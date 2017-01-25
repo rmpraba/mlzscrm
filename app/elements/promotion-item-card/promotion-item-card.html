@@ -8,8 +8,9 @@
         display: block;
       }
     </style>
-    <paper-checkbox id="promote{{admissionno}}"  
-    on-change="FnChange" checked="{{flag}}"></paper-checkbox>
+    <paper-input value="{{admission_no}}" hidden></paper-input>
+    <paper-checkbox id="promote{{admissionid}}"  
+    on-change="FnChange" checked="{{flag}}" disabled="{{dflag}}"></paper-checkbox>
   </template>
   <script>
   (function() {

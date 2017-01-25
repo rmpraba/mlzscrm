@@ -6045,10 +6045,12 @@ app.post('/cancelenrollment-service',  urlencodedParser,function (req, res){
       if(!err){
         if(rows.length==1){
               var enquiryno=rows[0].enquiry_no;
+              var status=rows[0].active_status;
               console.log(enquiryno);
               connection.query(qur2,function(err, result){
               if(result.affectedRows>0){
                 console.log('Coming for update!');
+                if(status=='New'){
                 var qur3="UPDATE student_enquiry_details set status='Cancelled' where enquiry_no='"+enquiryno+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";
                 connection.query(qur3,function(err, result){
                   if(result.affectedRows>0){
@@ -6062,6 +6064,18 @@ app.post('/cancelenrollment-service',  urlencodedParser,function (req, res){
                   });
                   }
                   });
+                }
+                else
+                {
+                  var qur4="INSERT INTO md_tchistory select *,'"+req.query.reason+"' from md_admission where admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";  
+                  connection.query(qur4,function(err, result){
+                  if(result.affectedRows>0){
+                  res.status(200).json({'returnval': 'Cancelled!'});
+                  }
+                  else
+                  res.status(200).json({'returnval': 'Unable to Cancel!'}); 
+                  });
+                }
               }
               else{
               res.status(200).json({'returnval': 'not updated'});

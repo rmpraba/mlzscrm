@@ -262,8 +262,15 @@
         if(document.querySelector('#structureselfmode').checked==true)
         { 
           this.feearr=""; 
+          installmentpattern="1";
+          localStorage.setItem("curr_sess_installmentpattern",installmentpattern);
+          this.fetchnoofinstallmenturl=sessionStorage.getItem("addrinfo")+"/fetchnoofinstallment-service";
+          this.$.fetchnoofinstallmentajax.generateRequest();
           localStorage.setItem("curr_sess_paymentthrough","self");
-          document.querySelector('#structurethirdpartymode').checked=false;
+          document.querySelector('#structurethirdpartymode').checked=false; 
+          document.querySelector('#structuregeneral1').checked=true;  
+          document.querySelector('#structurelumpsum1').checked=false;
+          document.querySelector('#structurelumpsumcommit1').checked=false;
           this.hidestandardpattern=false;
           this.$.admissionservice.searchfeeadmissionpaidinfoService(localStorage.getItem("curr_sess_enquiryno"));
           this.$.admissionservice.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
@@ -277,6 +284,7 @@
           localStorage.setItem("curr_sess_paymentthrough","thirdparty");
           document.querySelector('#structureselfmode').checked=false;
           document.querySelector('#structurelumpsum1').checked=true;
+          document.querySelector('#structurelumpsumcommit1').checked=false;
           localStorage.setItem("curr_sess_noofinstallment",1);
           localStorage.setItem("curr_sess_installmentpattern",3);
             
@@ -492,6 +500,7 @@
       },
       FnRefresh:function(){
         document.querySelector('#structureselfmode').checked=true;
+        document.querySelector('#structurethirdpartymode').checked=false;
         document.querySelector('#insrequirement').checked=false;
         this.flag=0;
         installment=[];
@@ -528,6 +537,7 @@
       },
       FnRefresh1:function(){
         document.querySelector('#structureselfmode').checked=true;
+        document.querySelector('#structurethirdpartymode').checked=false;
         this.totalpayableamount="";
         this.discountpercent="";
         document.querySelector('#insrequirement').checked=false;

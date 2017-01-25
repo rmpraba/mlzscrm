@@ -73,7 +73,15 @@
         var promotionarr=e.detail.response.returnval;
         for(var i=0;i<promotionarr.length;i++){
           promotionarr[i].sno=i+1;
+          promotionarr[i].admissionid=(promotionarr[i].admission_no).replace('/',"");
+          if(promotionarr[i].active_status!='Default'){
           promotionarr[i].flag=true;
+          promotionarr[i].dflag=false;
+          }
+          else{
+          promotionarr[i].flag=false;
+          promotionarr[i].dflag=true;
+          }
         }
         // alert(JSON.stringify(promotionarr));
         document.querySelector('promotion-card').promotionarr=promotionarr;
@@ -138,6 +146,7 @@
           alert('Promoted Successfully!!');
           c1=0;
           c2=0;
+
           this.FnFetchstudentforpromotionService(fromgrade,tograde,fromac,toac);
           promotearr=[];
           document.querySelector('promotion-card').FnClear();
