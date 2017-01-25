@@ -2607,11 +2607,19 @@ app.post('/insertchequefees',  urlencodedParser,function (req, res){
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
-
+    var new_receipt_no="";
+    var new_ack_no="";
     connection.query("SELECT * FROM receipt_sequence",function(err, rows){
-    response.ack_no="ACK-"+response.academic_year+"-"+rows[0].acknowledge_seq;
-    response1.receipt_no="ACK-"+response.academic_year+"-"+rows[0].acknowledge_seq;
-    var new_ack_no=parseInt(rows[0].acknowledge_seq)+1;
+    if(req.query.installment=="Commitment Fee"||req.query.installment=="Lumpsum"){
+      response.ack_no="REC-"+response.academic_year+"-"+rows[0].receipt_seq;
+      response1.receipt_no="REC-"+response.academic_year+"-"+rows[0].receipt_seq;
+      new_ack_no=parseInt(rows[0].receipt_seq)+1;
+    }
+    else{
+      response.ack_no="ACK-"+response.academic_year+"-"+rows[0].acknowledge_seq;
+      response1.receipt_no="ACK-"+response.academic_year+"-"+rows[0].acknowledge_seq;
+      new_ack_no=parseInt(rows[0].acknowledge_seq)+1;
+    }
     connection.query(masterinsert,[response1],function(err, rows){
       if(!err){
     connection.query(qur,[response],function(err, rows){
@@ -6267,6 +6275,9 @@ app.post('/insertinstallmentsplitofstud',  urlencodedParser,function (req, res){
         feetype_amount:req.query.feetypeamount,
         created_by:req.query.createdby
   };
+  // connection.query("SELECT * FROM mlzscrm.md_studentwise_installment_splitup WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.admissionno+"' and installment='"+req.query.installment+"' and feetype='"+req.query.feetype+"'",
+    // function(err, rows){
+  // if(rows.length==0){
   connection.query(qur,[response],
     function(err, result){
       if(!err){
@@ -6280,6 +6291,11 @@ app.post('/insertinstallmentsplitofstud',  urlencodedParser,function (req, res){
         console.log(err);
       }
     });
+    // }
+    // else{
+      // console.log('already thr!');
+    // }
+  // });
 });
 
 
