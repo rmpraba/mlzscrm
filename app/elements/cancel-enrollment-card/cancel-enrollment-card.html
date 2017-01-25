@@ -39,7 +39,7 @@
       </div>
       <div class="col-md-8" style="margin-top: 2%;"  hidden$="{{hideenritemcard}}">
       <template is="dom-repeat" items="{{cancelarr}}" as="item">
-      <cancel-enrollment-itemcard admissionno="{{item.admission_no}}" studentname="{{item.student_name}}" academicyear="{{item.academic_year}}" grade="{{item.class_for_admission}}" fathername="{{item.father_name}}"></cancel-enrollment-itemcard>
+      <cancel-enrollment-itemcard admissionid="{{item.admissionid}}" admissionno="{{item.admission_no}}" studentname="{{item.student_name}}" academicyear="{{item.academic_year}}" grade="{{item.class_for_admission}}" fathername="{{item.father_name}}"></cancel-enrollment-itemcard>
       </template>
     </div>
     <cancellation-service id="service"></cancellation-service>

@@ -32,7 +32,7 @@
       <tr hidden$="{{hidecancelblock}}">
       <td></td>
       <td>
-        <paper-checkbox id="tc{{admissionno}}" checked style="top: 1%;">Generate TC</paper-checkbox>
+        <paper-checkbox id="tc{{admissionid}}" checked style="top: 1%;">Generate TC</paper-checkbox>
       </td>
       <td>
         <paper-dropdown-menu id="reasonforcancel" label="Reason for cancellation" on-iron-select="FnSelectreason" style='margin-top: -10%;'>
@@ -74,13 +74,13 @@
         reason=(e.target.selectedItem.textContent).trim();
       },
       FnCancelEnrollement:function(){
-        if(reason!=""&&document.querySelector('#tc'+this.admissionno).checked==true){
+        if(reason!=""&&document.querySelector('#tc'+this.admissionid).checked==true){
           this.$.service.enrollmentcancelService(this.admissionno,this.academicyear,this.grade,reason);
         }
         else{
           if(reason==""||reason==null)
           alert('Please select the proper reason!!');
-          else if(document.querySelector('#tc'+this.admissionno).checked==false)
+          else if(document.querySelector('#tc'+this.admissionid).checked==false)
           alert("Can't cancel the enrollment without generating TC!!");;
         }
       }

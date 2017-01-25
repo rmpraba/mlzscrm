@@ -172,6 +172,9 @@
         // alert(JSON.stringify(arr));
         if(arr!='no rows'){
         document.querySelector('cancel-enrollment-card').FnHideview(false,true);
+        for(var i=0;i<arr.length;i++){
+          arr[i].admissionid=(arr[i].admission_no).replace('/','');
+        }
         document.querySelector('cancel-enrollment-card').cancelarr=arr;
         }
         else{

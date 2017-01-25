@@ -36,7 +36,9 @@
         <tr>
           <td><img style="width: 100px; height: 100px;" 
           src="../../images/schoollogo.png"></td>
-          <th colspan="5" style="text-align: left;"><h2 style="margin-left: 20px;">{{schoolname}}</h2>{{schooladdress}}</th>
+          <th colspan="5" style="text-align: left;"><h3 style="margin-left: 20px;">{{schoolname}}</h3></th>
+          <th></th></tr>
+          <tr><th colspan="5" style="text-align: center;">{{schooladdress}}</th>
         </tr>
       </table>
       <hr></hr>
@@ -58,7 +60,12 @@
       
       ready:function(){
         this.schoolname=localStorage.getItem("schoolname");
-        this.schooladdr=sessionStorage.getItem("schooladdr");  
+        this.schooladdress=localStorage.getItem("schooladdress"); 
+      },
+      Fnsetinfo:function(){
+        this.schoolname=localStorage.getItem("schoolname");
+        this.schooladdress=localStorage.getItem("schooladdress");
+        // this.parentname=localStorage.getItem("curr_sess_parentname");
       },
       FnHome:function(){
           this.$.service.getadmittedcount();
