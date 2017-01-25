@@ -7,10 +7,24 @@
       :host {
         display: block;
       }
+      table{
+        width:100%;
+      }
+      paper-input{
+        margin-top: -2%;
+      }
     </style>
     <div>
     <table>
-    <tr><td>
+    <tr><td>{{admissionno}}</td><td>{{studentname}}</td><td>{{grade}}</td><td>{{insamount}}</td>
+    <td style="text-align: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<paper-input style="width: 75%;margin-top: -2%;" label="Enter received amount" value="{{refamount}}"></paper-input></td><td style="text-align: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <paper-input style="width: 75%;margin-top: -2%;" label="Enter reference no" value="{{refno}}"></paper-input></td>
+    <td style="text-align: center;"><fromdate-icon-pickercard></fromdate-icon-pickercard></td>
+    <td><paper-button id="{{chequeno}}" class="btn btn-primary left" on-click="FnDone">Done</paper-button></td>
+    </tr>
+    </table>
+
+    <!-- <tr><td>
     <paper-input value="{{admissionno}}"></paper-input></td><td width="30px;"></td>
     <td><paper-input value="{{studentname}}"></paper-input></td></tr>
     <tr><td><paper-input value="{{grade}}"></paper-input></td><td width="30px;"></td>
@@ -21,7 +35,7 @@
     <tr><td><paper-input label="Enter received amount" value="{{refamount}}"></paper-input></td><td width="30px;"></td>
     <td><paper-input label="Enter reference no" value="{{refno}}"></paper-input></td></tr>
     <tr><td style="height:40px;margin-top: 5%;margin-left: 40%;" colspan="3" class="btn btn-primary" on-click="FnDone"><paper-button>Done</paper-button></td></tr>
-    </table>
+    </table> -->
     </div>
     <tp-realisation-service id='service'></tp-realisation-service>
   </template>
