@@ -1,0 +1,88 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\generate-tc-card\generate-tc-card.html">
+<link rel="import" href="..\cancellation-service\cancellation-service.html">
+<dom-module id="generate-tc-homecard">
+  <template>
+    <style>
+      .home{
+        background-color: black;
+        color: white;
+      }
+      #btn{
+        margin-top: 2%;
+        margin-left: 15%;
+      }
+    </style>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">{{schoolname}}</a>
+      </div>
+      <ul class="nav navbar-top-links navbar-right">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" on-click="FnHome">
+          <i class="fa fa-home"></i>
+        </a>
+        </li>
+      </ul>
+    </nav>
+      <table>
+        <tr>
+          <td><img style="width: 100px; height: 100px;" 
+          src="../../images/schoollogo.png"></td>
+          <th colspan="5" style="text-align: left;"><h2 style="margin-left: 20px;">{{schoolname}}</h2>{{schooladdress}}</th>
+        </tr>
+      </table>
+      <hr></hr>
+      <template  is="dom-repeat" items="{{tcarr}}" as="tc">
+        <generate-tc-card admissionno="{{tc.admission_no}}" student="{{tc.student_name}}" father="{{tc.father_name}}" mother="{{tc.mother_name}}" admissionno="{{tc.admission_no}}" dob="{{tc.dob}}" nationality="{{tc.nationality}}" nationality="{{tc.nationality}}" mothertoungue="{{tc.mother_toungue}}" caste="{{tc.caste}}" class="{{tc.class_for_admission}}" nationality="{{tc.nationality}}" doj="{{tc.created_on}}" academicyear="{{tc.academic_year}}" reason="{{tc.reason}}"></generate-tc-card>
+      </template>
+      <div class="row-buttons" id="btn">
+      <paper-button id="pdf"   style="height: 34px  !important;" on-click="downloadpdf" class="btn btn-primary center">PDF</paper-button>
+      <paper-button id="email" style="height: 34px  !important;" on-click="email" class="btn btn-primary center">Email</paper-button>
+      <paper-button id="print" style="height: 34px  !important;" on-click="print" class="btn btn-primary center">Print</paper-button>
+      </div>
+      <cancellaton-service id='service'></cancellaton-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'generate-tc-homecard',
+      
+      ready:function(){
+        this.schoolname=localStorage.getItem("schoolname");
+        this.schooladdr=sessionStorage.getItem("schooladdr");  
+      },
+      FnHome:function(){
+          this.$.service.getadmittedcount();
+          this.$.service.getcancelledcount();
+          document.querySelector('CRM-app').setPage('applist');
+          document.querySelector('app-list').setPage("cancel-enrollment-card","Cancel Enrollment");
+          document.querySelector('cancel-enrollment-card').FnHideview(true,false);  
+          document.querySelector('cancel-enrollment-card').FnRefresh(); 
+      },
+      print:function(){
+              this.$.pdf.hidden=true;
+              this.$.email.hidden=true;
+              this.$.print.hidden=true;
+              this.$.print.home=true;
+            if (!window.print){
+            alert("You need NS4.x to use this print button!")
+            return
+            }
+              window.print()
+              this.$.pdf.hidden=false;
+              this.$.email.hidden=false;
+              this.$.print.hidden=false;
+      }
+    });
+  })();
+  </script>
+</dom-module>

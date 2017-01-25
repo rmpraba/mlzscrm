@@ -1,0 +1,95 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../discount-type-ui-card/discount-type-ui-card.html">
+
+
+<dom-module id="discount-display-card">
+  <template>
+     <style>
+      :host 
+      {
+        display: block;
+      }
+      .card
+      {
+        @apply(--layout-center); 
+        @apply(--layout-horizontal);    
+        border-bottom: 1px solid #337ab7;
+        width: 200%
+      }
+      .discount-display{
+        margin: 10px 0 0 0;
+      }
+    </style>
+      <div class="col-sm-12 discount" id="card{{discountid}}">
+        <input type="hidden" name="" value="{{discounttypeid}}">
+        <span class="col-sm-10 discount-display">
+             <span class="" hidden$="{{hidediscounttypeuiitem}}">{{discounttypename}}</span>
+             <span class="" hidden$="{{hidediscounttypeuiinput}}">
+                 <paper-input value="{{discounttypename}}"></paper-input>
+             </span>
+        </span>
+        <span class="col-sm-1">
+            <span class="" hidden$="{{hidediscounttypeuiitem}}">
+            <paper-icon-button icon='create' on-click='FnEdit'></paper-icon-button>
+            </span>
+            <span class="" hidden$="{{hidediscounttypeuiinput}}">
+            <paper-icon-button icon='save' on-click='FnSave'></paper-icon-button>
+            </span>
+        </span>
+        <span class="col-sm-1">
+            <paper-icon-button icon='close' on-click='FnDelete'></paper-icon-button>
+        </span>
+      </div>
+    <reporting-service id="service"></reporting-service>
+  </template>
+
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'discount-display-card',
+
+      properties: {
+        foo: {
+          type: String,
+          value: 'discount-display-card',
+          notify: true
+        }
+      },
+      ready:function()
+      {
+        //alert("test");
+        this.hidediscounttypeuiinput=true;
+        this.hidediscounttypeuiitem=false;
+      },
+      FnDelete:function()
+      {
+        this.$.service.FnDeleteDiscount(this.discounttypeid);
+      },
+      FnEdit:function()
+      {
+        this.hidediscounttypeuiinput=false;
+        this.hidediscounttypeuiitem=true;
+      },
+      FnSave:function()
+      {
+        this.$.service.FnUpdateDiscount(this.discounttypeid,this.discounttypename,this.dseqid);
+        this.hidediscounttypeuiinput=true;
+        this.hidediscounttypeuiitem=false;
+      }
+     
+     });
+  })();
+  </script>
+</dom-module>

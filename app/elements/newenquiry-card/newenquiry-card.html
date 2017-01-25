@@ -1,0 +1,850 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\..\bower_components/gold-email-input/gold-email-input.html">
+<link rel="import" href="../dateofbirth-datepicker/dateofbirth-datepicker.html">
+<link rel="import" href="../special-discount-card/special-discount-card.html">
+<link rel="import" href="..\..\bower_components/paper-dialog/paper-dialog.html">
+<dom-module id="newenquiry-card">
+  <template>
+<!-- this ajax is to fetch the available classes with repect to the school -->
+   <iron-ajax
+        method="post"
+        id="getclassesajax"
+        url="{{getclassesurl}}"
+        params="{{getclassesparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getclassesResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <style type="text/css">
+      .horizontalframe{
+        display: flex;
+        @apply(--layout-horizontal);
+      }
+      #fname,#lname,#gradeclass,#dadname,#momname,#mobile,#email,#gemail,#Guardianname,#MobileNumber,#locality,#nextyear,#midyear,
+      #gmobile
+      {
+        --paper-input-container-label: { color: red };
+      }
+      paper-dropdown-menu{
+        --paper-input-container-label: { color: red };
+      }
+      #mangender{
+        color: red;
+      }
+      .lbl{
+        @apply(--layout-horizontal);
+      }
+      #pgdetail{
+        color: red;
+      }
+      .lb2,#lb2{
+        @apply(--layout-horizontal);
+      }
+  </style>
+    <div class="row enquiry-form">
+      <div class="form-group-heading">
+        <h4>Enquiry Detail</h4>
+      </div>
+      <paper-button class="btn btn-primary" on-click="fnxyz">get</paper-button>
+      <div class="list-group col-sm-12 panel-body form-category">
+
+        <div class="col-sm-4">
+          <paper-input label="Date of Enquiry" readonly value="{{todaydate}}"></paper-input>
+        </div>
+         <div class="col-sm-3" style='margin-top: 1%;'>
+         <paper-checkbox id="nextyear" class="checkbox" on-change="nextyearfhandler"> Next Year</paper-checkbox>
+         </div>
+         <div class="col-sm-3" style='margin-top: 1%;'>
+         <paper-checkbox id="midyear" class="checkbox" on-change="midyearfhandler"> Mid Term</paper-checkbox>
+         </div>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-4 enquiry-input">
+         <paper-input label="Academic Year" id="acyr" readonly required error-message="needs academics year!" allowed-pattern="[a-zA-Z ]" value="{{academicyear}}"></paper-input>
+        </div>
+        <div class="col-sm-4">
+          <paper-dropdown-menu label="Grade" id="gradeclass">
+            <paper-menu  class="dropdown-content" id="newenqcardgrade" required on-iron-select="classes" valueattr="value" >
+              <template  is="dom-repeat" items="{{itemarr}}" as="itemz">
+                <paper-item value="{{itemz.class}}">{{itemz.class}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
+        <div class="col-sm-3 enquiry-input">
+          <paper-input label="Enquiry Number" hidden value="{{enqno}}"></paper-input>
+        </div>
+      </div>
+      <div class="form-group-heading">
+        <h4>Student Detail</h4>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+          <div class="col-sm-4">
+            <paper-input label="First Name" id="fname" required error-message="needs first name!" allowed-pattern="[a-zA-Z ]" value="{{firstname}}"></paper-input>
+          </div>
+          <div class="col-sm-4">
+            <paper-input label="Middle Name" id="mname" required error-message="needs middle name!" allowed-pattern="[a-zA-Z ]" value="{{middlename}}"></paper-input>
+          </div>
+          <div class="col-sm-4">
+            <paper-input label="Last Name" id="lname" required error-message="needs last name!" allowed-pattern="[a-zA-Z ]" value="{{lastname}}"></paper-input>
+          </div>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-3 enquiry-input">
+          <div class="lbl"><label>Gender </label><p id="mangender">&nbsp; *</p> </div>
+          <div class="gender">
+            <span class="col-sm-4"><paper-checkbox id="male"  class="checkbox" on-change="maleHandler">Boy</paper-checkbox></span>
+            <span class="col-sm-4"><paper-checkbox  id="female" class="checkbox" on-change="femaleHandler">Girl</paper-checkbox></span>
+          </div>
+        </div>
+        <div class="lbl"><label>Category </label><p id="mangender">&nbsp; *</p> </div>
+        <div class="col-sm-9 enquiry-input" style='margin-top: 0.5%;'>
+          <template  is="dom-repeat" items="{{discountarr}}" as="view">
+          {{view.discount_type_name}}
+            <special-discount-card code="{{view.id}}" discountname="{{view.discount_type_name}}"></special-discount-card>
+          </template>
+        </div>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6" style='margin-top: -1%;'>
+          <dateofbirth-datepicker showdate="{{showdate}}"></dateofbirth-datepicker>
+        </div>
+        <div class="col-sm-6">
+          <paper-input readonly label="Age(In Years)" value="{{ageofyr}}"></paper-input>
+        </div>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6">
+          <label>Sibling</label>
+          <paper-radio-group>
+            <paper-radio-button name="yes">Yes</paper-radio-button>
+            <paper-radio-button name="no">No</paper-radio-button>
+          </paper-radio-group>
+        </div>
+      </div>
+    <div class="form-group-heading">
+       <span class="col-sm-3"><h4>Parent/Guardian Detail</h4></span><span class="col-sm-2" style="margin-left:-3%;"><p id="pgdetail">&nbsp;*</p></span>
+    </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+         <div class="col-sm-6 enquiry-input">
+           <div class="gender">
+
+             <span class="col-sm-6"><paper-checkbox  id="parents" class="checkbox" on-change="parentsHandler"><h5>Parent</h5></paper-checkbox></span>
+            <span class="col-sm-6"><paper-checkbox id="Gurdians"  class="checkbox" on-change="gardiansHandler"><h5>Guardian</h5></paper-checkbox></span>
+
+           </div>
+        </div>
+      </div>
+     <div  class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6">
+          <paper-input label="Father's Name" id="dadname" required error-message="needs father's name!" allowed-pattern="[a-zA-Z ]" value="{{fathername}}"></paper-input>
+        </div>
+        <div class="col-sm-6">
+          <paper-input label="Mother's Name" id="momname" required error-message="needs mother's name!" allowed-pattern="[a-zA-Z ]" value="{{mothername}}"></paper-input>
+        </div>
+      </div>  
+      <div class="list-group col-sm-12 panel-body form-category" >
+        <div class="col-sm-6">
+          <paper-input id="mobile" error-message="enter proper mobile no!" label="Father Mobile Number" allowed-pattern="[0-9]" maxlength="10" value="{{mob}}" on-change="verifymob"></paper-input>
+        </div>
+        <div class="col-sm-6">
+          <paper-input id="mobile" error-message="enter proper mobile no!" label="Mother Mobile Number" allowed-pattern="[0-9]" maxlength="10" value="{{mothermob}}" on-change="verifymob"></paper-input>
+        </div>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6">
+          <gold-email-input id="email" error-message="needs email ID!" label="Father Email" value="{{email}}"></gold-email-input>
+        </div>
+        <div class="col-sm-6">
+          <gold-email-input id="email" error-message="needs email ID!" label="Mother Email" value="{{motheremail}}"></gold-email-input>
+        </div>
+      </div>
+     <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6">
+          <paper-input label="Guardian's Name" id="Guardianname" required error-message="needs Guardian's Name!" allowed-pattern="[a-zA-Z ]" value="{{Guardianname}}"></paper-input>
+        </div>
+        <div class="col-sm-6">
+          <paper-input id="gmobile" required error-message="enter proper mobile no!" label="Mobile Number" allowed-pattern="[0-9]" maxlength="10" value="{{gmob}}" on-change="gverifymob"></paper-input>
+        </div>
+     </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6">
+          <gold-email-input id="gemail" auto-validate required error-message="needs email ID!" label="Guardian Email" value="{{gemail}}"></gold-email-input>
+        </div>
+      </div>  
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-4">
+          <paper-input  id="locality" required error-message="needs locality!" label="Enter location/Landmark" is="" value="{{textvalue}}" on-keydown="FnInputChanged"></paper-input>
+          <paper-listbox class="dropdown-content" id="itemlist" on-iron-select="Fnselected" valueattr="value">
+            <template is="dom-repeat" items="{{itemArray}}" as="item">
+              <paper-item value="{{item.itemid}}">{{item.itemdes}}</paper-item>
+            </template>
+          </paper-listbox>
+        </div>
+        <div class="col-sm-4" style='margin-top: -1%;'>
+          <paper-dropdown-menu label="Enquiry Source" style="margin-top: 3%;">
+            <paper-menu class="dropdown-content"  class="dropdown-content" id="source" on-iron-select="source" >
+              <template  is="dom-repeat" items="{{sourcearr}}" as="item">
+                <paper-item>{{item.source}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
+        <div class="col-sm-4" id="sibname">
+          <paper-input  label="Names of sibling" value="{{siblingname}}"></paper-input>
+        </div>
+        <div class="col-sm-6" id="sibdetail">
+          <paper-input  label="Grade of sibling" value="{{siblingdetails}}"></paper-input>
+        </div>
+        <div class="col-sm-6" id="referrer">
+          <paper-input  error-message="needs referrer!" label="Enter referrer name.." is="" value="{{referrername}}" on-keydown="FnInputChangedz"></paper-input>
+          <paper-listbox class="dropdown-content" id="itemlistz" on-iron-select="Fnselectedz" valueattr="value">
+            <template is="dom-repeat" items="{{itemArrayz}}" as="item">
+              <paper-item >{{item.itemdesz}}</paper-item>
+            </template>
+          </paper-listbox>
+         <div class="col-sm-4">
+              <paper-dropdown-menu label="Attended By" id="rmnames">
+            <paper-menu id="class" class="dropdown-content" required on-iron-select="attendedby" valueattr="value" >
+              <template  is="dom-repeat" items="{{listnamearr}}" as="view">
+                <paper-item >{{view.employee_name}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
+           </div>
+
+           <!-- <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6">
+              <paper-dropdown-menu label="Attended By" id="rmnames">
+            <paper-menu id="class" class="dropdown-content" required on-iron-select="attendedby" valueattr="value" >
+              <template  is="dom-repeat" items="{{listnamearr}}" as="view">
+                <paper-item >{{view.employee_name}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
+        </div> -->
+      <div class="col-md-12 form-button">
+        <paper-button class="btn btn-primary" on-click="submit">SUBMIT</paper-button>
+      </div>
+
+      <paper-dialog id="confirmbox" modal>
+        <p><h3>This mobile number is already registered..</h3></p>
+        <p><h5>Do this student have siblings or already registered here..!!</h5></p>
+        <p>As - {{studentname}} - {{enquiryno}}</p>
+  <div  class="horizontalframe">
+    <div class="buttons hrspace" >
+      <paper-button style="height:33px !important;"  on-click="Confirm">YES</paper-button>
+    </div>
+    <div class="buttons hrspace">
+      <paper-button style="height:33px !important;" on-click="cancel">NO</paper-button>
+    </div>
+  </div>
+   </paper-dialog>
+<paper-dialog id="cancelbox" modal>
+        <p><h3>If no then kindly change the mobile number..</h3></p>
+  <div  class="horizontalframe">
+    <div class="buttons hrspace" >
+      <paper-button style="height:33px !important;"  on-click="closedialog">OK</paper-button>
+      </div>
+      </div>
+   </paper-dialog>
+
+      <paper-toast class="toast-success toast-popup" style="background-color: #0b8043;" id="enquiry_success" text="">Enquiry Added</paper-toast>
+
+
+    <paper-dialog id="successbox">
+        <p><h2>Enquiry is Registered Successfully!</h2></p>
+        <p><h4>Your Enquiry id is - </h4><h1>{{enquiryno}}</h1></p>
+  <div  class="horizontalframe">
+    <div class="buttons hrspace" >
+      <paper-button style="height:33px !important;"  on-click="closediaz">OK</paper-button>
+      </div>
+      </div>
+   </paper-dialog>
+
+</div>
+
+    <crm-service id="service"></crm-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+        var enqsource;
+        var enqcategory;
+        var dobdate;
+        var namearr=[];
+        var namearrz=[];
+        var habitatid;
+        //var academicyear;
+        var gender;
+        var grade;
+        var paga;
+        var rtestudent;
+        var enrolltype;
+        var yr1;
+        var yr2;
+        var yearsxz;
+        var checkList=[];
+        var todaydat;
+        var attendername;
+        var enquiysource;
+    Polymer({
+      is: 'newenquiry-card',
+ready:function () {
+  // this.itemarr=[{"class":"class1"},{"class":"class2"}];
+        this.$.sibname.hidden=true;
+          this.$.sibdetail.hidden=true;
+          this.$.referrer.hidden=true;
+       
+        
+        this.todaydate=sessionStorage.getItem("todaydate");
+        this.$.itemlist.hidden=true;
+        this.showdate=sessionStorage.getItem("todaydate");
+      },
+      fnxyz:function(){
+        this.getclasses();
+        this.$.service.getlocation();
+        this.$.service.getdiscounts();
+        this.$.service.getrmnamelist();
+        this.$.service.getenquirysource();
+      }
+      ,Fnclear:function(){
+          this.ready();
+          //this.$.academics.selected=-1;
+          this.$.class.selected=-1;
+          this.$.male.checked=false;
+          this.$.female.checked=false;
+          this.$.parents.checked=false;
+          this.$.Gurdians.checked=false;
+          this.$.itemlist.selected=-1;
+          this.$.source.selected=-1;
+          this.firstname="";
+          this.middlename="";
+          this.Guardianname="";
+          this.gmob="";
+          this.gemail="";
+          this.lastname="";
+          this.ageofyr="";
+          this.fathername="";
+          this.mothername="";
+          this.mob="";
+          this.email="";
+          this.textvalue="";
+          this.datepekar="";
+           enquiysource=null;
+         enqcategory=null;
+         dobdate=null;
+         habitatid=null;
+         //academicyear=null;
+         gender=null;
+         rtestudent=null;
+         grade=null;
+         paga=null;
+         dobdate=null;
+         this.academicyear="";
+         document.querySelector('#nextyear').checked=false;
+         document.querySelector('#midyear').checked=false;
+         //document.querySelector('#rtestudent').checked=false;
+         document.querySelector('dateofbirth-datepicker').FnClear();
+         document.querySelector('#newenqcardgrade').selected=-1;
+         
+      },
+      classes:function(e){
+          grade=(e.target.selectedItem.textContent).trim();
+      },
+       source:function(e){
+        enquiysource=(e.target.selectedItem.textContent).trim();
+//alert(enquiysource);
+if(enquiysource=="Siblings"){
+          this.$.sibname.hidden=false;
+          this.$.sibdetail.hidden=false;
+          this.$.referrer.hidden=true;
+        }
+        else if(enquiysource=="Referrer"){
+          this.$.referrer.hidden=false;
+          this.$.sibname.hidden=true;
+          this.$.sibdetail.hidden=true;
+           this.$.service.getreferrername();
+        }
+        else{
+          this.$.sibname.hidden=true;
+          this.$.sibdetail.hidden=true;
+          this.$.referrer.hidden=true;
+        }
+       
+    },
+
+     /* Fnacademicyr:function(e){
+        academicyear=(e.target.selectedItem.textContent).trim();
+      },*/
+      maleHandler:function(){
+        if(document.querySelector("#male").checked==true)
+        {
+         document.querySelector("#female").checked=false;
+         gender="Male";
+         //alert(gender);
+       }
+      },
+      femaleHandler:function(){
+        if(document.querySelector("#female").checked==true)
+        {
+         document.querySelector("#male").checked=false;
+         gender="Female";
+         //alert(gender);
+       }
+      },
+        gardiansHandler:function(){
+        if(document.querySelector("#Gurdians").checked==true)
+        {
+         document.querySelector("#parents").checked=false;
+         paga="Gurdians";
+         //alert(gender);
+         this.fathername="";
+         this.mothername="";
+         this.mob="";
+         this.email="";
+       }
+       else{
+         paga=null;
+         this.Guardianname="";
+         this.gmob="";
+         this.gemail="";
+       }
+      },
+      parentsHandler:function(){
+        if(document.querySelector("#parents").checked==true)
+        {
+         document.querySelector("#Gurdians").checked=false;
+         paga="parents";
+          this.Guardianname="";
+         this.gmob="";
+         this.gemail="";
+         //alert(gender);
+       }
+       else{
+         paga=null;
+         this.fathername="";
+         this.mothername="";
+         this.mob="";
+         this.email="";
+       }
+      },
+     /* source:function(e){
+          enqsource=(e.target.selectedItem.textContent).trim();
+      },
+      category:function(e){
+        enqcategory=(e.target.selectedItem.textContent).trim();
+      },*/
+      dob:function(dateob){
+          dob=dateob;
+      },
+       autocompletename(nameitem){
+          namearr=nameitem;
+        },
+        FnInputChanged:function(e){
+          this.$.itemlist.hidden=false;
+          if(e.keyCode==13|| e.keyCode==40)
+            this.querySelector('paper-listbox').focus();
+          var arr=[];
+          arr.push({"itemdes":"-----Select-----"});
+          this.querySelector('paper-listbox').style.visibility='visible';
+          if(e.keyCode==8){
+            this.itemflag="true";
+            this.itemval="";
+            //alert('yes');
+            var len=(this.textvalue).length;
+            if(len<=1){
+              this.querySelector('paper-listbox').style.visibility='hidden';
+              this.itemArray="";
+              this.itemval="";
+            }
+            if(len>1){
+              this.querySelector('paper-listbox').style.visibility='visible';
+              var backsubval=(((this.textvalue).substring(0,(len-1))).trim()).toUpperCase();
+              for(var i=0;i<namearr.length;i++)
+              {
+                var subval=((namearr[i].habitat_name).trim()).substring(0,backsubval.length);
+                if((subval).toUpperCase()==(backsubval).toUpperCase())
+                {
+                  var obj={"itemdes":"","itemid":""};
+                  obj.itemdes=namearr[i].habitat_name;
+                  obj.itemid=namearr[i].habitat_id;
+                  arr.push(obj);
+                }
+              }
+              this.itemArray=arr;
+            }
+          }
+          if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+            if(this.itemflag=="true") {
+              this.itemval = (this.textvalue).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+              this.itemflag="false";
+            }
+            else
+            this.itemval = this.textvalue +String.fromCharCode((e.keyCode));
+            if(this.itemval.length>0)
+            {
+              for(var i=0;i<namearr.length;i++){
+                var subval=((namearr[i].habitat_name).trim()).substring(0,this.itemval.length);
+                if((subval).toUpperCase()==(this.itemval).toUpperCase()){
+                  var obj={"itemdes":"","itemid":""};
+                  obj.itemdes=namearr[i].habitat_name;
+                  obj.itemid=namearr[i].habitat_id;
+                  arr.push(obj);
+                }
+              }
+              if(arr.length>0)
+                this.itemArray=arr;
+              else {
+                var obj={"itemdes":"","itemid":""};
+                  obj.itemdes=namearr[i].habitat_name;
+                  obj.itemid=namearr[i].habitat_id;
+                  arr.push(obj);
+                this.itemArray=arr;
+              }
+            }
+          }
+
+        },
+        Fnselected:function(e)
+        {
+          //alert('s');
+          this.querySelector('paper-listbox').style.visibility='hidden';
+          this.textvalue = e.target.selectedItem.textContent.trim();
+          this.itemArray=[];
+          document.querySelector('#itemlist').selected=-1;
+          this.$.itemlist.hidden=true;
+        },
+        showdate:function(){
+          document.querySelector('dob-datepicker-card').FnShowDialog();
+        },
+        getdate:function(dates){
+          var dt1=new Date(dates);
+          dobdate=dates;
+          var dt=new Date();
+          var pr_year=dt.getFullYear();
+          var bt_year=dt1.getFullYear();
+          var diff=parseInt(pr_year-bt_year);
+          //alert(diff);
+
+          this.ageofyr=diff+" Years";
+         this.$.service.verifyage(grade,diff);
+
+      },
+        submit:function () {
+      // alert('submit!');
+
+        this.$.service.getenquiryno();
+
+
+      },
+
+
+      showdialog:function(enqno,fname,mname,lname){
+          this.studentname=fname+' '+mname+' '+lname;
+          this.enquiryno=enqno;
+          var id = 'confirmbox';
+        var dialog = document.getElementById(id);
+        dialog.open();
+      },
+      Confirm:function(){
+         var id = 'confirmbox';
+        var dialog = document.getElementById(id);
+        dialog.close();
+      },
+      cancel:function(){
+        var id = 'confirmbox';
+        var dialog = document.getElementById(id);
+        dialog.close();
+          var id = 'cancelbox';
+        var dialog = document.getElementById(id);
+        dialog.open();
+      },
+      closedialog:function(){
+          var id = 'cancelbox';
+        var dialog = document.getElementById(id);
+        dialog.close();
+      },
+      closediaz:function(){
+          var id = 'successbox';
+        var dialog = document.getElementById(id);
+        dialog.close();
+      },
+      dateclear:function(){
+        alert("Select DOB properly, it cannot be future date");
+
+      },
+      complete:function(){
+         if(paga=="Gurdians"){
+        if(this.firstname==""||this.lastname==""||this.textvalue==""||this.Guardianname==""||this.gemail==""||this.gmob==""||this.academicyear==''){
+           // alert('1');
+           this.$.fname.validate();
+            // this.$.mname.validate();
+            this.$.lname.validate();
+           this.$.locality.validate();
+           this.$.Guardianname.validate();
+            this.$.gmobile.validate();
+            this.$.gemail.validate();
+            this.$.acyr.validate();
+      }
+       else if(grade==null){
+          // alert('4');
+          alert('Select the grade your seeking for admission');
+        }
+        else if(gender==null){
+          // alert('5');
+          alert('Select the gender of the student');
+        }
+        else if(dobdate==null){
+          // alert('6');
+          alert('Select date of birth properly')
+        }
+
+        else if(this.textvalue==null||this.textvalue==""){
+          // alert('7');
+          alert('Select the Location');
+        }
+        else if(enrolltype==null){
+           alert('Select the Academics Year Type');
+        }
+        else{
+          // alert('coming........');
+
+        this.$.service.submitenqiry(this.enqno,this.academicyear,grade,this.firstname,this.middlename,this.lastname,gender,dobdate,this.fathername,this.mothername,this.mob,this.email,this.textvalue,this.todaydate,this.gemail,this.gmob,this.Guardianname,paga,enrolltype,this.discounttypecode,attendername,enquiysource,this.siblingname,this.siblingdetails,this.referrername);
+      }
+
+      }
+        else if(paga=="parents")
+          {
+            if(this.firstname==""||this.lastname==""||this.textvalue==""||this.fathername==""||this.mothername==""||this.mob==""||this.email==""||this.academicyear==""){
+            // alert('2');
+          this.$.fname.validate();
+            // this.$.mname.validate();
+            this.$.lname.validate();
+           this.$.locality.validate();
+            this.$.dadname.validate();
+            this.$.momname.validate();
+            this.$.mobile.validate();
+            this.$.email.validate();
+            this.$.acyr.validate();
+          }
+           else if(grade==null){
+          // alert('4');
+          alert('Select the grade your seeking for admission');
+        }
+        else if(gender==null){
+          // alert('5');
+          alert('Select the gender of the student');
+        }
+        else if(dobdate==null){
+          // alert('6');
+          alert('Select date of birth properly')
+        }
+
+        else if(this.textvalue==null||this.textvalue==""){
+          // alert('7');
+          alert('Select the Location');
+        }
+        else if(enrolltype==null){
+           alert('Select the Academic Year Type');
+        }
+        else{
+          // alert('coming........');
+
+        this.$.service.submitenqiry(this.enqno,this.academicyear,grade,this.firstname,this.middlename,this.lastname,gender,dobdate,this.fathername,this.mothername,this.mob,this.email,this.textvalue,this.todaydate,this.gemail,this.gmob,this.Guardianname,paga,enrolltype,this.discounttypecode,attendername,enquiysource,this.siblingname,this.siblingdetails,this.referrername);
+      }}
+      },
+      verifymob:function(){
+        //alert('1');
+        if(this.mob.length==10){
+        this.$.service.checkmobileno(this.mob);
+        }
+        else{
+            alert('Please check the mobile number properly');
+            //this.mob='';
+             this.$.mobile.validate();
+        }
+      },
+       gverifymob:function(){
+        //alert('1');
+        if(this.gmob.length==10){
+            this.$.service.checkmobileno(this.gmob);
+        }
+        else{
+            alert('Please check the mobile number properly');
+            //this.gmob='';
+             this.$.gmobile.validate();
+        }
+      },
+      showdialog:function(enqno,fname,mname,lname){
+          this.studentname=fname+' '+mname+' '+lname;
+          this.enquiryno=enqno;
+          var id = 'confirmbox';
+        var dialog = document.getElementById(id);
+        dialog.open();
+
+
+      },
+      showsuccess:function(){
+        //alert('hi');
+         var id = 'successbox';
+        var dialog = document.getElementById(id);
+        dialog.open();
+      },
+      nextyearfhandler:function(){
+          if(document.querySelector('#nextyear').checked==true){
+              document.querySelector('#midyear').checked=false;
+              enrolltype="fullyear";
+              //alert(enrolltype);
+              var dt=new Date();
+              //alert(month);
+                     yr1=(dt.getFullYear()+1)-2000;
+                     yr2=(dt.getFullYear()+2)-2000;
+                    yearsxz='AY-'+(dt.getFullYear()+1)+'-'+(dt.getFullYear()+2);
+                    this.academicyear=yearsxz;
+          }
+          else{
+            enrolltype=null;
+            this.academicyear="";
+          }
+      },
+      dateclear:function(){
+        alert("Select DOB properly, it cannot be future date");
+
+      },
+      rteHandler:function(e) {
+        if(document.querySelector('#rtestudent').checked==true){
+        rtestudent = "RTE Student";
+
+      }
+      else{
+        rtestudent=null;
+      }
+      },
+      discountHandler:function(e){
+        document.querySelector('#midyear').checked==true
+      },
+      setDiscountType:function(code){
+        this.discounttypecode=code;
+        // alert(this.discounttypecode);
+      },
+
+      midyearfhandler:function(){
+          if(document.querySelector('#midyear').checked==true){
+              document.querySelector('#nextyear').checked=false;
+              enrolltype="midyear";
+              //alert(enrolltype);
+              var dt=new Date();
+              var month=dt.getMonth()+1;
+              //alert(month);
+                       yr1=(dt.getFullYear())-2000;
+                       yr2=(dt.getFullYear()+1)-2000;
+                      yearsxz='AY-'+dt.getFullYear()+'-'+(dt.getFullYear()+1);
+                      this.academicyear=yearsxz;
+          }
+          else{
+            enrolltype=null;
+            this.academicyear="";
+          }
+      },attendedby:function(e){
+          attendername=(e.target.selectedItem.textContent).trim();
+      },
+      Fnlistboxz:function(nameitem){
+          namearrz=nameitem;
+        },
+        FnInputChangedz:function(e){
+          this.$.itemlistz.hidden=false;
+          if(e.keyCode==13|| e.keyCode==40)
+            this.querySelector('paper-listbox').focus();
+
+          var arr=[];
+          arr.push({"itemdesz":"-----Select-----"});
+          this.querySelector('paper-listbox').style.visibility='visible';
+          if(e.keyCode==8){
+            this.itemflagz="true";
+            this.itemvalz="";
+            //alert('yes');
+            var len=(this.referrername).length;
+            if(len<=1){
+              this.querySelector('paper-listbox').style.visibility='hidden';
+              this.itemArrayz="";
+              this.itemvalz="";
+            }
+            if(len>1){
+              this.querySelector('paper-listbox').style.visibility='visible';
+              var backsubval=(((this.referrername).substring(0,(len-1))).trim()).toUpperCase();
+              for(var i=0;i<namearrz.length;i++)
+              {
+                var subval=((namearrz[i].listname).trim()).substring(0,backsubval.length);
+                if((namearrz[i].listname).toUpperCase().indexOf((this.refferername).toUpperCase())!=-1)
+                {
+                  var obj={"itemdesz":""};
+                  obj.itemdesz=namearrz[i].listname;
+                  arr.push(obj);
+                }
+              }
+              this.itemArrayz=arr;
+            }
+          }
+          if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+            if(this.itemflagz=="true") {
+              this.itemvalz = (this.referrername).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+              this.itemflagz="false";
+            }
+            else
+            this.itemvalz = this.referrername +String.fromCharCode((e.keyCode));
+            if(this.itemvalz.length>0)
+            {
+              for(var i=0;i<namearrz.length;i++){
+                var subval=((namearrz[i].listname).trim()).substring(0,this.itemvalz.length);
+                if((namearrz[i].listname).toUpperCase().indexOf((this.itemvalz).toUpperCase())!=-1)
+                {
+                  var obj={"itemdesz":""};
+                  obj.itemdesz=namearrz[i].listname;
+                  arr.push(obj);
+                }
+              }
+              if(arr.length>0)
+                this.itemArrayz=arr;
+              else {
+                var obj={"itemdesz":""};
+                  obj.itemdesz="NO Item Found";
+                  arr.push(obj);
+                this.itemArrayz=arr;
+              }
+            }
+          }
+
+        },
+        Fnselectedz:function(e)
+        {
+          //alert('s');
+          this.querySelector('paper-listbox').style.visibility='hidden';
+          this.referrername = e.target.selectedItem.textContent.trim();
+          this.itemArrayz=[];
+          document.querySelector('#itemlist').selected=-1;
+          this.$.itemlistz.hidden=true;
+        },
+      getclasses:function(){
+      this.getclassesurl=sessionStorage.getItem("addrinfo")+"/getclasses";
+        var obj={"schol":""};
+        obj.schol=localStorage.getItem("schoolid");
+        this.getclassesparam=obj;
+       alert(JSON.stringify(obj));
+        this.$.getclassesajax.generateRequest();
+     },
+     getclassesResponse:function(e){
+        var result=e.detail.response.returnval;
+        alert(JSON.stringify(result));
+       this.itemarr=result;
+       //document.querySelector('detailed-enquiry-form').itemarr=result;
+       // document.querySelector('admission-approval-card').itemarr=result;
+     },
+    });
+  })();
+  </script>
+</dom-module>

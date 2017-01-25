@@ -1,0 +1,46 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="chequebounceorcancel-item-card">
+  <template>
+    <style>
+    </style>
+    <div>
+      <table class="table table-hover" id="collectionreport">
+      <thead>
+      <tr>
+        <td>{{sno}}</td><td>{{enrno}}</td><td>{{studentname}}</td><td>{{grade}}</td><td>{{installmenttype}}</td><td>{{chequeno}}</td><td>{{bankname}}</td><td>{{paiddate}}</td><td>{{installmentamount}}</td><td><paper-checkbox id="bounce{{sno}}" class="checkbox" on-change="FnBounceHandler" style="margin-top: -1%;"></paper-checkbox></td><td><paper-checkbox id="cancel{{sno}}" class="checkbox" on-change="FnCancelHandler" style="margin-top: -1%;"></paper-checkbox></td>
+      </tr>
+      <!-- </thead> -->
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var chequestatus="";
+    var checkedbox="";
+    Polymer({
+      is: 'chequebounceorcancel-item-card',
+      FnBounceHandler:function(e){
+        chequestatus="bounced";
+        // alert(document.querySelector('#bounce'+this.sno).checked);
+        if(document.querySelector('#bounce'+this.sno).checked==true)
+        document.querySelector('chequebounceorcancel-card').FnPushPopCheques(this.sno,chequestatus,1);
+        if(document.querySelector('#bounce'+this.sno).checked==false)
+        document.querySelector('chequebounceorcancel-card').FnPushPopCheques(this.sno,chequestatus,0);
+      },
+      FnCancelHandler:function(e){
+        chequestatus="cancelled";
+        // alert(document.querySelector('#cancel'+this.sno).checked);
+        if(document.querySelector('#cancel'+this.sno).checked==true)
+        document.querySelector('chequebounceorcancel-card').FnPushPopCheques(this.sno,chequestatus,1);
+        if(document.querySelector('#cancel'+this.sno).checked==false)
+        document.querySelector('chequebounceorcancel-card').FnPushPopCheques(this.sno,chequestatus,0);
+      },
+      FnRefresh:function(){
+
+      }     
+    });
+  })();
+  </script>
+</dom-module>

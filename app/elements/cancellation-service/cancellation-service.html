@@ -1,0 +1,185 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="cancellation-service">
+  <template>
+  <!-- It will read the total count of admitted students -->
+    <iron-ajax
+        method="post"
+        id="getadmittedcountajax"
+        url="{{getadmittedcounturl}}"
+        params="{{getadmittedcountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getadmittedcountResponse"
+        debounce-duration="300"
+        >
+  <!-- It will read the total count of cancelled students -->
+    <iron-ajax
+        method="post"
+        id="getcancelledcountajax"
+        url="{{getcancelledcounturl}}"
+        params="{{getcancelledcountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getcancelledcountResponse"
+        debounce-duration="300"
+        >
+    <!-- It will read the total count of cancelled students -->
+    <iron-ajax
+        method="post"
+        id="fetchstudentinfoforpreviewajax"
+        url="{{fetchstudentinfoforpreviewurl}}"
+        params="{{fetchstudentinfoforpreviewparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentinfoforpreviewResponse"
+        debounce-duration="300"
+        >
+    <!-- It will read the total count of cancelled students -->
+    <iron-ajax
+        method="post"
+        id="cancelenrollmentajax"
+        url="{{cancelenrollmenturl}}"
+        params="{{cancelenrollmentparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="cancelenrollmentResponse"
+        debounce-duration="300"
+        >
+     <!-- It would fetch the enrollements -->
+     <iron-ajax
+        method="post"
+        id="fetchallenrollmentsforsearchajax"
+        url="{{fetchallenrollmentsforsearchurl}}"
+        params="{{fetchallenrollmentsforsearchparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallenrollmentsforsearchResponse"
+        debounce-duration="300"
+        >
+     <!-- It would fetch info for tc-->
+     <iron-ajax
+        method="post"
+        id="fetchinfofortcajax"
+        url="{{fetchinfofortcurl}}"
+        params="{{fetchinfofortcparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchinfofortcResponse"
+        debounce-duration="300"
+        >
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var admission_no="";
+    var academic_year="";
+    var class_for_admission="";
+    Polymer({
+      is: 'cancellation-service',
+      getadmittedcount:function(){
+        this.getadmittedcounturl=sessionStorage.getItem("addrinfo")+"/getadmittedcount";
+        var obj={"schol":"","status":"","academicyear":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.status="Admitted";
+        obj.academicyear=sessionStorage.getItem("curr_sess_academicyear");
+        this.getadmittedcountparam=obj;
+       //alert(JSON.stringify(obj));
+        this.$.getadmittedcountajax.generateRequest();
+      },
+      getadmittedcountResponse:function(e){
+      var result=e.detail.response.returnval;
+      document.querySelector('enrollment-dashboard').gradewiseadmittedarr=result;
+      },
+      getcancelledcount:function(){
+        this.getcancelledcounturl=sessionStorage.getItem("addrinfo")+"/getcancelledcount";
+        var obj={"schol":"","status":"","academicyear":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.status="Cancelled";
+        obj.academicyear=sessionStorage.getItem("curr_sess_academicyear");
+        this.getcancelledcountparam=obj;
+       //alert(JSON.stringify(obj));
+        this.$.getcancelledcountajax.generateRequest();
+      },
+      getcancelledcountResponse:function(e){
+      var result=e.detail.response.returnval;
+      document.querySelector('enrollment-dashboard').gradewisecancelledarr=result;
+      },
+      enrollmentcancelService:function(admissionno,academicyear,grade,reason){
+        this.cancelenrollmenturl=sessionStorage.getItem("addrinfo")+"/cancelenrollment-service";
+        var obj={};
+        obj.admissionno=admissionno;
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        obj.reason=reason;
+        admission_no=admissionno;
+        academic_year=academicyear;
+        class_for_admission=grade;
+        obj.schoolid=localStorage.getItem("schoolid");        
+        // obj.academicyear=sessionStorage.getItem("curr_sess_academicyear");
+        this.cancelenrollmentparam=obj;
+        this.$.cancelenrollmentajax.generateRequest();
+      },
+      cancelenrollmentResponse:function(e){
+        alert(e.detail.response.returnval);
+        if(e.detail.response.returnval=='Cancelled!'){
+          this.fetchinfofortcService();
+          // this.getadmittedcount();
+          // this.getcancelledcount();
+          // document.querySelector('cancel-enrollment-card').FnHideview(true,false);  
+          // document.querySelector('cancel-enrollment-card').FnRefresh(); 
+
+        }
+      },
+      fetchinfofortcService:function(){
+        this.fetchinfofortcurl=sessionStorage.getItem("addrinfo")+"/fetchinfofortc-service";
+        var obj={};
+        obj.admissionno=admission_no;
+        obj.academicyear=academic_year;
+        obj.grade=class_for_admission;
+        obj.schoolid=localStorage.getItem("schoolid");        
+        this.fetchinfofortcparam=obj;
+        this.$.fetchinfofortcajax.generateRequest();
+      },
+      fetchinfofortcResponse:function(e){
+        document.querySelector('generate-tc-homecard').tcarr=e.detail.response.returnval;
+        document.querySelector('CRM-app').setPage('generate-tc-homecard');
+      },
+      fetchallenrollmentsforsearchService:function(){
+        this.fetchallenrollmentsforsearchurl=sessionStorage.getItem("addrinfo")+"/fetchallenrollmentsforsearch-service";
+        var obj={"schoolid":"","academicyear":"","statusflag":""}  
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=sessionStorage.getItem("curr_sess_academicyear");  
+        this.fetchallenrollmentsforsearchparam=obj;     
+        this.$.fetchallenrollmentsforsearchajax.generateRequest();
+      },
+      fetchallenrollmentsforsearchResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        document.querySelector('cancel-enrollment-card').autocompletearr(e.detail.response.returnval);
+      },
+      fetchstudentinfoforpreviewService:function(admissionno){
+        this.fetchstudentinfoforpreviewurl=sessionStorage.getItem("addrinfo")+"/fetchstudentinfoforpreview-service";
+        var obj={};
+        obj.admissionno=admissionno;
+        obj.schoolid=localStorage.getItem("schoolid");        
+        obj.academicyear=sessionStorage.getItem("curr_sess_academicyear");
+        this.fetchstudentinfoforpreviewparam=obj;
+        this.$.fetchstudentinfoforpreviewajax.generateRequest();
+      },
+      fetchstudentinfoforpreviewResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        if(arr!='no rows'){
+        document.querySelector('cancel-enrollment-card').FnHideview(false,true);
+        document.querySelector('cancel-enrollment-card').cancelarr=arr;
+        }
+        else{
+        arr=[];
+        document.querySelector('cancel-enrollment-itemcard').cancelarr=arr;
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>

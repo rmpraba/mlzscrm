@@ -1,0 +1,59 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="enrollment-dashboard">
+  <template>
+
+    <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-phone" aria-hidden="true"></i> Enrollment
+        <span class="pull-right">
+          <span class="panel-icon"><a href=""><i class="fa fa-plus" aria-hidden="true" data-toggle="modal" data-target="#addEnquiry"></i></a></span>
+          <span class="panel-icon"><a href=""><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></span>
+          <span class="panel-icon"><a href=""><i class="fa fa-trash" aria-hidden="true"></i></a></span>
+        </span>
+    </div>
+    <div class="panel-body">
+      <div class="list-group">
+        <div class="col-sm-6">Enrolled</div>
+        <div class="col-sm-6">Cancelled</div>
+      </div>
+     <div class="col-sm-6">
+     <template  is="dom-repeat" items="{{gradewiseadmittedarr}}" as="view">
+        <grade-count-itemcard grade="{{view.class}}" enquirygrade="{{view.total}}" gradestatus="{{view.status}}"></grade-count-itemcard>
+      </template>
+     </div>
+     <div class="col-sm-6">
+      <template  is="dom-repeat" items="{{gradewisecancelledarr}}" as="view">
+        <grade-count-itemcard grade="{{view.class}}" enquirygrade="{{view.total}}" gradestatus="{{view.status}}"></grade-count-itemcard>
+      </template>
+     </div>
+    </div>
+    </div>
+    <cancellation-service id="service"></cancellation-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'enrollment-dashboard',
+      ready:function(){ 
+          var d=new Date();
+          var y=d.getFullYear();
+          var m=d.getMonth()+1;
+          var academicyear="";
+          if(m<=4)
+          {
+            academicyear="AY-"+(parseInt(y)-1)+"-"+y;
+          }
+          else{
+            academicyear="AY-"+y+"-"+(parseInt(y)+1);
+          }
+          // alert(academicyear);
+          sessionStorage.setItem("curr_sess_academicyear",academicyear);         
+          this.$.service.getadmittedcount();
+          this.$.service.getcancelledcount();
+      }
+    });
+  })();
+  </script>
+</dom-module>

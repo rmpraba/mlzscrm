@@ -1,0 +1,42 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="generate-tc-card">
+  <template>
+    <style>
+    #itemcard{
+      margin-left: 10%;
+    }
+    </style>
+    <div>      
+      <h3 style="margin-left: 12%;">Transfer Certificate</h3>
+      <br>
+      <table id="itemcard" class="table table-hover">
+        <tr><th>Enrollment Number</th><th width="40px;"></th><th>{{admissionno}}</th></tr>
+        <tr><th>Student</th><th width="40px;"></th><th>{{student}}</th></tr>
+        <tr><th>Father</th><th width="40px;"></th><th>{{father}}</th></tr>
+        <tr><th>Mother</th><th width="40px;"></th><th>{{mother}}</th></tr>
+        <tr><th>Date Of Birth</th><th width="40px;"></th><th>{{dob}}</th></tr>
+        <tr><th>Nationality</th><th width="40px;"></th><th>{{nationality}}</th></tr>
+        <tr><th>Caste</th><th width="40px;"></th><th>{{caste}}</th></tr>
+        <tr><th>Mother Toungue</th><th width="40px;"></th><th>{{mothertoungue}}</th></tr>
+        <tr><th>Class</th><th width="40px;"></th><th>{{class}}</th></th>
+        <tr><th>Date Of Joining</th><th width="40px;"></th><th>{{doj}}</th></tr>
+        <tr><th>Academic Year</th><th width="40px;"></th><th>{{academicyear}}</th></tr>
+        <tr><th>Date Of Leaving</th><th width="40px;"></th><th>{{dol}}</th></tr>
+        <tr><th>Conduct & Character</th><th width="40px;"></th><th><paper-input value="{{conduct}}"></paper-input></th></tr>
+        <tr><th>Reason For Leaving</th><th width="40px;"></th><th>{{reason}}</th></tr>
+        <tr><th>No Dues Till Date</th><th width="40px;"></th><th>{{dues}}</th></tr>
+        <tr><th>Remarks</td><th width="40px;"></th><td><paper-input value="{{remarks}}"></paper-input></th></tr>
+      </table>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'generate-tc-card',
+    });
+  })();
+  </script>
+</dom-module>

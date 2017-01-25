@@ -1,0 +1,28 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="schooltypegrade-checkcard">
+  <template>
+    <style>
+    </style>
+    <div>
+    <paper-checkbox id="stformgrade" class="checkbox" on-change="gradeHandler" value="{{gradeid}}">{{gradename}}</paper-checkbox>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'schooltypegrade-checkcard',
+      ready:function(){
+      },
+      gradeHandler:function(e){
+        if(this.$.stformgrade.checked==true)
+        document.querySelector('schooltype-to-grade-displaycard').FnSetGrade(this.gradeid,true);
+        else if(this.$.stformgrade.checked==false)
+        document.querySelector('schooltype-to-grade-displaycard').FnSetGrade(this.gradeid,false);
+      }
+    });
+  })();
+  </script>
+</dom-module>

@@ -1,0 +1,128 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="dailycollection-report">
+  <template>
+    <style>
+      .datecard {
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <div class="col-md-6"> -->
+                <div class="col-md-2" style="margin-top: 2%;">
+                  <fromdate-icon-pickercard></fromdate-icon-pickercard>
+                </div>
+                <div class="col-md-1" style="margin-top: 2%;margin-left: -3%;">
+                  <todate-icon-pickercard></todate-icon-pickercard>
+                </div>
+                <div class="col-sm-2" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Grade" attr-for-selected="value">
+                  <paper-menu id="dailycollectiongrade" class="dropdown-content" required on-iron-select="FnSelectGrade" valueattr="value" >
+                    <template  is="dom-repeat" items="{{gradearr}}" as="item">
+                    <paper-item value="{{item.grade_id}}">{{item.grade_name}}</paper-item>
+                    </template>
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div>
+                <div class="col-md-1" style="margin-top: 2.5%;margin-left: 10%;">
+                  <paper-button style="height:30px;text-transform: none;" on-click="FnView" class="btn btn-primary">View</paper-button>
+                </div>
+
+                <div class="col-md-1" style="margin-top: 1%;margin-left: 22%;">
+                <p>Download
+                <a href="#">
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('dailycollectionreport', 'Daily collection report')"></span>
+                </a>
+                </p>
+                </div>  
+            </div>
+          </div>
+        </div>
+    </div>
+    <div  id="dailycollectionreport">
+    <template is="dom-repeat" items="{{dailycollectionarr}}" as="item">
+    
+    <template is="dom-repeat" items="{{item.feearr}}" as="f">
+    <h4>{{item.installment}}: {{f.collectiontype}}</h4>
+     <table class="table table-hover">
+      <thead>
+      <tr>
+        <!-- <th>Sno</th> -->
+        <th>Enr/Enq No</th><th>Student Name</th><th>Grade</th><th hidden$="{{f.hidecheque}}">Cheque No</th><th hidden$="{{f.hidecheque}}">Bank Name</th><th hidden$="{{f.hidecheque}}">Cheque Date</th><th>Receipt/Ack No</th><th>Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+      <template  is="dom-repeat" items="{{f.Cash}}" as="cash">
+        <tr>
+        <!-- <td>{{cash.sno}}</td> -->
+        <td>{{cash.admissionno}}</td><td>{{cash.studentname}}</td><td>{{cash.grade}}</td><td hidden$="{{f.hidecheque}}">{{cash.chequeno}}</td><td hidden$="{{f.hidecheque}}">{{cash.bankname}}</td><td hidden$="{{f.hidecheque}}">{{cash.chequedate}}</td>
+        <td>{{cash.receiptno}}</td><td>{{cash.installmentamount}}</td></tr>
+      </template>
+      <tr><th colspan="8"></th> <th style="text-align: right;right:5%;position: absolute;">Total Amount: &nbsp;&nbsp;{{f.total}}</th></tr>
+      </tbody>
+    </table> 
+   
+    </template>   
+    </template>
+    <br>
+    <div style='margin-left: 30%;'>
+    <table>
+    <tr>
+    <th>Collection By Cash: </th><th style="width: 3%;"></th><th>{{collectionbycash}}</th>
+    </tr>
+    <tr>
+    <th>Collection By Cheque: </th><th style="width: 3%;"></th><th>{{collectionbycheque}}</th>
+    </tr>
+    <tr>
+    <th>Total Collection : </th><th style="width: 3%;"></th><th>{{totalcollection}}</th>
+    </tr>
+    </table>    
+    </div>
+    </div>
+    <fee-report-service id="feereportservice"></fee-report-service>
+  </template>
+  <script type="text/javascript">
+      var tableToExcel = (function() {
+      var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+     return function(table, name) {
+     if (!table.nodeType) table = document.getElementById(table)
+     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+     window.location.href = uri + base64(format(template, ctx))
+     }
+     })()
+  </script>
+  <script>
+  (function() {
+    'use strict';
+    var grade;
+    Polymer({
+      is: 'dailycollection-report',
+      FnCallService:function(){        
+        this.$.feereportservice.FnFetchDailyFeeReportService("All Grades");
+      },
+      FnView:function(){
+        this.$.feereportservice.FnFetchDailyFeeReportService(grade);
+      },
+      FnSelectGrade:function(e){
+        grade=(e.target.selectedItem.textContent).trim();
+      },
+      FnRefresh:function(){
+        document.querySelector('#dailycollectiongrade').selected=-1;
+        this.dailycollectionarr="";
+        this.collectionbycash="";
+        this.collectionbycheque="";
+        this.totalcollection="";
+        document.querySelector('fromdate-icon-pickercard').ready();
+        document.querySelector('todate-icon-pickercard').ready();
+      }
+    });
+  })();
+  </script>
+</dom-module>

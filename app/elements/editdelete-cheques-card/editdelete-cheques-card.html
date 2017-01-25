@@ -1,0 +1,192 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\editdelete-cheques-itemcard/editdelete-cheques-itemcard.html">
+
+<dom-module id="editdelete-cheques-card">
+  <template>
+    <style>
+    </style>
+     <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <div class="col-md-6"> -->
+                <div class="col-md-3" style="margin-top: -1%;">
+                   <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchEnquiry"></paper-input>
+                   <paper-listbox class="dropdown-content" id="input2" on-iron-select="FnSelectEnquiry">
+                   <template is="dom-repeat" items="{{itemArray}}" as="item">
+                   <paper-item value="{{item.admission_no}}">{{item.itemdes}}</paper-item>
+                   </template>
+                   </paper-listbox>
+                </div>
+                <div class="col-md-1" style="margin-top: 2%;">
+                <label>(OR)</label>
+                </div>
+                <div class="col-md-3" style="margin-top: -2%;">
+                   <paper-input  label="Cheque No" is="" value="{{chequeno}}">
+                   <paper-icon-button suffix icon="search" on-click="FnSearchbychequeno" title="Search"></paper-icon-button>
+                   </paper-input>
+                </div>
+               <!--  <div class="col-md-2" style="margin-top: 1%;">
+                  <paper-button on-click="FnView" class="btn btn-primary">View</paper-button>
+                </div> -->
+                <!-- <div class="col-md-2" style="margin-top: 1%;">
+                  <paper-button on-click="FnSubmit" class="btn btn-primary">Process</paper-button>
+                </div> -->
+            </div>
+          </div>
+        </div>
+    </div>
+     <div>
+      <table class="table table-hover" id="bounceprocessreport">
+      <thead>
+      <tr>
+        <th>Sno</th><th>Enr/Enq No</th><th>Student Name</th><th>Grade</th><th>Installment Type</th><th>Cheque No</th><th>Bank Name</th><th>Cheque Date</th><th>Amount</th><th>Received Date</th><th>Edit/Delete</th>
+      </tr>
+      <tr>
+      <td colspan="10">
+        <template  is="dom-repeat" items="{{chequearr}}" as="item">
+        <editdelete-cheques-itemcard sno="{{item.sno}}" enrno="{{item.admission_no}}" studentname="{{item.student_name}}" grade="{{item.grade}}" installmenttype="{{item.installment_type}}" chequeno="{{item.cheque_no}}" bankname="{{item.bank_name}}" paiddate="{{item.paid_date}}" installmentamount="{{item.installment_amount}}" chequedate="{{item.cheque_date}}"></editdelete-cheques-itemcard>
+        </template>
+      </td>
+      </tr>
+      </thead>
+      </table>
+    </div>
+    <admission-service id="admissionservice"></admission-service>
+    <processing-service id="processingservice"></processing-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var item=[];
+    var allchequesarr=[];
+    var cheques=[];
+    Polymer({
+      is: 'editdelete-cheques-card',
+      ready:function(){
+        this.querySelector('paper-listbox').style.visibility='hidden';
+      },
+      FnSetChequeArray:function(arr){
+        allchequesarr=arr;
+      },
+      FnPushPopCheques:function(sno,chequestatus,flag){
+        // alert(sno+"  "+flag)
+        if(flag==1)
+        {
+          for(var i=0;i<allchequesarr.length;i++){
+            if(allchequesarr[i].sno==sno){
+              allchequesarr[i].status=chequestatus;
+              cheques.push(allchequesarr[i]);
+            }
+          }
+        }
+        if(flag==0)
+        {
+          for(var i=0;i<cheques.length;i++){
+            if(cheques[i].sno==sno){
+              cheques.splice(i,1);
+            }
+          }
+        }
+      },
+      FnSubmit:function(){  
+        // alert(JSON.stringify(cheques));
+        if(cheques.length>0) {
+        this.$.processingservice.FnUpdateChequeStatus(cheques);
+        }
+        else
+        alert('No cheques are exist to process!!!');       
+      },
+      callService:function(){
+        this.$.admissionservice.fetchallstudentforsearchService();
+      },
+      autocompletearr:function(autocompletearr)
+      {
+         item=autocompletearr;
+      },
+
+      FnSearchEnquiry:function(e){
+      if(e.keyCode==13|| e.keyCode==40)
+      this.querySelector('paper-listbox').focus();
+      var arr=[];
+      arr.push({"itemdes":"-----Select-----"});
+      this.querySelector('paper-listbox').style.visibility='visible';
+      if(e.keyCode==8){
+        this.itemflag="true";
+        this.itemval="";
+        //alert('yes');
+        var len=(this.value).length;
+        if(len<=1){
+          this.querySelector('paper-listbox').style.visibility='hidden';
+          this.itemArray="";
+          this.itemval="";
+        }
+        if(len>1){
+          this.querySelector('paper-listbox').style.visibility='visible';
+          var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,backsubval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.value).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          this.itemArray=arr;
+        }
+      }
+      if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+        if(this.itemflag=="true") {
+          this.itemval = (this.value).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+          this.itemflag="false";
+        }
+        else
+        this.itemval = this.value +String.fromCharCode((e.keyCode));
+        if(this.itemval.length>0)
+        {
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,this.itemval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.itemval).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          if(arr.length>0)
+            this.itemArray=arr;
+          else
+          {
+            var obj={"itemdes":"","enquiry_no":""};
+            obj.itemdes="No items found";
+            arr.push(obj);
+            this.itemArray=arr;
+          }
+        }
+      }
+    },
+    FnSelectEnquiry:function(e){
+    this.querySelector('paper-listbox').style.visibility='hidden';
+    var enquiry_name = e.target.selectedItem.textContent.trim();
+    var admission_no = e.target.selectedItem.value.trim();
+    localStorage.setItem("curr_sess_enquiryno",admission_no);
+    localStorage.setItem("curr_sess_enquiryname",enquiry_name);
+    this.itemArray=[];
+    document.querySelector('#input2').selected=-1;
+    this.value=enquiry_name;
+    this.$.processingservice.fetchchequeforeditordelete(admission_no);
+    },
+    FnSearchbychequeno:function(){
+    localStorage.setItem("curr_sess_enquiryno",this.chequeno);
+    this.$.processingservice.fetchchequeforeditordelete(this.chequeno);
+    }
+    });
+  })();
+  </script>
+</dom-module>

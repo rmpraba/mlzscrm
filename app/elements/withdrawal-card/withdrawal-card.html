@@ -1,0 +1,145 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\withdrawal-showitem-card/withdrawal-showitem-card.html">
+
+
+<dom-module id="withdrawal-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      #withdrawdialog{
+        /*width:60%;*/
+      }
+      .layout{
+        @apply(--layout-horizontal);
+      }
+      paper-input{
+        margin-left: 4%;
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <div class="col-md-6"> -->
+                <div class="col-md-3" style="margin-top: -2%;">               
+                  <paper-input id="searchtext" label="Enter Enquiry/Admission Number/Name" value="{{enquiryno}}">
+                    <paper-icon-button suffix icon="search" on-click="FnSearchEnquiry" title="Search"></paper-icon-button>
+                  </paper-input>
+                </div>
+                <div class="col-md-3" style="margin-top: -1%;">
+                  <paper-dropdown-menu label="Select Enquiry/Admission No" on-iron-select="FnSelectEnquiry">
+                    <paper-listbox class="dropdown-content" id="withdrawenrsearch">
+                    <template  is="dom-repeat" items="{{enquiryarr}}" as="item">
+                      <paper-item value="{{item.enquiry_no}}">{{item.enquiry_no}}-{{item.enquiry_name}}</paper-item>
+                    </template>
+                    </paper-listbox>
+                  </paper-dropdown-menu>
+                </div>
+                <div class="col-md-2" style="margin-top: 1%;">
+                  <paper-button on-click="FnProcess" class="btn btn-primary">Process</paper-button>
+                </div>
+                <!-- <div class="col-md-2" style="margin-top: 1%;">
+                  <input type="button" id="btn2" onclick="tableToExcel('realizationreport', 'Fee Collection Report')" value="Export to Excel">
+                </div> -->
+            </div>
+          </div>
+        </div>
+    </div>
+    <div>
+      <table class="table table-hover" id="realizationreport">
+      <thead>
+      <tr>
+        <th>Sno</th><th>Enr/Enq No</th><th>Student Name</th><th>Grade</th><th>Installment Type</th><th>Cheque No</th><th>Received Date</th><th>Amount</th><th>Paid Status</th>
+      </tr>
+      <tr>
+      <td colspan="10">
+        <template  is="dom-repeat" items="{{chequearr}}" as="item">
+        <withdrawal-showitem-card sno="{{item.sno}}" enrno="{{item.admission_no}}" studentname="{{item.student_name}}" grade="{{item.grade}}" installmenttype="{{item.installment_type}}" chequeno="{{item.cheque_no}}" bankname="{{item.bank_name}}" paiddate="{{item.paid_date}}" installmentamount="{{item.installment_amount}}" chequestatus="{{item.paid_status}}"></withdrawal-showitem-card>
+        </template>
+      </td>
+      </tr>
+      </thead>
+      </table>
+    </div>
+
+    <paper-dialog id="withdrawdialog" modal>
+    <h4>Amount to return</h4>
+     <div  class="layout"><paper-input required error-message="Requiress amount!"  id="wpayableamount" label="Total Paid Amount" value="{{payableamount}}"> </paper-input>
+     <paper-input required error-message="Requires amount!"  id="wpaidamount" label="Realized Amount" value="{{paidamount}}"> </paper-input></div>
+     
+     <div  class="layout"> <paper-input required  error-message="Requires amount!"  id="wreturnamount" label="Amount To Return" value="{{amounttoreturn}}"> </paper-input>
+      <paper-radio-group selected="Cheque" on-iron-select="FnSelectPayType">
+       <paper-radio-button name="Cheque">Cheque</paper-radio-button>
+       <paper-radio-button name="Cash">Cash</paper-radio-button>
+      </paper-radio-group>
+    </div>
+
+     <div  class="layout"> 
+      <receiptdatepicker-card></receiptdatepicker-card> 
+      <paper-input required error-message="Requires bankname!"  id="wbankname" label="Bank Name" value="{{bankname}}"> </paper-input>
+       
+     </div>
+     
+     <div  class="layout" hidden$="{{hidechequeinfo}}"> 
+      <paper-input required error-message="Requires chequeno!"  id="wchequeno" label="Cheque No" value="{{chequeno}}"> </paper-input>
+      <paper-input required error-message="Requires bankname!"  id="wreason" label="Reason..." value="{{reason}}"> </paper-input></div>
+     
+    <div class="buttons">
+      <paper-button id="wgenerate" on-click="FnGenerate">Generate</paper-button>
+      <paper-button id="wcancel" on-click="FnCancel">Cancel</paper-button>
+    </div>     
+    </paper-dialog>
+
+    <processing-service id="processingservice"></processing-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var paytype='Cheque';
+    Polymer({
+      is: 'withdrawal-card',
+      ready:function(){
+        this.hidechequeinfo=false;
+      },
+      FnSearchEnquiry:function(){
+        document.querySelector('#withdrawenrsearch').selected="-1";
+        this.$.processingservice.searchfeeadmissionService(this.enquiryno);
+      },
+      FnSelectEnquiry:function(e){
+        var enquiry=(e.target.selectedItem.textContent).trim();
+        var inx=enquiry.indexOf('-');
+        var enquiry_no=enquiry.substring(0,inx);
+        var enquiry_name=enquiry.substring(inx+1);
+        localStorage.setItem("curr_sess_enquiryno",enquiry_no);
+        localStorage.setItem("curr_sess_enquiryname",enquiry_name);
+        this.$.processingservice.searchwithdrawchequesService(enquiry_no);
+      },
+      FnProcess:function(){
+        this.$.withdrawdialog.toggle();
+      },
+      FnSelectPayType:function(e){
+        // alert(e.target.selectedItem.textContent);
+        paytype=(e.target.selectedItem.textContent).trim();
+        if(paytype=="Cash")
+          this.hidechequeinfo=true;
+        else
+          this.hidechequeinfo=false;
+      },
+      FnGenerate:function(){
+        this.$.withdrawdialog.toggle();
+        var feereceiptarr=[];
+        if(this.amounttoreturn>0)
+        {
+         this.$.processingservice.FnInsertreturninfo(this.payableamount,this.paidamount,this.amounttoreturn,this.chequeno,this.bankname,paytype);           
+        }
+      },
+      FnCancel:function(){
+        this.$.withdrawdialog.toggle();
+      }
+    });
+  })();
+  </script>
+</dom-module>

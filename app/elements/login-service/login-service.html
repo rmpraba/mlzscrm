@@ -1,0 +1,118 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../crm-service/crm-service.html">
+<dom-module id="login-service">
+  <template>
+  <!-- this ajax takes the value for the address from configuration file -->
+   <iron-ajax
+        auto
+        id="addressajax"
+        url="../../configfile/address.json"
+        handle-as="json"
+        content-type="application/json"
+        on-response="addressResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+
+
+
+  <!-- this below function is to do verify the login information from the database -->
+  <iron-ajax
+        method="post"
+        id="loginpageajax"
+        url="{{loginpageurl}}"
+        params="{{loginpageparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="loginpageResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+ <crm-service id="service"></crm-service>
+  </template>
+
+  <script>
+  (function() {
+    var addr;
+    Polymer({
+      is: "login-service",
+
+      addinfoconfig:function(){
+          this.$.addressajax.generateRequest();
+      },
+      
+     addressResponse:function(e)
+      {
+        addr=e.detail.response.address;
+        // alert(addr);
+        sessionStorage.setItem("addrinfo",addr);
+        //alert(JSON.stringify(e.detail.response.address));
+      },
+      Fn_login_userlogin:function(username,password){ 
+         this.loginpageurl=sessionStorage.getItem("addrinfo")+"/loginpage";
+        var obj={"username":"","password":""}
+        obj.username=username;
+        obj.password=password;
+        this.loginpageparam=obj;
+       //alert(JSON.stringify(obj));
+        this.$.loginpageajax.generateRequest();
+      },
+      loginpageResponse:function(e){
+        var result=e.detail.response.returnval;
+        // alert(JSON.stringify(result));
+        if(result.length<=0){
+          alert("Username and Password is incorrect..!");
+        } else {
+          var shortname= result[0].shortname;
+          var school= result[0].schoolname;
+          var role=result[0].role_name;
+          var employeename=result[0].employee_name;
+          var roleid=result[0].role_id;
+          var schoolid=result[0].school_id;
+          var employeeid=result[0].employee_id;
+          var address=result[0].address;
+
+          var pr_dashboear=result[0].rt_dashboard;
+          var pr_enquiry=result[0].rt_enquiry;
+          var pr_admission_form=result[0].rt_admission_form;
+          var pr_adm_approval=result[0].rt_adm_approval;
+          var pr_followup=result[0].rt_followup;
+          var pr_collectionentry=result[0].rt_collectionentry;
+
+
+          localStorage.setItem("dashboard",pr_dashboear);
+          localStorage.setItem("enquiry",pr_enquiry);
+          localStorage.setItem("admissionform",pr_admission_form);
+          localStorage.setItem("admapproval",pr_adm_approval);
+          localStorage.setItem("followup",pr_followup);
+          localStorage.setItem("collectionentry",pr_collectionentry);
+
+/*document.querySelector('navigation-bar').Fn_access_rights(pr_enquiry,pr_followup,pr_dashboear,pr_admission_form,pr_adm_approval,pr_collectionentry)*/
+            
+          // document.querySelector('navigation-bar').Fncheck();
+
+          localStorage.setItem("shortname",shortname);
+          localStorage.setItem("schoolname",school);
+          localStorage.setItem("employeename",employeename);
+          localStorage.setItem("schoolid",schoolid);
+          localStorage.setItem("roleid",roleid);
+          localStorage.setItem("employeeid",employeeid);
+          localStorage.setItem("schooladdress",address);
+
+        document.querySelector('navigation-bar').setRoleview();
+        //alert(school+'   '+role+'    '+employeename+'    '+roleid);
+        document.querySelector('CRM-app').setPage("applist");
+        document.querySelector('app-list').setPage("enquiry","Enquiry");
+        document.querySelector('followup-service').gettotalfollowupcounttoday();
+        }
+      }
+
+
+     
+      });
+      })();
+  </script>
+
+</dom-module>
+

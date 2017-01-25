@@ -1,0 +1,149 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="promotion-service">
+  <template>
+    <!-- Promotion from Old academic year to new academic year-->
+     <iron-ajax
+        method="post"
+        id="fetchstudentforpromotionajax"
+        url="{{fetchstudentforpromotionurl}}"
+        params="{{fetchstudentforpromotionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentforpromotionResponse"
+        debounce-duration="300"
+        >
+    <!-- Promotion from Old academic year to new academic year-->
+     <iron-ajax
+        method="post"
+        id="promotioninsertajax"
+        url="{{promotioninserturl}}"
+        params="{{promotioninsertparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="promotioninsertResponse"
+        debounce-duration="300"
+        >
+    <!-- Promotion from Old academic year to new academic year-->
+     <iron-ajax
+        method="post"
+        id="promotionoldactonewacajax"
+        url="{{promotionoldactonewacurl}}"
+        params="{{promotionoldactonewacparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="promotionoldactonewacResponse"
+        debounce-duration="300"
+        >
+    
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var count1=0;
+    var count2=0;
+    var promotearr=[];
+    var fromgrade="";
+    var tograde="";
+    var fromac="";
+    var toac="";
+    var c1=0,c2=0;
+    Polymer({
+      is: 'promotion-service',
+      FnSetPromotionSourcearr:function(arr,flag){
+        document.querySelector('promotion-card').FnClear();
+        for(var i=0;i<arr.length;i++){
+          arr[i].flag=flag;
+        }
+        document.querySelector('promotion-card').promotionarr=arr;
+      },
+      FnFetchstudentforpromotionService:function(fromgrade,tograde,fromac,toac){
+        this.fetchstudentforpromotionurl=sessionStorage.getItem("addrinfo")+"/fetchstudentforpromotion-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromgrade=fromgrade;
+        obj.tograde=tograde;
+        obj.fromac=fromac;
+        obj.toac=toac;
+        this.fetchstudentforpromotionparam=obj;
+        this.$.fetchstudentforpromotionajax.generateRequest();
+      },
+      fetchstudentforpromotionResponse:function(e){
+        var promotionarr=e.detail.response.returnval;
+        for(var i=0;i<promotionarr.length;i++){
+          promotionarr[i].sno=i+1;
+          promotionarr[i].flag=true;
+        }
+        // alert(JSON.stringify(promotionarr));
+        document.querySelector('promotion-card').promotionarr=promotionarr;
+        document.querySelector('promotion-card').FnSetPromotionSource(promotionarr);
+      },
+      FnpromotioninsertService:function(fromgradee,togradee,fromacc,toacc,promotearrr){
+        // alert('coming');
+        this.promotioninserturl=sessionStorage.getItem("addrinfo")+"/promotioninsert-service";
+        fromgrade=fromgradee;
+        tograde=togradee;
+        fromac=fromacc;
+        toac=toacc;
+        promotearr=promotearrr;
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromgrade=fromgradee;
+        obj.tograde=togradee;
+        obj.fromac=fromacc;
+        obj.toac=toacc;
+        for(var i=0;i<promotearrr.length;i++){
+        if(promotearrr[i].flag==true){
+        count1++;
+        obj.admissionno=promotearrr[i].admission_no;
+        this.promotioninsertparam=obj;
+        this.$.promotioninsertajax.generateRequest();
+        }
+        }
+      },
+      promotioninsertResponse:function(e){
+        // alert(e.detail.response.returnval);
+        count2++;
+        if(count1==count2){
+          // alert('Promoted Successfully!!');
+          this.FnpromotionoldactonewacService();
+          count1=0;
+          count2=0;
+        }
+      },
+      FnpromotionoldactonewacService:function(){
+        this.promotionoldactonewacurl=sessionStorage.getItem("addrinfo")+"/promotionoldactonewac-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromgrade=fromgrade;
+        obj.tograde=tograde;
+        obj.fromac=fromac;
+        obj.toac=toac;
+        for(var i=0;i<promotearr.length;i++){
+        if(promotearr[i].flag==true){
+        // alert(count1);
+        c1=c1+1;
+        obj.admissionno=promotearr[i].admission_no;
+        this.promotionoldactonewacparam=obj;
+        this.$.promotionoldactonewacajax.generateRequest();
+        }
+        }
+      },
+      promotionoldactonewacResponse:function(e){
+        // alert(e.detail.response.returnval);
+        c2++;
+        // alert(c1+"  "+c2);
+        if(c1==c2){
+          alert('Promoted Successfully!!');
+          c1=0;
+          c2=0;
+          this.FnFetchstudentforpromotionService(fromgrade,tograde,fromac,toac);
+          promotearr=[];
+          document.querySelector('promotion-card').FnClear();
+        }
+      }      
+    });
+  })();
+  </script>
+</dom-module>

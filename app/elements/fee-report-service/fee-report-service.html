@@ -1,0 +1,757 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="fee-report-service">
+  <template>
+     <!-- It would fetch fees -->
+     <iron-ajax
+        method="post"
+        id="fetchfeecollectionreportajax"
+        url="{{fetchfeecollectionreporturl}}"
+        params="{{fetchfeecollectionreportparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeecollectionreportResponse"
+        debounce-duration="300"
+        >
+        <!-- It would fetch overall fee  -->
+     <iron-ajax
+        method="post"
+        id="fetchoverallcollectionreportajax"
+        url="{{fetchoverallcollectionreporturl}}"
+        params="{{fetchoverallcollectionreportparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchoverallcollectionreportResponse"
+        debounce-duration="300"
+        >
+        <!-- It would fetch fee collection filter -->
+     <iron-ajax
+        method="post"
+        id="fetchfilterreportajax"
+        url="{{fetchfilterreporturl}}"
+        params="{{fetchfilterreportparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfilterreportResponse"
+        debounce-duration="300"
+        >
+        <!-- It would fetch the pending fee info -->
+     <iron-ajax
+        method="post"
+        id="pendingfeereportajax"
+        url="{{pendingfeereporturl}}"
+        params="{{pendingfeereportparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="pendingfeereportResponse"
+        debounce-duration="300"
+        >
+        <!-- It would fetch the pending fee collection info-->
+     <iron-ajax
+        method="post"
+        id="pendingfeecollectionreportajax"
+        url="{{pendingfeecollectionreporturl}}"
+        params="{{pendingfeecollectionreportparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="pendingfeecollectionreportResponse"
+        debounce-duration="300"
+        >
+        <!-- It would fetch daily collection-->
+     <iron-ajax
+        method="post"
+        id="dailycollectionreportajax"
+        url="{{dailycollectionreporturl}}"
+        params="{{dailycollectionreportparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="dailycollectionreportResponse"
+        debounce-duration="300"
+        >
+        <!-- It would fetch bounce cheques-->
+     <iron-ajax
+        method="post"
+        id="fetchbouncechequesajax"
+        url="{{fetchbouncechequesurl}}"
+        params="{{fetchbouncechequesparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchbouncechequesResponse"
+        debounce-duration="300"
+        >
+     <!-- It would fetch pdc cheques-->
+     <iron-ajax
+        method="post"
+        id="fetchpdcchequesajax"
+        url="{{fetchpdcchequesurl}}"
+        params="{{fetchpdcchequesparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchpdcchequesResponse"
+        debounce-duration="300"
+        >
+     <!-- It would fetch discount structure-->
+     <iron-ajax
+        method="post"
+        id="fetchdiscountstructureajax"
+        url="{{fetchdiscountstructureurl}}"
+        params="{{fetchdiscountstructureparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchdiscountstructureResponse"
+        debounce-duration="300"
+        >
+      <!-- It would fetch fee structure-->
+     <iron-ajax
+        method="post"
+        id="fetchfeestructureajax"
+        url="{{fetchfeestructureurl}}"
+        params="{{fetchfeestructureparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeestructureResponse"
+        debounce-duration="300"
+        >
+
+        <!-- It would fetch fee structure-->
+     <iron-ajax
+        method="post"
+        id="fetchgradewisefeestructureajax"
+        url="{{fetchgradewisefeestructureurl}}"
+        params="{{fetchgradewisefeestructureparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchgradewisefeestructureResponse"
+        debounce-duration="300"
+        >
+        
+
+        <!-- It would fetch fee structure-->
+     <iron-ajax
+        method="post"
+        id="fetchstructureallstudentajax"
+        url="{{fetchstructureallstudenturl}}"
+        params="{{fetchstructureallstudentparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstructureallstudentResponse"
+        debounce-duration="300"
+        >
+        
+     <iron-ajax
+        method="post"
+        id="fetchallenrolledadmissionsajax"
+        url="{{fetchallenrolledadmissionsurl}}"
+        params="{{fetchallenrolledadmissionsparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallenrolledadmissionsResponse"
+        debounce-duration="300"
+        >
+     <iron-ajax
+        method="post"
+        id="fetchallenrolledstudentsajax"
+        url="{{fetchallenrolledstudentsurl}}"
+        params="{{fetchallenrolledstudentsparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallenrolledstudentsResponse"
+        debounce-duration="300"
+        >
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var splitupamountarr=[];
+    var overallamountarr=[];
+    Polymer({
+      is: 'fee-report-service',
+      FnFetchFeeReportService:function(grade){
+        this.fetchfeecollectionreporturl=sessionStorage.getItem("addrinfo")+"/fetchfeecollectionreport-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        obj.grade=grade;
+        this.fetchfeecollectionreportparam=obj;
+        this.$.fetchfeecollectionreportajax.generateRequest();
+      },
+      fetchfeecollectionreportResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        var totalamount=0;
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+        for(var i=0;i<arr.length;i++){
+          arr[i].sno=i+1;
+          arr[i].fine_amount=0;
+          totalamount=parseFloat(parseFloat(totalamount)+parseFloat(arr[i].installment_amount)).toFixed(2);
+        }
+        }
+        else{
+          arr=[];
+        }
+        document.querySelector('fee-collection-report-card').totalamount=totalamount;
+        document.querySelector('fee-collection-report-card').collectionarr=arr;
+      },
+      FnFilterReportService:function(grade,filtertype){
+        this.fetchfilterreporturl=sessionStorage.getItem("addrinfo")+"/fetchfilterreport-service";
+        var obj={"schoolid":"","fromdate":"","todate":"","filtertype":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        obj.filtertype=filtertype;
+        obj.grade=grade;
+        this.fetchfilterreportparam=obj;
+        this.$.fetchfilterreportajax.generateRequest();
+      },
+      fetchfilterreportResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        var totalamount=0;
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+        for(var i=0;i<arr.length;i++){
+          arr[i].sno=i+1;
+          arr[i].fine_amount=0;
+          totalamount=parseFloat(parseFloat(totalamount)+parseFloat(arr[i].installment_amount)).toFixed(2);
+        }
+        }
+        else
+        {
+          arr=[];
+        }
+        document.querySelector('fee-collection-report-card').totalamount=totalamount;
+        document.querySelector('fee-collection-report-card').collectionarr=arr;
+      },
+      FnFetchOverallFeeReportService:function(){
+        this.fetchoverallcollectionreporturl=sessionStorage.getItem("addrinfo")+"/fetchoverallcollectionreport-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchoverallcollectionreportparam=obj;
+        this.$.fetchoverallcollectionreportajax.generateRequest();
+      },
+      fetchoverallcollectionreportResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+      },
+      FnFetchPendingFeeReportService:function(){
+        this.pendingfeereporturl=sessionStorage.getItem("addrinfo")+"/pendingfeereport-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.pendingfeereportparam=obj;
+        this.$.pendingfeereportajax.generateRequest();
+      },
+      pendingfeereportResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        var totalamount=0;
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+        for(var i=0;i<arr.length;i++){
+          arr[i].sno=i+1;
+          arr[i].fine_amount=0;
+          totalamount=parseFloat(parseFloat(totalamount)+parseFloat(arr[i].installment_amount)).toFixed(2);
+        }
+        }
+        else{
+          arr=[]
+        }
+        document.querySelector('pendingcheques-report').totalamount=totalamount;
+        document.querySelector('pendingcheques-report').pendingarr=arr;
+      },
+      FnFetchPendingCollectionReportService:function(academicyear,grade){
+        this.pendingfeecollectionreporturl=sessionStorage.getItem("addrinfo")+"/pendingfeecollectionreport-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        this.pendingfeecollectionreportparam=obj;
+        this.$.pendingfeecollectionreportajax.generateRequest();
+      },
+      pendingfeecollectionreportResponse:function(e){
+        var totalarr=e.detail.response.totalarr;
+        var paidarr=e.detail.response.paidarr;
+        var pendingarr=e.detail.response.pendingarr;
+        if(totalarr.length>0){
+        for(var i=0;i<totalarr.length;i++)
+        {
+          totalarr[i].sno=(i+1);
+          var paidamount=0;
+          var paidflag=0;
+          var pendingamount=0;
+          var pendingflag=0;
+          if(paidarr.length>0){
+          for(var j=0;j<paidarr.length;j++){
+            if(totalarr[i].admission_no==paidarr[j].admission_no)
+            {
+              paidflag=1;
+              paidamount=parseFloat(paidamount)+parseFloat(paidarr[j].paidamount);
+              totalarr[i].paid_amount=paidamount;
+            }
+          }
+          if(paidflag==0)
+            {
+            paidamount=parseFloat(paidamount)+parseFloat(0);
+            totalarr[i].paid_amount=paidamount;
+            }
+          paidamount=0;
+          paidflag=0;
+          }
+          if(pendingarr.length>0){
+          for(var j=0;j<pendingarr.length;j++){
+            if(totalarr[i].admission_no==pendingarr[j].admission_no)
+            {
+              pendingflag=1;
+              pendingamount=parseFloat(pendingamount)+parseFloat(pendingarr[j].pendingamount);
+              totalarr[i].pending_amount=pendingamount;
+            }
+          }
+          if(pendingflag==0)
+            {
+            pendingamount=parseFloat(pendingamount)+parseFloat(0);
+            totalarr[i].pending_amount=pendingamount;
+            }
+          pendingamount=0;
+          pendingflag=0;
+          }
+          else
+            totalarr[i].pending_amount=pendingamount;
+        }
+        }
+        // alert(JSON.stringify(totalarr));
+        if(totalarr.length>0)
+        {
+          document.querySelector('pendingfee-report').pendingfeearr=totalarr;
+        }
+        else
+        {
+          totalarr=[];
+          document.querySelector('pendingfee-report').pendingfeearr=totalarr;
+        }
+      },
+      FnFetchDailyFeeReportService:function(grade){
+        this.dailycollectionreporturl=sessionStorage.getItem("addrinfo")+"/dailycollectionreport-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        obj.grade=grade;
+        this.dailycollectionreportparam=obj;
+        this.$.dailycollectionreportajax.generateRequest();
+      },
+      dailycollectionreportResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var a=[];
+        var b=[];
+        var c=[];
+        var overall=[];
+        var cashtotal=0;
+        var chequetotal=0;
+        var collectionbycash=0;
+        var collectionbycheque=0;
+        var totalcollection=0;
+       if(arr!='no rows'){
+       for(var i=0;i<arr.length;i++)
+       {       
+        var nameobj={"installment":""};
+        nameobj.installment=arr[i].installment; 
+        var obj={"admissionno":"","studentname":"","grade":"","installment":"","modeofpayment":"","chequeno":"","bankname":"","installmentamount":"","receiptno":""};
+        var objj={"admissionno":"","studentname":"","grade":"","installment":"","modeofpayment":"","chequeno":"","bankname":"","installmentamount":"","receiptno":""};
+        if(arr[i].mode_of_payment=="Cash"){
+        // obj.sno=i+1;
+        obj.admissionno=arr[i].admission_no;
+        obj.studentname=arr[i].student_name;
+        obj.grade=arr[i].grade;
+        obj.installment=arr[i].installment;
+        obj.modeofpayment=arr[i].mode_of_payment;
+        obj.chequeno=arr[i].cheque_no;
+        obj.bankname=arr[i].bank_name;
+        obj.chequedate=arr[i].installment_date;
+        obj.installmentamount=arr[i].installment_amount;
+        obj.receiptno=arr[i].receipt_no;
+        obj.hidecheque=true;
+        cashtotal=parseFloat(cashtotal)+parseFloat(arr[i].installment_amount);
+        collectionbycash=parseFloat(collectionbycash)+parseFloat(arr[i].installment_amount);
+        a.push(obj);
+        }
+        if(arr[i].mode_of_payment=="Cheque"||arr[i].mode_of_payment=="Tranfer"){
+        // objj.sno=i+1;
+        objj.admissionno=arr[i].admission_no;
+        objj.studentname=arr[i].student_name;
+        objj.grade=arr[i].grade;
+        objj.installment=arr[i].installment;
+        objj.modeofpayment=arr[i].mode_of_payment;
+        objj.chequeno=arr[i].cheque_no;
+        objj.bankname=arr[i].bank_name;
+        objj.chequedate=arr[i].installment_date;
+        objj.installmentamount=arr[i].installment_amount;
+        objj.receiptno=arr[i].receipt_no;
+        objj.hidecheque=false;
+        chequetotal=parseFloat(chequetotal)+parseFloat(arr[i].installment_amount);
+        collectionbycheque=parseFloat(collectionbycheque)+parseFloat(arr[i].installment_amount);
+        b.push(objj);
+        }
+        
+        for(var j=i+1;j<arr.length;j++)
+        {
+           if(arr[i].installment==arr[j].installment)
+           {
+              var obj1={"admissionno":"","studentname":"","grade":"","installment":"","modeofpayment":"","chequeno":"","bankname":"","installmentamount":"","receiptno":""};
+              var obj2={"admissionno":"","studentname":"","grade":"","installment":"","modeofpayment":"","chequeno":"","bankname":"","installmentamount":"","receiptno":""};
+              if(arr[j].mode_of_payment=="Cash"){
+               // obj1.sno=j;
+               obj1.admissionno=arr[j].admission_no;
+               obj1.studentname=arr[j].student_name;
+               obj1.grade=arr[j].grade;
+               obj1.installment=arr[j].installment;
+               obj1.modeofpayment=arr[j].mode_of_payment;
+               obj1.chequeno=arr[j].cheque_no;
+               obj1.bankname=arr[j].bank_name;
+               obj1.chequedate=arr[i].installment_date;
+               obj1.installmentamount=arr[j].installment_amount;
+               obj1.receiptno=arr[j].receipt_no;
+               cashtotal=parseFloat(cashtotal)+parseFloat(arr[i].installment_amount);
+               collectionbycash=parseFloat(collectionbycash)+parseFloat(arr[i].installment_amount);
+               obj1.hidecheque=true;
+               a.push(obj1);
+               }
+               if(arr[j].mode_of_payment=="Transfer"||arr[j].mode_of_payment=="Cheque"){
+               // obj2.sno=j;
+               obj2.admissionno=arr[j].admission_no;
+               obj2.studentname=arr[j].student_name;
+               obj2.grade=arr[j].grade;
+               obj2.installment=arr[j].installment;
+               obj2.modeofpayment=arr[j].mode_of_payment;
+               obj2.chequeno=arr[j].cheque_no;
+               obj2.bankname=arr[j].bank_name;
+               obj2.chequedate=arr[i].installment_date;
+               obj2.installmentamount=arr[j].installment_amount;
+               obj2.receiptno=arr[j].receipt_no;
+               obj2.hidecheque=false;
+               chequetotal=parseFloat(chequetotal)+parseFloat(arr[i].installment_amount);
+               collectionbycheque=parseFloat(collectionbycheque)+parseFloat(arr[i].installment_amount);
+               b.push(obj2);
+               }
+               arr.splice(j,1);
+               j--;
+           }
+        } 
+        totalcollection=parseFloat(collectionbycash)+parseFloat(collectionbycheque); 
+        c.push({"collectiontype":"Cash","Cash":a,"hidecheque":true,"total":cashtotal});  
+        c.push({"collectiontype":"Cheque/Transfer","Cash":b,"hidecheque":false,"total":chequetotal});    
+        nameobj.feearr=c;
+
+        overall.push(nameobj);
+        cashtotal=0;
+        chequetotal=0;
+        a=[];
+        b=[]; 
+        c=[];       
+       }
+       // alert(JSON.stringify(overall));
+       document.querySelector('dailycollection-report').dailycollectionarr=overall;
+       document.querySelector('dailycollection-report').collectionbycash=collectionbycash;
+       document.querySelector('dailycollection-report').collectionbycheque=collectionbycheque;
+       document.querySelector('dailycollection-report').totalcollection=totalcollection;
+       overall=[];
+       collectionbycash="";
+       collectionbycheque="";
+       totalcollection="";
+       }
+      else{
+        // alert('coming..');
+      document.querySelector('dailycollection-report').dailycollectionarr=overall;
+       document.querySelector('dailycollection-report').collectionbycash=collectionbycash;
+       document.querySelector('dailycollection-report').collectionbycheque=collectionbycheque;
+       document.querySelector('dailycollection-report').totalcollection=totalcollection;
+       }
+      },
+      FnFetchBounceChequesService:function(){
+        this.fetchbouncechequesurl=sessionStorage.getItem("addrinfo")+"/fetchbouncecheques-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchbouncechequesparam=obj;
+        this.$.fetchbouncechequesajax.generateRequest();
+      },
+      fetchbouncechequesResponse:function(e){
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+        for(var i=0;i<arr.length;i++)
+          arr[i].sno=i+1;
+        document.querySelector('bouncecheque-displaycard').bouncechequearr=arr;
+        }
+        else
+        {
+          arr=[];
+          document.querySelector('bouncecheque-displaycard').bouncechequearr=arr;
+        }
+      },
+      FnFetchPDCService:function(){
+        this.fetchpdcchequesurl=sessionStorage.getItem("addrinfo")+"/fetchpdccheques-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchpdcchequesparam=obj;
+        this.$.fetchpdcchequesajax.generateRequest();
+      },
+      fetchpdcchequesResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var noofstudents=0;
+        var totalamount=0;
+        if(arr!='no rows'){
+        for(var i=0;i<arr.length;i++)
+        {
+        arr[i].sno=i+1;        
+        noofstudents=parseFloat(noofstudents)+1;
+        totalamount=parseFloat(totalamount)+parseFloat(arr[i].installment_amount);
+        }
+        document.querySelector('pdccheques-report-card').pdcarr=arr;
+        document.querySelector('pdccheques-report-card').noofstudents=noofstudents;
+        document.querySelector('pdccheques-report-card').totalcollection=totalamount;
+        }
+        else
+        {
+          arr=[];
+          document.querySelector('pdccheques-report-card').pdcarr=arr;
+        }
+      },
+      FnFetchDiscountStructureService:function(admissionyear
+          ,academicyear,grade){
+        this.fetchdiscountstructureurl=sessionStorage.getItem("addrinfo")+"/fetchdiscountstructure-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        obj.admissionyear=admissionyear;
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        this.fetchdiscountstructureparam=obj;
+        this.$.fetchdiscountstructureajax.generateRequest();
+      },
+      fetchdiscountstructureResponse:function(e){
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+          for(var i=0;i<arr.length;i++)
+          {
+          arr[i].sno=i+1;        
+          }
+          document.querySelector('discount-structure-report').discountarr=arr;
+        }
+        else
+        {
+          arr=[];
+          document.querySelector('discount-structure-report').discountarr=arr;
+        }
+        document.querySelector('fromdate-icon-pickercard').ready();
+        document.querySelector('todate-icon-pickercard').ready();
+        arr=[];
+      } ,
+      FnFetchFeeStructureService:function(admissionyear
+          ,academicyear,grade){
+        this.fetchfeestructureurl=sessionStorage.getItem("addrinfo")+"/fetchfeestructure-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        obj.admissionyear=admissionyear;
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        this.fetchfeestructureparam=obj;
+        this.$.fetchfeestructureajax.generateRequest();
+      },
+      fetchfeestructureResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var title=e.detail.response.titlearr;
+        var titlearr=[];
+        titlearr.push('#');
+        titlearr.push('Academic Year');
+        titlearr.push('Admission Year');
+        titlearr.push('Grade');
+        for(var i=0;i<title.length;i++){
+          titlearr.push(title[i].fee_type);
+        }
+        titlearr.push('Total');
+        var a=[];
+        var overall=[];
+       for(var i=0;i<arr.length;i++)
+       {    
+        // alert(arr.length);    
+        // alert(arr[i].fee_code);
+        var nameobj={"feecode":""};
+        nameobj.feecode=arr[i].fee_code; 
+        nameobj.academicyear=arr[i].academic_year;
+        nameobj.admissionyear=arr[i].admission_year; 
+        nameobj.grade=arr[i].grade_id;
+        nameobj.totalfee=arr[i].fees;
+        var obj1={};
+        for(var x=0;x<title.length;x++){
+        // alert(title[x].fee_type+"  "+arr[i].fee_type);
+        if(title[x].fee_type==arr[i].fee_type)
+        obj1[(title[x].fee_type).replace(' ','')]=arr[i].total_fee;
+        }
+        a.push(obj1);
+        for(var j=i+1;j<arr.length;j++)
+        {          
+          var f=0; 
+          var obj={};
+          var currfeetype="";          
+          if(arr[i].fee_code==arr[j].fee_code)
+          {            
+            // alert(arr[i].fee_code+"  "+arr[j].fee_code);
+            for(var x=0;x<title.length;x++){
+            currfeetype=title[x].fee_type;  
+            if(title[x].fee_type==arr[j].fee_type){
+            obj[(title[x].fee_type).replace(' ','')]=arr[j].total_fee;     
+            f=1;
+            } 
+            } 
+            if(f==0){
+              obj[currfeetype]="0";
+            } 
+             a.push(obj);
+             arr.splice(j,1);
+             j--;     
+           }
+           // alert(JSON.stringify(obj));
+        }
+        nameobj.feetypes=a;
+        overall.push(nameobj);
+        a=[];
+       }
+
+       // alert(JSON.stringify(titlearr));
+       // alert(JSON.stringify(overall));
+
+       document.querySelector('fee-structure-report').titlearr=titlearr;
+        if(overall!='no rows'){
+          for(var i=0;i<overall.length;i++)
+          {
+          overall[i].sno=i+1;        
+          }
+          document.querySelector('fee-structure-report').feestructurearr=overall;
+        }
+        else
+        {
+          overall=[];
+          document.querySelector('fee-structure-report').feestructurearr=overall;
+        }
+      },
+      FnFetchGradewiseFeeStructureService:function(admissionyear
+          ,academicyear,grade){
+        this.fetchgradewisefeestructureurl=sessionStorage.getItem("addrinfo")+"/fetchgradewisefeestructure-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionyear=admissionyear;
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        this.fetchgradewisefeestructureparam=obj;
+        this.$.fetchgradewisefeestructureajax.generateRequest();
+      },
+      fetchgradewisefeestructureResponse:function(e){
+        if(e.detail.response.returnval!='no rows'){
+          var feemaster=e.detail.response.returnval;
+          // alert(JSON.stringify(feemaster));
+          for(var i=0;i<(this.allstud).length;i++){
+            var flag=0;
+          for(var j=0;j<feemaster.length;j++){
+            // alert(this.allstud[i].academic_year+" "+feemaster[j].academic_year+" "+this.allstud[i].admission_year+" "+feemaster[j].admission_year+" "+this.allstud[i].class_for_admission+" "+feemaster[j].grade);
+            if(this.allstud[i].academic_year==feemaster[j].academic_year&&this.allstud[i].admission_year==feemaster[j].admission_year&&this.allstud[i].class_for_admission==feemaster[j].grade){
+              flag=1;
+              this.allstud[i].feecode=feemaster[j].fee_code;
+              this.allstud[i].fees=feemaster[j].fees;
+            }
+          }
+          if(flag==0){
+             this.allstud[i].feecode='-';
+             this.allstud[i].fees='-';
+           }
+          }
+          // alert(JSON.stringify(this.allstud));
+          document.querySelector('gradewise-fee-structure-report').gradewisefeestructurearr=this.allstud;
+            this.allstud=[];
+        }
+        else{
+
+        }
+      },
+      FnFetchAllStudentService:function(admissionyear,academicyear,grade){
+        this.fetchstructureallstudenturl=sessionStorage.getItem("addrinfo")+"/fetchstructureallstudent-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionyear=admissionyear;
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        this.fetchstructureallstudentparam=obj;
+        this.$.fetchstructureallstudentajax.generateRequest();
+      },
+      fetchstructureallstudentResponse:function(e){
+        this.allstud=e.detail.response.returnval;
+      },
+      FnFetchGradewiseDiscountStructureService:function(admissionyear
+          ,academicyear,grade){
+        this.fetchgradewisediscountstructureurl=sessionStorage.getItem("addrinfo")+"/fetchgradewisediscountstructure-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionyear=admissionyear;
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        this.fetchgradewisediscountstructureparam=obj;
+        this.$.fetchgradewisediscountstructureajax.generateRequest();
+      },
+      fetchgradewisediscountstructureResponse:function(e){
+        if(e.detail.response.returnval!='no rows'){
+          this.discountmaster=e.detail.response.returnval;
+        }
+        else{
+
+        }
+      },
+      FnFetchAllAdmissionService:function(academicyear,grade){
+        this.fetchallenrolledadmissionsurl=sessionStorage.getItem("addrinfo")+"/fetchallenrolledadmissions-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        this.fetchallenrolledadmissionsparam=obj;
+        this.$.fetchallenrolledadmissionsajax.generateRequest();
+      }, 
+      fetchallenrolledadmissionsResponse:function(e){
+        if(e.detail.response.returnval!='no rows'){
+        this.admission=e.detail.response.returnval;
+        document.querySelector('enrollment-report').enrollmentarr=e.detail.response.returnval;
+        }
+        else
+        {
+
+        }
+      },
+      FnFetchAllStudentsService:function(academicyear,grade){
+        this.fetchallenrolledstudentsurl=sessionStorage.getItem("addrinfo")+"/fetchallenrolledstudents-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        this.fetchallenrolledstudentsparam=obj;
+        this.$.fetchallenrolledstudentsajax.generateRequest();
+      },
+      fetchallenrolledstudentsResponse:function(e){
+        if(e.detail.response.returnval!='no rows'){
+        this.students=e.detail.response.returnval;
+        }
+        else
+        {
+
+        }
+      }         
+    });
+  })();
+  </script>
+</dom-module>

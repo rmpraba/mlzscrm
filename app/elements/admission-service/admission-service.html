@@ -1,0 +1,1902 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="admission-service">
+  <template>
+  <!-- It would fetch the enquiry no's -->
+     <iron-ajax
+        method="post"
+        id="fetchallstudentforsearchajax"
+        url="{{fetchallstudentforsearchurl}}"
+        params="{{fetchallstudentforsearchparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallstudentforsearchResponse"
+        debounce-duration="300"
+        >
+   <!-- It would fetch the enquiry no's -->
+     <iron-ajax
+        method="post"
+        id="searchenquiryajax"
+        url="{{searchenquiryurl}}"
+        params="{{searchenquiryparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="searchenquiryResponse"
+        debounce-duration="300"
+        >
+         <!-- It would fetch the enquiry no's -->
+     <iron-ajax
+        method="post"
+        id="searchexistingadmissionajax"
+        url="{{searchexistingadmissionurl}}"
+        params="{{searchexistingadmissionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="searchexistingadmissionResponse"
+        debounce-duration="300"
+        >
+    <!-- this ajax is to fetch the available classes with repect to the school -->
+   <iron-ajax
+        method="post"
+        id="getclassesajax"
+        url="{{getclassesurl}}"
+        params="{{getclassesparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getclassesResponse"
+        debounce-duration="300"
+        >
+    <!-- Component will fetch the selected enquiry info -->
+   <iron-ajax
+        method="post"
+        id="fetchenquiryinfoajax"
+        url="{{fetchenquiryinfourl}}"
+        params="{{fetchenquiryinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchenquiryinfoResponse"
+        debounce-duration="300"
+        >
+         <!-- Component will fetch the selected enquiry info -->
+   <iron-ajax
+        method="post"
+        id="fetchexistingadmissioninfoajax"
+        url="{{fetchexistingadmissioninfourl}}"
+        params="{{fetchexistingadmissioninfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchexistingadmissioninfoResponse"
+        debounce-duration="300"
+        >
+         <!-- Component will fetch the selected enquiry info -->
+   <iron-ajax
+        method="post"
+        id="fetchexistingadmissionstudinfoajax"
+        url="{{fetchexistingadmissionstudinfourl}}"
+        params="{{fetchexistingadmissionstudinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchexistingadmissionstudinfoResponse"
+        debounce-duration="300"
+        >
+         <!-- Component will fetch the selected enquiry info -->
+   <iron-ajax
+        method="post"
+        id="fetchexistingadmissioncoinfoajax"
+        url="{{fetchexistingadmissioncoinfourl}}"
+        params="{{fetchexistingadmissioncoinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchexistingadmissioncoinfoResponse"
+        debounce-duration="300"
+        >
+         <!-- Component will fetch the selected enquiry info -->
+   <iron-ajax
+        method="post"
+        id="fetchexistingadmissionphysicinfoajax"
+        url="{{fetchexistingadmissionphysicinfourl}}"
+        params="{{fetchexistingadmissionphysicinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchexistingadmissionphysicinfoResponse"
+        debounce-duration="300"
+        >
+         <!-- Component will fetch the selected enquiry info -->
+   <iron-ajax
+        method="post"
+        id="fetchexistingadmissionhistoryinfoajax"
+        url="{{fetchexistingadmissionhistoryinfourl}}"
+        params="{{fetchexistingadmissionhistoryinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchexistingadmissionhistoryinfoResponse"
+        debounce-duration="300"
+        >
+        <!-- Component will insert Admission info-->
+   <iron-ajax
+        method="post"
+        id="insertadmissionajax"
+        url="{{insertadmissionurl}}"
+        params="{{insertadmissionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="insertadmissionResponse"
+        debounce-duration="300"
+        >
+        <!-- Component will insert student info-->
+   <iron-ajax
+        method="post"
+        id="insertstudentajax"
+        url="{{insertstudenturl}}"
+        params="{{insertstudentparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="insertstudentResponse"
+        debounce-duration="300"
+        >
+       <!-- Component will insert school history -->
+   <iron-ajax
+        method="post"
+        id="insertstudenthistoryajax"
+        url="{{insertstudenthistoryurl}}"
+        params="{{insertstudenthistoryparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="insertstudenthistoryResponse"
+        debounce-duration="300"
+        >
+        <!-- Component will insert student disability info -->
+   <iron-ajax
+        method="post"
+        id="insertdisabilityinfoajax"
+        url="{{insertdisabilityinfourl}}"
+        params="{{insertdisabilityinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="insertdisabilityinfoResponse"
+        debounce-duration="300"
+        >
+        <!-- Component will insert student co curricular info-->
+   <iron-ajax
+        method="post"
+        id="insertcocurricularinfoajax"
+        url="{{insertcocurricularinfourl}}"
+        params="{{insertcocurricularinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="insertcocurricularinfoResponse"
+        debounce-duration="300"
+        >
+
+
+            <!-- Component will insert student co curricular info-->
+   <iron-ajax
+        method="post"
+        id="searchfeeenquiryajax"
+        url="{{searchfeeenquiryurl}}"
+        params="{{searchfeeenquiryparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="searchfeeenquiryResponse"
+        debounce-duration="300"
+        >
+
+
+            <!-- Component will insert student co curricular info-->
+   <iron-ajax
+        method="post"
+        id="fetchfeeajax"
+        url="{{fetchfeeurl}}"
+        params="{{fetchfeeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeeResponse"
+        debounce-duration="300"
+        >
+        
+
+            <!-- Component will insert student co curricular info-->
+   <iron-ajax
+        method="post"
+        id="searchadmnenquiryajax"
+        url="{{searchadmnenquiryurl}}"
+        params="{{searchadmnenquiryparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="searchadmnenquiryResponse"
+        debounce-duration="300"
+        >
+                <!-- Component will insert student co curricular info-->
+   <iron-ajax
+        method="post"
+        id="searchadmissionajax"
+        url="{{searchadmissionurl}}"
+        params="{{searchadmissionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="searchadmissionResponse"
+        debounce-duration="300"
+        >
+        <!-- Component will fetch the fee component-->
+   <iron-ajax
+        method="post"
+        id="fetchfeesajax"
+        url="{{fetchfeesurl}}"
+        params="{{fetchfeesparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeesResponse"
+        debounce-duration="300"
+        >
+             <!-- Component will fetch the discount-->
+   <iron-ajax
+        method="post"
+        id="fetchdiscountajax"
+        url="{{fetchdiscounturl}}"
+        params="{{fetchdiscountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchdiscountResponse"
+        debounce-duration="300"
+        >
+           <!-- Component will fetch the fee component-->
+   <iron-ajax
+        method="post"
+        id="fetchfeesinfoajax"
+        url="{{fetchfeesinfourl}}"
+        params="{{fetchfeesinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeesinfoResponse"
+        debounce-duration="300"
+        >
+        <!-- Component will fetch the fee split up component-->
+   <iron-ajax
+        method="post"
+        id="fetchfeesplitupajax"
+        url="{{fetchfeesplitupurl}}"
+        params="{{fetchfeesplitupparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeesplitupResponse"
+        debounce-duration="300"
+        >
+        <!-- Component will fetch the no of installment-->
+   <iron-ajax
+        method="post"
+        id="fetchnoofinstallmentajax"
+        url="{{fetchnoofinstallmenturl}}"
+        params="{{fetchnoofinstallmentparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchnoofinstallmentResponse"
+        debounce-duration="300"
+        >
+    <!-- this below ajax gives the total number of enquiry appeared categorized based on the grade -->
+    <iron-ajax
+        method="post"
+        id="getadmissioncountajax"
+        url="{{getadmissioncounturl}}"
+        params="{{getadmissioncountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getadmissioncountResponse"
+        debounce-duration="300"
+        >
+
+        <!-- this below fetch the admission test info-->
+    <iron-ajax
+        method="post"
+        id="fetchadmissiontestinfoajax"
+        url="{{fetchadmissiontestinfourl}}"
+        params="{{fetchadmissiontestinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchadmissiontestinfoResponse"
+        debounce-duration="300"
+        >
+
+
+ <iron-ajax
+        method="post"
+        id="updateteststatusajax"
+        url="{{updateteststatusurl}}"
+        params="{{updateteststatusparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updateteststatusResponse"
+        debounce-duration="300"
+        >
+
+        <iron-ajax
+        method="post"
+        id="studentfulldetailsajax"
+        url="{{studentfulldetailsurl}}"
+        params="{{studentfulldetailsparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="studentfulldetailsResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="studentcocurricularajax"
+        url="{{studentcocurricularurl}}"
+        params="{{studentcocurricularparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="studentcocurricularResponse"
+        debounce-duration="300"
+        >
+         <iron-ajax
+        method="post"
+        id="studentphysicalajax"
+        url="{{studentphysicalurl}}"
+        params="{{studentphysicalparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="studentphysicalResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="studenthistoryajax"
+        url="{{studenthistoryurl}}"
+        params="{{studenthistoryparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="studenthistoryResponse"
+
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="searchfeeadmissionajax"
+        url="{{searchfeeadmissionurl}}"
+        params="{{searchfeeadmissionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="searchfeeadmissionResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="searchfeeadmissioninfoajax"
+        url="{{searchfeeadmissioninfourl}}"
+        params="{{searchfeeadmissioninfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="searchfeeadmissioninfoResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="searchfeeadmissionpaidinfoajax"
+        url="{{searchfeeadmissionpaidinfourl}}"
+        params="{{searchfeeadmissionpaidinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="searchfeeadmissionpaidinfoResponse"
+        debounce-duration="300"
+        >
+
+        <iron-ajax
+        method="post"
+        id="fetchinstallmentdateajax"
+        url="{{fetchinstallmentdateurl}}"
+        params="{{fetchinstallmentdateparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchinstallmentdateResponse"
+        debounce-duration="300"
+        >
+
+        <iron-ajax
+        method="post"
+        id="checkregfeepaidstatusajax"
+        url="{{checkregfeepaidstatusurl}}"
+        params="{{checkregfeepaidstatusparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="checkregfeepaidstatusResponse"
+        debounce-duration="300"
+        >
+
+         <iron-ajax
+        method="post"
+        id="checkdefaulterstatusajax"
+        url="{{checkdefaulterstatusurl}}"
+        params="{{checkdefaulterstatusparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="checkdefaulterstatusResponse"
+        debounce-duration="300"
+        >
+
+        <iron-ajax
+        method="post"
+        id="fetchstudentforsearchajax"
+        url="{{fetchstudentforsearchurl}}"
+        params="{{fetchstudentforsearchparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentforsearchResponse"
+        debounce-duration="300"
+        >
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var paidfeearr=[];
+    var discountarr=[];
+    var installmentdatearr=[];
+    var installmentarr=[];
+    Polymer({
+      is: 'admission-service',
+      fetchstudentforsearchService:function(status){
+        this.fetchstudentforsearchurl=sessionStorage.getItem("addrinfo")+"/fetchstudentforsearch-service";
+        var obj={"schoolid":"","status":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.status=status;
+        this.fetchstudentforsearchparam=obj;
+        this.$.fetchstudentforsearchajax.generateRequest();
+      },
+      fetchstudentforsearchResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        if(arr.length>0)
+        document.querySelector('provisionalfee-card').autocompletearr(arr);
+      },
+      callSearchenquiryService:function(enquiryno){        
+        this.searchenquiryurl=sessionStorage.getItem("addrinfo")+"/searchenquiry";
+        localStorage.setItem("curr_sess_insertflag",1);
+        var obj={"enquiryno":"","schoolid":""};
+        obj.enquiryno=enquiryno;
+        this.enquiryno=enquiryno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.searchenquiryparam=obj;
+        this.$.searchenquiryajax.generateRequest();
+      },
+      searchenquiryResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        if(e.detail.response.returnval=='no enquiry'||e.detail.response.returnval=='exist'){
+            this.callSearchexistingadmissionService();        
+        }
+        else{
+            document.querySelector('admission-form').enquiryarr=e.detail.response.returnval;
+            document.querySelector('admission-approval-card').enquiryarr=e.detail.response.returnval;
+            document.querySelector('searchreceipt-card').enquiryarr=e.detail.response.returnval;
+        }
+      },
+      callSearchexistingadmissionService:function(){  
+        this.searchexistingadmissionurl=sessionStorage.getItem("addrinfo")+"/searchexistingadmission";
+        localStorage.setItem("curr_sess_insertflag",2);
+        var obj={"admissionno":"","schoolid":""};
+        obj.admissionno=this.enquiryno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.searchexistingadmissionparam=obj;
+        this.$.searchexistingadmissionajax.generateRequest();
+      },
+      searchexistingadmissionResponse:function(e){
+        var admnarr=e.detail.response.returnval;
+        // alert(JSON.stringify(admnarr));
+        if(admnarr!='no rows'){
+        var arr=[];        
+        // alert(admnarr[0].enquiry_no);
+        // localStorage.setItem("curr_sess_admnenquiryno",admnarr[0].enquiry_no);
+        for(var i=0;i<admnarr.length;i++){
+        var obj={"enquiry_no":"","enquiry_name":""};
+        obj.enquiry_no=admnarr[i].admission_no; 
+        obj.enquiry_name=admnarr[i].student_name;  
+        arr.push(obj); 
+        }
+        document.querySelector('admission-form').enquiryarr=arr;
+        document.querySelector('searchreceipt-card').enquiryarr=arr;
+        }
+        // else
+            // alert('Please pay Application fee!');
+      },
+      callFetchenquiryinfoService:function(){
+        this.fetchenquiryinfourl=sessionStorage.getItem("addrinfo")+"/fetchenquiryinfo";
+        var obj={"enquiryno":"","schoolid":""}
+        obj.enquiryno=localStorage.getItem("curr_sess_enquiryno");
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.fetchenquiryinfoparam=obj;
+        this.$.fetchenquiryinfoajax.generateRequest();
+      },
+      fetchenquiryinfoResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        // alert(document.querySelector('admission-form').schoolname);
+        if(arr=='no rows'){
+            this.fetchexistingadmissioninfoService();
+            this.fetchexistingadmissionstudinfoService();
+            this.fetchexistingadmissionhistoryinfoService();
+            this.fetchexistingadmissionphysicinfoService();
+            this.fetchexistingadmissioncoinfoService();
+        }
+        else
+        {
+        document.querySelector('admission-form').schoolname=localStorage.getItem("schoolname");
+        // document.querySelector('admission-form').applicationno=arr[0].prospectus_no;
+        document.querySelector('admission-form').enquiredyear=arr[0].academic_year;
+        document.querySelector('admission-form').firstname=arr[0].first_name;
+        document.querySelector('admission-form').middlename=arr[0].middle_name;
+        document.querySelector('admission-form').lastname=arr[0].last_name;
+        document.querySelector('admission-form').gradeselection=arr[0].class;
+        // document.querySelector('admission-form').FnSetSecLanguage(arr[0].second_language);
+        if(arr[0].class=="Nursery"||arr[0].class=="Junior KG"||arr[0].class=="Senior KG"||arr[0].class=="Grade-1"||arr[0].class=="Grade-2"||arr[0].class=="Grade-3"||arr[0].class=="Grade-4"){
+            // document.querySelector('admission-form').FnHideThirdLanguage(true);
+        }
+        else{
+        // document.querySelector('admission-form').FnHideThirdLanguage(false);
+        // document.querySelector('admission-form').FnSetThirdLanguage(arr[0].third_language);
+        }
+        document.querySelector('dateofbirth-datepicker').FnSetDate(arr[0].dob);
+        document.querySelector('admission-form').dob=arr[0].dob;
+        document.querySelector('admission-form').FnFindAge(arr[0].dob);
+        document.querySelector('admission-form').FnSetGender(arr[0].gender);
+
+        // document.querySelector('admission-form').flatno=arr[0].flat_no;
+        // document.querySelector('admission-form').bulidingname=arr[0].address1;
+        // document.querySelector('admission-form').street=arr[0].address2;
+        // document.querySelector('admission-form').town=arr[0].address3;
+        // document.querySelector('admission-form').city=arr[0].city;
+        // document.querySelector('admission-form').state=arr[0].state;
+        // document.querySelector('admission-form').pincode=arr[0].pincode;
+
+        document.querySelector('admission-form').mothertongue=arr[0].mother_tongue;
+
+        // document.querySelector('admission-form').siblingname=arr[0].sibiling_name;
+        // document.querySelector('admission-form').siblingclass=arr[0].sibling_detail;
+
+        // document.querySelector('admission-form').prevschoolname=arr[0].old_school;
+
+        document.querySelector('admission-form').fathername=arr[0].father_name;
+        document.querySelector('admission-form').mothername=arr[0].mother_name;
+        document.querySelector('admission-form').fatheroccupation=arr[0].father_occupation;
+        document.querySelector('admission-form').motheroccupation=arr[0].mother_occupation;
+        // document.querySelector('admission-form').fatherqualification=arr[0].father_qualification;
+        // document.querySelector('admission-form').motherqualification=arr[0].mother_qualification;
+        document.querySelector('admission-form').fathermobile=arr[0].father_mob;
+        document.querySelector('admission-form').mothermobile=arr[0].mother_mob;
+        document.querySelector('admission-form').fatheremail=arr[0].father_email;
+        document.querySelector('admission-form').motheremail=arr[0].mother_email;
+
+        document.querySelector('admission-form').FnSetSibling(arr[0].have_sibling);
+        if(arr[0].parent_or_guard=="parent")
+        document.querySelector('admission-form').FnSetParentguard("No");
+        if(arr[0].parent_or_guard=="guardian"){
+        document.querySelector('admission-form').guardianname1=arr[0].guardian_name;
+        document.querySelector('admission-form').gmobileno=arr[0].guardian_mobile;
+        document.querySelector('admission-form').gfax=arr[0].guardian_mail;
+        if(arr[0].guardian_occup!='undefined')
+        document.querySelector('admission-form').guardianoccupation=arr[0].guardian_occup;
+        document.querySelector('admission-form').FnSetParentguard("Yes");
+        }
+
+
+        // document.querySelector('admission-form').fatherincome=arr[0].father_income;
+        // document.querySelector('admission-form').motherincome=arr[0].mother_income;
+        // document.querySelector('admission-form').FnSetTransport(arr[0].transport_requirment);
+        // document.querySelector('admission-form').FnSetCanteen(arr[0].canteen_requirment);
+        // document.querySelector('special-discount-card').setCheckedHandler(arr[0].discount_type_code);
+        }
+      },
+      fetchexistingadmissioninfoService:function(){
+        this.fetchexistingadmissioninfourl=sessionStorage.getItem("addrinfo")+"/fetchexistingadmissioninfo";
+        var obj={"admissionno":"","schoolid":""}
+        // alert(localStorage.getItem("curr_sess_enquiryno"));
+        obj.admissionno=localStorage.getItem("curr_sess_enquiryno");
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.fetchexistingadmissioninfoparam=obj;
+        this.$.fetchexistingadmissioninfoajax.generateRequest();
+      },
+      fetchexistingadmissioninfoResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        var arr=e.detail.response.returnval;
+        if(arr=='no rows'){
+            alert('Please collect Application fee!');
+        }
+        else
+        {
+            // alert('coming');
+        document.querySelector('admission-form').enqenrlabel="Enquiry Number";
+        document.querySelector('admission-form').enqenrno=arr[0].enquiry_no;
+        localStorage.setItem("curr_sess_admnenquiryno",arr[0].enquiry_no);
+        // localStorage.setItem("curr_sess_enquiryno",arr[0].enquiry_no);    
+        document.querySelector('admission-form').schoolname=localStorage.getItem("schoolname");
+        document.querySelector('admission-form').applicationno=arr[0].prospect_application_no;
+        document.querySelector('admission-form').enquiredyear=arr[0].academic_year;
+        document.querySelector('admission-form').selectedadmnyear=arr[0].admission_year;
+        document.querySelector('admission-form').FnSetAdmnYear(arr[0].admission_year);
+        document.querySelector('admission-form').firstname=arr[0].first_name;
+        document.querySelector('admission-form').middlename=arr[0].middle_name;
+        document.querySelector('admission-form').lastname=arr[0].last_name;
+        document.querySelector('admission-form').gradeselection=arr[0].class_for_admission;
+       
+        document.querySelector('admission-form').dob=arr[0].dob;
+        document.querySelector('admission-form').FnFindAge(arr[0].dob);
+        document.querySelector('admission-form').FnSetGender(arr[0].gender);
+        
+        document.querySelector('admission-form').fathername=arr[0].father_name;
+        document.querySelector('admission-form').mothername=arr[0].mother_name;
+        document.querySelector('admission-form').FnSetTransport(arr[0].transport_availed);
+        document.querySelector('admission-form').FnSetCanteen(arr[0].canteen_availed);
+        document.querySelector('admission-form').FnSetDisabled(arr[0].disabled_student);
+
+        // document.querySelector('special-discount-card').setCheckedHandler(arr[0].discount_type);
+
+        // document.querySelector('admission-form').FnShowDisable(arr[0].disabled_student);
+        // document.querySelector('admission-form').FnShowAcheivement(arr[0].academic_acheivement);
+
+        document.querySelector('admission-form').FnSetAcheivement(arr[0].academic_acheivement);
+        }
+      },
+      fetchexistingadmissionstudinfoService:function(){
+        this.fetchexistingadmissionstudinfourl=sessionStorage.getItem("addrinfo")+"/fetchexistingadmissionstudinfo";
+        var obj={"admissionno":"","schoolid":""}
+        obj.admissionno=localStorage.getItem("curr_sess_admnenquiryno");
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.fetchexistingadmissionstudinfoparam=obj;
+        this.$.fetchexistingadmissionstudinfoajax.generateRequest();
+      },
+      fetchexistingadmissionstudinfoResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        var arr=e.detail.response.returnval;
+        if(arr=='no rows'){
+            // alert('No match found!');
+        }
+        else
+        {
+        document.querySelector('admission-form').FnSetSecLanguage(arr[0].second_language);
+        if(arr[0].class_for_admission=='Grade-5'||arr[0].class_for_admission=='Grade-6'||arr[0].class_for_admission=='Grade-7'||arr[0].class_for_admission=='Grade-8'||arr[0].class_for_admission=='Grade-9'||arr[0].class_for_admission=='Grade-10'){
+            document.querySelector('admission-form').FnHideThirdLanguage(false);
+            document.querySelector('admission-form').FnSetThirdLanguage(arr[0].third_language);
+        }
+        else{
+            document.querySelector('admission-form').FnHideThirdLanguage(true);
+        }
+        document.querySelector('dateofbirth-datepicker').FnSetDate(arr[0].dob);
+        document.querySelector('admission-form').dob=arr[0].dob;
+        document.querySelector('admission-form').FnFindAge(arr[0].dob);
+        document.querySelector('admission-form').FnSetGender(arr[0].gender);
+
+        document.querySelector('admission-form').flatno=arr[0].flat_no;
+        document.querySelector('admission-form').bulidingname=arr[0].building_name;
+        document.querySelector('admission-form').street=arr[0].street;
+        document.querySelector('admission-form').town=arr[0].town;
+        document.querySelector('admission-form').city=arr[0].city;
+        document.querySelector('admission-form').state=arr[0].state;
+        document.querySelector('admission-form').pincode=arr[0].pincode;
+        document.querySelector('admission-form').height=arr[0].height;
+        document.querySelector('admission-form').weight=arr[0].weight;
+        document.querySelector('admission-form').selectedbg=arr[0].blood_group;
+        document.querySelector('admission-form').FnSetBg(arr[0].blood_group);
+        document.querySelector('admission-form').nationality=arr[0].nationality;
+        document.querySelector('admission-form').mothertongue=arr[0].mother_toungue;
+
+        document.querySelector('admission-form').siblingname=arr[0].sibling_name;
+        document.querySelector('admission-form').siblingclass=arr[0].sibling_class;
+
+        document.querySelector('admission-form').fathername=arr[0].father_name;
+        document.querySelector('admission-form').mothername=arr[0].mother_name;
+        document.querySelector('admission-form').fatherqualification=arr[0].father_profession;
+        document.querySelector('admission-form').motherqualification=arr[0].mother_profession;
+        document.querySelector('admission-form').fatheroccupation=arr[0].father_occupation;
+        document.querySelector('admission-form').motheroccupation=arr[0].mother_occupation;
+        document.querySelector('admission-form').fatherincome=arr[0].father_income;
+        document.querySelector('admission-form').motherincome=arr[0].mother_income;
+        document.querySelector('admission-form').fathertelno=arr[0].father_tel;
+        document.querySelector('admission-form').mothertelno=arr[0].mother_tel;
+        document.querySelector('admission-form').fathermobile=arr[0].father_mobile;
+        document.querySelector('admission-form').mothermobile=arr[0].mother_mobile;
+        document.querySelector('admission-form').fatheremail=arr[0].father_email;
+        document.querySelector('admission-form').motheremail=arr[0].mother_email;
+
+        document.querySelector('admission-form').pflatno=arr[0].permanent_pflatno;
+        document.querySelector('admission-form').pbuildingname=arr[0].permanent_pbuildingname;
+        document.querySelector('admission-form').pstreet=arr[0].permanent_pstreet;
+        document.querySelector('admission-form').ptown=arr[0].permanent_town;
+        document.querySelector('admission-form').pdistrict=arr[0].permanent_district;
+        document.querySelector('admission-form').pstate=arr[0].permanent_state;
+        document.querySelector('admission-form').ppincode=arr[0].permanent_pincode;
+
+        document.querySelector('admission-form').guardianname1=arr[0].guardian_name;
+        document.querySelector('admission-form').relationship1=arr[0].guardian_relationship;
+        document.querySelector('admission-form').gflatno=arr[0].guard_flatno;
+        document.querySelector('admission-form').gbuildingname=arr[0].guard_building;
+        document.querySelector('admission-form').gstreet=arr[0].guard_street;
+        document.querySelector('admission-form').gtown=arr[0].guard_town;
+        document.querySelector('admission-form').gcity=arr[0].guard_city;
+        document.querySelector('admission-form').gstate=arr[0].guard_state;
+        document.querySelector('admission-form').gpincode=arr[0].guard_pincode;
+
+        document.querySelector('admission-form').gresidentialcontact=arr[0].guard_res_contact;
+        document.querySelector('admission-form').gofficecontact=arr[0].guard_office_contact;
+        document.querySelector('admission-form').gmobileno=arr[0].guard_mobile_no;
+        document.querySelector('admission-form').gfax=arr[0].guard_fax;
+        if(arr[0].caste==null||arr[0].caste==""){}
+        else
+        document.querySelector('admission-form').FnSetCaste(arr[0].caste);
+        document.querySelector('admission-form').relegion=arr[0].religion;
+               
+        }
+      },
+       fetchexistingadmissioncoinfoService:function(){
+        this.fetchexistingadmissioncoinfourl=sessionStorage.getItem("addrinfo")+"/fetchexistingadmissioncoinfo";
+        var obj={"admissionno":"","schoolid":""}
+        obj.admissionno=localStorage.getItem("curr_sess_admnenquiryno");
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.fetchexistingadmissioncoinfoparam=obj;
+        this.$.fetchexistingadmissioncoinfoajax.generateRequest();
+      },
+      fetchexistingadmissioncoinfoResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        var arr=e.detail.response.returnval;
+        if(arr=='no rows'){
+            // alert('No match found!');
+        }
+        else
+        {
+        document.querySelector('admission-form').field1=arr[0].field1;
+        document.querySelector('admission-form').year1=arr[0].year1;    
+        document.querySelector('admission-form').event1=arr[0].event1;
+        document.querySelector('admission-form').prizedetail1=arr[0].prize1;
+        document.querySelector('admission-form').field2=arr[0].field2;
+        document.querySelector('admission-form').year2=arr[0].year2;    
+        document.querySelector('admission-form').event2=arr[0].event2;
+        document.querySelector('admission-form').prizedetail2=arr[0].prize2;
+        document.querySelector('admission-form').field3=arr[0].field3;
+        document.querySelector('admission-form').year3=arr[0].year3;    
+        document.querySelector('admission-form').event3=arr[0].event3;
+        document.querySelector('admission-form').prizedetail3=arr[0].prize3;      
+        }
+      },
+       fetchexistingadmissionphysicinfoService:function(){
+        this.fetchexistingadmissionphysicinfourl=sessionStorage.getItem("addrinfo")+"/fetchexistingadmissionphysicinfo";
+        var obj={"admissionno":"","schoolid":""}
+        obj.admissionno=localStorage.getItem("curr_sess_admnenquiryno");
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.fetchexistingadmissionphysicinfoparam=obj;
+        this.$.fetchexistingadmissionphysicinfoajax.generateRequest();
+      },
+      fetchexistingadmissionphysicinfoResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        var arr=e.detail.response.returnval;
+        if(arr=='no rows'){
+            // alert('No match found!');
+        }
+        else
+        {
+        document.querySelector('admission-form').physicdetail=arr[0].physic_detail;
+        document.querySelector('admission-form').physicstatus=arr[0].physic_status;    
+        document.querySelector('admission-form').mentaldetail=arr[0].mental_detail;
+        document.querySelector('admission-form').mentalstatus=arr[0].mental_status;
+        document.querySelector('admission-form').illnessdetail=arr[0].illness_detail;
+        document.querySelector('admission-form').illnessstatus=arr[0].illness_status;
+        document.querySelector('admission-form').allergydetail=arr[0].allergy_detail;
+        document.querySelector('admission-form').allergystatus=arr[0].allergy_status;
+        document.querySelector('admission-form').chronicdetail=arr[0].chronic_detail;
+        document.querySelector('admission-form').chronicstatus=arr[0].chronic_status;
+      
+        }
+      },
+       fetchexistingadmissionhistoryinfoService:function(){
+        this.fetchexistingadmissionhistoryinfourl=sessionStorage.getItem("addrinfo")+"/fetchexistingadmissionhistoryinfo";
+        var obj={"admissionno":"","schoolid":""}
+        obj.admissionno=localStorage.getItem("curr_sess_admnenquiryno");
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.fetchexistingadmissionhistoryinfoparam=obj;
+        this.$.fetchexistingadmissionhistoryinfoajax.generateRequest();
+      },
+      fetchexistingadmissionhistoryinfoResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        var arr=e.detail.response.returnval;
+        if(arr=='no rows'){
+            // alert('No match found!');
+        }
+        else
+        {
+        document.querySelector('admission-form').prevschoolname=arr[0].school_name;
+        document.querySelector('admission-form').selectedfromgrade=arr[0].from_grade; 
+        document.querySelector('admission-form').FnSetFromGrade(arr[0].from_grade);  
+        document.querySelector('admission-form').selectedtograde=arr[0].to_grade;
+        document.querySelector('admission-form').FnSetToGrade(arr[0].to_grade);
+        document.querySelector('admission-form').selectedboard=arr[0].board;
+        document.querySelector('admission-form').FnSetBoard(arr[0].board);
+        document.querySelector('admission-form').yearfrom=arr[0].from_year;
+        document.querySelector('admission-form').yearto=arr[0].to_year;
+        document.querySelector('admission-form').medium=arr[0].medium_of_ins;
+        document.querySelector('admission-form').lastclassmark=arr[0].percentage;
+        document.querySelector('admission-form').reasonforleaving=arr[0].reason;
+        }
+      },
+      callInsertAdmissionService:function(enquiryno,enquiryname,applicationno,schoolname,enquiredyear,admissionyear,firstname,middlename,lastname,gradeselection,secondlanguage,thirdlanguage,dob,age,gender,flatno,bulidingname,street,city,town,state,pincode,height,weight,FnBlood,relegions,relegion,nationality,mothertongue,siblingname,siblingclass,prevschoolname,fromgrade,tograde,FnBo,yearfrom,yearto,medium,lastclassmark,reasonforleaving,handler,physicdetail,physicstatus,mentaldetail,mentalstatus,illnessdetail,illnessstatus,allergydetail,allergystatus,chronicdetail,chronicstatus,acheivehandler,fathername,mothername,fatherqualification,motherqualification,fatheroccupation,motheroccupation,fatherincome,motherincome,fathertelno,mothertelno,fathermobile,mothermobile,fatheremail,motheremail,fatherdob,motherdob,pflatno,pbuildingname,pstreet,pdistrict,ptown,pstate,ppincode,guardianname1,guardianname2,relationship1,relationship2,gflatno,gbuildingname,gstreet,gcity,gtown,gstate,gpincode,gresidentialcontact,gofficecontact,gmobileno,gfax,admissiontransport,admissioncanteen,field1,year1,event1,prizedetail1,field2,year2,event2,prizedetail2,field3,year3,event3,prizedetail3,admissiontype,discounttype,admissionsibling,admissionhistory,aadharno){
+
+        this.studentphysicalurl=sessionStorage.getItem("addrinfo")+"/studentphysical_service";
+        
+        var obj={"enquiryno":"","applicationno":"","schoolid":"","schoolname":"","admissionyear":"","firstname":"","middlename":"","lastname":"","studentname":"","gradeselection":"","admissiondob":"","admissiongender":"","admissiondisabled":"","createdby":"","physicdetail":"","physicstatus":"","mentaldetail":"","mentalstatus":"","illnessdetail":"","illnessstatus":"","allergydetail":"","allergystatus":"","chronicdetail":"","chronicstatus":""}
+        obj.enquiryno=enquiryno;
+        obj.applicationno=applicationno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=admissionyear;
+        obj.firstname=firstname;
+        obj.middlename=middlename;
+        obj.lastname=lastname;
+        obj.studentname=firstname+' '+middlename+' '+lastname;
+        obj.gradeselection=gradeselection;
+        obj.physicdetail=physicdetail;
+        obj.physicstatus=physicstatus;
+        obj.mentaldetail=mentaldetail;
+        obj.mentalstatus=mentalstatus;
+        obj.illnessdetail=illnessdetail;
+        obj.illnessstatus=illnessstatus;
+        obj.allergydetail=allergydetail;
+        obj.allergystatus=allergystatus;
+        obj.chronicdetail=chronicdetail;
+        obj.chronicstatus=chronicstatus;
+        obj.createdby=localStorage.getItem("employeeid");  
+        this.studentphysicalparam=obj; 
+        // alert(handler);
+        if(handler=="yes")
+        this.$.studentphysicalajax.generateRequest();
+        
+        this.studentfulldetailsurl=sessionStorage.getItem("addrinfo")+"/studentfulldetails_service";
+          
+           var obj={"enquiryno":"","applicationno":"","schoolid":"","schoolname":"","admissionyear":"","firstname":"","middlename":"","lastname":"","studentname":"","gradeselection":"","admissiondob":"","admissiongender":"","admissioncanteen":"","admissiontransport":"","createdby":"","fathername":"","mothername":"","flatno":"","bulidingname":"","street":"","town":"","city":"","state":"","pincode":"","height":"","weight":"","nationality":"","mothertongue":"","siblingname":"","siblingclass":"","fatherdob":"","motherdob":"","fatherqualification":"","motherqualification":"","fatheroccupation":"","motheroccupation":"","fatherincome":"","motherincome":"","fathertelno":"","mothertelno":"","fathermobile":"","mothermobile":"","fatheremail":"","motheremail":"","ptown":"","pdistrict":"","pstate":"","ppincode":"","relationship1":"","guardianname1":"","relationship2":"","guardianname2":"","guardianname":"","gbuildingname":"","gstreet":"","gtown":"","gcity":"","gstate":"","gpincode":"","gresidentialcontact":"","gofficecontact":"","gmobileno":"","gfax":"","FnBlood":""}
+        obj.enquiryno=enquiryno;
+        obj.applicationno=applicationno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.schoolname=schoolname;
+        obj.academicyear=admissionyear;
+        obj.firstname=firstname;
+        obj.middlename=middlename;
+        obj.lastname=lastname;
+        obj.studentname=firstname+' '+middlename+' '+lastname;
+        obj.gradeselection=gradeselection;
+        obj.secondlanguage=secondlanguage;
+        obj.thirdlanguage=thirdlanguage;
+        obj.admissiondob=dob;
+        obj.admissiongender=gender;
+        obj.flatno=flatno;
+        obj.bulidingname=bulidingname;
+        obj.street=street;
+        obj.town=town;
+        obj.city=city;
+        obj.state=state;
+        obj.pincode=pincode;
+        obj.height=height;
+        obj.weight=weight;
+        obj.bloodgroup=FnBlood;
+        obj.nationality=nationality;
+        obj.mothertongue=mothertongue;
+        obj.siblingname=siblingname;
+        obj.siblingclass=siblingclass;
+        obj.fatherdob=fatherdob;
+        obj.motherdob=motherdob;
+        obj.fathername=fathername;
+        obj.mothername=mothername;
+        obj.fatherqualification=fatherqualification;
+        obj.motherqualification=motherqualification;
+        obj.fatheroccupation=fatheroccupation;
+        obj.motheroccupation=motheroccupation;
+        obj.fatherincome=fatherincome;
+        obj.motherincome=motherincome;
+        obj.fathertelno=fathertelno;
+        obj.mothertelno=mothertelno;
+        obj.fathermobile=fathermobile;
+        obj.mothermobile=mothermobile;
+        obj.fatheremail=fatheremail;
+        obj.motheremail=motheremail;
+        obj.pflatno=pflatno;
+        obj.pbuildingname=pbuildingname;
+        obj.pstreet=pstreet;
+        obj.ptown=ptown;
+        obj.pdistrict=pdistrict;
+        obj.pstate=pstate;
+        obj.ppincode=ppincode;
+        obj.relationship1=relationship1;
+        obj.guardianname1=guardianname1;
+        obj.relationship2=relationship2;
+        obj.guardianname2=guardianname2;
+        obj.gflatno=gflatno;
+        obj.gbuildingname=gbuildingname;
+        obj.gstreet=gstreet;
+        obj.gtown=gtown;
+        obj.gcity=gcity;
+        obj.gstate=gstate;
+        obj.gpincode=gpincode;
+        obj.gresidentialcontact=gresidentialcontact;
+        obj.gofficecontact=gofficecontact;
+        obj.gmobileno=gmobileno;
+        obj.religion=relegion;
+        obj.caste=relegions;
+        obj.aadharno=aadharno;
+        obj.createdby=localStorage.getItem("employeeid"); 
+
+        this.studentfulldetailsparam=obj;
+        this.$.studentfulldetailsajax.generateRequest();
+
+       this.studentcocurricularurl=sessionStorage.getItem("addrinfo")+"/studentcocurricular_service";
+        {
+        var obj={"enquiryno":"","applicationno":"","schoolid":"","schoolname":"","admissionyear":"","firstname":"","middlename":"","lastname":"","studentname":"","gradeselection":"","createdby":"","sno1":"","field1":"","year1":"","event1":"","prizedetail1":"","sno2":"","field2":"","year2":"","event2":"","prizedetail2":"","sno3":"","field3":"","year3":"","event3":"","prizedetail3":""}
+        obj.enquiryno=enquiryno;
+        obj.applicationno=applicationno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.schoolname=schoolname;
+        obj.academicyear=admissionyear;
+        obj.firstname=firstname;
+        obj.middlename=middlename;
+        obj.lastname=lastname;
+        obj.studentname=firstname+' '+middlename+' '+lastname;
+        obj.gradeselection=gradeselection;
+        // obj.sno1=sno1;
+        obj.field1=field1;
+        obj.year1=year1;
+        obj.event1=event1;
+        obj.prizedetail1=prizedetail1;
+        // obj.sno2=sno2;
+        obj.field2=field2;
+        obj.year2=year2;
+        obj.event2=event2;
+        obj.prizedetail2=prizedetail2;
+        // obj.sno3=sno3;
+        obj.field3=field3;
+        obj.year3=year3;
+        obj.event3=event3;
+        obj.prizedetail3=prizedetail3;
+        obj.createdby=localStorage.getItem("employeeid"); 
+        this.studentcocurricularparam=obj;
+        // alert(acheivehandler);
+        if(acheivehandler=="yes")
+        this.$.studentcocurricularajax.generateRequest();
+        }
+
+        this.insertstudenthistoryurl=sessionStorage.getItem("addrinfo")+"/studenthistory_service";
+        {
+         var obj={"enquiryno":"","applicationno":"","schoolid":"","schoolname":"","admissionyear":"","firstname":"","middlename":"","lastname":"","studentname":"","gradeselection":"","admissiongender":"","createdby":"","prevschoolname":"","classfrom":"","classto":"","yearfrom":"","yearto":"","medium":"","lastclassmark":"","reasonforleaving":"","FnBo":""}
+        obj.enquiryno=enquiryno;
+        obj.applicationno=applicationno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.schoolname=schoolname;
+        obj.admissionyear=admissionyear;
+        obj.firstname=firstname;
+        obj.middlename=middlename;
+        obj.lastname=lastname;
+        obj.studentname=firstname+' '+middlename+' '+lastname;
+        obj.gradeselection=gradeselection;
+        obj.createdby=localStorage.getItem("employeename");
+        obj.prevschoolname=prevschoolname;
+        obj.classfrom=fromgrade;
+        obj.classto=tograde;
+        obj.yearfrom=yearfrom;
+        obj.yearto=yearto;
+        obj.medium=medium;
+        obj.lastclassmark=lastclassmark;
+        obj.reasonforleaving=reasonforleaving;
+        obj.board=FnBo;
+        obj.createdby=localStorage.getItem("employeeid"); 
+        this.insertstudenthistoryparam=obj;
+        if(admissionhistory=="yes")
+        this.$.insertstudenthistoryajax.generateRequest();
+     }
+
+      this.insertadmissionurl=sessionStorage.getItem("addrinfo")+"/insertadmission";
+        
+        var obj={"enquiryno":"","applicationno":"","schoolid":"","schoolname":"","admissionyear":"","academicyear":"","firstname":"","middlename":"","lastname":"","studentname":"","gradeselection":"","admissiondob":"","admissiongender":"","fathername":"","mothername":"","admissiondisabled":"","admissioncanteen":"","admissiontransport":"","createdby":""}
+        obj.enquiryno=enquiryno;
+        obj.applicationno=applicationno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.schoolname=schoolname;
+        obj.admissionyear=admissionyear;
+        obj.academicyear=admissionyear;
+        obj.firstname=firstname;
+        obj.middlename=middlename;
+        obj.lastname=lastname;
+        obj.studentname=firstname+' '+middlename+' '+lastname;
+        obj.gradeselection=gradeselection;
+        obj.admissiondob=dob;
+        obj.admissiongender=gender;
+        obj.fathername=fathername;
+        obj.mothername=mothername;
+        obj.admissiondisabled=handler;
+        obj.acheivehandler=acheivehandler;
+        obj.admissioncanteen=admissioncanteen;
+        obj.admissiontransport=admissiontransport;
+        obj.createdby=localStorage.getItem("employeeid");    
+        obj.admissiontype=admissiontype;
+        obj.discounttype=discounttype;
+        obj.admissionsibling=admissionsibling;
+        obj.admissionhistory=admissionhistory;
+        this.insertadmissionparam=obj;
+        this.$.insertadmissionajax.generateRequest();
+
+},
+studentphysicalResponse:function(e){
+// alert("physical"+e.detail.response.returnval);
+},
+studentfulldetailsResponse:function(e){
+// alert("fulldetail"+e.detail.response.returnval);
+},
+studentcocurricularResponse:function(e){
+// alert("cocurricular"+e.detail.response.returnval);
+},
+insertstudenthistoryResponse:function(e){
+// alert("history"+e.detail.response.returnval);
+},
+
+      insertadmissionResponse:function(e){
+        alert("Enrollment No genererated!!!"+e.detail.response.returnval);
+        if(e.detail.response.returnval!='admissionfail')
+        // this.callfetchadmissioncountService();
+        document.querySelector('enquiry-card').ready();
+      },
+      callFetchadmissiontestinfo:function(enquiryno){
+        this.fetchadmissiontestinfourl=sessionStorage.getItem("addrinfo")+"/fetchadmissiontestinfo";
+         var obj={"schoolid":"","enquiryno":""}
+         obj.schoolid=localStorage.getItem("schoolid");
+         obj.enquiryno=enquiryno;
+         this.fetchadmissiontestinfoparam=obj;
+         this.$.fetchadmissiontestinfoajax.generateRequest(); 
+      },
+      fetchadmissiontestinfoResponse:function(e){
+         // alert(e.detail.response.returnval);
+         var arr=e.detail.response.returnval;
+         if(arr=='no rows'){
+            alert('Admission status already updated!!');
+         }
+         else{
+         document.querySelector('admission-approval-card').FnShowTable();
+         document.querySelector('admission-approval-card').enquiryno=arr[0].enquiry_no;
+         document.querySelector('admission-approval-card').studentname=arr[0].enquiry_name;
+         document.querySelector('admission-approval-card').grade=arr[0].class;
+         document.querySelector('admission-approval-card').enqdate=arr[0].created_on;
+         document.querySelector('admission-approval-card').testdate=arr[0].test_date;
+         if(arr[0].english_status=="Yes")
+            document.querySelector('admission-approval-card').englishcol=false;
+         if(arr[0].maths_status=="Yes")
+            document.querySelector('admission-approval-card').mathscol=false;
+         if(arr[0].evs_status=="Yes")
+            document.querySelector('admission-approval-card').evscol=false;
+         }
+
+      },
+      callUpdateteststatus:function(enquiryno,status,englishmark,mathsmark,evsmark){
+         this.updateteststatusurl=sessionStorage.getItem("addrinfo")+"/updateteststatus";
+         var obj={"schoolid":"","enquiryno":"","status":""}
+         obj.schoolid=localStorage.getItem("schoolid");
+         obj.enquiryno=enquiryno;
+         obj.status=status;
+         obj.englishmark=englishmark;
+         obj.mathsmark=mathsmark;
+         obj.evsmark=evsmark;
+         var d=new Date();
+         obj.evaluatedon=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+         obj.evaluatedby=localStorage.getItem("employeeid");          
+         this.updateteststatusparam=obj;
+         this.$.updateteststatusajax.generateRequest(); 
+      },
+      updateteststatusResponse:function(e){
+         alert(e.detail.response.returnval);
+        },
+        
+      searchfeeadmissionService:function(admissionno){
+        this.searchfeeadmissionurl=sessionStorage.getItem("addrinfo")+"/searchfeeadmission";
+        // localStorage.setItem("curr_sess_insertflag",2);
+        var obj={"admissionno":"","schoolid":""};
+        obj.admissionno=admissionno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.searchfeeadmissionparam=obj;
+        this.$.searchfeeadmissionajax.generateRequest();
+     },
+      searchfeeadmissionResponse:function(e){
+        var admnarr=e.detail.response.returnval;
+        var arr=[];        
+        for(var i=0;i<admnarr.length;i++){
+        var obj={"enquiry_no":"","enquiry_name":""};
+        obj.enquiry_no=admnarr[i].admission_no; 
+        obj.enquiry_name=admnarr[i].student_name;  
+        arr.push(obj); 
+        }
+        document.querySelector('fees-card').enquiryarr=arr;
+      },
+
+     searchfeeadmissionpaidinfoService:function(admissionno){
+        this.searchfeeadmissionpaidinfourl=sessionStorage.getItem("addrinfo")+"/fetchexistingadmissionpaidinfo";
+        var obj={"admissionno":"","schoolid":""};
+        obj.admissionno=admissionno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.searchfeeadmissionpaidinfoparam=obj;
+        this.$.searchfeeadmissionpaidinfoajax.generateRequest();
+     },
+     searchfeeadmissionpaidinfoResponse:function(e){
+        paidfeearr=e.detail.response.returnval;
+        // alert(JSON.stringify(paidfeearr));
+     },
+     searchfeeadmissioninfoService:function(admissionno){
+        this.searchfeeadmissioninfourl=sessionStorage.getItem("addrinfo")+"/fetchexistingadmissioninfo";
+        var obj={"admissionno":"","schoolid":""};
+        obj.admissionno=admissionno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.searchfeeadmissioninfoparam=obj;
+        this.$.searchfeeadmissioninfoajax.generateRequest();
+     },
+     searchfeeadmissioninfoResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        if(arr!='no rows'){
+        document.querySelector('fees-card').acyear=arr[0].academic_year;
+        document.querySelector('fees-card').academicyear=arr[0].admission_year;
+        document.querySelector('fees-card').enquiredclass=arr[0].class_for_admission;
+        document.querySelector('fees-card').studentname=arr[0].student_name;
+        document.querySelector('fees-card').parentname=arr[0].father_name;
+        document.querySelector('fees-card').dob=arr[0].dob;
+        localStorage.setItem("curr_sess_admissiontype",arr[0].admission_type);
+        localStorage.setItem("curr_sess_discounttype",arr[0].discount_type);
+        localStorage.setItem("curr_sess_parentname",arr[0].father_name);
+        localStorage.setItem("curr_sess_admissionyear",arr[0].admission_year);
+        localStorage.setItem("curr_sess_grade",arr[0].class_for_admission);
+        localStorage.setItem("curr_sess_studentname",arr[0].student_name);
+
+        this.checkdefaulterstatusService(localStorage.getItem("curr_sess_academicyear"),arr[0].admission_year,arr[0].class_for_admission,localStorage.getItem("curr_sess_enquiryno"));
+        
+        // this.fetchinstallmentdateService();
+        // this.callfetchfeesService(arr[0].academic_year,arr[0].admission_year,arr[0].class_for_admission);        
+        // this.callfetchdiscountService(arr[0].academic_year,arr[0].admission_year,arr[0].class_for_admission,arr[0].discount_type);
+        // // this.callfetchfeesinfoService(arr[0].academic_year,arr[0].admission_year,arr[0].class_for_admission,arr[0].admission_type,arr[0].discount_type);
+        // this.fetchfeesplitup(arr[0].academic_year,arr[0].admission_year,arr[0].class_for_admission);
+        }
+     },
+     checkdefaulterstatusService:function(academicyear,admissionyear,grade,admissionno){
+        this.checkdefaulterstatusurl=sessionStorage.getItem("addrinfo")+"/checkdefaulterstatus-service";
+        var obj={"admissionno":"","schoolid":""};
+        obj.admissionno=admissionno;
+        obj.admissionyear=admissionyear; 
+        obj.academicyear=academicyear;
+        // alert(academicyear); 
+        obj.grade=grade; 
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        this.checkdefaulterstatusparam=obj;
+        this.$.checkdefaulterstatusajax.generateRequest();
+     },
+     checkdefaulterstatusResponse:function(e){
+        // alert(e.detail.response.returnval);
+        if(e.detail.response.returnval=='Admitted'){
+            document.querySelector('fees-card').Fnhidepattern(false);
+            this.checkregfeepaidstatusService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"),localStorage.getItem("curr_sess_enquiryno"));
+        }
+        if(e.detail.response.returnval=='Default'){           
+            if(localStorage.getItem("curr_sess_installmentpattern")==1)
+            {
+            document.querySelector('fees-card').Fnhidepattern(true);
+            localStorage.setItem("curr_sess_noofinstallment",1);
+            localStorage.setItem("curr_sess_installmentpattern",3);
+            }
+            this.checkregfeepaidstatusService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"),localStorage.getItem("curr_sess_enquiryno"));
+        }
+     },
+      checkregfeepaidstatusService:function(academicyear,admissionyear,grade,admissionno){
+         this.checkregfeepaidstatusurl=sessionStorage.getItem("addrinfo")+"/checkregfeepaidstatus-service";
+        var obj={"admissionno":"","schoolid":""};
+        obj.admissionno=admissionno;
+        obj.admissionyear=admissionyear; 
+        obj.academicyear=academicyear;
+        // alert(academicyear); 
+        obj.grade=grade; 
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        this.checkregfeepaidstatusparam=obj;
+        this.$.checkregfeepaidstatusajax.generateRequest();
+      },
+      checkregfeepaidstatusResponse:function(e){
+        // alert(e.detail.response.returnval);
+        if(e.detail.response.returnval=="no feecode"){
+            alert('No feecode found!!');
+        }
+        if(e.detail.response.returnval=="no regfee"){
+            this.fetchinstallmentdateService();
+            this.callfetchfeesService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));        
+            // this.callfetchdiscountService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"),localStorage.getItem("curr_sess_discounttype"));
+            // this.fetchfeesplitup(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));
+        }
+        if(e.detail.response.returnval=="paid"){
+            this.fetchinstallmentdateService();
+            this.callfetchfeesService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));        
+            // this.callfetchdiscountService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"),localStorage.getItem("curr_sess_discounttype"));
+            // this.fetchfeesplitup(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));
+        }
+        if(e.detail.response.returnval=="not paid"){
+            alert('Please pay registeration fee before!!');
+        }
+      },
+      callfetchfeesService:function(academicyear,admissionyear,grade){
+        // alert(localStorage.getItem("curr_sess_installmentpattern"));
+        this.fetchfeesurl=sessionStorage.getItem("addrinfo")+"/fetchfees";
+        var obj={"schoolid":"","academicyear":"","admissionyear":"","grade":""}        
+        obj.admissionyear=admissionyear; 
+        obj.academicyear=academicyear; 
+        obj.grade=grade; 
+        obj.schoolid=localStorage.getItem("schoolid");     
+        this.fetchfeesparam=obj;       
+        this.$.fetchfeesajax.generateRequest();
+      },      
+      fetchfeesResponse:function(e){        
+        var arr=e.detail.response.returnval; 
+        this.splituparr=[]; 
+        this.splituparr=e.detail.response.feesplitup;
+        // alert(JSON.stringify(this.splituparr));      
+        if(arr.length>0&&(this.splituparr).length>0){
+            localStorage.setItem("curr_sess_feecode",arr[0].fee_code); 
+            localStorage.setItem("curr_sess_totalfees",arr[0].fees); 
+            document.querySelector('fees-card').totalfees=arr[0].fees;
+            // this.fetchfeesplitup();
+             this.callfetchdiscountService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"),localStorage.getItem("curr_sess_discounttype"));
+            this.fetchfeesplitup(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));
+        }
+        else
+        {
+            alert('No feecode found for this student!!');
+        }           
+      },
+      callfetchdiscountService:function(academicyear,admissionyear,grade,discounttype){
+        this.fetchdiscounturl=sessionStorage.getItem("addrinfo")+"/fetchdiscount-service";
+        var obj={"schoolid":"","academicyear":"","admissionyear":"","grade":""}        
+        obj.admissionyear=admissionyear; 
+        obj.academicyear=academicyear; 
+        obj.grade=grade; 
+        obj.discounttype=discounttype;
+        obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern"); 
+        var dt=new Date();
+        var d=dt.getDate();
+        var m=(dt.getMonth()+1);
+        var y=dt.getFullYear();
+        if(d<10)
+          d="0"+d;
+        if(m<10)
+          m="0"+m;
+        obj.currdate=m+"/"+d+"/"+y;  
+        // obj.noofinstallment=localStorage.getItem("curr_sess_noofinstallment");
+        obj.schoolid=localStorage.getItem("schoolid");     
+        this.fetchdiscountparam=obj; 
+        // alert(JSON.stringify(obj));      
+        this.$.fetchdiscountajax.generateRequest();
+      },
+      fetchdiscountResponse:function(e){
+        discountarr=e.detail.response.returnval;
+        // alert(JSON.stringify(discountarr));
+        var discountamt=0;
+        var discountpercent=0; 
+        var discountpercentamt=0;
+        var totalwosdfee=0;
+        var totalpayableamount=0;
+        if(discountarr.length>0){
+            for(var i=0;i<discountarr.length;i++){   
+            // if(discountarr[i].discount_type_code!='5')
+            discountamt=parseFloat(discountarr[i].amount)+parseFloat(discountamt);
+            }
+
+            totalwosdfee=parseFloat(localStorage.getItem("curr_sess_totalfees"))-parseFloat(discountamt);           
+            for(var i=0;i<discountarr.length;i++){   
+            if(discountarr[i].discount_type_code=='5'){
+            if(localStorage.getItem("curr_sess_installmentpattern")=='3'&&discountarr[i].discount_percentage!='0'){    
+                discountpercent=discountarr[i].discount_percentage;
+                discountpercentamt=parseFloat(parseFloat(totalwosdfee)*(parseFloat(discountarr[i].discount_percentage)/100)).toFixed(2);
+            }
+            if(localStorage.getItem("curr_sess_installmentpattern")=='4'&&discountarr[i].discount_percentage!='0'){    
+                discountpercent=discountarr[i].discount_percentage;
+                // discountpercentamt=parseFloat(parseFloat(totalwosdfee)*(parseFloat(discountarr[i].discount_percentage)/100)).toFixed(2);
+            }
+            } 
+            }
+        }
+
+        var totalpayableamount=parseFloat(localStorage.getItem("curr_sess_totalfees"))-parseFloat(discountamt);
+        var payableamount=parseFloat(totalpayableamount)-(parseFloat(discountpercentamt));
+        document.querySelector('fees-card').totaldiscount=discountamt;
+        localStorage.setItem("curr_sess_totaldiscount",discountamt);
+        document.querySelector('fees-card').totalpayableamount=totalpayableamount;
+        localStorage.setItem("curr_sess_payablefees",totalpayableamount);
+        document.querySelector('fees-card').discountpercent=discountpercent+"%";
+        document.querySelector('fees-card').payableamount=payableamount;
+        var totaldiscount=parseFloat(discountamt)+(parseFloat(discountpercentamt));
+        localStorage.setItem("curr_sess_discountpercent",discountpercent);
+        localStorage.setItem("curr_sess_payablediscount",totaldiscount);
+        localStorage.setItem("curr_sess_payableamount",payableamount);
+        // if(discountarr.length>0){
+        //     for(var i=0;i<(this.splituparr).length;i++){
+        //         for(var j=0;j<discountarr.length;j++){
+        //         if(this.splituparr[i].fee_type==discountarr[j].fee_type&&discountarr[j].discount_percentage!='0'){
+        //             discountarr[j].amount=parseFloat(this.splituparr[i].total_fee)*(parseFloat((parseFloat(discountarr[j].discount_percentage)/100)));
+        //         }
+        //         }
+        //     }
+        // }
+
+        // alert(JSON.stringify(discountarr));
+
+        // if(discountarr.length>0){
+        // alert(localStorage.getItem("curr_sess_installmentpattern"));
+        // if(localStorage.getItem("curr_sess_installmentpattern")!='3'){
+        // for(var i=0;i<discountarr.length;i++){
+            
+        //     if(discountarr[i].discount_type_code!='5')
+        //     discountamt=parseFloat(discountarr[i].amount)+parseFloat(discountamt);
+            // if(((localStorage.getItem("curr_sess_installmentpattern")=='3')||(localStorage.getItem("curr_sess_installmentpattern")=='4'))&&discountarr[i].discount_type_code=='5')
+            // {
+            // discountpercentamt=parseFloat(discountpercentamt)+parseFloat(discountarr[i].amount);
+            // discountpercent=parseFloat(discountpercent)+parseFloat(discountarr[i].discount_percentage);
+            // }
+            
+        // }
+        // }
+        // var totalpayableamount=parseFloat(localStorage.getItem("curr_sess_totalfees"))-parseFloat(discountamt);
+        // var payableamount=parseFloat(totalpayableamount)-(parseFloat(discountpercentamt));
+        // document.querySelector('fees-card').totaldiscount=discountamt;
+        // localStorage.setItem("curr_sess_totaldiscount",discountamt);
+        // document.querySelector('fees-card').totalpayableamount=totalpayableamount;
+        // localStorage.setItem("curr_sess_payablefees",totalpayableamount);
+        // document.querySelector('fees-card').discountpercent=discountpercent+"%";
+        // document.querySelector('fees-card').payableamount=payableamount;
+        // var totaldiscount=parseFloat(discountamt)+(parseFloat(discountpercentamt));
+        // localStorage.setItem("curr_sess_payablediscount",totaldiscount);
+        // localStorage.setItem("curr_sess_payableamount",payableamount);
+      },
+      // callfetchfeesinfoService:function(academicyear,admissionyear,grade,admissiontype,discounttype){
+      //   this.fetchfeesinfourl=sessionStorage.getItem("addrinfo")+"/fetchfeesinfo-service";
+      //   var obj={"schoolid":"","academicyear":"","admissionyear":"","grade":""}        
+      //   obj.admissionyear=admissionyear; 
+      //   obj.academicyear=academicyear; 
+      //   obj.grade=grade; 
+      //   obj.admissiontype=admissiontype; 
+      //   obj.discounttype=discounttype; 
+      //   obj.noofinstallment=localStorage.getItem("curr_sess_noofinstallment");
+      //   obj.schoolid=localStorage.getItem("schoolid");     
+      //   this.fetchfeesinfoparam=obj;       
+      //   this.$.fetchfeesinfoajax.generateRequest();
+      // },
+      // fetchfeesinfoResponse:function(e){        
+      //   var arr=e.detail.response.returnval; 
+      //   // alert(JSON.stringify(arr)); 
+      //   var discount=0;
+      //   var payableamount=0;      
+      //   if(arr.length>0){
+      //       for(var i=0;i<arr.length;i++){
+      //           discount=parseFloat(parseFloat(discount)+parseFloat(arr[i].discount)).toFixed(2);
+      //           payableamount=parseFloat(parseFloat(payableamount)+parseFloat(arr[i].payableamount)).toFixed(2);
+      //       }
+      //   document.querySelector('fees-card').totalfees=(parseFloat(payableamount)+parseFloat(discount)).toFixed(2);
+      //   document.querySelector('fees-card').payableamount=payableamount;
+      //   document.querySelector('fees-card').totaldiscount=discount;    
+      //   } 
+      //   else{
+      //   document.querySelector('fees-card').totalfees=(parseFloat(localStorage.getItem("curr_sess_totalfees"))+parseFloat(discount)).toFixed(2);
+      //   document.querySelector('fees-card').payableamount=localStorage.getItem("curr_sess_totalfees");
+      //   document.querySelector('fees-card').totaldiscount=discount;    
+      //   }        
+      // },
+      fetchfeesplitup:function(academic_year,admission_year,grade){
+        this.fetchfeesplitupurl=sessionStorage.getItem("addrinfo")+"/fetchfeesplitup";
+        var obj={"schoolid":"","academicyear":"","admissionyear":"","grade":""}        
+        obj.admissionyear=admission_year; 
+        obj.academicyear=academic_year; 
+        obj.grade=grade; 
+        obj.feecode=localStorage.getItem("curr_sess_feecode");
+        // obj.admissiontype=admissiontype; 
+        // obj.discounttype=discounttype; 
+        obj.noofinstallment=localStorage.getItem("curr_sess_noofinstallment");
+        obj.schoolid=localStorage.getItem("schoolid");    
+        this.fetchfeesplitupparam=obj;       
+        this.$.fetchfeesplitupajax.generateRequest();
+      },
+      fetchfeesplitupResponse:function(e){
+        var arr=e.detail.response.returnval;        
+        if(localStorage.getItem("curr_sess_installmentpattern")!='3'){
+        this.FnFormFeePaymentstructure(arr);
+        }
+        else
+        this.FnFormLumsumFeePaymentstructure();       
+      },
+      fetchinstallmentdateService:function(){
+        this.fetchinstallmentdateurl=sessionStorage.getItem("addrinfo")+"/fetchinstallmentdate-service";
+        var obj={"schoolid":"","academicyear":""}        
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear"); 
+        obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");
+        obj.schoolid=localStorage.getItem("schoolid");    
+        this.fetchinstallmentdateparam=obj;   
+        // alert(JSON.stringify(obj));    
+        this.$.fetchinstallmentdateajax.generateRequest();
+      },
+      fetchinstallmentdateResponse:function(e){
+        installmentdatearr=e.detail.response.returnval;
+        // this.FnFormFeestructure(arr);
+        // alert(JSON.stringify(installmentdatearr));
+      },
+      FnFormFeePaymentstructure:function(arr){
+        var noofinstallment=localStorage.getItem("curr_sess_noofinstallment");
+        // alert(noofinstallment);
+        // alert(JSON.stringify(discountarr));
+        var basetype=[];
+        if(localStorage.getItem("curr_sess_installmentpattern")!='3'){
+            if(discountarr.length>0){
+            for(var i=0;i<arr.length;i++){
+            var flag=0;
+                 
+            for(var j=0;j<discountarr.length;j++){
+                // alert(arr[i].base_fee_type+"  "+arr[i].fee_type+"  "+discountarr[j].fee_type);
+                if(arr[i].base_fee_type=="Commitment Fee"){ 
+                    if(arr[i].fee_type==discountarr[j].fee_type){  
+                      if(arr[i].amount>0&&discountarr[j].amount>0) {
+                      flag=1;                    
+                      if(arr[i].fee_type=="Kit fee"){
+                      arr[i].actualamount=parseFloat(arr[i].amount);
+                      arr[i].amount=parseFloat(parseFloat(arr[i].amount)-parseFloat(discountarr[j].amount)).toFixed(2);
+                      discountarr.splice(j,1);
+                      }
+                      else{                        
+                      arr[i].actualamount=parseFloat(arr[i].amount);
+                      arr[i].amount=parseFloat(parseFloat(arr[i].amount)-(Math.ceil(parseFloat(parseFloat(discountarr[j].amount)/(parseInt(noofinstallment)-parseInt(arr[i].installment_amount)))/1000)*1000)).toFixed(2);
+                      
+                      discountarr[j].amount=parseFloat(parseFloat(discountarr[j].amount)-(Math.ceil(parseFloat(parseFloat(discountarr[j].amount)/(parseInt(noofinstallment)-parseInt(arr[i].installment_no)))/1000)*1000)).toFixed(2);
+                      }
+                      }
+                    }
+                }
+                else{
+                    if(arr[i].fee_type==discountarr[j].fee_type&&discountarr[j].amount>0){
+                       if(arr[i].amount>0&&(i!=(parseInt(arr.length)))){
+                       flag=1;
+                       arr[i].actualamount=parseFloat(arr[i].amount);
+                       arr[i].amount=parseFloat(parseFloat(arr[i].amount)-(Math.ceil(parseFloat(parseFloat(discountarr[j].amount)/(parseInt(noofinstallment)-parseInt(arr[i].installment_no)))/1000)*1000)).toFixed(2);
+                      discountarr[j].amount=parseFloat(parseFloat(discountarr[j].amount)-(Math.ceil(parseFloat(parseFloat(discountarr[j].amount)/(parseInt(noofinstallment)-parseInt(arr[i].installment_no)))/1000)*1000)).toFixed(2);
+                       }
+                    }
+                }
+            }
+            if(flag==0){
+               arr[i].actualamount=parseFloat(arr[i].amount); 
+               arr[i].amount=parseFloat(arr[i].amount);
+            }
+            }
+            }
+            else
+            {
+            for(var i=0;i<arr.length;i++){
+               arr[i].actualamount=parseFloat(arr[i].amount); 
+               arr[i].amount=parseFloat(arr[i].amount);
+            }    
+            }
+        // alert(JSON.stringify(arr));
+        var termarr=[];
+        var installmentarr=[];
+        
+        for(var i=0;i<arr.length;i++){
+            
+            var obj={"insno":"","feetype":"","amount":""};
+            obj.insno=arr[i].base_fee_type;
+            obj.feetype=arr[i].fee_type;
+            obj.amount=arr[i].amount;
+            obj.actualamount=arr[i].actualamount;
+            // obj.discountamount=parseFloat(arr[i].actualamount)-parseFloat(arr[i].amount);
+            installmentarr.push(obj);
+            termarr.push(obj);
+          }
+        document.querySelector('fees-card').FnSetInstallmentSplitup(installmentarr);
+
+        var a=[];
+        var splituparr=[];
+
+        var f=new Date();
+        var y=f.getFullYear();
+        var m=parseInt(f.getMonth())+1;
+        var d=f.getDate();
+        if(m<10)
+          m="0"+m;
+        if(d<10)
+          d="0"+d;
+        var current_date=m+"/"+d+"/"+y;
+
+        for(var i=0;i<termarr.length;i++){
+            // alert(i+"  "+termarr[i].insno+"  "+installmentdatearr[i].installment);
+            for(var j=0;j<installmentdatearr.length;j++){
+            if(termarr[i].insno!="Commitment Fee"){
+            if(termarr[i].insno==installmentdatearr[j].installment)
+                termarr[i].installmentdate=installmentdatearr[j].installment_date;
+            }
+            else
+                termarr[i].installmentdate=current_date; 
+            }
+        }
+        
+       for(var i=0;i<termarr.length;i++)
+       {       
+        var nameobj={"installment":"","installmentamount":""};
+        nameobj.installmentid=(termarr[i].insno).replace(' ','');
+        nameobj.installment=termarr[i].insno; 
+        nameobj.installmentdate=termarr[i].installmentdate; 
+
+        var amt=0;
+        var actamt=0;
+        var obj={"feetype":"","amount":""};
+        obj.feetype=termarr[i].feetype;
+        obj.amount=termarr[i].amount;
+        obj.actualamount=termarr[i].actualamount;
+        amt=parseFloat(amt)+parseFloat(termarr[i].amount);
+        actamt=parseFloat(actamt)+parseFloat(termarr[i].actualamount);
+        a.push(obj);
+        for(var j=i+1;j<termarr.length;j++)
+        {
+           if(termarr[i].insno==termarr[j].insno)
+           {
+             var obj1={"feetype":"","amount":""}
+             obj1.feetype=termarr[j].feetype;
+             obj1.amount=termarr[j].amount;
+             obj1.actualamount=termarr[j].actualamount;
+             amt=parseFloat(amt)+parseFloat(termarr[j].amount);
+             actamt=parseFloat(actamt)+parseFloat(termarr[j].actualamount);
+             a.push(obj1);
+             termarr.splice(j,1);
+             j--;
+           }
+        }
+        nameobj.installmentamount=amt;
+        nameobj.actualamount=actamt;
+        nameobj.discountamount=parseFloat(actamt)-parseFloat(amt);
+        nameobj.fees=a;
+        splituparr.push(nameobj);
+        a=[];        
+       }
+      }
+      else{
+
+      }
+      this.FnPrepareInstallment(splituparr);
+      // alert(JSON.stringify(splituparr));      
+      },
+      FnFormLumsumFeePaymentstructure:function(){
+        var arr=[];
+        var f=new Date();
+        var y=f.getFullYear();
+        var m=parseInt(f.getMonth())+1;
+        var d=f.getDate();
+        if(m<10)
+          m="0"+m;
+        if(d<10)
+          d="0"+d;
+        var current_date=m+"/"+d+"/"+y;
+        var obj={"installment":"","actualamount":"","discountamount":"","installmentamount":""};
+        obj.installmentid="Lumpsum";
+        obj.installment="Lumpsum";
+        obj.actualamount=localStorage.getItem("curr_sess_totalfees");
+        obj.discountamount=localStorage.getItem("curr_sess_payablediscount");
+        obj.installmentamount=localStorage.getItem("curr_sess_payableamount");
+        obj.installmentdate=current_date;
+        arr.push(obj);
+        this.FnPrepareInstallment(arr);
+      },
+    
+      FnPrepareInstallment:function(arr){
+        // alert(JSON.stringify(arr));
+        var tempinsamount=0;
+        var tempactamount=0;
+        var tempdisamount=0;
+        var tempobj;
+
+        var f=new Date();
+        var y=f.getFullYear();
+        var m=parseInt(f.getMonth())+1;
+        var d=f.getDate();
+        if(m<10)
+          m="0"+m;
+        if(d<10)
+          d="0"+d;
+        var current_date=m+"/"+d+"/"+y;
+
+        if(paidfeearr!='no rows'){
+            document.querySelector('fees-card').Fnhidecommitinstallment(true);
+            var t=0;
+            for(var i=0;i<paidfeearr.length;i++){
+                for(var j=0;j<arr.length;j++){
+                if((paidfeearr[i].installment=="Commitment Fee (Ins1)"&&arr[j].installment=="Commitment Fee")||(paidfeearr[i].installment=="Commitment Fee (Ins2)"&&arr[j].installment=="Commitment Fee")){
+                    var obj={};
+                    obj.installment=paidfeearr[i].installment;
+                    obj.installmentamount=paidfeearr[i].installment_amount;
+                    if(paidfeearr[i].installment=="Commitment Fee (Ins1)"){
+                    obj.installmentid="CommitmentFee1";
+                    // alert(arr[j].installmentamount+"   "+paidfeearr[i].installment_amount);
+                    tempinsamount=parseFloat(arr[j].installmentamount)-parseFloat(paidfeearr[i].installment_amount);
+                    // alert(tempinsamount);
+                    tempobj=arr[j].fees;
+                    }
+                    obj.installmentdate=paidfeearr[i].installment_date;
+                    if(paidfeearr[i].provision_payment=="1"){
+                    obj.actualamount=arr[i].actualamount;
+                    obj.discountamount=arr[i].discountamount
+                    }
+                    else{
+                    obj.actualamount=paidfeearr[i].actual_amount;
+                    obj.discountamount=paidfeearr[i].discount_amount
+                    }
+                    obj.fees=arr[j].fees;
+                    arr.push(obj);
+                    // arr.splice(j,0,obj);
+                    t++;
+                }
+                }
+            }
+
+            if(t==1){
+                // alert('one fee');
+                var obj={};
+                    obj.installment="Commitment Fee (Ins2)";
+                    obj.installmentamount=tempinsamount;                    
+                    obj.installmentid="CommitmentFee2";
+                    obj.installmentdate="";
+                    obj.actualamount=tempinsamount;
+                    obj.discountamount=0;
+                    obj.fees=tempobj;
+                    // alert(JSON.stringify(tempobj));
+                    arr.push(obj);
+                    t++;
+                    // arr.splice(1,0,obj);
+            }
+
+            if(t==2){
+                // alert('two fee');
+                for(var j=0;j<arr.length;j++){
+                    if(arr[j].installment=="Commitment Fee")
+                        arr.splice(j,1);
+                }
+            }
+
+            document.querySelector('fees-card').hiddentitleflag=false;
+            for(var i=0;i<arr.length;i++){
+                var f=0;
+                for(var j=0;j<paidfeearr.length;j++){
+                    if(arr[i].installment==paidfeearr[j].installment&&paidfeearr[j].cheque_status!='bounced'){
+                        f=1;
+                        arr[i].hiddencommitinput=true;
+                        arr[i].hiddencommititem=false;
+                        arr[i].paidflag=true;
+                        arr[i].paidflag=true;
+                        arr[i].hiddenflag=false;
+                        arr[i].readonlyflag=true;
+                        arr[i].hiddenpayflag=true;
+                        arr[i].chequeno=paidfeearr[j].cheque_no;
+                        arr[i].chequedate=paidfeearr[j].installment_date;
+                        arr[i].bankname=paidfeearr[j].bank_name;
+                        arr[i].installmentdate=paidfeearr[j].receipt_date;
+                        arr[i].receiptdate=paidfeearr[j].receipt_date;
+                        arr[i].paiddate=paidfeearr[j].paid_date;
+                        arr[i].modeofpayment=paidfeearr[j].mode_of_payment;
+                    }
+                    if(arr[i].installment==paidfeearr[j].installment&&paidfeearr[j].cheque_status=='bounced'){
+
+                        f=1;
+                       arr[i].installmentamount=parseFloat(arr[i].installmentamount)+parseFloat(paidfeearr[j].fine_amount);
+                       arr[i].hiddencommitinput=true;
+                       arr[i].hiddencommititem=false;
+                       arr[i].paidflag=false;
+                       arr[i].hiddenflag=true;
+                       arr[i].readonlyflag=false;
+                       arr[i].hiddenpayflag=false;
+                       arr[i].chequeno='';
+                       arr[i].paiddate=''; 
+                       arr[i].modeofpayment='';
+                    }
+
+                }
+                if(f==0)
+                {
+                   arr[i].hiddencommitinput=true;
+                   arr[i].hiddencommititem=false;
+                   arr[i].paidflag=false;
+                   arr[i].hiddenflag=true;
+                   arr[i].readonlyflag=false;
+                   arr[i].hiddenpayflag=false;
+                   arr[i].chequeno='';
+                   arr[i].paiddate=''; 
+                   arr[i].modeofpayment='';
+                }
+            }
+        }
+        else{
+        document.querySelector('fees-card').Fnhidecommitinstallment(false);
+        document.querySelector('fees-card').hiddentitleflag=true;
+        for(var i=0;i<arr.length;i++){
+            arr[i].hiddencommitinput=true;
+            arr[i].hiddencommititem=false;
+                   arr[i].paidflag=false;
+                   arr[i].hiddenflag=true;
+                   arr[i].readonlyflag=false;
+                   arr[i].hiddenpayflag=false;
+                   arr[i].chequeno='';
+                   arr[i].paiddate=''; 
+                   arr[i].modeofpayment='';
+                   arr[i].receiptdate=current_date;
+                   // alert(arr[i].installmentdate+"  "+current_date);
+                   if(arr[i].installmentdate<=current_date){
+                    // alert('true');
+                    arr[i].editdate=false;
+                   }
+                   else
+                   {
+                    // alert('false');
+                    arr[i].editdate=true;
+                   }
+        }
+        } 
+        // alert(JSON.stringify(arr));
+        var temp=[];
+
+        if(localStorage.getItem("curr_sess_insrequirement")=="yes"){
+
+             for(var i=0;i<arr.length;i++){
+                if(arr[i].installment=="Commitment Fee")
+                {
+                 arr[i].installment="Commitment Fee (Ins1)";
+                 arr[i].installmentid="CommitmentFee1";
+                 arr[i].hiddencommitinput=false;
+                 arr[i].hiddencommititem=true;   
+                }
+            }
+            var row={};
+            row.installment="Commitment Fee (Ins2)";
+            row.installmentamount=0;
+            row.installmentid="CommitmentFee2";
+            row.installmentdate=="";
+            row.actualamount="";
+            row.discountamount="";
+            row.fees=0;
+            row.hiddencommitinput=false;
+            row.hiddencommititem=true;
+            row.paidflag=false;
+            row.hiddenflag=true;
+            row.readonlyflag=false;
+            row.hiddenpayflag=false;
+            row.chequeno='';
+            row.paiddate=''; 
+            row.modeofpayment='';
+            arr.splice(1,0,row);
+        }
+        if(localStorage.getItem("curr_sess_changeinamountflag")==1)
+        {
+            var amount=localStorage.getItem("curr_sess_changeinamountamount");
+            var ramount=0;
+            var actualamount=0;
+            var insdate;
+            var feearr=[];
+       for(var i=0;i<arr.length;i++){
+        if(arr[i].installment=="Commitment Fee (Ins1)"){
+            ramount=parseFloat(arr[i].installmentamount)-parseFloat(amount);
+            actualamount=ramount;
+            insdate=arr[i].installmentdate;
+            feearr=arr[i].fees;
+            arr[i].installmentamount=amount;
+        }
+        if(arr[i].installment=="Commitment Fee (Ins2)"){
+        arr[i].installmentamount=ramount;
+        arr[i].actualamount=actualamount;
+        arr[i].discountamount=0;
+        arr[i].fees=feearr;
+        arr[i].installmentdate=insdate;
+        }
+        arr[i].hiddencommitinput=true;
+        arr[i].hiddencommititem=false;
+       }
+       }
+
+       // alert(JSON.stringify(arr));
+       
+        var finalarr=[];
+        for(var i=0;i<arr.length;i++){
+            if(arr[i].installment=="Commitment Fee (Ins1)"||arr[i].installment=="Commitment Fee"){
+                finalarr.push(arr[i]);
+                arr.splice(i,1);
+            }
+            if(arr[i].installment=="Commitment Fee (Ins2)"){
+                finalarr.push(arr[i]);
+                arr.splice(i,1);
+            }
+        }
+        var installmentamt=0;
+        var actualamt=0;
+        var discountamt=0;
+        var installdate="";
+        if(localStorage.getItem("curr_sess_installmentpattern")=="4")
+        {
+            var f=new Date();
+            var y=f.getFullYear();
+            var m=parseInt(f.getMonth())+1;
+            var d=f.getDate();
+            if(m<10)
+              m="0"+m;
+            if(d<10)
+              d="0"+d;
+            var current_date=m+"/"+d+"/"+y;
+            for(var i=0;i<arr.length;i++){
+                installmentamt=parseFloat(parseFloat(installmentamt)+parseFloat(arr[i].installmentamount)).toFixed(2);
+                actualamt=parseFloat(parseFloat(actualamt)+parseFloat(arr[i].actualamount)).toFixed(2);
+                discountamt=parseFloat(parseFloat(discountamt)+parseFloat(arr[i].discountamount)).toFixed(2);
+                installdate=current_date;
+            }
+        var discountpercentamt=parseFloat(parseFloat(actualamt)*(parseFloat(localStorage.getItem("curr_sess_discountpercent"))/100)).toFixed(2);
+        var payableamount=parseFloat(localStorage.getItem("curr_sess_payablefees"))-(parseFloat(discountpercentamt));
+        document.querySelector('fees-card').payableamount=payableamount;
+        var totaldiscount=parseFloat(discountamt)+(parseFloat(discountpercentamt));
+        localStorage.setItem("curr_sess_payablediscount",totaldiscount);
+        localStorage.setItem("curr_sess_payableamount",payableamount);
+
+            for(var i=0;i<arr.length;i++){
+                if(arr[i].installment=="Installment1"){
+                if(localStorage.getItem("curr_sess_discountpercent")>0){
+                    arr[i].installmentamount=parseFloat(installmentamt)-parseFloat(discountpercentamt);
+                    arr[i].discountamount=discountpercentamt;
+                    arr[i].actualamount=actualamt;
+                    arr[i].installmentdate=installdate;
+                }
+                else{
+                    arr[i].installmentamount=installmentamt;
+                    arr[i].discountamount=discountamt;
+                    arr[i].actualamount=actualamt;
+                    arr[i].installmentdate=installdate;
+                }
+                }
+                else{
+                    arr.splice(i,1);
+                    i--;
+                }
+            }
+           for(var i=0;i<arr.length;i++){
+           finalarr.push(arr[i]); 
+           }
+        }
+        else{
+           for(var i=0;i<arr.length;i++){
+           finalarr.push(arr[i]); 
+           }
+        }
+        // alert(JSON.stringify(finalarr));
+        document.querySelector('fees-card').feearr=finalarr; 
+        // document.querySelector('fees-card').Fnsetinstallmentarr(arr);
+        document.querySelector('fees-card').FnHiddenPayment();  
+        installmentarr=finalarr;
+        paidfeearr=[];
+        discountarr=[];
+        installmentdatearr=[];
+        arr=[]; 
+        finalarr=[];
+      },
+      FnCreateCommitmentfeeInstallment:function(amount){
+       var ramount=0;
+       for(var i=0;i<installmentarr.length;i++){
+        if(installmentarr[i].installment=="Commitment Fee (Ins1)"){
+            ramount=parseFloat(installmentarr[i].installmentamount)-parseFloat(amount);
+            installmentarr[i].installmentamount=amount;
+        }
+        if(installmentarr[i].installment=="Commitment Fee (Ins2)")
+            installmentarr[i].installmentamount=ramount;
+        installmentarr[i].hiddencommitinput=true;
+        installmentarr[i].hiddencommititem=false;
+       }
+       // alert(JSON.stringify(installmentarr));
+       document.querySelector('fees-card').feearr=installmentarr; 
+      },
+      fetchallstudentforsearchService:function(){
+        this.fetchallstudentforsearchurl=sessionStorage.getItem("addrinfo")+"/fetchallstudentforsearch-service";
+        var obj={"schoolid":"","academicyear":"","statusflag":""}  
+        obj.schoolid=localStorage.getItem("schoolid");  
+        this.fetchallstudentforsearchparam=obj;     
+        this.$.fetchallstudentforsearchajax.generateRequest();
+      },
+      fetchallstudentforsearchResponse:function(e){
+        document.querySelector('chequebounceorcancel-card').autocompletearr(e.detail.response.returnval);
+        document.querySelector('editdelete-cheques-card').autocompletearr(e.detail.response.returnval);
+      }   
+
+    });
+  })();
+  </script>
+</dom-module>

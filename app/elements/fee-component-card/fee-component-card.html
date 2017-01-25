@@ -1,0 +1,303 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="fee-component-card">
+  <template>
+  <style>
+    paper-dialog{
+       /*border: 2px solid;*/
+       border-color: darkslategrey;
+       background-color: white;
+       color: black;
+    }
+    paper-button{
+            width: 10%;
+            background: #252626;
+            color: white;
+            margin-top: 2%;
+            text-transform: none;
+    }
+  </style>
+    <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hidefeecard}}">
+          <div class="col-sm-2 enquiry-input">
+            <paper-item>{{installment}}</paper-item>
+          </div>
+          <div class="col-sm-3 enquiry-input" style="margin-top: -2%;">
+            <paper-dropdown-menu label="Select Installment Type" attr-for-selected="value">
+            <paper-menu id="structureinstallmenttype" class="dropdown-content" required on-iron-select="FnSelectInstallmentType" valueattr="value" >
+              <template  is="dom-repeat" items="{{componentarr}}" as="item">
+              <paper-item>{{item.component_name}}</paper-item>
+              </template>
+            </paper-menu>
+            </paper-dropdown-menu>
+          </div>
+          <div class="col-sm-2 enquiry-input" style="margin-top: -2%;">
+          <paper-input readonly id="ins{{installment}}" label="Payable amount" value="{{payableamount}}"></paper-input>
+          </div>
+          <div class="col-sm-2 enquiry-input" style="margin-top: -3%;">
+          <installment-date-picker id="date{{installment}}" on-click="FnDateChange"></installment-date-picker>
+          </div>
+          <div class="col-sm-3 enquiry-input" style="margin-top: 2%;margin-left: -2%;">
+            <!-- <span class="pull-right"> -->
+            <span class="panel-icon"><a href=""><i class="fa fa-plus" aria-hidden="true" data-toggle="modal" data-target="#addfeetype" on-click="FnAdd"></i></a></span> 
+            <span class="panel-icon"><a href=""><i class="fa fa-eye" aria-hidden="true" data-toggle="modal" data-target="#addfeetype" on-click="FnView"></i></a></span>            
+            <span class="panel-icon"><a href=""><i class="fa fa-trash" aria-hidden="true" on-click="FnDelete"></i></a></span>
+            <span class="panel-icon"><a href=""><i class="fa fa-save" aria-hidden="true" on-click="FnSave"></i></a></span>
+            <!-- </span> -->
+          </div>
+    </div>
+    <div>
+      <paper-dialog id="dialog{{installment}}">
+        <fee-type-card id="{{installment}}" type="{{installmenttype}}"></fee-type-card>
+      </paper-dialog>
+    </div>
+
+    <div>
+      <paper-dialog id="viewdialog{{installment}}">
+        <table style="width: 800px;margin-left: 5%;"><tr><th>Installment</th><th>Installment Type</th><th>Fee Type</th><th>Actual Amount</th><th>Discount</th><th>Payable Amount</th></tr>
+        <template  is="dom-repeat" items="{{viewarr}}" as="item">
+        <tr><td>{{item.installment}}</td><td>{{item.installmenttype}}</td><td>{{item.feetype}}</td><td>{{item.actualamount}}</td><td>{{item.discount}}</td><td>{{item.payableamount}}</td></tr>
+        </template>
+        </table>
+        <paper-button style="margin-left: 70%;" on-click="FnViewClose">Close</paper-button>
+      </paper-dialog>
+    </div>
+
+    <div>
+      <paper-dialog id="deletedialog{{installment}}">
+        <table style="width: 800px;margin-left: 5%;"><tr><th>Installment</th><th>Installment Type</th><th>Fee Type</th><th>Actual Amount</th><th>Discount</th><th>Payable Amount</th></tr>
+        <template  is="dom-repeat" items="{{deletearr}}" as="item">
+        <tr>
+          <td colspan="6"><feetype-delete-card installment="{{item.installment}}" installmenttype="{{item.installmenttype}}" feetype="{{item.feetype}}" actualamount="{{item.actualamount}}" discount="{{item.discount}}" payableamount="{{item.pyableamount}}"></feetype-delete-card></td>
+        </tr>
+        </template>
+        </table>
+        <paper-button style="margin-left: 70%;" on-click="FnDeleteClose">Close</paper-button>
+      </paper-dialog>      
+    </div>
+    
+
+      <!-- It would fetch fee component type -->
+     <iron-ajax
+        method="post"
+        id="fetchfeecomponenttypeajax"
+        url="{{fetchfeecomponenttypeurl}}"
+        params="{{fetchfeecomponenttypeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeecomponenttypeResponse"
+        debounce-duration="300"
+        >
+        <!-- It would fetch fee type -->
+      <iron-ajax
+        method="post"
+        id="fetchfeetypeajax"
+        url="{{fetchfeetypeurl}}"
+        params="{{fetchfeetypeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeetypeResponse"
+        debounce-duration="300"
+      >
+      <schedule-service id="scheduleservice"></schedule-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var installmenttype,feetype;
+    var installment=[];
+    var subinstallment=[];
+    var idd;
+    var flag=0;
+    Polymer({
+      is: 'fee-component-card',
+      ready:function(){
+        this.hidefeetype=true;
+        this.fetchfeecomponenttypeurl=sessionStorage.getItem("addrinfo")+"/fetchfeecomponenttype-service";
+        this.$.fetchfeecomponenttypeajax.generateRequest();
+      },
+      fetchfeecomponenttypeResponse:function(e){        
+        this.componentarr=e.detail.response.returnval;
+      },
+      FnSelectInstallmentType:function(e){
+        idd=this.installment;        
+        installmenttype=(e.target.selectedItem.textContent).trim();
+        this.installmenttype=installmenttype;
+        localStorage.setItem("curr_sess_installment",this.installment);
+      },
+      FnAdd:function(){
+        document.getElementById('dialog'+idd).opened=true;
+        // this.fetchfeetypeService();
+      },     
+      FnCloseDialog:function(feetype,actualamount,discount,payableamount,remainingamount){
+        document.getElementById('dialog'+idd).opened=false;
+        this.FnSetInstallment(feetype,actualamount,discount,payableamount,remainingamount);
+      },
+      FnCancelCloseDialog:function(){
+        document.getElementById('dialog'+idd).opened=false;
+        // this.FnSetInstallment(feetype,actualamount,discount,payableamount);
+      },
+     
+      FnSetInstallment:function(feetype,actualamount,discount,payableamount,remainingamount){
+        
+        var obj={"installment":"","installmenttype":"","feetype":"","actualamount":"","discount":"","payableamount":""}
+        obj.installment=idd;
+        obj.installmenttype=installmenttype;
+        obj.feetype=feetype;
+        obj.actualamount=actualamount;
+        obj.discount=discount;
+        obj.payableamount=payableamount;
+        obj.remainingamount=remainingamount;
+        if(subinstallment.length==0)
+          subinstallment.push(obj); 
+          else{  
+          for(var i=0;i<subinstallment.length;i++){
+            var temp=0;
+            if(subinstallment[i].installment==idd&&subinstallment[i].installmenttype==installmenttype&&subinstallment[i].feetype==feetype){
+                subinstallment.splice(i,1);
+            }
+            // else{
+            // temp=1;
+            // }       
+            }            
+            // if(temp==1)
+            subinstallment.push(obj); 
+          } 
+          for(var i=0;i<subinstallment.length;i++){
+            if(subinstallment[i].installment==idd&&subinstallment[i].installmenttype==installmenttype&&subinstallment[i].feetype!=feetype){
+              payableamount=parseInt(subinstallment[i].payableamount)+parseInt(payableamount);
+            }
+          }
+          // alert(idd);
+          // alert(document.getElementById('ins'+idd));
+          document.getElementById('ins'+idd).value=payableamount;
+          document.querySelector('fee-type-card').FnSetSubinstallment(subinstallment);           
+          // alert(JSON.stringify(subinstallment));
+      },
+      FnView:function(){
+         var arr=[];
+         for(var i=0;i<subinstallment.length;i++){
+            var obj={"installment":"","installmenttype":"","feetype":"","actualamount":"","discount":"","payableamount":""}
+            if(subinstallment[i].installment==idd){
+              obj.installment=subinstallment[i].installment;
+              obj.installmenttype=subinstallment[i].installmenttype;
+              obj.feetype=subinstallment[i].feetype;
+              obj.actualamount=subinstallment[i].actualamount;
+              obj.discount=subinstallment[i].discount;
+              obj.payableamount=subinstallment[i].payableamount;
+              arr.push(obj);
+            }            
+          }
+         this.viewarr=arr;
+         // alert(JSON.stringify(this.viewarr))
+         document.getElementById('viewdialog'+idd).opened=true;
+      },
+      FnDelete:function(){
+         var arr=[];
+         for(var i=0;i<subinstallment.length;i++){
+            var obj={"installment":"","installmenttype":"","feetype":"","actualamount":"","discount":"","payableamount":""}
+            if(subinstallment[i].installment==idd){
+              obj.installment=subinstallment[i].installment;
+              obj.installmenttype=subinstallment[i].installmenttype;
+              obj.feetype=subinstallment[i].feetype;
+              obj.actualamount=subinstallment[i].actualamount;
+              obj.discount=subinstallment[i].discount;
+              obj.payableamount=subinstallment[i].payableamount;
+              arr.push(obj);
+            }            
+          }
+         this.deletearr=arr;
+         // alert(JSON.stringify(this.deletearr))
+         document.getElementById('deletedialog'+idd).opened=true;
+      },
+      FnViewClose:function(){
+        document.getElementById('viewdialog'+idd).opened=false;
+      },
+      FnDeleteClose:function(){
+        document.getElementById('deletedialog'+idd).opened=false;
+      },
+      FnSpliceFeetype:function(installment,installmenttype,feetype){
+        // alert(installment+" "+installmenttype+" "+feetype);
+        for(var i=0;i<subinstallment.length;i++){
+            if(subinstallment[i].installment==installment&&subinstallment[i].installmenttype==installmenttype&&subinstallment[i].feetype==feetype){
+              subinstallment.splice(i,1);
+            }
+        }
+        // alert(JSON.stringify(subinstallment));
+        var arr=[];
+         for(var i=0;i<subinstallment.length;i++){
+            var obj={"installment":"","installmenttype":"","feetype":"","actualamount":"","discount":"","payableamount":""}
+            if(subinstallment[i].installment==idd){
+              obj.installment=subinstallment[i].installment;
+              obj.installmenttype=subinstallment[i].installmenttype;
+              obj.feetype=subinstallment[i].feetype;
+              obj.actualamount=subinstallment[i].actualamount;
+              obj.discount=subinstallment[i].discount;
+              obj.payableamount=subinstallment[i].payableamount;
+              arr.push(obj);
+            }            
+          }
+         // alert(JSON.stringify(arr));
+         this.deletearr=arr;
+      },
+      FnSetInstallmentDate:function(date){
+        for(var i=0;i<subinstallment.length;i++){
+        }
+      },
+      FnDateChange:function(e){
+        // alert(this.installment);
+        idd=this.installment;
+        for(var i=0;i<subinstallment.length;i++){
+          if(idd==subinstallment[i].installment){
+            subinstallment[i].installmentdate=localStorage.getItem("curr_sess_installmentdate");
+          }
+        }        
+      },
+      FnSave:function(){
+        var actualamount=0;
+        var discount=0;
+        var payableamount=0;
+        var obj={"installment":"","installmenttype":"","feetype":"","actualamount":"","discount":"","payableamount":""}
+        // installmentarr=[];
+        // alert(idd);
+        for(var i=0;i<subinstallment.length;i++){
+          if(idd==subinstallment[i].installment){            
+          actualamount=actualamount+parseInt(subinstallment[i].actualamount);
+          discount=discount+parseInt(subinstallment[i].discount);
+          payableamount=payableamount+parseInt(subinstallment[i].payableamount);
+          obj.installment=subinstallment[i].installment;
+          obj.installmenttype=subinstallment[i].installmenttype;          
+          obj.actualamount=actualamount;
+          obj.discount=discount;
+          obj.payableamount=payableamount;
+          obj.installmentdate=subinstallment[i].installmentdate;
+          }          
+        }
+        for(var j=0;j<installment.length;j++){
+            if(installment[j].installment==idd){
+              installment.splice(j,1);
+            }
+        }
+        installment.push(obj);
+        // alert(JSON.stringify(installment));
+        document.querySelector('fee-structure-schedulecard').FnSetInsatllment(installment,subinstallment);
+        alert('Added!');
+      },
+      eliminateDuplicates:function(arr) {
+      var i;
+      var len=arr.length;
+      var out=[];
+      var obj={};
+      for (i=0;i<len;i++) {
+      obj[arr[i]]=0;
+      }
+      for (i in obj) {
+      out.push(i);
+      }
+      return out;
+      }
+
+    });
+  })();
+  </script>
+</dom-module>

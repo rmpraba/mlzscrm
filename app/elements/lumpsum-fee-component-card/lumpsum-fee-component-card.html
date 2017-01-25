@@ -1,0 +1,132 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="lumpsum-fee-component-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div>
+      <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hidefeecard}}">
+      <div class="col-sm-2 enquiry-input">
+      <paper-item>{{installment}}</paper-item>
+      </div>
+      <div class="col-sm-3 enquiry-input" style="margin-top: -2%;">
+          <paper-input readonly id="lum{{installment}}" label="Total amount" value="{{totalamount}}"></paper-input>
+      </div>
+      <div class="col-sm-3 enquiry-input" style="margin-top: -2%;">
+          <paper-input readonly id="lum{{discountamount}}" label="Discount amount" value="{{discountamount}}"></paper-input>
+      </div>
+      <div class="col-sm-3 enquiry-input" style="margin-top: -2%;">
+          <paper-input readonly id="lum{{installment}}" label="Payable amount" value="{{payableamount}}"></paper-input>
+      </div>
+      
+      </div>
+
+    </div>
+
+    <iron-ajax
+        method="post"
+        id="fetchdiscountpercentageajax"
+        url="{{fetchdiscountpercentageurl}}"
+        params="{{fetchdiscountpercentageparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchdiscountpercentageResponse"
+        debounce-duration="300"
+        >
+        <schedule-service id="scheduleservice"></schedule-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var consolidatedarray=[];
+    Polymer({
+      is: 'lumpsum-fee-component-card',
+      ready:function(){
+        this.fetchdiscountpercentageurl=sessionStorage.getItem("addrinfo")+"/fetchdiscountpercentageinfo";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.fetchdiscountpercentageparam=obj;
+        this.$.fetchdiscountpercentageajax.generateRequest();
+      },
+      fetchdiscountpercentageResponse:function(e){
+        var arr=e.detail.response.returnval;
+        if(arr!='0')
+        localStorage.setItem("curr_sess_discountpercentage",arr[0].percentage);
+      },
+      FnSetTotalFeeInstallment:function(totalfees,totalfeearr,totaldiscountarr){
+        var fees="";
+        
+        var discount=0;
+        var totalfeearray=[];
+        var totaldiscountarray=[];
+        totalfeearray=totalfeearr;
+        totaldiscountarray=totaldiscountarr;
+        for(var i=0;i<totalfeearray.length;i++){
+          if(totalfeearray[i].fee_type=='Registration fee')
+          totalfees=parseFloat(totalfees)-parseFloat(totalfeearray[i].total_fee);
+        }
+        for(var i=0;i<totaldiscountarr.length;i++){
+          if(totaldiscountarr[i].fee_type!='Registration fee')
+          discount=parseFloat(parseFloat(totaldiscountarr[i].amount)+parseFloat(discount)).toFixed(2);
+        }
+        // alert(discount);
+        fees=totalfees;
+        var obj={"schoolid":"","academicyear":"","admissionyear":"","grade":"","admissiontype":"",
+        "discountcode":"","discounttype":"","feecode":"","actualamount":"","payableamount":""};
+              obj.schoolid=localStorage.getItem("schoolid");
+              obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+              obj.admissionyear=localStorage.getItem("curr_sess_admissionyear");
+              obj.grade=localStorage.getItem("curr_sess_grade");
+              obj.noofinstallment=localStorage.getItem("curr_sess_noofinstallment"); 
+              obj.discounttypecode=totaldiscountarray[0].discount_type_code; 
+              obj.discounttype=totaldiscountarray[0].discount_type; 
+              obj.discountcode='Lumpsum';
+              obj.admissiontype=localStorage.getItem("curr_sess_admissiontype");
+              obj.discountamount=discount;
+              obj.feecode=totalfeearray[0].fee_code;
+              obj.feetype="Lumpsum";
+              obj.actualamount=totalfees;
+              obj.payableamount=parseFloat(parseFloat(obj.actualamount)-parseFloat(obj.discountamount)).toFixed(2);
+              obj.payableamount=parseFloat(obj.payableamount)-parseFloat(parseFloat(obj.payableamount)*(parseFloat(localStorage.getItem("curr_sess_discountpercentage"))/100)).toFixed(2);
+              consolidatedarray.push(obj);
+              this.$.scheduleservice.generateinstallmentscheduleService(consolidatedarray);
+
+              this.totalamount=fees;
+              this.payableamount=obj.payableamount;
+              var dis_amt=(parseFloat(parseFloat(parseFloat(obj.actualamount)-parseFloat(obj.discountamount)).toFixed(2))*(parseFloat(localStorage.getItem("curr_sess_discountpercentage"))/100));
+              // alert(dis_amt);
+              this.discountamount=parseFloat(parseFloat(obj.discountamount)+parseFloat(dis_amt)).toFixed(2);
+
+              var obj={"schoolid":""};
+              var installment=[];
+              obj.installment=this.installment;
+              obj.installmenttype='Lumpsum';  
+              obj.feetype='Lumpsum';  
+              obj.actualamount=this.totalamount;
+              obj.discount=this.discountamount; 
+              obj.payableamount=this.payableamount;
+              obj.remainingamount=0;
+
+              installment.push(obj);
+
+              var obj={"schoolid":""};
+              var subinstallment=[];
+              obj.installment=this.installment;
+              obj.installmenttype='Lumpsum';  
+              obj.feetype='Lumpsum';  
+              obj.actualamount=this.totalamount;
+              obj.discount=this.discountamount; 
+              obj.payableamount=this.payableamount;
+              obj.installmentdate='';
+              // obj.remainingamount=0;
+              subinstallment.push(obj);
+              document.querySelector('fee-structure-schedulecard').FnSetInsatllment(installment,subinstallment);
+      }
+    });
+  })();
+  </script>
+</dom-module>

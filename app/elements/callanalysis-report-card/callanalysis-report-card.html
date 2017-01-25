@@ -1,0 +1,70 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="callanalysis-report-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div>
+      <div class="col-md-12 form-button">
+         <div class="col-sm-6">
+          <paper-dropdown-menu label="View Report For : " id="rmnames">
+            <paper-menu id="class" class="dropdown-content" required on-iron-select="attendedby" valueattr="value" >
+              <template  is="dom-repeat" items="{{listnamearr}}" as="view">
+                <paper-item >{{view.employee_name}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
+      </div>
+      <div class="col-md-12 form-button">
+         <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Source</th>
+        <th>Total Enquiries 2017-2018 (YTD)</th>
+        <th>Total Enquiries in current month (MTD)</th>
+        <th>Enquiry for the day</th>
+      </tr>
+      </thead>
+      <tbody>
+        <template  is="dom-repeat" items="{{callinanasysisyaerandmontharr}}" as="view">
+          <tr><td>{{view.source}}</td><td>{{view.year}}</td><td>{{view.month}}</td><td>{{view.day}}</td></tr>
+        </template>
+      </tbody>
+    </table>
+      </div>
+    </div>
+    <followup-service id="followupservice"></followup-service>
+    <crm-service id="service"></crm-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+var rmname;
+    Polymer({
+      is: 'callanalysis-report-card',
+
+      ready:function(){
+          this.$.service.getrmnamelist();
+      },
+      attendedby:function(e){
+        rmname=(e.target.selectedItem.textContent).trim();
+        this.$.followupservice.getrmenquirydetails(rmname);
+      }
+    });
+  })();
+  </script>
+</dom-module>

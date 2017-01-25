@@ -1,0 +1,127 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="enrollment-report">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+          <div class="col-md-12">
+          <!-- <div class="col-sm-3 enquiry-input">
+          <paper-dropdown-menu label="Admission Year" attr-for-selected="value">
+            <paper-menu id="enrollmentadmissionyear" class="dropdown-content" required on-iron-select="FnSelectAdmissionYear" valueattr="value" >
+              <template  is="dom-repeat" items="{{admissionarr}}" as="item">
+              <paper-item>{{item.admission_year}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+          </div> -->
+          <div class="col-sm-3">
+          <paper-dropdown-menu label="Academic Year" attr-for-selected="value">
+            <paper-menu id="enrollmentacademicyear" class="dropdown-content" required on-iron-select="FnSelectAcademicYear" valueattr="value" >
+              <template  is="dom-repeat" items="{{academicarr}}" as="item">
+              <paper-item>{{item.academic_year}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu> 
+          </div>
+          <div class="col-sm-2">
+          <paper-dropdown-menu label="Grade" attr-for-selected="value">
+            <paper-menu id="enrollmentgrade" class="dropdown-content" required on-iron-select="FnSelectGrade" valueattr="value" >
+              <template  is="dom-repeat" items="{{gradearr}}" as="item">
+              <paper-item value="{{item.grade_id}}">{{item.grade_name}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu> 
+          </div>
+          <div class="col-md-1" style="margin-top: 2.5%;margin-left: 2%;">
+              <paper-button style="height:30px;text-transform: none;" on-click="FnView" class="btn btn-primary">View</paper-button>
+          </div>
+
+          <div class="col-md-1" style="margin-top: -3%;margin-left: 25%;">
+                <p>Download
+                <a href="#">
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('enrollmentreport','Enrollment Report')"></span>
+                </a>
+                </p>
+          </div>   
+          </div>
+          </div>
+        </div>
+    </div>
+     <table class="table table-hover" id="enrollmentreport" hidden>
+      <template  is="dom-repeat" items="{{enrollmentarr}}" as="e">
+      <tr><td>{{e.enquiry_no}}</td><td>{{e.admission_no}}</td><td>{{e.admission_year}}</td><td>{{e.academic_year}}</td><td>{{e.first_name}}</td><td>{{e.middle_name}}</td><td>{{e.last_name}}</td><td>{{e.student_name}}</td><td>{{e.class_for_admission}}</td><td>{{e.dob}}</td><td>{{e.gender}}</td><td>{{e.father_name}}</td><td>{{e.mother_name}}</td><td>{{e.disabled_stuent}}</td><td>{{e.canteen_availed}}</td><td>{{e.transport_availed}}</td><td>{{e.having_sibling}}</td><td>{{e.admission_status}}</td><td>{{e.active_status}}</td><td>{{e.second_language}}</td><td>{{e.third_language}}</td><td>{{e.mother_toungue}}</td><td>{{e.blood_group}}</td><td>{{e.father_mobile}}</td><td>{{e.mother_mobile}}</td><td>{{e.father_email}}</td><td>{{e.mother_email}}</td><td>{{e.aadhar_no}}</td><td>{{e.caste}}</td><td>{{e.flat_no}}</td><td>{{e.building_name}}</td><td>{{e.street}}</td><td>{{e.town}}</td><td>{{e.city}}</td><td>{{e.pincode}}</td></tr>
+      </template> 
+      </table>
+      <!-- <table class="table table-hover" id="gwfeestructurereport" style="width: 140%;">
+      <tr>
+        <th>Enrollment #</th><th>Student Name</th><th>Admission Year</th><th>Academic Year</th><th>Grade</th><th>Fee Code</th><th>Fees</th>
+      </tr>
+      <tbody>
+      <template  is="dom-repeat" items="{{gradewisefeestructurearr}}" as="item">
+      <tr>
+      <td>{{item.admission_no}}</td><td>{{item.student_name}}</td>
+      <td>{{item.admission_year}}</td><td>{{item.academic_year}}</td>
+      <td>{{item.class_for_admission}}</td><td>{{item.feecode}}</td>
+      <td>{{item.fees}}</td>
+      </tr>
+      </template>
+      </tbody>
+    </table>    
+ -->
+    <fee-report-service id="feereportservice"></fee-report-service>
+  </template>
+  <script type="text/javascript">
+      var tableToExcel = (function() {
+      var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+     return function(table, name) {
+     if (!table.nodeType) table = document.getElementById(table)
+     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+     window.location.href = uri + base64(format(template, ctx))
+     }
+     })()
+  </script>
+  
+  <script>
+  (function() {
+    'use strict';
+    var admissionyear,academicyear,grade;
+    Polymer({
+      is: 'enrollment-report',
+      // FnSelectAdmissionYear:function(e){
+      //   admissionyear=(e.target.selectedItem.textContent).trim();
+      // },
+      FnSelectAcademicYear:function(e){
+        academicyear=(e.target.selectedItem.textContent).trim();
+      },
+      FnSelectGrade:function(e){
+        grade=(e.target.selectedItem.textContent).trim();
+      },
+      callService:function(){        
+        // this.$.feereportservice.FnFetchDiscountStructureService();
+      },
+      FnView:function(){
+        this.$.feereportservice.FnFetchAllAdmissionService(academicyear,grade);
+        // this.$.feereportservice.FnFetchAllStudentsService(academicyear,grade);
+      },
+      FnRefresh:function(){
+        document.querySelector('#enrollmentacademicyear').selected=-1;
+        // document.querySelector('#gwfeestructadmissionyear').selected=-1;
+        document.querySelector('#enrollmentgrade').selected=-1;
+        admissionyear="";
+        academicyear="";
+        grade="";
+      }
+    });
+  })();
+  </script>
+</dom-module>

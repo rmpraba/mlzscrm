@@ -1,0 +1,610 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="pre-apps-service">
+  <template>
+    <!-- this ajax is to fetch the available classes with repect to the school -->
+    <iron-ajax
+      method="post"
+      id="getclassesajax"
+      url="{{getclassesurl}}"
+      params="{{getclassesparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="getclassesResponse"
+      debounce-duration="300"
+      >
+    </iron-ajax>
+    <iron-ajax
+      method="post"
+      id="discountajax"
+      url="{{discounturl}}"
+      params="{{discountparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="getdiscountsResponse"
+      debounce-duration="300"
+    >
+    </iron-ajax>
+    <!-- this ajax is used to verify the age criteria for the specific grade according cbse rule and regulation that hasw been stored in md_age table in the database -->
+    <iron-ajax
+      method="post"
+      id="verifyageajax"
+      url="{{verifyageurl}}"
+      params="{{verifyageparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="verifyageResponse"
+      debounce-duration="300"
+    >
+    </iron-ajax>
+    <!-- this ajax is used to get the enquiry sources available to generate the list -->
+    <iron-ajax
+      method="post"
+      id="getenquirysourceajax"
+      url="{{getenquirysourceurl}}"
+      params="{{getenquirysourceparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="getenquirysourceResponse"
+      debounce-duration="300"
+    >
+    </iron-ajax>
+  <!-- this ajax is to get the referrer name from parent table -->
+  <iron-ajax
+        method="post"
+        id="getparentnameajax"
+        url="{{getparentnameurl}}"
+        params="{{getparentnameparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getparentnameResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <!-- this ajax is used to fetch the referrer name from student detail table -->
+  <iron-ajax
+        method="post"
+        id="getstudentnameajax"
+        url="{{getstudentnameurl}}"
+        params="{{getstudentnameparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getstudentnameResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="getcounsellorattendedbyajax"
+        url="{{getcounsellorattendedbyurl}}"
+        params="{{getcounsellorattendedbyparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getcounsellorattendedbyResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <!-- this ajax fetched the list of locations available with respect to school -->
+  <iron-ajax
+        method="post"
+        id="getlocationajax"
+        url="{{getlocationurl}}"
+        params="{{getlocationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getlocationResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>  
+  <iron-ajax
+        method="post"
+        id="getmothertongueajax"
+        url="{{getmothertongueurl}}"
+        params="{{getmothertongueparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getmothertongueResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="getprofessionajax"
+        url="{{getprofessionurl}}"
+        params="{{getprofessionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getprofessionResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+    <iron-ajax
+        method="post"
+        id="submitenqdetailsajax"
+        url="{{submitenqdetailsurl}}"
+        params="{{submitenqdetailsparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="submitenqdetailsResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax> 
+  <iron-ajax
+        method="post"
+        id="getenquirynoajax"
+        url="{{getenquirynourl}}"
+        params="{{getenquirynoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getenquirynoResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="updateseqajax"
+        url="{{updatesequrl}}"
+        params="{{updateseqparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updateseqResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="getstudentsinlocationajax"
+        url="{{getstudentsinlocationurl}}"
+        params="{{getstudentsinlocationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getstudentsinlocationResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="siblingdetailsajax"
+        url="{{siblingdetailsurl}}"
+        params="{{siblingdetailsparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="siblingdetailsResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="referraldetailsajax"
+        url="{{referraldetailsurl}}"
+        params="{{referraldetailsparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="referraldetailsResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="savereferraldataajax"
+        url="{{savereferraldataurl}}"
+        params="{{savereferraldataparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="savereferraldataResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+<!-- this ajax is to verify with the database whether the specific number is existing in database or not -->
+  <iron-ajax
+        method="post"
+        id="verifymobilenoajax"
+        url="{{verifymobilenourl}}"
+        params="{{verifymobilenoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="verifymobilenoResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="getenquiryreferralsajax"
+        url="{{getenquiryreferralsurl}}"
+        params="{{getenquiryreferralsparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getenquiryreferralsResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="getadmittedstudentsinlocationajax"
+        url="{{getadmittedstudentsinlocationurl}}"
+        params="{{getadmittedstudentsinlocationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getadmittedstudentsinlocationResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="getprovisionallyadmittedstudentsinlocationajax"
+        url="{{getprovisionallyadmittedstudentsinlocationurl}}"
+        params="{{getprovisionallyadmittedstudentsinlocationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getprovisionallyadmittedstudentsinlocationResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+      <followup-service id="followupservice"></followup-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    var verifyage;
+    var verifygrade;
+    var parentarr=[];
+    var studentarr=[];
+    var namelistarr=[];
+    var sibnamelistarr = [];
+    var seqno;
+    var enquiryiddz,attendantname;
+    var enquired_location,enquired_students,admitted_students,provisionally_admitted_students;
+
+    Polymer({
+      is: 'pre-apps-service',
+
+      getclasses:function(){
+        this.getclassesurl=sessionStorage.getItem("addrinfo")+"/getclasses";
+        var obj={"schol":""};
+        obj.schol=localStorage.getItem("schoolid");
+        this.getclassesparam=obj;
+        //alert(JSON.stringify(obj));
+        this.$.getclassesajax.generateRequest();
+      },
+      getclassesResponse:function(e){
+        var result=e.detail.response.returnval;
+        //alert(JSON.stringify(result));
+        document.querySelector('pre-apps').gradeinschoolarr=result;
+       //document.querySelector('detailed-enquiry-form').itemarr=result;
+       // document.querySelector('admission-approval-card').itemarr=result;
+      },
+      getdiscounts:function(){
+        this.discounturl=sessionStorage.getItem("addrinfo")+"/discount";
+        var obj={"schol":""};
+        obj.schol=localStorage.getItem("schoolid");
+        this.discountparam=obj;
+        this.$.discountajax.generateRequest();
+      },
+      getdiscountsResponse:function(e){
+        var res=e.detail.response.returnval;
+        //alert(JSON.stringify(res));
+        document.querySelector('pre-apps').discountarr=res;
+        
+      },
+      verifyage:function(grade,age){
+        verifyage=age;
+        this.verifyageurl=sessionStorage.getItem("addrinfo")+"/verifyage";
+        var obj={"grades":""};
+        obj.grades=grade;
+        this.verifyageparam=obj;
+        this.$.verifyageajax.generateRequest();
+      },
+      verifyageResponse:function(e){
+        var min=e.detail.response.returnval[0].min_age;
+        var max=e.detail.response.returnval[0].max_age;
+        if((min<=verifyage)&&(max>=verifyage)){
+        }
+        else if(min>verifyage){
+          alert("Your age is lesser than the minimum age criteria\nThe age should be between "+min+" and "+max+" for "+verifygrade);
+          document.querySelector('detailed-enquiry-form').ageofyr="";
+          document.querySelector('pre-apps').ageofyr="";
+        }
+        else if(max<verifyage){
+          alert("Your age is greater than the maximum age criteria\nThe age should be between "+min+" and "+max+" for "+verifygrade);
+          document.querySelector('detailed-enquiry-form').ageofyr="";
+          document.querySelector('pre-apps').ageofyr="";
+        }
+      },
+      getenquirysource:function(){
+        this.getenquirysourceurl=sessionStorage.getItem("addrinfo")+"/getenquirysource";
+        var obj={"schol":""};
+        obj.schol=localStorage.getItem("schoolid");
+        this.getenquirysourceparam=obj;
+        this.$.getenquirysourceajax.generateRequest();
+      },
+      getenquirysourceResponse:function(e){
+        var result=e.detail.response.returnval;
+        document.querySelector('pre-apps').sourcearr=result;
+        document.querySelector('detailed-enquiry-form').sourcearr=result;
+      },
+      getreferrername:function(){
+        this.getparentnameurl=sessionStorage.getItem("addrinfo")+"/getparentname";
+        var obj={"schol":""}
+        obj.schol=localStorage.getItem("schoolid");
+        this.getparentnameparam=obj;
+        this.$.getparentnameajax.generateRequest();
+      },
+      getparentnameResponse:function(e){
+        parentarr=e.detail.response.returnval;
+        for(var i=0;i<parentarr.length;i++){
+          var obj={"listname":""};
+          obj.listname=parentarr[i].parent_name;
+          obj.listid = parentarr[i].student_id;
+          namelistarr.push(obj);
+        }
+        document.querySelector('pre-apps').Fnlistboxz(namelistarr);
+
+        this.getstudentnameurl=sessionStorage.getItem("addrinfo")+"/getstudentnamelist";
+        var obj={"schol":""}
+        obj.schol=localStorage.getItem("schoolid");
+        this.getstudentnameparam=obj;
+        this.$.getstudentnameajax.generateRequest();
+      },
+      getstudentnameResponse:function(e){
+        studentarr=e.detail.response.returnval;
+        for(var i=0;i<studentarr.length;i++){
+          var obj={"siblistname":""};
+          obj.siblistname=studentarr[i].student_name;
+          obj.siblistid=studentarr[i].id;
+          sibnamelistarr.push(obj);
+        }
+        document.querySelector('pre-apps').SibFnlistboxz(sibnamelistarr);
+      },
+      getcounsellorattendedby:function(){
+        this.getcounsellorattendedbyurl=sessionStorage.getItem("addrinfo")+"/getcounsellorattendedby";
+        var obj={"schol":""}
+        obj.schol=localStorage.getItem("schoolid");
+        this.getcounsellorattendedbyparam=obj;
+        this.$.getcounsellorattendedbyajax.generateRequest();
+      },
+      getcounsellorattendedbyResponse:function(e){
+        var result = e.detail.response.returnval;
+        document.querySelector('pre-apps').counsellor=result;
+      },
+      getlocation:function(){
+        this.getlocationurl=sessionStorage.getItem("addrinfo")+"/getlocation";
+        var obj={"schol":""};
+        obj.schol=localStorage.getItem("schoolid");
+        this.getlocationparam=obj;
+        //alert(JSON.stringify(obj));
+        this.$.getlocationajax.generateRequest();
+      },
+      getlocationResponse:function(e){
+        var result=e.detail.response.returnval;
+        document.querySelector('pre-apps').autocompletename(result);
+      },
+      getmothertongue:function(){
+        this.getmothertongueurl=sessionStorage.getItem("addrinfo")+"/getmothertongue";
+        var obj={"schol":""};
+        obj.schol=localStorage.getItem("schoolid");
+        this.getmothertongueparam=obj;
+        //alert(JSON.stringify(obj));
+        this.$.getmothertongueajax.generateRequest();
+      },
+      getmothertongueResponse:function(e){
+        var result=e.detail.response.returnval;
+        document.querySelector('pre-apps').mothertonguearr=result;
+      },
+      getprofession:function(){
+        this.getprofessionurl=sessionStorage.getItem("addrinfo")+"/getprofession";
+        var obj={"schol":""};
+        obj.schol=localStorage.getItem("schoolid");
+        this.getprofessionparam=obj;
+        //alert(JSON.stringify(obj));
+        this.$.getprofessionajax.generateRequest();
+      },
+      getprofessionResponse:function(e){
+        var result=e.detail.response.returnval;
+        document.querySelector('pre-apps').professionarr=result;
+      },
+      submitenqdetails:function(todate,enrolltype,academicyear,grade,firstname,middlename,lastname,gender,havesibling,ageofyr,dobdate,mothertonguelanguage,fathername,mothername,mob,mothermob,email,motheremail,guardianname,guardianmobile,guardianemail,dadoccupationinfo,motheroccupationinfo,textvalue,enquiysource,attenedcounsellorname,enqno,guardianoccupationinfo,parent_or_guardian_work,referralvalue, schoolname,schoolarea,siblingremark,paga){
+        this.submitenqdetailsurl=sessionStorage.getItem("addrinfo")+"/submitenqdetails";
+        var obj={"schol":"","createdon":"","enrolltype":"","academicyear":"","grade":"","firstname":"","middlename":"","lastname":"","gender":"","havesibling":"","ageofyr":"","dobdate":"","mothertonguelanguage":"","fathername":"","mothername":"","mob":"","mothermob":"","email":"","motheremail":"","guardianname":"","guardianmobile":"","guardianemail":"","dadoccupationinfo":"","motheroccupationinfo":"","location":"","enquiysource":"","attenedcounsellorname":"","status":"","enquiryname":"","enquiry_no":"","parent_or_guardian_work":"","guardianoccupationinfo":"","referralvalue":"","school_name":"","school_area":"","sibling_remark":""};
+        obj.schol=localStorage.getItem("schoolid");
+        obj.createdon = todate;
+        obj.enrolltype = enrolltype;
+        obj.academicyear = academicyear;
+        obj.grade = grade,
+        obj.firstname = firstname;
+        obj.middlename = middlename;
+        obj.lastname = lastname;
+        obj.gender = gender;
+        obj.havesibling = havesibling;
+        obj.ageofyr = ageofyr;
+        obj.dobdate= dobdate;
+        obj.mothertonguelanguage = mothertonguelanguage;
+        obj.fathername = fathername;
+        obj.mothername = mothername;
+        obj.mob =mob;
+        obj.mothermob= mothermob;
+        obj.email = email;
+        obj.motheremail = motheremail;
+        obj.guardianname = guardianname;
+        obj.guardianmobile = guardianmobile;
+        obj.guardianemail = guardianemail;
+        obj.dadoccupationinfo = dadoccupationinfo;
+        obj.motheroccupationinfo = motheroccupationinfo;
+        obj.location = textvalue;
+        obj.enquiysource = enquiysource;
+        obj.attenedcounsellorname = attenedcounsellorname;
+        obj.enquiryname = firstname+' '+middlename+' '+lastname;
+        obj.status = "Enquired";
+        obj.enquiry_no = enqno;
+        obj.guardianoccupationinfo = guardianoccupationinfo;
+        obj.parent_or_guardian_work = parent_or_guardian_work;
+        obj.referralvalue = referralvalue;
+        obj.school_name = schoolname;
+        obj.school_area = schoolarea;
+        obj.sibling_remark = siblingremark;
+        obj.parentorguard=paga;
+        this.submitenqdetailsparam=obj;
+        this.$.submitenqdetailsajax.generateRequest();
+
+        enquiryiddz=enqno;
+        attendantname=attenedcounsellorname;
+      },
+      submitenqdetailsResponse:function(e){
+        var result=e.detail.response.returnval;
+        if(result == 'inserted'){
+          this.updateenquiryno();
+        }
+        
+     },
+     getenquiryno:function(){
+      this.getenquirynourl=sessionStorage.getItem("addrinfo")+"/getenquiryno";
+        var obj={"schol":""};
+        obj.schol=localStorage.getItem("schoolid");
+        this.getenquirynoparam=obj;
+        this.$.getenquirynoajax.generateRequest();
+     },
+     getenquirynoResponse:function(e){
+      seqno=e.detail.response.returnval[0].enquiry_no;
+      seqno=seqno+1;
+      var enquiryif="ENQ1718"+seqno;
+      document.querySelector('pre-apps').enquiry_number=enquiryif;
+      /*var today = new Date(); var yyyy = today.getFullYear();
+      var academicyr=yyyy+'-'+(yyyy+1);
+      document.querySelector('pre-apps').academicyr=academicyr;*/
+      document.querySelector('pre-apps').complete();
+     },
+      updateenquiryno:function(){
+        this.updatesequrl=sessionStorage.getItem("addrinfo")+"/updateseq";
+        var obj={"id":"","schol":""}; 
+        obj.id=seqno;
+        obj.schol=localStorage.getItem("schoolid");
+        this.updateseqparam=obj;
+        this.$.updateseqajax.generateRequest();
+      },
+      updateseqResponse:function(e){
+        var result = e.detail.response.returnval;
+        if(result == 'success'){
+          alert('Submitted!');
+          document.querySelector('pre-apps').FnClear();
+          document.querySelector('pre-apps').ready();  
+          this.$.followupservice.GenerateFollowups(enquiryiddz,attendantname);
+        } else {
+          alert('Form Submission intertupted!');
+        }
+      },
+      getstudentsinlocation:function(location){
+        enquired_location = location;
+        this.getstudentsinlocationurl=sessionStorage.getItem("addrinfo")+"/getstudentsinlocation";
+        var obj={"location":"","schol":""}; 
+        obj.schol=localStorage.getItem("schoolid");
+        obj.location=enquired_location;
+        this.getstudentsinlocationparam=obj;
+        this.$.getstudentsinlocationajax.generateRequest();
+      },
+      getstudentsinlocationResponse:function(e){
+        enquired_students = e.detail.response.returnval[0].total_enquired_students;
+        this.getadmittedstudentsinlocation();
+      },
+      getadmittedstudentsinlocation:function(){
+        this.getadmittedstudentsinlocationurl=sessionStorage.getItem("addrinfo")+"/getadmittedstudentsinlocation";
+        var obj={"location":"","schol":""}; 
+        obj.schol=localStorage.getItem("schoolid");
+        obj.location=enquired_location;
+        this.getadmittedstudentsinlocationparam=obj;
+        this.$.getadmittedstudentsinlocationajax.generateRequest();
+      },
+      getadmittedstudentsinlocationResponse:function(e){
+        admitted_students = e.detail.response.returnval[0].total_enquired_students;
+        this.getprovisionallyadmittedstudentsinlocation();
+      },
+      getprovisionallyadmittedstudentsinlocation:function(){
+        this.getprovisionallyadmittedstudentsinlocationurl=sessionStorage.getItem("addrinfo")+"/getprovisionallyadmittedstudentsinlocation";
+        var obj={"location":"","schol":""}; 
+        obj.schol=localStorage.getItem("schoolid");
+        obj.location=enquired_location;
+        this.getprovisionallyadmittedstudentsinlocationparam=obj;
+        this.$.getprovisionallyadmittedstudentsinlocationajax.generateRequest();
+      },
+      getprovisionallyadmittedstudentsinlocationResponse:function(e){
+        provisionally_admitted_students = e.detail.response.returnval[0].total_enquired_students;
+        document.querySelector('pre-apps').opentotalstudentdialog(enquired_students,admitted_students,provisionally_admitted_students);
+      },
+      siblingdetails:function(id){
+        this.siblingdetailsurl=sessionStorage.getItem("addrinfo")+"/siblingdetails";
+        var obj={"schol":"", "student_id":""};
+        obj.student_id = id;
+        obj.schol=localStorage.getItem("schoolid");
+        this.siblingdetailsparam=obj;
+        this.$.siblingdetailsajax.generateRequest();
+      },
+      siblingdetailsResponse:function(e){
+        var result=e.detail.response.returnval;
+        var parent = e.detail.response.returnval[0].parent_name;
+        var grade =  e.detail.response.returnval[0].class;
+        var section = e.detail.response.returnval[0].section;
+        document.querySelector('pre-apps').siblingdetailsarr=result;
+        document.querySelector('pre-apps').Fnselectedsiblingdetail(parent,grade,section);
+      },
+      referraldetails:function(id){
+        this.referraldetailsurl=sessionStorage.getItem("addrinfo")+"/referraldetails";
+        var obj={"schol":"", "student_id":""};
+        obj.schol=localStorage.getItem("schoolid");
+        obj.student_id = id;
+        this.referraldetailsparam=obj;
+        this.$.referraldetailsajax.generateRequest();
+      },
+      referraldetailsResponse:function(e){
+        var result=e.detail.response.returnval;
+        var student = e.detail.response.returnval[0].student_name;
+        var grade =  e.detail.response.returnval[0].class;
+        var section = e.detail.response.returnval[0].section;
+        document.querySelector('pre-apps').referraldetailsarr=result;
+        document.querySelector('pre-apps').Fnselectedreferraldetail(student,grade,section);
+      },
+      savereferraldata:function(enqno, studentname, parentname, grade, section, type){
+        this.savereferraldataurl=sessionStorage.getItem("addrinfo")+"/savereferraldata";
+        var obj={"schol":"", "enquiry_no":"", "studentname":"","parentname":"","grade":"","section":"","referral_type":""};
+        obj.schol=localStorage.getItem("schoolid");
+        obj.enquiry_no = enqno;
+        obj.studentname = studentname;
+        obj.parentname = parentname;
+        obj.grade = grade;
+        obj.section = section;
+        obj.referral_type = type;
+        this.savereferraldataparam=obj;
+        this.$.savereferraldataajax.generateRequest();
+      },
+      savereferraldataResponse:function(e){
+        var result=e.detail.response.returnval;
+      },
+      checkmobileno:function(mobile){
+        this.verifymobilenourl=sessionStorage.getItem("addrinfo")+"/verifymobileno";
+        var obj={"mobileno":"","schol":""}
+        obj.mobileno=mobile;
+        obj.schol=localStorage.getItem("schoolid");
+        this.verifymobilenoparam=obj;
+       //alert(JSON.stringify(obj));
+        this.$.verifymobilenoajax.generateRequest();
+      },
+      verifymobilenoResponse:function(e){
+        var result=e.detail.response.returnval;
+        if(result.length>0){
+          document.querySelector('pre-apps').showdialog(result[0].enquiry_no,result[0].first_name,result[0].middle_name,result[0].last_name);
+        }
+      },
+      getenquiryreferrals:function(){
+        this.getenquiryreferralsurl=sessionStorage.getItem("addrinfo")+"/getenquiryreferrals";
+        var obj={"schol":""}
+        obj.schol=localStorage.getItem("schoolid");
+        this.getenquiryreferralsparam=obj;
+        this.$.getenquiryreferralsajax.generateRequest();
+      },
+        getenquiryreferralsResponse:function(e){
+        var result=e.detail.response.returnval;
+        document.querySelector('pre-apps').referralarr=result;
+      }
+    });
+  })();
+  </script>
+</dom-module>

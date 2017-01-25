@@ -1,0 +1,80 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\admission-service\admission-service.html">
+<link rel="import" href="..\processing-service\processing-service.html">
+
+<dom-module id="searchreceipt-card">
+  <template>
+    <style>
+    </style>
+    <div>
+       <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">              
+                <div class="col-md-4" style="margin-top: -2%;">
+                  <paper-input id="searchtext" label="Admission Number/Name" value="{{enquiryno}}">
+                  <paper-icon-button suffix icon="search" on-click="FnSearchEnquiry" title="Search"></paper-icon-button>
+                  </paper-input>
+                </div>
+                <div class="col-md-3" style="margin-top: -1%;">
+                  <paper-dropdown-menu label="Select Enquiry/Admission No" on-iron-select="FnSelectEnquiry">
+                   <paper-listbox class="dropdown-content" id="receiptsearch">
+                    <template  is="dom-repeat" items="{{enquiryarr}}" as="item">
+                    <paper-item value="{{item.enquiry_no}}">{{item.enquiry_no}}-{{item.enquiry_name}}</paper-item>
+                    </template>
+                   </paper-listbox>
+                  </paper-dropdown-menu>
+                </div>
+                <div class="col-md-3" style="margin-top: -1%;">
+                 <paper-dropdown-menu id="receiptacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="receiptacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                </div>
+                <div class="col-md-2" style="margin-top: 1%;">
+                  <paper-button on-click="FnView" class="btn btn-primary">View</paper-button>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div>
+    </div>
+    <admission-service id="admissionservice"></admission-service>
+    <processing-service id="processingservice"></processing-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var academicyear="";
+    Polymer({
+      is: 'searchreceipt-card',
+      ready:function(){
+
+      },
+      FnSearchEnquiry:function(){
+        this.$.admissionservice.callSearchenquiryService(this.enquiryno);
+      },
+      FnSelectEnquiry:function(e){
+        var enquiry=(e.target.selectedItem.textContent).trim();
+        var inx=enquiry.indexOf('-');
+        var enquiry_no=enquiry.substring(0,inx);
+        var enquiry_name=enquiry.substring(inx+1);
+        localStorage.setItem("curr_sess_enquiryno",enquiry_no);
+        localStorage.setItem("curr_sess_enquiryname",enquiry_name);
+        // this.$.admissionservice.callFetchenquiryinfoService();
+      },
+      FnSelectAcademicYear:function(e){
+        academicyear=(e.target.selectedItem.textContent).trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+      },
+      FnView:function(){
+        this.$.processingservice.fetchreceiptService(localStorage.getItem("curr_sess_enquiryno"),localStorage.getItem("curr_sess_enquiryname"));
+      }
+    });
+  })();
+  </script>
+</dom-module>

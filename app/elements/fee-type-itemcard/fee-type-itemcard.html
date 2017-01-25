@@ -1,0 +1,28 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="fee-type-itemcard">
+  <template>
+  <paper-checkbox id="check" on-change="changeHandler">{{feetype}}</paper-checkbox>    
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'fee-type-itemcard',
+      changeHandler:function(e){ 
+        // alert(document.querySelector('#check').checked);
+        if(document.querySelector("#check").checked==true){
+          // alert('true');
+          document.querySelector('fee-type-card').FnSetFeeInfo(this.feetype,1);
+        }
+        if(document.querySelector("#check").checked==false){
+          // alert('false');
+          document.querySelector('fee-type-card').FnSetFeeInfo(this.feetype,0);
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>

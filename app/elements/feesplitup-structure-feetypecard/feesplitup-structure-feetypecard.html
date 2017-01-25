@@ -1,0 +1,48 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="feesplitup-structure-feetypecard">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      paper-input{
+        margin-left: 5%;
+        margin-top: -2%;
+        width:40%;
+      }
+    </style>
+    <div hidden>{{splitarr}}</div>
+    <paper-input hidden value="{{insno}}"></paper-input>
+    <paper-input hidden value="{{basefeetype}}"></paper-input>
+    <paper-input hidden value="{{feetype}}"></paper-input>
+    <paper-input hidden totalfee="{{totalfee}}"></paper-input>
+    <paper-input id="" value="{{insfeetypeamount}}" on-change="FnSetinsfeeamount"></paper-input>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var splitarr=[];
+    Polymer({
+      is: 'feesplitup-structure-feetypecard',
+      ready:function(){
+
+      },
+      FnSetinsfeeamount:function(){
+        // alert(JSON.stringify(this.splitarr));
+        // alert(this.basefeetype+"  "+this.feetype+"  "+this.totalfee+"  "+this.insfeetypeamount);
+        var obj={"installment":"","feetype":"","totalfee":"","installmentfee":""};
+        obj.insno=this.insno;
+        obj.installment=this.basefeetype;
+        obj.feetype=this.feetype;
+        obj.totalfee=this.totalfee;
+        obj.installmentfee=this.insfeetypeamount;
+        obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");
+        obj.noofinstallment=localStorage.getItem("curr_sess_noofinstallment");
+        document.querySelector('feesplitup-structure-card').FnSetInstallmentSplitup(obj);
+      }
+    });
+  })();
+  </script>
+</dom-module>

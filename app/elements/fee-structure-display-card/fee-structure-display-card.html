@@ -1,0 +1,44 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="fee-structure-display-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .incard{
+        margin-left: 20%;
+      }
+    </style>
+    <div>
+      <label>{{type}}</label>
+      <div class="incard">
+      <template  is="dom-repeat" items="{{feesplitarr}}" as="item">
+      <table>
+        <tr>
+          <th>{{item.feetype}}</th><th>{{item.amount}}</th>
+        </tr>
+      </table>
+      </template>
+      </div>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'fee-structure-display-card',
+
+      properties: {
+        foo: {
+          type: String,
+          value: 'fee-structure-display-card',
+          notify: true
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>

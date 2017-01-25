@@ -1,0 +1,64 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="fee-splitup-feetype-card">
+  <template>
+  <style>
+  </style>
+
+  <div class="feecard">  
+    <div class="innerfeecard">
+    <paper-checkbox id="commit{{feetypecode}}" value="{{type}}" on-change="FnSelectFeetype">{{feetype}}</paper-checkbox>
+    </div>
+    <div>
+      <paper-dialog id="{{feetypecode}}">
+        <div>
+          <paper-input label="Enter fee component" value="{{amount}}"></paper-input>
+          <paper-button on-click="FnOk">Ok</paper-button>
+          <paper-button on-click="FnCancel">Cancel</paper-button>
+        </div>
+      </paper-dialog>
+    </div>
+  </div> 
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'fee-splitup-feetype-card',
+      ready:function(){
+      },
+      FnSelectFeetype:function(e){
+        var obj={"type":"","feetype":"","amount":""};
+       if(document.querySelector('#commit'+(this.feetypecode)).checked==true){
+        obj.type=this.type;
+        obj.feetype=this.feetype; 
+        obj.amount=0;
+        if(this.feetypecode!='Kitfee')
+        document.querySelector('#'+this.feetypecode).toggle();
+        else
+        document.querySelector('fee-splitup-card').FnSetFeeType(obj,true);
+        }  
+       else{
+        obj.type=this.type;
+        obj.feetype=this.feetype; 
+        document.querySelector('fee-splitup-card').FnSetFeeType(obj,false);
+        }        
+      },
+      FnOk:function(){
+        var obj={"type":"","feetype":"","amount":""};
+        obj.type=this.type;
+        obj.feetype=this.feetype; 
+        obj.amount=this.amount;
+        document.querySelector('#'+this.feetypecode).toggle();
+        document.querySelector('fee-splitup-card').FnSetFeeType(obj,true);
+      },
+      FnCancel:function(){
+        document.querySelector('#'+this.feetypecode).toggle();
+        document.querySelector('#commit'+this.feetypecode).selected=-1;
+      }
+    });
+  })();
+  </script>
+</dom-module>

@@ -1,0 +1,90 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="cancel-enrollment-itemcard">
+  <template>
+    <style type="text/css">
+    .itemcard{
+      border-bottom: 1px solid #dedede;  
+      width: 80%;
+    }
+    .btn{
+      margin-left: 50%;
+    }
+    #collectionreport{
+      width: 110%;
+    }
+    </style>      
+    <div class="itemcard">      
+      <table  id="collectionreport">
+      <thead>
+      <tr>
+      <td><img src="../../images/login.png" style="height:70px;width:70px;"></td>
+      <td><table>
+        <tr><th colspan="3">{{admissionno}}</th></tr>
+        <tr><th colspan="3">{{studentname}} c/o {{fathername}}</th></tr>
+        <tr><th colspan="3">{{academicyear}} - {{grade}}</th></tr>
+      </table></td>
+      <!-- </tr> -->
+      <th hidden$="{{hidecancelbtn}}">
+      <paper-button on-click="FnCancel" class="btn btn-primary center">Cancel</paper-button>
+      <!-- <span class="panel-icon"><a href="" on-click="FnCancel"><i height="15px" width="15px" class="fa fa-close" aria-hidden="true" data-toggle="modal"></i></a> --></span></th></tr>   
+      <tr hidden$="{{hidecancelblock}}">
+      <td></td>
+      <td>
+        <paper-checkbox id="tc{{admissionno}}" checked style="top: 1%;">Generate TC</paper-checkbox>
+      </td>
+      <td>
+        <paper-dropdown-menu id="reasonforcancel" label="Reason for cancellation" on-iron-select="FnSelectreason" style='margin-top: -10%;'>
+            <paper-listbox class="dropdown-content" selected="{{cancelreason}}" id="reasonforcancel" attr-for-selected="value">
+              <paper-item value="User error">User error</paper-item>
+              <paper-item value="Duplicate">Duplicate</paper-item>
+              <paper-item value="Withdrawal">Withdrawal</paper-item>
+              <paper-item value="Discontinue">Discontinue</paper-item>
+              <paper-item value="Transfer">Transfer</paper-item>
+              <paper-item value="Absconding">Absconding</paper-item>
+            </paper-listbox>
+        </paper-dropdown-menu>
+      </td>      
+      <td>
+      <paper-button on-click="FnCancelEnrollement" class="btn btn-primary center">Done</paper-button>
+      </td>
+      </tr>
+      </thead>
+      </table>
+    </div>
+    <cancellation-service id="service"></cancellation-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var reason="";
+    Polymer({
+      is: 'cancel-enrollment-itemcard',
+      ready:function(){
+        this.hidecancelbtn=false;
+        this.hidecancelblock=true;
+      },
+      FnCancel:function(){
+        this.hidecancelblock=false;
+        this.hidecancelbtn=true;
+        // this.$.service.enrollmentcancelService(this.admissionno,this.academicyear,this.grade);
+      },
+      FnSelectreason:function(e){
+        reason=(e.target.selectedItem.textContent).trim();
+      },
+      FnCancelEnrollement:function(){
+        if(reason!=""&&document.querySelector('#tc'+this.admissionno).checked==true){
+          this.$.service.enrollmentcancelService(this.admissionno,this.academicyear,this.grade,reason);
+        }
+        else{
+          if(reason==""||reason==null)
+          alert('Please select the proper reason!!');
+          else if(document.querySelector('#tc'+this.admissionno).checked==false)
+          alert("Can't cancel the enrollment without generating TC!!");;
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>

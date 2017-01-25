@@ -1,0 +1,263 @@
+
+
+<script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../enquiry-card/enquiry-card.html">
+<link rel="import" href="../discount-type-ui-card/discount-type-ui-card.html">
+<link rel="import" href="../discount-display-card/discount-display-card.html">
+<link rel="import" href="../walkin-analysis-card/walkin-analysis-card.html">
+<link rel="stylesheet" type="text/css" href="../../styles/styles.css">
+  <dom-module id="app-list">
+  <template>
+  <style>
+  .in
+  {
+  float:right;
+  font-size:12px;
+  }
+
+  .backbutton
+  {
+    float:left;
+    width: 4%;
+  }
+  </style>
+
+  <div class="head">
+      <navigation-bar></navigation-bar>
+    </div>
+
+      <div class="content">
+      <div id="page-wrapper">
+      <div class="row">
+        <div class="col-lg-12">
+          <h1 class="page-header">{{title}}</h1>
+        </div>
+      </div>
+      <!-- /.row -->
+      <div class="row">
+        <!-- <enquiry-card></enquiry-card> -->
+        <iron-pages selected="{{page}}" attr-for-selected="data-category">
+            <section data-category="loginpage">
+              <login-card></login-card>
+            </section>
+          <section data-category="enquiry">
+            <div class="col-md-6">
+              <enquiry-card></enquiry-card>
+            </div>
+          </section>
+          
+           <section data-category="master-report">
+            <div class="col-md-6">
+              <mastercreation-report-card></mastercreation-report-card>
+            </div>
+          </section>
+
+           <section data-category="installment-master-ui">
+            <div class="col-md-6">
+              <installment-master-ui-card></installment-master-ui-card>
+            </div>
+          </section>
+
+           <section data-category="discount-type-ui">
+            <div class="col-md-12">
+              <discount-type-ui-card></discount-type-ui-card>
+            </div>
+          </section>
+
+          <!-- <section data-category="discount-display">
+            <div class="col-md-6">
+              <discount-display-card></discount-display-card>
+            </div>
+          </section> -->
+
+          <section data-category="follow-up">
+            <div class="col-md-12">
+              <followup-dashboard></followup-dashboard>
+            </div>
+          </section>
+
+          <section data-category="fee-reports">
+            <div class="col-md-12">
+              <fee-reports></fee-reports>
+            </div>
+          </section>
+
+          <section data-category="followup-details">
+            <div class="col-md-12">
+              <followup-details></followup-details>
+            </div>
+          </section>
+
+          <section data-category="walkin-analysis">
+            <div class="col-md-12">
+              <walkin-analysis-card></walkin-analysis-card>
+            </div>
+          </section>
+          <section data-category="walkin-analysis-filter">
+            <div class="col-md-12">
+              <walkin-analysis-filter-card></walkin-analysis-filter-card>
+            </div>
+          </section>
+          <section data-category="master-enquiry-analysis">
+            <div class="col-md-12">
+              <master-report-card></master-report-card>
+            </div>
+          </section>
+          <section data-category="fee-collection-report-card">
+            <div class="col-md-12">
+              <fee-collection-report-card></fee-collection-report-card>
+            </div>
+          </section>
+          <section data-category="callanalysis-report-card">
+            <div class="col-md-12">
+              <callanalysis-report-card></callanalysis-report-card>
+            </div>
+          </section>
+          <section data-category="cheque-realization-card">
+            <div class="col-md-12">
+              <cheque-realization-card></cheque-realization-card>
+            </div>
+          </section>
+          <section data-category="withdrawal-card">
+            <div class="col-md-12">
+              <withdrawal-card></withdrawal-card>
+            </div>
+          </section>
+          <section data-category="exchange-followup">
+            <div class="col-md-12">
+              <exchange-followup></exchange-followup>
+            </div>
+          </section>
+          <section data-category="searchreceipt">
+            <div class="col-md-12">
+              <searchreceipt-card></searchreceipt-card>
+            </div>        
+          </section>
+          <section data-category="pre-apps">
+            <div class="col-md-12">
+              <pre-apps></pre-apps>
+            </div>
+          </section>
+          <section data-category="followup-today-report">
+            <div class="col-md-12">
+              <followup-today-report></followup-today-report>
+            </div>
+          </section>
+          <section data-category="pendingcheques-report">
+            <div class="col-md-12">
+              <pendingcheques-report></pendingcheques-report>
+            </div>
+          </section>
+          <section data-category="pendingfee-report">
+            <div class="col-md-12">
+              <pendingfee-report></pendingfee-report>
+            </div>
+          </section>
+          <section data-category="dailycollection-report">
+            <div class="col-md-12">
+              <dailycollection-report></dailycollection-report>
+            </div>
+          </section>
+          <section data-category="bouncecheque-displaycard">
+            <div class="col-md-12">
+              <bouncecheque-displaycard></bouncecheque-displaycard>
+            </div>
+          </section>
+          <section data-category="counsellor-report">
+            <div class="col-md-12">
+              <counsellor-report></counsellor-report>
+            </div>
+          </section>
+          <section data-category="chequebounceorcancel-card">
+            <div class="col-md-12">
+              <chequebounceorcancel-card></chequebounceorcancel-card>
+            </div>
+          </section>
+          <section data-category="editdelete-cheques-card">
+            <div class="col-md-12">
+              <editdelete-cheques-card></editdelete-cheques-card>
+            </div>
+          </section>
+          <section data-category="pdccheques-report-card">
+            <div class="col-md-12">
+              <pdccheques-report-card></pdccheques-report-card>
+            </div>
+          </section>
+          <section data-category="discount-structure-report">
+            <div class="col-md-12">
+              <discount-structure-report></discount-structure-report>
+            </div>
+          </section>
+          <section data-category="fee-structure-report">
+            <div class="col-md-12">
+              <fee-structure-report></fee-structure-report>
+            </div>
+          </section>
+          <section data-category="promotion-card">
+            <div class="col-md-12">
+              <promotion-card></promotion-card>
+            </div>
+          </section>
+          <section data-category="cancel-enrollment-card">
+            <div class="col-md-12">
+              <cancel-enrollment-card></cancel-enrollment-card>
+            </div>
+          </section>
+          <section data-category="cancel-enrollment-itemcard">
+            <div class="col-md-12">
+              <cancel-enrollment-itemcard></cancel-enrollment-itemcard>
+            </div>
+          </section>
+          <section data-category="gradewise-fee-structure-report">
+            <div class="col-md-12">
+              <gradewise-fee-structure-report></gradewise-fee-structure-report>
+            </div>
+          </section>
+          <section data-category="enrollment-report">
+            <div class="col-md-12">
+              <enrollment-report></enrollment-report>
+            </div>
+          </section>
+          <section data-category="tp-realisation-card">
+            <div class="col-md-12">
+              <tp-realisation-card></tp-realisation-card>
+            </div>
+          </section>
+          </iron-pages>
+          </div>
+          </div>
+       </div>
+       <div class="footer"></div>
+       <attendance-service id="service"></attendance-service>
+       <!-- <reporting-service id="reportservice"></reporting-service> -->
+  </template>
+  <script>
+  Polymer({
+    is: "app-list",
+    ready: function() {
+
+    this.page="enquiry";
+    //this.title="Simple Enquiry Form";
+   var currpage=localStorage.getItem("curr_sess_page");
+  },
+  setPage:function(page,title){
+    //alert(page);
+    localStorage.setItem("curr_sess_homepage","0");
+    localStorage.setItem("curr_sess_page",page);
+    this.page=page;
+    this.title=title;
+ },
+ signout:function()
+ {
+  window.location.href="../index.html";
+  localStorage.setItem("userinfo",null);
+  localStorage.setItem("route",null);
+  //document.querySelector('app-card').setPage("loginpage");
+ }
+});
+
+  </script>
+</dom-module>

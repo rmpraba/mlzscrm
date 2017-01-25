@@ -1,0 +1,466 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\datepicker-followup-card\datepicker-followup-card.html">
+<dom-module id="followup-listitem-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      #dialog2{
+            margin-left: -50%;
+                top: 30%;
+      }
+      #dialog3{
+            margin-left: -25%;
+                top: 30%;
+      }
+     
+    </style>
+    <div>
+    <table class="table table-stdiped" style="    margin-bottom: -2%;" >
+        <tbody>
+        <tr class="list-group col-sm-12 panel-body form-category" id="list">
+        <td class="col-sm-2" style="text-align:center; padding-top: 5%;">
+          {{sno}}
+        </td>
+          <td class="col-sm-3" style="text-align:center; padding-top: 4%;">
+            <div class="col-sm-12">
+              <div class="col-sm-6">
+                <paper-checkbox id="callyes{{followupno}}" on-change="yescallstatusHandler" class="checkbox" checked={{yesbox}} disabled={{disableyes}}>Yes</paper-checkbox>
+              </div>
+              <div class="col-sm-6">
+                <paper-checkbox id="callno{{followupno}}" on-change="nocallstatusHandler"  class="checkbox" checked={{nobox}}  disabled={{disableno}}>No</paper-checkbox>
+              </div>
+            </div>
+          </td>
+          <td class="col-sm-2" style="text-align:center; padding-top: 4%;">
+            <paper-item>{{scheduledate}}</paper-item>
+          </td>
+          
+          <td class="col-sm-3" style="text-align:center; ">
+       
+          <div class="col-sm-12">
+          <!-- <followup-datepicker-card id="dates" showdate="{{nextdate}}"></followup-datepicker-card> -->
+          <paper-input id="dates" label="Date" error-message="needs next followup date!" readonly required value="{{nextdate}}" hidden$="{{dates}}"></paper-input>
+          <div id="reschedule" style=" padding-top: 16%; padding-left: 33%;  margin-left: -28%;" hidden$="{{reschedule}}">
+          <paper-button raised style="background-color: silver;" class="button" on-click="Rescheduling" >Reschedule</paper-button></div>
+          </div>
+        
+          
+          </td>
+            <!-- <div id="confidencelabel">{{confidencelvl}}</div> -->
+          
+          <td class="col-sm-3" style="text-align:center; padding-top: 6%;"><div hidden$="{{viewdetail}}"><a href="" on-click="fnviewdetailshow">view details</a></div>
+          <div hidden$="{{notcompleted}}">Still not completed</div></td>
+        </tr>
+        </tbody>
+        <div hidden>{{callstatus}}/{{confidencelvl}}/{{followupno}}/{{fid}}/{{nextdate}}/{{scheid}}</div>
+      </table>
+      </div>
+       <paper-dialog id="dialog1" class="paper-date-picker-dialog">
+        <paper-date-picker id="picker" date="{{date}}"></paper-date-picker>
+        <div class="buttons">
+          <paper-button raised on-click="close1">Cancel</paper-button>
+          <paper-button raised on-click="FnDismissDialog1">OK</paper-button>
+        </div>
+      </paper-dialog>
+
+      <paper-dialog id="dialog2" class="paper-date-picker-dialog">
+      <div class="content">
+      <div>Confidence Level : 
+        <paper-dropdown-menu style="margin-left: 5%;" id="followdrop" disabled={{disabledrop}} label="Select Confidence Level">
+              <paper-listbox id="confidencelevel" class="dropdown-content" on-iron-select="FnConfidenceLevel">
+                <paper-item value=0>TBD</paper-item>
+                <paper-item value=1>>90%</paper-item>
+                <paper-item value=2>>75%</paper-item>
+                <paper-item value=3>>50%</paper-item>
+                <paper-item value=4><50%</paper-item>
+                <paper-item value=5><35%</paper-item>
+                <paper-item value=6><10%</paper-item>
+              </paper-listbox>
+            </paper-dropdown-menu>
+</div>
+            <iron-autogrow-textarea id="followbox1" placeholder="Please type your comments here..." error-message="needs comments!" required value="{{value}}"></iron-autogrow-textarea>
+              <datepicker-followup-card scheduledon="{{scheduledate}}" showdate="{{nextdate}}"></datepicker-followup-card>
+      </div>
+        <div class="buttons">
+          <paper-button id="followdisk2" style="background-color: silver;" class="btn glyphicon glyphicon-floppy-disk" raised on-click="FollowUp">Save</paper-button>
+          <paper-button raised style="background-color: silver;" on-click="FnDismissDialog2">Cancel</paper-button>
+        </div>
+      </paper-dialog>
+
+      <paper-dialog id="dialog3" class="paper-date-picker-dialog">
+      <div class="content">
+      <div>Current call status : 
+        <paper-dropdown-menu style="margin-left: 5%;" id="followdrop2" disabled={{disabledrop2}} label="Select call status">
+              <paper-listbox id="callstatusdrop" class="dropdown-content" on-iron-select="Fncallstatusdrop">
+                  <paper-item>Didn’t pick up</paper-item>
+                  <paper-item>Switch off</paper-item>
+                  <paper-item>Wrong number</paper-item>
+                  <paper-item>Busy</paper-item>
+                  <paper-item>Not reachable</paper-item>
+                  <paper-item>Not available</paper-item>
+                </paper-listbox>
+            </paper-dropdown-menu>
+      </div>
+
+            <iron-autogrow-textarea id="followbox2" placeholder="Please type your comments here..." error-message="needs comments!" required bind-value="{{value}}"></iron-autogrow-textarea>
+            <div>
+              <!-- <followup-datepicker-card scheduledon="{{scheduledate}}" showdate="{{nextdate}}"></followup-datepicker-card> -->
+              <datepicker-followup-card scheduledon="{{scheduledate}}" showdate="{{nextdate}}"></datepicker-followup-card>
+            </div>
+      </div>
+        <div class="buttons">
+          <paper-button id="followdisk3" style="background-color: silver;" class="btn glyphicon glyphicon-floppy-disk" raised on-click="FollowUp">Save</paper-button>
+          <paper-button raised style="background-color: silver;" on-click="FnDismissDialog3">Cancel</paper-button>
+        </div>
+      </paper-dialog>
+      
+     <div hidden>{{scheduledate}}/{{nextdate}}</div>
+
+
+     <paper-dialog id="dialog4" class="paper-date-picker-dialog">
+      <div class="content">
+            <h2>Select your option..</h2>
+            <paper-radio-group>
+              <paper-radio-button id="todaydate" on-click="Fntodaydate">Today.</paper-radio-button>
+              <paper-radio-button id="customdate" on-click="Fncustomdate">Custom Date.</paper-radio-button>
+            </paper-radio-group>
+              
+            <custom-datepicker-card id="custdate"></custom-datepicker-card>
+      </div>
+        <div class="buttons">
+          <paper-button id="followdisk4" style="background-color: silver;" class="btn glyphicon glyphicon-floppy-disk" raised on-click="savecustomdate">Save</paper-button>
+          <paper-button raised style="background-color: silver;" on-click="FnDismissDialog4">Cancel</paper-button>
+        </div>
+      </paper-dialog>
+
+
+
+      <paper-dialog id="dialogdetailshow" class="paper-date-picker-dialog">
+      <div class="content">
+          <table>
+            <tr>
+              <td style=" padding: 3%; width: 32%;">Enquiry done on</td>
+              <td style=" padding: 3%; width: 10%;">:</td>
+              <td style=" padding: 3%; width: 40%;">{{actualdate}}</td>
+            </tr>
+            <tr>
+              <td style=" padding: 3%;">Confidence Level</td>
+              <td style=" padding: 3%;">:</td>
+              <td style=" padding: 3%;">{{confidencegiven}}</td>
+            </tr>
+            <tr>
+              <td style=" padding: 3%;">Comments</td>
+              <td style=" padding: 3%;">:</td>
+              <td style=" padding: 3%;">{{comments}}</td>
+            </tr>
+          </table>
+      </div>
+        <div class="buttons">
+          <paper-button raised style="background-color: silver;" on-click="closedetaildialog">Close</paper-button>
+        </div>
+      </paper-dialog>
+
+
+      <followup-service id="followupservice"></followup-service>
+  </template>
+  <script>
+  (function() {
+    'use stdict';
+    var confidencelvl;
+    var callstatus;
+    var vnextdate;
+    var currentdate;
+    var callpickstatus;
+    var checkdates=[];
+    var folwno;
+    var ckdt1;
+    var ckdt2;
+    var sum;
+    var takedate;
+    var nextdatsd;
+    var flagz;
+
+    Polymer({
+      is: 'followup-listitem-card',
+
+      ready:function(){
+        confidencelvl="TBD";
+        currentdate=sessionStorage.getItem("todaydate");
+
+        if(this.confidencelvl==''||this.confidencelvl==null){
+          this.$.confidencelevel.selected=0;
+        }
+        else{
+              if(this.confidencelvl=='>90%'){
+                this.$.confidencelevel.selected=1;
+              }
+              else if(this.confidencelvl=='>75%'){
+                this.$.confidencelevel.selected=2;
+              }
+              else if(this.confidencelvl=='>50%'){
+                this.$.confidencelevel.selected=3;
+              }
+              else if(this.confidencelvl=='<50%'){
+                this.$.confidencelevel.selected=4;
+              }
+              else if(this.confidencelvl=='<35%'){
+                this.$.confidencelevel.selected=5;
+              }
+              else if(this.confidencelvl=='<10%'){
+                this.$.confidencelevel.selected=6;
+              }
+        }
+      },
+      yescallstatusHandler:function(){
+        if(document.getElementById('callyes'+this.followupno).checked==true){
+          callstatus="Yes";
+          flwno=this.sno;
+          document.getElementById('callno'+this.followupno).checked=false;
+          this.$.dialog2.open();
+        }
+        else{
+          callstatus=null;
+        }
+      },
+      nocallstatusHandler:function(){
+          if(document.getElementById('callno'+this.followupno).checked==true){
+          callstatus="No";
+          flwno=this.sno;
+          document.getElementById('callyes'+this.followupno).checked=false;
+          this.$.dialog3.open();
+        }
+        else{
+          callstatus=null;
+        }
+      },
+      FnConfidenceLevel:function(e){
+        confidencelvl=(e.target.selectedItem.textContent).trim();
+        nextdatsd=this.nextdate;
+      },
+      dateclear:function(){
+        alert('You are allowed to select only future date..!');
+        nextdatsd=null;
+      },
+      fndatez:function(datesxas){
+        checkdates=datesxas;
+        this.ready();
+      },
+      getdate:function(nextdatez){
+        var selected=new Date(this.scheduledate);
+        var sdat=new Date(nextdatez);
+        var res=parseInt(sdat-selected);
+        if(res==0){
+          alert('Kindly, select different followup date than scheduled date.. ');
+          this.showdate='';
+        }else{
+          vnextdate=new Date(nextdatez);
+          this.nextdate=nextdatez;
+          flagz=1;  
+        }      
+      },
+      FollowUp:function(){
+        var selected=new Date(this.scheduledate);
+        var nextdatez=localStorage.getItem("localsess_nextfollowup_date");
+        var sdat=new Date(nextdatez);
+        var res=parseInt(sdat-selected);
+        if(res==0){
+          alert('Kindly, select different date, The date which you have selected same with the current scheduledate ... ');
+          this.showdate='';
+        }
+        else{
+          vnextdate=new Date(nextdatez);
+          this.nextdate=nextdatez;
+          flagz=1;  
+        }
+        if(this.value==""||confidencelvl==null){
+          this.$.followbox1.validate();
+          this.$.followbox2.validate();
+          if(confidencelvl==null||confidencelvl==""){
+            alert('Please select the Confidence level of this followup');
+          }
+        }
+        else{
+          if(flagz==1){
+            this.datesdiff();
+            this.$.followupservice.updatefolowup(this.fid,this.scheduledate,this.followupno,currentdate,nextdatsd,this.value,callstatus,confidencelvl,this.sno);  
+            this.$.dialog2.close();
+            this.$.dialog3.close();
+            document.getElementById('followbox1').value="";
+            document.getElementById('followbox2').value="";
+            this.value="";
+          }         
+        }
+        
+      },
+      
+      dialogfollowup:function(){
+        document.getElementById('dialog1').open();
+      },
+      close1:function(){
+        document.getElementById('dialog1').close();
+      },
+      FnDismissDialog1:function(){
+        var pickdate=moment(this.$.picker.date).format('L');
+        var dt=new Date(pickdate);
+       var datesx=dt.getDate()+'/'+(dt.getMonth()+1)+'/'+dt.getFullYear();
+       this.nextdate=datesx;
+
+        document.getElementById('dialog1').close();
+      },
+      Rescheduling:function(){
+        this.$.dialog4.open();
+        this.$.custdate.hidden=true;
+      },
+      
+      FnDismissDialog2:function(){
+         document.getElementById('dialog2').close();
+          document.querySelector('#confidencelevel').selected=-1;
+          document.getElementById('followbox1').value="";
+          this.value="";
+          document.getElementById('callyes'+this.followupno).checked=false;
+          this.$.dialog2.close();
+      },
+       Fncallstatusdrop:function(e){
+        callpickstatus=(e.target.selectedItem.textContent).trim();
+        nextdatsd=this.nextdate;
+        this.value=(e.target.selectedItem.textContent).trim();
+      },
+      FnDismissDialog3:function(){
+        document.querySelector('#callstatusdrop').selected=-1;
+        document.getElementById('followbox2').value="";
+        this.value="";
+         document.getElementById('callno'+this.followupno).checked=false;
+          this.$.dialog3.close();
+      },
+      fnviewdetailshow:function(){
+        //alert(this.fid+'  '+this.followupno+'   '+this.callstatus);
+        this.$.followupservice.viewdetailshow(this.fid,this.followupno,this.callstatus);
+      },
+      Fntodaydate:function(){
+            takedate="todaydate";
+            //alert(takedate);
+            this.$.custdate.hidden=true;
+      },
+      Fncustomdate:function(){
+            this.$.custdate.hidden=false;
+      },
+      customdateclear:function(){
+          takedate=null;
+      },
+      customgetdate:function(datzxc){
+          takedate=datzxc;
+      },
+      savecustomdate:function(){
+         this.$.followupservice.Fnreschedule(this.confidencelvl,this.fid,takedate);
+         this.$.dialog4.close();
+      },
+      FnDismissDialog4:function(){
+        todaydate=null;
+        this.$.custdate.hidden=true;
+        this.$.dialog4.close();
+      },
+      datesdiff:function(){
+        for(var j=0;j<checkdates.length;j++){           
+            var et=checkdates[j].schedule_date;
+            var  asdf=new Date(et);
+             asdf.setTime(asdf.getTime() +(asdf.getTimezoneOffset()+330)*60*1000);
+        }
+        var fno=parseInt(flwno)-1;
+        var flag=0;
+        var flag2=0;
+        var dt=new Date(vnextdate.getFullYear()+'-'+(vnextdate.getMonth()+1)+'-'+vnextdate.getDate());
+        var ltdat=new Date(asdf.getFullYear()+'-'+(asdf.getMonth()+1)+'-'+asdf.getDate());
+             
+        dt.setTime(dt.getTime() +(dt.getTimezoneOffset()+330)*60*1000);
+        ltdat.setTime(ltdat.getTime() +(ltdat.getTimezoneOffset()+330)*60*1000);
+        
+        if((dt<ltdat)&&(dt!=ltdat)){
+          for(var l=flwno;l<checkdates.length;l++){
+            ckdt1=new Date(vnextdate);
+            var et2=checkdates[l].schedule_date;
+            var temp=new Date(et2);
+            ckdt2=new Date(temp);
+            ckdt2.setTime(ckdt2.getTime() +(ckdt2.getTimezoneOffset()+330)*60*1000);
+            var res=ckdt1-ckdt2;
+            // alert(ckdt1+'    '+ckdt2+'   '+res+'  '+flag+'  '+flag2);
+            if((res<0)&&(flag==0)&&(flag2==0)){
+            flag=1;
+            //alert('Insert a new row');
+            sum=parseInt(checkdates.length)+1;
+            nextdatsd=ckdt1;
+            // alert(sum+'   '+this.scheid+'   '+this.fid+'   '+ckdt1+'   '+ckdt2);
+            this.$.followupservice.insertnewfollowup(sum,this.scheid,this.fid,ckdt1,ckdt2);
+            }
+            else if((res>0)&&(flag2==0)){
+            folwno=(parseInt(l)+1);
+            //alert('Deactivate the corresponding dates and insert new row');
+            //alert(this.scheid+'   '+this.fid+'  '+folwno+'   '+ckdt2);
+            this.$.followupservice.deactivatefollowup(this.scheid,this.fid,folwno,ckdt2);
+            }
+            else if(res==0){
+            flag2=1;
+            }
+            }
+            }
+            else if(dt>ltdat){
+                alert('The given date is greater than last date. \n So, please Re-schedule it..');
+                //this.$.followupservice.Fnreschedule(confidencelvl,this.fid);
+                this.$.dialog4.open();
+                this.$.custdate.hidden=true;
+            }
+            else if(dt==ltdat){
+              alert('The Followup date you selected is equal to last date so please reschedule or select different date');
+            }
+      },
+      showdetaildialog:function(detailarr){
+            this.actualdate=detailarr[0].actual_date;
+            this.confidencegiven=detailarr[0].confidence_level;
+            this.comments=detailarr[0].followup_comments;
+            this.$.dialogdetailshow.open();
+      },
+      closedetaildialog:function(){
+             this.$.dialogdetailshow.close();
+      },
+      Fnclear:function(){
+        this.sno="";
+        this.followupno="";
+        this.yesbox="";
+        this.disableyes="";
+        this.nobox="";
+        this.disableno="";
+        this.viewdetail="";
+        this.notcompleted="";
+        this.callstatus="";
+        this.confidencelvl="";
+        this.fid="";
+        this.scheid="";
+        this.disabledrop="";
+        this.scheduledate="";
+        this.disabledrop2="";
+        this.value="";
+        this.nextdate="";
+        this.actualdate="";
+        this.confidencegiven="";
+        this.comments="";
+        confidencelvl
+        callstatus=null;
+        vnextdate=null;
+        currentdate=null;
+        callpickstatus=null;
+        checkdates=[];
+        folwno=null;
+        ckdt1=null;
+        ckdt2=null;
+        sum=null;
+        takedate=null;
+        nextdatsd=null;
+        flagz=null;
+      }
+      
+    });
+  })();
+  </script>
+</dom-module>

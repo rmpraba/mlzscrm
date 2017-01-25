@@ -1,0 +1,35 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../schooltypegrade-checkcard/schooltypegrade-checkcard.html">
+<dom-module id="schooltype-checkcard">
+  <template>
+    <style>
+    .outcard{
+      @apply(--layout-vertical);
+    }
+    .incard{
+      @apply(--layout-horizontal);
+    }
+    schooltypegrade-checkcard{
+      width:15%;
+    }
+    </style>
+    
+    <label>{{schooltype}}</label>
+    <div class="incard">
+    <template  is="dom-repeat" items="{{gradearr}}" as="item">
+    <schooltypegrade-checkcard gradeid="{{item.gradeid}}" gradename="{{item.gradename}}"></schooltypegrade-checkcard>
+    </template>
+    </div>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'schooltype-checkcard',
+    });
+  })();
+  </script>
+</dom-module>

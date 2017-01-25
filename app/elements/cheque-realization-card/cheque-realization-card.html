@@ -1,0 +1,112 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\cheque-realization-itemcard/cheque-realization-itemcard.html">
+<link rel="import" href="..\fromdate-pickercard/fromdate-pickercard.html">
+<link rel="import" href="..\todate-pickercard/todate-pickercard.html">
+<link rel="import" href="..\processing-service/processing-service.html">
+
+<dom-module id="cheque-realization-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+     <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <div class="col-md-6"> -->
+                <div class="col-md-2" style="margin-top: 2%;">
+                  <fromdate-icon-pickercard></fromdate-icon-pickercard>
+                </div>
+                <div class="col-md-1" style="margin-top: 2%;margin-left: -3%;">
+                  <todate-icon-pickercard></todate-icon-pickercard>
+                </div>
+                <div class="col-md-1" style="margin-top: 2.5%;margin-left: 5%;">
+                  <paper-button style="height:30px;text-transform: none;" on-click="FnView" class="btn btn-primary">View</paper-button>
+                </div>
+                <!-- <div class="col-md-2" style="margin-top: 1%;">
+                  <input type="button" id="btn2" onclick="tableToExcel('realizationreport', 'Fee Collection Report')" value="Export to Excel">
+                </div> -->
+                <div class="col-md-1" style="margin-top: 2.5%;margin-left: 10%;">
+                  <paper-button style="height:30px;text-transform: none;" on-click="FnSubmit" class="btn btn-primary">Submit</paper-button>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div>
+      <table class="table table-hover" id="realizationreport">
+      <thead>
+      <tr>
+        <th>Sno</th><th>Enr/Enq No</th><th>Student Name</th><th>Grade</th><th>Installment Type</th><th>Cheque No</th><th>Bank Name</th><th>Date</th><th>Amount</th><th>Cheque Status</th>
+      </tr>
+      <tr>
+      <td colspan="10">
+        <template  is="dom-repeat" items="{{chequearr}}" as="item">
+        <cheque-realization-itemcard sno="{{item.sno}}" enrno="{{item.admission_no}}" studentname="{{item.student_name}}" grade="{{item.grade}}" installmenttype="{{item.installment_type}}" chequeno="{{item.cheque_no}}" bankname="{{item.bank_name}}" paiddate="{{item.paid_date}}" installmentamount="{{item.installment_amount}}"></cheque-realization-itemcard>
+        </template>
+      </td>
+      </tr>
+      </thead>
+      </table>
+    </div>
+    <processing-service id="processingservice"></processing-service>
+  </template>
+  <script type="text/javascript">
+      var tableToExcel = (function() {
+      var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+     return function(table, name) {
+     if (!table.nodeType) table = document.getElementById(table)
+     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+     window.location.href = uri + base64(format(template, ctx))
+     }
+     })()
+  </script>
+  <script>
+  (function() {
+    'use strict';
+    var allchequesarr=[];
+    Polymer({
+      is: 'cheque-realization-card',
+      FnCallService:function(){
+        this.$.processingservice.FnFetchprocessingchequeService();
+      },
+      FnView:function(){
+        this.$.processingservice.FnFetchprocessingchequeService();
+      },
+      FnSetChequeArray:function(arr){
+        allchequesarr=arr;
+      },
+      FnPushPopCheques:function(sno,status,flag){
+        for(var i=0;i<allchequesarr.length;i++){
+          if(allchequesarr[i].sno==sno){
+            if(flag==1)
+            allchequesarr[i].status=status;
+            if(flag==0)
+            allchequesarr.splice(i,1);
+          }
+        }
+      },
+      FnSubmit:function(){
+        alert('If you press submit it will clear all the cheques...Please process all the cheques which is not cleared...');
+        // alert(JSON.stringify(allchequesarr));
+        if(allchequesarr.length>0) 
+        this.$.processingservice.FnUpdateChequeStatus(allchequesarr);
+        else
+        alert('No cheques are exist to process!!!');         
+      },
+      FnRefresh:function(){
+        this.chequearr=[];
+        document.querySelector('fromdate-icon-pickercard').ready();
+        document.querySelector('todate-icon-pickercard').ready();
+        // this.$.processingservice.FnFetchprocessingchequeService();
+      }
+
+    });
+  })();
+  </script>
+</dom-module>

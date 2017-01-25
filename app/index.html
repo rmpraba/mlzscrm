@@ -1,0 +1,119 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="MLZS CRM">
+  <title>MLZS CRM</title>
+
+  <!-- Place favicon.ico in the `app/` directory -->
+
+  <!-- Chrome for Android theme color -->
+  <meta name="theme-color" content="#2E3AA1">
+
+  <!-- Web Application Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Tile color for Win8 -->
+  <meta name="msapplication-TileColor" content="#3372DF">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="PSK">
+  <link rel="icon" sizes="192x192" href="images/touch/schoollogofavicon.ico">
+
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Polymer Starter Kit">
+  <link rel="apple-touch-icon" href="images/touch/schoollogofavicon.ico">
+
+  <!-- Tile icon for Win8 (144x144) -->
+  <meta name="msapplication-TileImage" content="images/touch/schoollogofavicon.ico">
+
+  <!-- build:css styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/styles.css">
+  <!-- endbuild-->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="bower_components/bootstrap-datepicker/css/datepicker.css">
+  <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <!-- endbuild -->
+
+  <!-- Because this project uses vulcanize this should be your only html import
+       in this file. All other imports should go in elements.html -->
+  <link rel="import" href="elements/elements.html">
+
+  <!-- For shared styles, shared-styles.html import in elements.html -->
+  <style is="custom-style" include="shared-styles"></style>
+
+
+  <!-- MetisMenu CSS -->
+  <link href="bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+  <!-- Timeline CSS -->
+  <link rel="stylesheet" href="styles/timeline.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles/sb-admin-2.css">
+
+  <!-- Morris Charts CSS -->
+  <link href="bower_components/morrisjs/morris.css" rel="stylesheet">
+
+  <!-- Custom Fonts -->
+  <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="import" href="../CRM-app/CRM-app.html">
+
+  <!-- Polymer Elements-->
+  <link rel="import" href="bower_components/paper-radio-button/paper-radio-button.html">
+  <link rel="import" href="bower_components/paper-radio-group/paper-radio-group.html">
+  <link rel="import" href="bower_components/iron-collapse/iron-collapse.html">
+  <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="bower_components/iron-input/iron-input.html">
+  <link rel="import" href="bower_components/polymerfire/polymerfire.html">
+  <link rel="import" href="bower_components/iron-input/iron-input.html">
+  <link rel="import" href="bower_components/paper-badge/paper-badge.html">  
+  <link rel="import" href="bower_components/gold-phone-input/gold-phone-input.html">  
+</head>
+
+<body unresolved style="padding: 0;">
+  <span id="browser-sync-binding"></span>
+  <template is="dom-bind" id="app">
+    <CRM-app></CRM-app>
+  </template>
+
+  <!-- build:js scripts/app.js -->
+  <script src="scripts/app.js"></script>
+  <!-- endbuild-->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+
+
+
+  <!-- Metis Menu Plugin JavaScript -->
+  <script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+  <!-- Morris Charts JavaScript -->
+  <script src="bower_components/raphael/raphael-min.js"></script>
+  <script src="bower_components/morrisjs/morris.min.js"></script>
+  <script src="scripts/morris-data.js"></script>
+
+  <!-- Custom Theme JavaScript -->
+  <script src="scripts/sb-admin-2.js"></script>
+</body>
+
+</html>

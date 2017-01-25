@@ -1,0 +1,125 @@
+.bg{
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+}
+.card-container.card {
+  max-width: 350px;
+  padding: 40px 40px;
+}
+.card {
+  background-color: #F7F7F7;
+  padding: 20px px 30px;
+  margin: 0 auto 25px;
+  margin-top: 50px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+  background: rgba(255,255,255,0.5);
+}
+
+.profile-img-card {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 10px;
+  display: block;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+.form-group{
+  margin: 10% auto;
+  text-align: center;
+}
+.event-title{
+  padding: 5px 0 0 0;
+}
+.event-input,.enquiry-input{
+  margin: 0;
+}
+.event-checkbox{
+  margin: 3% auto;
+}
+.panel-icon{
+  margin: 0 10px;
+}
+.event-checkbox-grade{
+  margin-left: 20px;
+}
+.event-checkbox-recurrence{
+  margin-top: 35px !important;
+}
+.form-button, .event-title{
+  margin: 3% auto;
+  text-align: center;
+}
+.enquiry-list-item{
+  height: 75px;
+}
+.enquired{
+  color: blue;
+  margin-left: 10px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.rejected{
+  color: red;
+  margin-left: 30px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.applied{
+  color: darkgreen;
+  margin-left: 20px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.form-category{
+  margin-bottom: 5px !important;
+}
+.enquiry-form, .event-form{
+  padding: 0 5px;
+}
+.toast-success{
+  width: 100%;
+  text-align: center;
+}
+.toast-popup{
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+}
+.form-category:nth-child(even) {background: #F2F3F4}
+.form-category:nth-child(odd) {background: #EDEDED}
+.class-age{
+  margin-top: 25px;
+}
+.form-group-heading{
+  margin: 0 0 0 2%;
+  font-size: medium;
+}
+.followup-field{
+  padding-top: 35px !important;
+}
+.enquiry-input{
+  height: 75px;
+}
+.paper-search{
+  margin: 20px 0 0 0;
+}
+.glyph-button{
+  padding-top: 15px;
+}
+.status-btn{
+  margin: 0 18px;
+  height: 35px;
+  width:103px;
+}
+.discount:nth-child(even) {background: #F2F3F4}
+.discount:nth-child(odd) {background: #EDEDED}
+.discount{
+  margin: 5px 0 5px 0;
+}

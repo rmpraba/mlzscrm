@@ -1,0 +1,143 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\tp-realisation-itemcard/tp-realisation-itemcard.html">
+
+<dom-module id="tp-realisation-card">
+  <template>
+    <style>
+    </style>
+     <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <div class="col-md-6"> -->
+                <div class="col-md-5" style="margin-top: -1%;">
+                   <paper-input  label="Enter Student Name Here" is="" value="{{value}}" on-keydown="FnSearchEnquiry"></paper-input>
+                   <paper-listbox class="dropdown-content" id="rteinput1" on-iron-select="FnSelectEnquiry">
+                   <template is="dom-repeat" items="{{itemArray}}" as="item">
+                   <paper-item value="{{item.admission_no}}">{{item.itemdes}}</paper-item>
+                   </template>
+                   </paper-listbox>
+                </div>
+                
+                <!-- <div class="col-md-2" style="margin-top: 1%;">
+                  <paper-button on-click="FnSubmit" class="btn btn-primary">Process</paper-button>
+                </div> -->
+            </div>
+          </div>
+        </div>
+    </div>
+     <div>
+     
+     <template is="dom-repeat" items="{{tparr}}" as="item">
+     <tp-realisation-itemcard admissionno="{{item.admission_no}}"
+     studentname="{{item.student_name}}" grade="{{item.grade}}" installment="{{item.installment}}" insamount="{{item.installment_amount}}">
+     </tp-realisation-itemcard>
+     </template>
+     
+    </div>
+    
+    <tp-realisation-service id="tpservice"></tp-realisation-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var item=[];
+    var allchequesarr=[];
+    var cheques=[];
+    Polymer({
+      is: 'tp-realisation-card',
+      ready:function(){
+        this.querySelector('paper-listbox').style.visibility='hidden';
+      },      
+      callService:function(){
+        this.$.tpservice.fetchtpstudentforsearchService();
+      },
+      autocompletearr:function(autocompletearr)
+      {
+         item=autocompletearr;
+      },
+      FnSearchEnquiry:function(e){
+      if(e.keyCode==13|| e.keyCode==40)
+      this.querySelector('paper-listbox').focus();
+      var arr=[];
+      arr.push({"itemdes":"-----Select-----"});
+      this.querySelector('paper-listbox').style.visibility='visible';
+      if(e.keyCode==8){
+        this.itemflag="true";
+        this.itemval="";
+        //alert('yes');
+        var len=(this.value).length;
+        if(len<=1){
+          this.querySelector('paper-listbox').style.visibility='hidden';
+          this.itemArray="";
+          this.itemval="";
+        }
+        if(len>1){
+          this.querySelector('paper-listbox').style.visibility='visible';
+          var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,backsubval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.value).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          this.itemArray=arr;
+        }
+      }
+      if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+        if(this.itemflag=="true") {
+          this.itemval = (this.value).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+          this.itemflag="false";
+        }
+        else
+        this.itemval = this.value +String.fromCharCode((e.keyCode));
+        if(this.itemval.length>0)
+        {
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,this.itemval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.itemval).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          if(arr.length>0)
+            this.itemArray=arr;
+          else
+          {
+            var obj={"itemdes":"","enquiry_no":""};
+            obj.itemdes="No items found";
+            arr.push(obj);
+            this.itemArray=arr;
+          }
+        }
+      }
+    },
+    FnSelectEnquiry:function(e){
+    this.querySelector('paper-listbox').style.visibility='hidden';
+    var enquiry_name = e.target.selectedItem.textContent.trim();
+    var admission_no = e.target.selectedItem.value.trim();
+    localStorage.setItem("curr_sess_enquiryno",admission_no);
+    localStorage.setItem("curr_sess_enquiryname",enquiry_name);
+    this.itemArray=[];
+    document.querySelector('#rteinput1').selected=-1;
+    this.value=enquiry_name;
+    this.$.tpservice.fetchtpstudinfoService(admission_no);
+    },
+    FnRefresh:function(){
+      this.tparr="";
+      tis.value="";
+    }
+    });
+  })();
+  </script>
+</dom-module>

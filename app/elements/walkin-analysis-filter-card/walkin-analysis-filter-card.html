@@ -1,0 +1,106 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../from-datepicker-card/from-datepicker-card.html">
+<link rel="import" href="../to-datepicker-card/to-datepicker-card.html">
+<dom-module id="walkin-analysis-filter-card">
+  <template>
+      <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-10">
+              <div class="col-md-6">
+                <label>Filter:</label>
+                <paper-radio-group aria-labelledby="label1">
+                  <paper-radio-button on-click="academic_year" name="year" id = "academic">Academic Year</paper-radio-button>
+                  <paper-radio-button name="yearandmonth" on-click="between_dates">Between Dates</paper-radio-button>
+                </paper-radio-group>
+              </div>
+              <div class="col-md-6">
+                <paper-dropdown-menu id="academicyr" label="Academic Year" on-iron-select="reportforyear">
+                  <paper-menu class="dropdown-content" valueattr="value" >
+                      <paper-item>{{previousyear}}</paper-item>
+                      <paper-item>{{currentyear}}</paper-item>
+                      <paper-item>{{nextyear}}</paper-item>
+                  </paper-menu>
+                </paper-dropdown-menu>
+                <div class="col-md-6" hidden$="{{hidedate}}">
+                  <from-datepicker-card></from-datepicker-card>
+                </div>
+                <div class="col-md-6" hidden$="{{hidedate}}">
+                  <to-datepicker-card></to-datepicker-card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <table class="table table-hover" id="hidereport">
+      <thead>
+      <tr>
+        <th>Source</th>
+        <th>Total Enquiries</th>
+      </tr>
+      </thead>
+      <tbody>
+      <template  is="dom-repeat" items="{{reportarr}}" as="view">
+        <tr><td>{{view.enquiry_source}}</td><td>{{view.totalenq}}</td></tr>
+      </template>
+      </tbody>
+    </table>
+    <crm-service id="service"></crm-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var fromDate ='';
+    var toDate ='';
+
+    Polymer({
+      is: 'walkin-analysis-filter-card',
+
+    ready:function(){
+      this.$.academicyr.hidden = true;
+      this.hidedate= true;
+      this.$.hidereport.hidden = true;
+    } ,
+    academic_year:function(){
+      var dt = new Date();
+      var current_year =dt.getFullYear();
+      var previous_1_year = current_year - 1;
+      var nextyear = current_year + 1;
+      var nextyears = current_year + 2;
+      var previous_academic_year='AY-'+previous_1_year+"-"+current_year;
+      var current_academic_year = 'AY-'+current_year+"-"+nextyear;
+      var next_academic_year = 'AY-'+nextyear+"-"+nextyears;
+      this.previousyear = previous_academic_year;
+      this.currentyear = current_academic_year;
+      this.nextyear = next_academic_year;
+      this.$.academicyr.hidden = false;
+      this.hidedate= true;
+    },
+    reportforyear:function(e){
+      var academicyrs = (e.target.selectedItem.textContent).trim();
+      this.$.service.getacademicyearreport(academicyrs);
+    },
+    between_dates:function(){
+      this.$.academicyr.hidden = true;
+      this.hidedate= false;
+    },
+    showReport:function(){
+      this.$.hidereport.hidden = false;
+    },
+    FnSetFromDate:function(date){
+      fromDate = date;
+      if(fromDate && toDate){
+        this.$.service.getbetweendatereport(fromDate,toDate);
+      }
+    },
+    FnSetToDate:function(date){
+      toDate = date;
+      if(fromDate && toDate){
+        this.$.service.getbetweendatereport(fromDate,toDate);
+      }
+    }
+    });
+  })();
+  </script>
+</dom-module>

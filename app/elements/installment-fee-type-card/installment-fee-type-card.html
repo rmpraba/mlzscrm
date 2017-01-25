@@ -1,0 +1,264 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="installment-fee-type-card">
+  <template>
+  <style>
+  .feecard{
+    @apply(--layout-vertical);
+    border-color: darkslategrey;
+       background-color: white;
+       color: black;
+       width: 400px;
+  }
+  .btn{
+    @apply(--layout-horizontal);
+    /*margin-left: 15%;*/
+    margin-left: 0px;
+  }
+  paper-button{
+            width: 10%;
+            background: #252626;
+            color: white;
+            margin-top: 2%;
+            text-transform: none;
+  }
+  .innerfeecard{
+    width: 200px;
+    margin-left: 100px;
+  }
+  </style>
+
+  <div class="feecard">  
+    <div class="innerfeecard">
+    <paper-dropdown-menu label="Select Fee Type" attr-for-selected="value">
+      <paper-menu id="{{type}}" class="dropdown-content" required on-iron-select="FnSelectFeetype" valueattr="value" >
+        <template  is="dom-repeat" items="{{feetypearr}}" as="item">
+          <paper-item value="{{item.fee_type}}">{{item.fee_type}}</paper-item>
+        </template>
+      </paper-menu>
+    </paper-dropdown-menu>
+
+    <paper-input readonly label="Due amount" value="{{actualamount}}"></paper-input>
+    <paper-input readonly hidden label="Discount" value="{{discount}}"></paper-input>
+    <paper-input readonly="{{payablereadonlyflag}}" label="Installment amount" value="{{payableamount}}" on-change="FnPayableAmount"></paper-input>
+    <paper-input readonly label="Remaining amount" value="{{remainingamount}}"></paper-input>
+
+    <div class="btn">    
+    <paper-button on-click="FnAdd">Add</paper-button>
+    <paper-button on-click="FnCancel">Cancel</paper-button>
+    </div>
+    </div>
+  </div>
+ 
+  <!-- It would fetch fee type -->
+  <iron-ajax
+        method="post"
+        id="fetchfeetypeajax"
+        url="{{fetchfeetypeurl}}"
+        params="{{fetchfeetypeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeetypeResponse"
+        debounce-duration="300"
+  >
+
+    <!-- Fetch installment pattern-->
+     <iron-ajax
+        method="post"
+        id="fetchinstallmentfeecodeajax"
+        url="{{fetchinstallmentfeecodeurl}}"
+        params="{{fetchinstallmentfeecodeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchinstallmentfeecodeResponse"
+        debounce-duration="300"
+        >
+      <!-- Fetch installment pattern-->
+     <iron-ajax
+        method="post"
+        id="fetchinstallmentdiscountcodeajax"
+        url="{{fetchinstallmentdiscountcodeurl}}"
+        params="{{fetchinstallmentdiscountcodeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchinstallmentdiscountcodeResponse"
+        debounce-duration="300"
+        >
+  <schedule-service id="scheduleservice"></schedule-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var feetype;
+    var arr=[];
+    var subinstallmentarr=[];
+    var totalfeearray=[];
+    var totaldiscountarray=[];
+    var consolidatedarray=[];
+    var actualinstallmentfeetypes=[];
+    var count=0;
+    Polymer({
+      is: 'installment-fee-type-card',
+      ready:function(){
+        this.fetchfeetypeService();
+      },
+      FnSelectFeetype:function(e){
+        // alert(e.target.id);
+        localStorage.setItem("curr_sess_selectedinstallment",e.target.id);
+        feetype=(e.target.selectedItem.textContent).trim();
+        this.actualamount="";
+        this.discount="";
+        this.payableamount="";
+        this.remainingamount="";
+        this.FnFormFeeStructure(feetype);
+        // this.fetchinstallmentfeecode(feetype);
+      },
+       fetchfeetypeService:function(){        
+        this.fetchfeetypeurl=sessionStorage.getItem("addrinfo")+"/fetchfeetype-service"
+        this.$.fetchfeetypeajax.generateRequest();
+      },
+      fetchfeetypeResponse:function(e){
+        this.feetypearr=e.detail.response.returnval;
+      },      
+      FnAdd:function(){        
+        document.querySelector('installment-fee-component-card').FnCloseDialog(feetype,this.actualamount,this.discount,this.payableamount,this.remainingamount); 
+        document.querySelector('#'+this.feetype).selected=-1;
+        feetype="";
+        this.actualamount="";
+        this.discount="";
+        this.payableamount="";
+        this.remainingamount="";
+      },
+      FnCancel:function(){
+        document.querySelector('installment-fee-component-card').FnCancelCloseDialog();
+        document.querySelector('#'+this.feetype).selected=-1;
+        feetype="";
+        this.actualamount="";
+        this.discount="";
+        this.payableamount="";
+        this.remainingamount="";
+      },
+     
+      FnSetSubinstallment:function(subarr){
+        subinstallmentarr=subarr;
+        // alert(JSON.stringify(subinstallmentarr));
+      },
+      FnPayableAmount:function(){
+        this.payflag=0;
+        var temp=parseFloat(parseFloat(this.actualamount)-parseFloat(this.payableamount)).toFixed(2);
+        if(temp>=0){
+          this.remainingamount=temp;
+          for(var i=0;i<actualinstallmentfeetypes.length;i++){
+          if(actualinstallmentfeetypes[i].feetype==feetype){          
+            actualinstallmentfeetypes[i].payableamount=this.remainingamount;
+            if(actualinstallmentfeetypes[i].remainingamount==0){
+              actualinstallmentfeetypes.splice(i,1);
+            }
+          }
+          }
+        }
+        else{
+          this.payflag=1;
+          alert('Please enter proper amount!!');
+          this.payableamount=localStorage.getItem("curr_sess_payableamount");
+          this.remainingamount=parseFloat(parseFloat(this.actualamount)-parseFloat(this.payableamount)).toFixed(2);
+        }
+      },
+      FnSetTotalFeeInstallment:function(totalfeearr,totaldiscountarr){
+        // alert(JSON.stringify(totalfeearr));
+        // alert(JSON.stringify(totaldiscountarr));
+        totalfeearray=totalfeearr;
+        totaldiscountarray=totaldiscountarr;
+
+        for(var i=0;i<totalfeearray.length;i++){
+        var flag=0;
+        var obj={"schoolid":"","academicyear":"","admissionyear":"","grade":"","admissiontype":"",
+        "discountcode":"","discounttype":"","feecode":"","actualamount":"","payableamount":""};
+          for(var j=0;j<totaldiscountarray.length;j++){
+            if(totalfeearray[i].fee_type==totaldiscountarray[j].fee_type)
+            {
+              flag=1;
+              obj.schoolid=localStorage.getItem("schoolid");
+              obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+              obj.admissionyear=localStorage.getItem("curr_sess_admissionyear");
+              obj.grade=localStorage.getItem("curr_sess_grade");
+              obj.noofinstallment=localStorage.getItem("curr_sess_noofinstallment"); 
+              obj.discounttypecode=totaldiscountarray[j].discount_type_code; 
+              obj.discounttype=totaldiscountarray[j].discount_type; 
+              obj.discountcode=totaldiscountarray[j].discount_code;
+              obj.admissiontype=localStorage.getItem("curr_sess_admissiontype");
+              obj.discountamount=totaldiscountarray[j].amount;
+              obj.feecode=totalfeearray[i].fee_code;
+              obj.feetype=totalfeearray[i].fee_type;
+              obj.actualamount=totalfeearray[i].total_fee;
+              obj.payableamount=parseFloat(parseFloat(obj.actualamount)-parseFloat(obj.discountamount)).toFixed(2);
+              consolidatedarray.push(obj);
+            }
+          }
+          if(flag==0){
+              obj.schoolid=localStorage.getItem("schoolid");
+              obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+              obj.admissionyear=localStorage.getItem("curr_sess_admissionyear");
+              obj.grade=localStorage.getItem("curr_sess_grade"); 
+              obj.noofinstallment=localStorage.getItem("curr_sess_noofinstallment"); 
+              obj.discounttypecode=localStorage.getItem("curr_sess_discounttypecode"); 
+              obj.discounttype=localStorage.getItem("curr_sess_discounttype"); 
+              obj.discountcode="";
+              obj.admissiontype=localStorage.getItem("curr_sess_admissiontype");
+              obj.discountamount=0;
+              obj.feecode=totalfeearray[i].fee_code;
+              obj.feetype=totalfeearray[i].fee_type;
+              obj.actualamount=totalfeearray[i].total_fee;
+              obj.payableamount=parseFloat(parseFloat(obj.actualamount)-parseFloat(obj.discountamount)).toFixed(2);
+              consolidatedarray.push(obj);
+          }
+        }
+
+        this.$.scheduleservice.generateinstallmentscheduleService(consolidatedarray);
+       
+        actualinstallmentfeetypes=consolidatedarray;
+        consolidatedarray=[];
+        // alert(JSON.stringify(consolidatedarray));
+      },
+      FnFormFeeStructure:function(feetype){
+        // alert(feetype);
+        this.flag=0;
+        this.rflag=0;
+        this.regflag=0;
+        var actualnoofinstallment=actualinstallmentfeetypes[0].noofinstallment;
+        
+        for(var i=0;i<actualinstallmentfeetypes.length;i++){
+          if(actualinstallmentfeetypes[i].feetype==feetype){                      
+            this.actualamount=actualinstallmentfeetypes[i].payableamount;
+            if(localStorage.getItem("curr_sess_selectedinstallment")!="Commitment fee"){ 
+            this.payablereadonlyflag=true;
+            if(((actualinstallmentfeetypes[i].noofinstallment)-1)==(actualnoofinstallment-1)){
+            this.payableamount=Math.ceil((parseFloat((actualinstallmentfeetypes[i].payableamount)/(parseInt(actualinstallmentfeetypes[i].noofinstallment)-1).toFixed(2))/1000))*1000;  
+            } 
+            else{
+            this.payableamount=Math.round((parseFloat((actualinstallmentfeetypes[i].payableamount)/(parseInt(actualinstallmentfeetypes[i].noofinstallment)-1).toFixed(2))/1000))*1000;   
+            }   
+            actualinstallmentfeetypes[i].noofinstallment=parseInt((
+              actualinstallmentfeetypes[i].noofinstallment)-1)
+            }
+            else{
+            this.payableamount=actualinstallmentfeetypes[i].payableamount;
+            }
+            localStorage.setItem("curr_sess_payableamount",this.payableamount);
+            this.discount=actualinstallmentfeetypes[i].discountamount;
+            this.remainingamount=parseFloat(parseFloat(this.actualamount)-parseFloat(this.payableamount)).toFixed(2);
+            actualinstallmentfeetypes[i].payableamount=this.remainingamount;
+            if(actualinstallmentfeetypes[i].remainingamount==0){
+              this.flag=1;  
+              actualinstallmentfeetypes.splice(i,1);
+            }
+          }
+        }
+        if(this.flag==1)
+          alert("No pending fee for this selected feetype!!");
+      }
+    });
+  })();
+  </script>
+</dom-module>

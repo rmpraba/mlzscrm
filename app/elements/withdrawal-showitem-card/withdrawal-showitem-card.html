@@ -1,0 +1,32 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="withdrawal-showitem-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div>
+      <table class="table table-hover" id="collectionreport">
+      <thead>
+      <tr>
+        <td>{{sno}}</td><td>{{enrno}}</td><td>{{studentname}}</td><td>{{grade}}</td><td>{{installmenttype}}</td><td>{{chequeno}}</td><td>{{bankname}}</td><td>{{paiddate}}</td><td>{{installmentamount}}</td><td>{{chequestatus}}</td>
+      </tr>
+      </thead>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var chequestatus="";
+    Polymer({
+      is: 'withdrawal-showitem-card',
+      FnChangeStatus:function(){
+       
+      }     
+    });
+  })();
+  </script>
+</dom-module>

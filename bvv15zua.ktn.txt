@@ -1,0 +1,38 @@
+﻿Merge branch 'master' of https://github.com/rmpraba/CRM
+
+# Conflicts:
+#	app/elements/crm-service/crm-service.html
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 1 and 5 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   .idea/workspace.xml
+#	modified:   app/elements/app-list/app-list.html
+#	modified:   app/elements/crm-service/crm-service.html
+#	modified:   app/elements/elements.html
+#	modified:   app/elements/follow-up-dashboard-item-card/follow-up-dashboard-item-card.html
+#	modified:   app/elements/followup-dashboard/followup-dashboard.html
+#	modified:   app/elements/followup-details-items/followup-details-items.html
+#	modified:   app/elements/followup-details/followup-details.html
+#	new file:   app/elements/followup-service/followup-service.html
+#	modified:   app/elements/followup-student-detail/followup-student-detail.html
+#	modified:   app/elements/master-report-card/master-report-card.html
+#	modified:   app/elements/navigation-bar/navigation-bar.html
+#	modified:   app/elements/reporting-service/reporting-service.html
+#	renamed:    app/elements/enquiry-analysis-card/enquiry-analysis-card.html -> app/elements/walkin-analysis-card/walkin-analysis-card.html
+#	modified:   server.js
+#
+

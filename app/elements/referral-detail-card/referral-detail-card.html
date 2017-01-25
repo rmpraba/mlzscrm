@@ -1,0 +1,32 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="referral-detail-card">
+  <template>
+    <div class="col-sm-6 enquiry-input">
+      <div class="lbl"><label>Student Name</label></div>
+        <h5>{{studentname}}</h5>
+    </div>
+    <div class="col-sm-6 enquiry-input">
+      <div class="lbl"><label>Grade</label></div>
+      <h5>{{class}} - {{section}}</h5>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'referral-detail-card',
+      ready:function(){
+
+      },
+      FnClear:function(){
+        this.studentname = "";
+        this.class = "";
+        this.section = "";
+      }
+    });
+  })();
+  </script>
+</dom-module>

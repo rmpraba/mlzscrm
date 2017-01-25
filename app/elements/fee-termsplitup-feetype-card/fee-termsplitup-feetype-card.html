@@ -1,0 +1,40 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="fee-termsplitup-feetype-card">
+  <template>
+  <style>
+  </style>
+  <div class="feecard">  
+    <div class="innerfeecard">
+    <paper-checkbox id="term{{feetypecode}}" value="{{type}}" on-change="FnSelectFeetype">{{feetype}}</paper-checkbox>
+    </div>
+  </div> 
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'fee-termsplitup-feetype-card',
+      ready:function(){
+      },
+      FnSelectFeetype:function(e){
+        var obj={"type":"","feetype":"","amount":""};
+        if(document.querySelector('#term'+(this.feetypecode)).checked==true){
+        obj.type=this.type;
+        obj.feetype=this.feetype; 
+        obj.amount=0;
+        document.querySelector('fee-splitup-card').FnSetFeeType(obj,true);
+        }  
+        else
+          {
+            obj.type=this.type;
+            obj.feetype=this.feetype; 
+            document.querySelector('fee-splitup-card').FnSetFeeType(obj,false);
+          }   
+      }
+    });
+  })();
+  </script>
+</dom-module>

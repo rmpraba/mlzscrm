@@ -1,0 +1,1066 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../detailed-enquiry-form/detailed-enquiry-form.html">
+<link rel="import" href="../admission-form/admission-form.html">
+<link rel="import" href="../followup-card/followup-card.html">
+<link rel="import" href="../schedulefee-card/schedulefee-card.html">
+<link rel="import" href="../fee-card/fee-card.html">
+<link rel="import" href="../followup-details/followup-details.html">
+<link rel="import" href="../fee-reports/fee-reports.html">
+<link rel="import" href="../feetype-schedule-capdcrd/feetype-schedule-card.html">
+<link rel="import" href="../discount-schedule-card/discount-schedule-card.html">
+
+<dom-module id="navigation-bar">
+  <template>
+    <style>
+      #fee-dialog{
+        width: 90%;
+        height: 100%;
+        margin-left:5%;
+        margin-right:5%;
+        padding: 0;
+      }
+      #fee-content{
+        height: auto;
+        min-height: 100%;
+      }
+    </style>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">{{schoolname}}</a>
+    </div>
+
+    <ul class="nav navbar-top-links navbar-right">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-messages">
+          <li>
+            <a href="#">
+              <div>
+                <strong>John Smith</strong>
+                  <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+              </div>
+              <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a href="#">
+              <div>
+                <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+              </div>
+              <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a href="#">
+              <div>
+                <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+              </div>
+              <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a class="text-center" href="#">
+              <strong>Read All Messages</strong>
+              <i class="fa fa-angle-right"></i>
+            </a>
+          </li>
+        </ul>
+        <!-- /.dropdown-messages -->
+      </li>
+      <!-- /.dropdown -->
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-tasks">
+          <li>
+            <a href="#">
+              <div>
+                <p>
+                  <strong>Task 1</strong>
+                  <span class="pull-right text-muted">40% Complete</span>
+                </p>
+                <div class="progress progress-striped active">
+                  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                    <span class="sr-only">40% Complete (success)</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a href="#">
+              <div>
+                <p>
+                  <strong>Task 2</strong>
+                  <span class="pull-right text-muted">20% Complete</span>
+                </p>
+                <div class="progress progress-striped active">
+                  <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                    <span class="sr-only">20% Complete</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a href="#">
+              <div>
+                <p>
+                  <strong>Task 3</strong>
+                  <span class="pull-right text-muted">60% Complete</span>
+                </p>
+                <div class="progress progress-striped active">
+                  <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                    <span class="sr-only">60% Complete (warning)</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a href="#">
+              <div>
+                <p>
+                  <strong>Task 4</strong>
+                  <span class="pull-right text-muted">80% Complete</span>
+                </p>
+                <div class="progress progress-striped active">
+                  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                    <span class="sr-only">80% Complete (danger)</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <a class="text-center" href="#">
+              <strong>See All Tasks</strong>
+              <i class="fa fa-angle-right"></i>
+            </a>
+          </li>
+        </ul>
+        <!-- /.dropdown-tasks -->
+      </li>
+      <!-- /.dropdown -->
+      <li class="dropdown">
+        <template is="dom-if" if="{{badgeShow}}">
+          <paper-badge for="number" label="{{totalfollowupstodaycount}}"></paper-badge>
+        </template>
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" on-click="gettodayfollowups">
+          <i class="fa fa-bell fa-fw"></i>
+        </a>
+      </li>
+      <!-- /.dropdown -->
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-user">
+          <li> Hi, {{username}}</li>
+          <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+          </li>
+          <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+          </li>
+          <li class="divider"></li>
+          <li><a href="login.html" on-click="FnSignout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+          </li>
+        </ul>
+        <!-- /.dropdown-user -->
+      </li>
+      <!-- /.dropdown -->
+    </ul>
+    <!-- /.navbar-top-links -->
+
+    <div class="navbar-default sidebar" role="navigation">
+      <div class="sidebar-nav navbar-collapse">
+        <ul class="nav" id="side-menu">
+          <li class="sidebar-search">
+            <div class="input-group custom-search-form">
+              <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                  <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+            </div>
+            <!-- /input-group -->
+          </li>
+         <!--  <li id="dashboard">
+            <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+          </li> -->
+          
+          <li id="enquiry" hidden$="{{hideenquirymenu}}">
+            <a href="" aria-hidden="true" on-click="enquiry"><i class="fa fa-phone-square fa-fw"></i> Enquiry<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+              <li>
+              <a href="" on-click="Fnpreapp">Enquiry Form</a>
+                <!-- <a href="flot.html"></a> -->
+              </li>
+              <!-- <li>
+                <a href="" on-click="Fnenqform" aria-hidden="true" data-toggle="modal" data-target="#addDetailedEnquiry">Enquiry Form</a>
+              </li> -->
+               <li id="">
+            <a href="" aria-hidden="true" on-click="followupdashboard" data-toggle="modal"> Follow Up</a>
+          </li>
+            </ul>
+          </li>
+
+          <!-- <li id="admission"> -->
+            <!-- <a href="" aria-hidden="true" on-click="schedule"><i class="fa fa-check fa-fw"></i>Fees Structure</a> -->
+          <li id="exchange-followup" hidden$="{{hidebalancefollowupmenu}}">
+            <a href="" on-click="exchange_followup" ><i class="fa fa-exchange fa-fw"></i>Balance Followup</a>
+          </li>
+
+          <li id="feestructure" hidden$="{{hidefeestructuremenu}}">
+            <a href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>Fees Structure</a>
+            <ul class="nav nav-second-level">
+              <li>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#feetypeschedule" on-click="FnFeetypeschedule">Fee Type Schedule</a>
+              </li>
+              <li>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#discountschedule" on-click="FnDiscountschedule">Discount Schedule</a>
+              </li>
+              <li>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#feesplitupschedule" on-click="FnFeesplitupschedule">Fee Splitup Schedule</a>
+              </li>
+              <li>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#feestructureschedule" on-click="FnFeestructureschedule">Installment Schedule</a>
+              </li>              
+              </ul>
+           </li>
+
+           <li id="fee-reports" hidden$="{{hidefeestructurereportmenu}}">
+           <a href="" aria-hidden="true" on-click="feereports"><i class="fa fa-table fa-fw"></i>Fee Structure Reports</a>
+           <ul class="nav nav-second-level">
+           <li id="discount-report">
+            <a href="" aria-hidden="true" data-target="#discountstructurereport" data-backdrop="static" data-keyboard="false" on-click="FnDiscountStructureReport">Discount report</a>
+           </li>
+           <li id="fee-structure-report">
+            <a href="" aria-hidden="true" data-target="#feestructurereport" data-backdrop="static" data-keyboard="false" on-click="FnFeeStructureReport">Fee Structure Report</a>
+           </li>
+           <li id="fee-structure-report">
+            <a href="" aria-hidden="true" data-target="#feestructureforgradereport" data-backdrop="static" data-keyboard="false" on-click="FnFeeStructureForGradeReport">Fee Structure For Grades</a>
+           </li>
+           </ul>
+           </li>
+
+
+        <li id="enrollment" hidden$="{{hideenrollmentmenu}}">
+            <a href="" aria-hidden="true"><i class="fa fa-phone-square fa-fw"></i> Enrollment<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">         
+          <li id="adtest">
+            <a href="" aria-hidden="true" data-toggle="modal" data-target="#admissiontest" data-backdrop="static" data-keyboard="false" on-click="FnAdmissionTest">Admission Test</a>
+          </li>
+          <li id="admission">
+            <a href="" aria-hidden="true" data-toggle="modal" data-target="#newadmission" data-backdrop="static" data-keyboard="false" on-click="FnAdmission">Admission</a>
+          </li>
+          <li id="promotion">
+            <a href="" aria-hidden="true" on-click="FnPromotion">Promotion</a>
+           </li>
+           <li id="cancelenrollment">
+            <a href="" aria-hidden="true" on-click="FnCancelEnrollment">Cancel Enrollment</a>
+           </li>
+           <li id="withdrawalprocess">
+            <a href="" aria-hidden="true" on-click="FnWithdrawal">Wthdrawal Processing</a>
+           </li>
+           <li id="enrollmentreport">
+            <a href="" aria-hidden="true" on-click="FnEnrollmentreport">Enrollment Report</a>
+           </li>
+          </ul>
+          </li>
+          <!-- <li id="payment">
+            <a href="" aria-hidden="true" data-toggle="modal" data-target="#feepayment"><i class="fa fa-money fa-fw"></i>Fee Payment</a>
+          </li> -->
+
+           <li id="payment" hidden$="{{hidefeepaymentmenu}}">
+            <a href="#" aria-hidden="true" data-toggle="modal" on-click="FnFeePayment"><i class="fa fa-money fa-fw"></i> Fee Payment<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+              <li>
+              <a href="" aria-hidden="true" data-toggle="modal" data-target="#prospectousfee" on-click="FnProspect">Application fee</a>
+              </li>
+              <li>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#registerationfee" on-click="FnRegister">Registration fee</a>
+              </li>
+              <li>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#feepayment"  on-click="FnKit">School fee</a>
+              </li>             
+              <li>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#provisionfee"  on-click="FnProvisionfee">Provision fee</a>
+              </li> 
+            </ul>
+            </nav-second-level>
+          </li>
+
+           <li id="masterreport" hidden$="{{hidemasterreportmenu}}">
+            <a href="#" aria-hidden="true" data-toggle="modal" on-click="Master"><i class="fa fa-money fa-fw"></i>Master Reports<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+              <li>
+              <a href="" aria-hidden="true" data-toggle="modal" data-target="#discountmaster" on-click="FnDiscount">Discount Type</a>
+              </li>
+              <li>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#installmentmaster" on-click="FnInstallment">Installment Date</a>
+              </li>             
+            </ul>
+            </nav-second-level>
+          </li>
+
+          <li id="reports" hidden$="{{hidereportmenu}}">
+            <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Report<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+            <li id="enquiryreports">
+            <a href="" aria-hidden="true">Enquiry Analysis Report<span class="fa arrow"></span></a>
+            <ul class="nav nav-third-level">
+              <li>
+                <a href="" on-click="walkin_analysis" aria-hidden="true">Walkin Analysis</a>
+                <!-- <a href="flot.html"></a> -->
+              </li>
+              <li>
+                <a href="" on-click="walkin_analysis_filter" aria-hidden="true">Walkin Analysis With Filter</a>
+                <!-- <a href="flot.html"></a> -->
+              </li>
+              <li>
+                <a href="" on-click="call_analysis" aria-hidden="true">Follow-Up Call Analysis</a>
+                <!-- <a href="flot.html"></a> -->
+              </li>
+              <li>
+                <a href="" on-click="Fnmasteranalysis" aria-hidden="true">Master Enquiry Analysis</a>
+              </li>
+              <li>
+                <a href="" on-click="Fncounsellorreport" aria-hidden="true">Counsellor Report</a>
+              </li>
+            </ul>
+            </li>
+            <li id="collectionreports">
+            <a href="" aria-hidden="true">Fee Collection<span class="fa arrow"></span></a>
+            <ul class="nav nav-third-level">
+            <li id="dailycollectionreport">
+            <a href="" aria-hidden="true" on-click="FnDailyCollectionReport">Daily Fee Collection Report</a>
+            </li>
+            <li id="feecollectionreport">
+            <a href="" aria-hidden="true" on-click="FnFeeCollectionReport">Fee Collection Report</a>
+            </li>
+            <li id="chequerealization">
+            <a href="" aria-hidden="true" on-click="FnChequerealization">Cheque Realization</a>
+           </li>
+           <li id="tprealisation">
+            <a href="" aria-hidden="true" on-click="FnTprealisation">Third Party Realization</a>
+           </li>
+           <li id="bouncecheques">
+            <a href="" aria-hidden="true" on-click="FnShowBounceCheques">Bounce Cheques</a>
+           </li>
+           <li id="searchreceipt">
+            <a href="" aria-hidden="true" on-click="FnSearchReceipt">Search Receipt</a>
+           </li> 
+            <li id="bounceprocess">
+            <a href="" aria-hidden="true" on-click="FnBounceProcessing">Bounce/Cancel Process</a>
+            </li> 
+            <li id="bounceprocess">
+            <a href="" aria-hidden="true" on-click="FnChequeEditDelete">Edit/Delete Cheques</a>
+            </li>        
+            </ul>
+            </li>
+            <li id="pendingreport">
+            <a href="" aria-hidden="true">Pending Collection report<span class="fa arrow"></span></a>
+             <ul class="nav nav-third-level">
+            <li id="pendingcollectionreport">
+            <a href="" aria-hidden="true" on-click="FnPendingFeeReport">Pending Collection Report</a>
+            </li>
+            <li id="pendingcheques">
+            <a href="" aria-hidden="true" on-click="FnPendingCheques">Pending Cheques</a>
+            </li>
+            <li id="pdccheques">
+            <a href="" aria-hidden="true" on-click="FnPdcCheques">PDC Cheques</a>
+            </li>
+           </ul>
+            </li>
+            </ul>
+          </li>         
+          
+          <!-- <li id="admform">
+            <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Admission Form<!-- <span class="fa arrow"></span> -->
+            <!-- </a>
+          </li> --> 
+          <!-- <li id="collcnentry">
+            <a href="#"><i class="fa fa-wrench fa-fw"></i> Collection Entry<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+              <li>
+                <a href="panels-wells.html">Panels and Wells</a>
+              </li>
+              <li>
+                <a href="buttons.html">Buttons</a>
+              </li>
+              <li>
+                <a href="notifications.html">Notifications</a>
+              </li>
+              <li>
+                <a href="typography.html">Typography</a>
+              </li>
+              <li>
+                <a href="icons.html"> Icons</a>
+              </li>
+              <li>
+                <a href="grid.html">Grid</a>
+              </li>
+            </ul>
+            <!-- /.nav-second-level -->
+          <!-- </li> 
+          <li id="admapp">
+            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Admission Approval
+                        <!-- /.nav-second-level -->
+          <!-- </li>  -->
+
+        </ul>
+      </div>
+      <!-- /.sidebar-collapse -->
+    </div>
+    <!-- /.navbar-static-side -->
+  </nav>
+ <div class="modal fade bd-example-modal-lg" id="addEnquiry" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="center-block event-title" id="eventTitle">
+                Enquiry Form
+              </h4>
+            </div>
+            <div class="modal-body">
+              <newenquiry-card></newenquiry-card>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="modal fade bd-example-modal-lg" id="addDetailedEnquiry" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="enquiry-title">
+              Enquiry Form
+            </h4>
+          </div>
+          <div class="modal-body">
+            <detailed-enquiry-form></detailed-enquiry-form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     <div class="modal fade bd-example-modal-lg" id="admissiontest" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="admission-title">
+              Admission Test
+            </h4>
+          </div>
+          <div class="modal-body">
+            <admission-approval-card></admission-approval-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="newadmission" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="admission-title">
+              Admission
+            </h4>
+          </div>
+          <div class="modal-body">
+            <admission-form></admission-form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade bd-example-modal-lg" id="feepayment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              School Fee 
+            </h4>
+          </div>
+          <div class="modal-body">
+            <fees-card></fees-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="registerationfee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+             Registeration Fee
+            </h4>
+          </div>
+          <div class="modal-body">
+            <registerationfee-card></registerationfee-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="prospectousfee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+             Application Fee
+            </h4>
+          </div>
+          <div class="modal-body">
+            <prospectousfee-card></prospectousfee-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="provisionfee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+             Provisional Fee
+            </h4>
+          </div>
+          <div class="modal-body">
+            <provisionalfee-card></provisionalfee-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+     <div class="modal fade bd-example-modal-lg" id="feetypeschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Schedule Fee Type
+            </h4>
+          </div>
+          <div class="modal-body">
+            <feetype-schedule-card></feetype-schedule-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     <div class="modal fade bd-example-modal-lg" id="feestructureschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Schedule Installment
+            </h4>
+          </div>
+          <div class="modal-body">
+            <fee-structure-schedulecard></fee-structure-schedulecard>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade bd-example-modal-lg" id="discountschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Discount Schedule
+            </h4>
+          </div>
+          <div class="modal-body">
+            <discount-master-card></discount-master-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="feesplitupschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Fee Splitup Schedule
+            </h4>
+          </div>
+          <div class="modal-body">
+            <!-- <fee-splitup-card></fee-splitup-card> -->
+            <feesplitup-structure-card></feesplitup-structure-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="installmentschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Installment Schedule
+            </h4>
+          </div>
+          <div class="modal-body">
+            <installment-master-card></installment-master-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     
+
+    <crm-service id="service"></crm-service>
+    <followup-service id="followupservice"></followup-service>
+    <schedule-service id="scheduleservice"></schedule-service>
+    <reporting-service id="reportingservice"></reporting-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'navigation-bar',
+
+      ready:function(){
+        this.schoolname=localStorage.getItem("schoolname");
+        this.username=localStorage.getItem("employeename");
+        this.hideenquirymenu=true;
+        this.hidebalancefollowupmenu=true;
+        this.hidefeestructurereportmenu=true;
+        this.hidefeestructuremenu=true;
+        this.hideenrollmentmenu=true;
+        this.hidefeepaymentmenu=true;
+        this.hidemasterreportmenu=true;
+        this.hidereportmenu=true;
+      },
+      Fncheck:function(){
+        // if(localStorage.getItem("enquiry")=='true'){
+        //   this.$.enquiry.hidden=true;
+        // }
+        // if(localStorage.getItem("dashboard")=='true'){
+        //   this.$.dashboard.hidden=true;
+        // }
+        // if(localStorage.getItem("followup")=='true'){
+        //   this.$.followup.hidden=true;
+        // }
+        // if(localStorage.getItem("admissionform")=='true'){
+        //   this.$.admform.hidden=true;
+        // }
+        // if(localStorage.getItem("collectionentry")=='true'){
+        //   this.$.collcnentry.hidden=true;
+        // }
+        // if(localStorage.getItem("admapproval")=='true'){
+        //   this.$.admapp.hidden=true;
+        // }
+
+      },
+      FnFeetypeschedule:function(e){
+        document.querySelector('feetype-schedule-card').FnRefresh();
+        this.$.scheduleservice.fetchgradeService();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchadmissionyearService();
+        this.$.scheduleservice.fetchfeetypeService();
+      },
+      FnProspect:function(e){
+      // alert(e.target.text);
+        localStorage.setItem("curr_sess_feetypepayment","Application fee");
+        document.querySelector('prospectousfee-card').callService();
+        document.querySelector('prospectousfee-card').FnRefresh();
+        document.querySelector('prospectousfee-card').ready();
+        // this.FnRefresh();
+      },
+      FnRegister:function(e){
+      // alert(e.target.text);
+        localStorage.setItem("curr_sess_feetypepayment","Registration fee");
+        document.querySelector('registerationfee-card').callService();
+        document.querySelector('registerationfee-card').FnRefresh();
+        document.querySelector('registerationfee-card').ready();
+        // this.FnRefresh();
+      },
+      FnDiscountschedule:function(e){
+        document.querySelector('discount-master-card').FnRefresh();
+        this.$.scheduleservice.fetchgradeService();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchadmissionyearService();
+        this.$.scheduleservice.fetchdiscounttypeService();
+        this.$.scheduleservice.fetchfeetypeService();       
+      },
+
+      FnFeestructureschedule:function(e){
+        document.querySelector('fee-structure-schedulecard').FnRefresh();
+        document.querySelector('fee-structure-schedulecard').ready();
+        this.$.scheduleservice.fetchgradeService();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchadmissionyearService();
+        this.$.scheduleservice.fetchfeecomponenttypeService();
+        this.$.scheduleservice.fetchdiscounttypeService();
+        this.$.scheduleservice.fetchfeetypeService();
+      },
+      FnInstallmentschedule:function(e){
+        this.$.scheduleservice.fetchgradeService();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchadmissionyearService();
+      },
+
+      FnAnnual:function(e){
+        localStorage.setItem("curr_sess_feetype",e.target.text);
+        this.FnRefresh();
+      },
+      FnKit:function(e){
+        localStorage.setItem("curr_sess_feetype",e.target.text);
+        localStorage.setItem("curr_sess_provisionflag",0);
+        this.FnRefresh();
+      },
+      FnMiscellaneous:function(e){
+        localStorage.setItem("curr_sess_feetype",e.target.text);
+        this.FnRefresh();
+
+      },
+      followupdashboard:function(){
+        this.$.followupservice.getfollowupcount();
+        document.querySelector('app-list').setPage("follow-up");
+      },
+      FnRefresh:function(){
+        document.querySelector('fees-card').ready();
+        document.querySelector('fees-card').FnRefresh();
+        // document.querySelector('admission-service').FnRefresh();
+      },
+      enquiry:function()
+      {
+        this.$.service.getenquirycount();
+        document.querySelector('detailed-enquiry-form').country();
+        document.querySelector('app-list').setPage("enquiry");
+
+      },
+      Master:function()
+      {
+          //this.$.service.getinstallmentdetails();
+      },
+      schedule:function(){
+        this.$.service.getfeecount();
+        document.querySelector('app-list').setPage("feestructure-dashboard");
+
+      },
+      walkin_analysis:function(){
+        this.$.service.walkinanalysisyear();
+        this.$.service.walkinanalysismonth();
+        this.$.service.walkinanalysisday();
+        document.querySelector('app-list').setPage("walkin-analysis","Walkin Analysis");
+      },
+      walkin_analysis_filter:function(){
+        document.querySelector('app-list').setPage("walkin-analysis-filter","Walkin Analysis with Filters");
+      },
+      FnAdmissionTest:function(){
+        document.querySelector('admission-approval-card').FnRefresh();
+
+      },
+
+      FnAdmission:function(){
+        this.$.service.getdiscounts();
+        document.querySelector('admission-form').FnRefresh();
+        document.querySelector('special-discount-card').ready();
+      },
+
+      Fnpreapp:function(){
+        document.querySelector('app-list').setPage("pre-apps","Enquiry Form");
+        document.querySelector('pre-apps').ready();
+        document.querySelector('pre-apps').callnextyearhandler();
+          // document.querySelector('newenquiry-card').Fnclear();
+          // document.querySelector('special-discount-card').ready();
+          
+      },
+      Fnenqform:function(){
+          document.querySelector('detailed-enquiry-form').Fnclear();
+          document.querySelector('detailed-enquiry-form').ready();
+      },
+      
+
+      FnDiscount:function()
+      {
+        document.querySelector('app-list').setPage("discount-type-ui","Discount Type");
+        document.querySelector('discount-type-ui-card').ready();
+        document.querySelector('discount-display-card').ready();        
+      },
+      
+       FnInstallment:function()
+      {
+
+        document.querySelector('app-list').setPage("installment-master-ui-card","Installment Date");
+        //document.querySelector('installment-master-ui-card').ready();
+          
+      },
+      Fnmasteranalysis:function(){
+          document.querySelector('app-list').setPage("master-enquiry-analysis","Master Walk-in Analysis");
+          document.querySelector('master-report-card').Fncall();
+      },
+      FnFeeCollectionReport:function(){
+          this.$.scheduleservice.fetchgradeforreportService();
+          document.querySelector('app-list').setPage("fee-collection-report-card","Collection Report");
+          document.querySelector('fee-collection-report-card').FnRefresh();
+          document.querySelector('fee-collection-report-card').FnCallService();
+      },
+      FnFeePayment:function(){
+          document.querySelector('fees-card').callService();
+          document.querySelector('fees-card').FnRefresh();
+          document.querySelector('fees-card').ready();
+      },
+     
+      call_analysis:function(){
+        document.querySelector('app-list').setPage("callanalysis-report-card","Follow-Up Call Analysis Report");
+          document.querySelector('callanalysis-report-card').ready();
+        },
+      FnChequerealization:function(){
+          document.querySelector('app-list').setPage("cheque-realization-card","Cheque Processing");
+          document.querySelector('cheque-realization-card').FnCallService();
+      },
+
+      FnWithdrawal:function(){
+          document.querySelector('app-list').setPage("withdrawal-card","Withdrawal Processing");
+      },
+      exchange_followup:function(){
+        document.querySelector('app-list').setPage("exchange-followup","Balance Followup");
+        document.querySelector('exchange-followup').ready();
+      },  
+      feereports:function(){
+        // document.querySelector('app-list').setPage("fee-reports","Fee Structure Reports");
+        // this.$.reportingservice.getfeedetails();
+       // document.querySelector('fee-reports').ready();
+      },
+      gettodayfollowups:function(){
+        document.querySelector('app-list').setPage("followup-today-report","Today's Follow Up");
+        this.$.followupservice.getfollowupdetailstoday();
+      }, 
+      Fntotalfollowupstoday:function(count){
+        if( count === 0 ){
+          this.badgeShow = false;
+        } else {
+          this.badgeShow = true;
+        }
+        this.totalfollowupstodaycount = count;
+      },
+      FnFeesplitupschedule:function(){
+        document.querySelector('feesplitup-structure-card').ready();
+        document.querySelector('feesplitup-structure-card').FnRefresh();
+        this.$.scheduleservice.fetchgradeService();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchadmissionyearService();
+
+      },
+      FnSearchReceipt:function(){
+        this.$.scheduleservice.fetchacademicyearService();
+        document.querySelector('app-list').setPage("searchreceipt","Search Receipt");
+        document.querySelector('searchreceipt-card').ready();
+      },
+      FnPendingCheques:function(){
+        document.querySelector('app-list').setPage("pendingcheques-report","Pending Cheques Report");
+        document.querySelector('pendingcheques-report').ready();
+        document.querySelector('pendingcheques-report').FnRefresh();
+        document.querySelector('pendingcheques-report').FnCallService();
+      },
+      FnPendingFeeReport:function(){
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchgradeforreportService();
+        document.querySelector('app-list').setPage("pendingfee-report","Pending Fee Report");
+        document.querySelector('pendingfee-report').ready();
+        document.querySelector('pendingfee-report').FnRefresh();
+        document.querySelector('pendingfee-report').FnCallService();
+      },
+      FnDailyCollectionReport:function(){
+        this.$.scheduleservice.fetchgradeforreportService();
+        document.querySelector('app-list').setPage("dailycollection-report","Daily Collection Report");
+        document.querySelector('dailycollection-report').FnRefresh();
+        document.querySelector('dailycollection-report').FnCallService();
+      },
+      FnShowBounceCheques:function(){
+        document.querySelector('app-list').setPage("bouncecheque-displaycard","Bounce Cheques");
+        document.querySelector('bouncecheque-displaycard').FnCallService();
+      },
+      Fncounsellorreport:function(){
+        document.querySelector('app-list').setPage("counsellor-report","Counsellor Report");
+        document.querySelector('reporting-service').counsellorreport();
+      },
+      FnBounceProcessing:function(){
+        document.querySelector('app-list').setPage("chequebounceorcancel-card","Cheque Bounce / Cancel");
+        document.querySelector('chequebounceorcancel-card').callService();
+      },
+      FnTprealisation:function(){
+        document.querySelector('app-list').setPage("tp-realisation-card","Third Party Realization");
+        document.querySelector('tp-realisation-card').callService();
+      },
+      FnChequeEditDelete:function(){
+        document.querySelector('app-list').setPage("editdelete-cheques-card","Edit/Delete Cheques");
+        document.querySelector('editdelete-cheques-card').callService();
+      },
+      FnProvisionfee:function(){
+        localStorage.setItem("curr_sess_feetypepayment","Commitment Fee (Ins1)");
+        localStorage.setItem("curr_sess_provisionflag",1);
+        document.querySelector('provisionalfee-card').callService();
+      },
+      FnPdcCheques:function(){
+        document.querySelector('app-list').setPage("pdccheques-report-card","PDC Cheques");
+        document.querySelector('pdccheques-report-card').callService();
+      },
+      FnPromotion:function(){
+          this.$.scheduleservice.fetchgradeService();
+          this.$.scheduleservice.fetchacademicyearService();
+          document.querySelector('app-list').setPage("promotion-card","Promote Students");
+      },
+      FnCancelEnrollment:function(){
+        this.$.scheduleservice.fetchacademicyearService();
+        document.querySelector('app-list').setPage("cancel-enrollment-card","Cancel Enrollment");
+        document.querySelector('cancel-enrollment-card').FnRefresh();
+      },
+      FnDiscountStructureReport:function(){
+        this.$.scheduleservice.fetchgradeforreportService();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchadmissionyearService();
+        document.querySelector('app-list').setPage("discount-structure-report","Discount master");
+        document.querySelector('discount-structure-report').FnRefresh();
+        document.querySelector('discount-structure-report').callService();
+      },
+      FnFeeStructureReport:function(){
+        this.$.scheduleservice.fetchgradeforreportService();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchadmissionyearService();
+        document.querySelector('app-list').setPage("fee-structure-report","Fee master");
+        document.querySelector('fee-structure-report').FnRefresh();
+        document.querySelector('fee-structure-report').callService();
+      },
+      FnFeeStructureForGradeReport:function(){
+        this.$.scheduleservice.fetchgradeforreportService();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchadmissionyearService();
+        document.querySelector('app-list').setPage("gradewise-fee-structure-report","Fee master");
+        document.querySelector('gradewise-fee-structure-report').FnRefresh();
+        document.querySelector('gradewise-fee-structure-report').callService();
+      },
+      FnEnrollmentreport:function(){
+        this.$.scheduleservice.fetchgradeforreportService();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchadmissionyearService();
+        document.querySelector('app-list').setPage("enrollment-report","Enrollments");
+        document.querySelector('enrollment-report').FnRefresh();
+        document.querySelector('enrollment-report').callService();
+      },
+      setRoleview:function(){
+       if(localStorage.getItem("roleid")=="ROLE101") 
+       {
+        this.hideenquirymenu=false;
+        this.hidebalancefollowupmenu=true;
+        this.hidefeestructurereportmenu=true;
+        this.hidefeestructuremenu=true;
+        this.hideenrollmentmenu=false;
+        this.hidefeepaymentmenu=false;
+        this.hidemasterreportmenu=true;
+        this.hidereportmenu=false;
+       }
+       else if(localStorage.getItem("roleid")=="ROLE102") 
+       {
+        this.hideenquirymenu=false;
+        this.hidebalancefollowupmenu=false;
+        this.hidefeestructurereportmenu=true;
+        this.hidefeestructuremenu=true;
+        this.hideenrollmentmenu=false;
+        this.hidefeepaymentmenu=false;
+        this.hidemasterreportmenu=true;
+        this.hidereportmenu=false;
+       }
+       else if(localStorage.getItem("roleid")=="ROLE103") 
+       {
+        this.hideenquirymenu=false;
+        this.hidebalancefollowupmenu=true;
+        this.hidefeestructurereportmenu=false;
+        this.hidefeestructuremenu=true;
+        this.hideenrollmentmenu=false;
+        this.hidefeepaymentmenu=false;
+        this.hidemasterreportmenu=false;
+        this.hidereportmenu=false;
+       }
+       if(localStorage.getItem("roleid")=="ROLE106") 
+       {
+        this.hideenquirymenu=true;
+        this.hidebalancefollowupmenu=true;
+        this.hidefeestructurereportmenu=false;
+        this.hidefeestructuremenu=false;
+        this.hideenrollmentmenu=true;
+        this.hidefeepaymentmenu=false;
+        this.hidemasterreportmenu=false;
+        this.hidereportmenu=false;
+       }
+      },
+      FnSignout:function(){
+        window.location.href="../index.html";
+      }
+    });
+  })();
+  </script>
+</dom-module>

@@ -1,0 +1,63 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<dom-module id="followup-details-items">
+  <style>
+    .striped:nth-child(even) {background: #F2F3F4}
+    .striped:nth-child(odd) {background: #EDEDED}
+  </style>
+  <template>
+   <div>
+     <div class="row">
+     <div hidden>{{status}}/{{followupid}}</div>
+       <table class="striped" style="margin: 2% 0 0 5%;">
+         <tbody>
+           <tr>
+             <td style="width:7%">{{id}}</td>
+             <td style="width:11%; text-align: left;">{{student}}</td>
+             <td style="width:10%">{{currdate}}</td>
+             <td style="width:8%">{{confidencelevel}}</td>
+             <td style="width:5%;text-align: center;">{{followupflag}}</td>
+             <td style="width:15%;text-align: center;"> <button class="btn" on-click="viewdetail" data-toggle="modal" data-target="#studentfollowup"><a>Click</a></button></td>
+           </tr>
+         </tbody>
+       </table>
+       <div class="modal fade bd-example-modal-lg" id="studentfollowup" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+         <div class="modal-dialog modal-lg">
+           <div class="modal-content">
+             <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+               <h4 class="center-block event-title" id="">
+                 Follow Up Detail
+               </h4>
+             </div>
+             <div class="modal-body">
+               <followup-student-detail></followup-student-detail>
+             </div>
+           </div>
+         </div>
+       </div>
+
+     </div>
+  </div>
+    <followup-service id="followupservice"></followup-service>
+    </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'followup-details-items',
+      ready:function(){
+        var sche=new Date(this.currdate);
+        this.currdate=sche.getFullYear()+'-'+(sche.getMonth()+1)+'-'+sche.getDate();
+      },
+
+      viewdetail:function(){
+        //alert(this.status+   +this.followupid);
+        this.$.followupservice.viewdetail(this.id,this.status,this.followupid);
+      }
+    });
+  })();
+  </script>
+</dom-module>

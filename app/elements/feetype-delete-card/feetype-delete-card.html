@@ -1,0 +1,25 @@
+
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="feetype-delete-card">
+  <template>
+    <table style="width: 800px;margin-left: 5%;">
+      <tr><td>{{installment}}</td><td>{{installmenttype}}</td><td>{{feetype}}</td><td>{{actualamount}}</td><td>{{discount}}</td><td>{{payableamount}}</td><td><span class="panel-icon"><a href=""><i class="fa fa-trash" aria-hidden="true" on-click="FnDelete"></i></a></span>
+            </span></td></tr>
+    </table>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'feetype-delete-card',
+
+      FnDelete:function(){
+        document.querySelector('fee-component-card').FnSpliceFeetype(this.installment,this.installmenttype,this.feetype);
+      }
+    });
+  })();
+  </script>
+</dom-module>

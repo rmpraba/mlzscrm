@@ -1,0 +1,34 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="follow-up-dashboard-item-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div class="list-group list-group-item enquiry-list-item">
+    <div hidden>{{status}}</div>
+        <h5>{{grade}}</h5>
+        <div class="col-sm-3">
+          <a href="" class="enquired" on-click="getfollowupdetails" aria-hidden="true" data-toggle="modal" data-target="#followupdet">{{enquirygrade}}</a>
+        </div>
+      </div>
+
+      <followup-service id="followupservice"></followup-service>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'follow-up-dashboard-item-card',
+      getfollowupdetails:function(){
+        this.$.followupservice.getfollowupstudents(this.grade,this.status);       
+      },
+    });
+  })();
+  </script>
+</dom-module>

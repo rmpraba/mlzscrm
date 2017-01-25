@@ -1,0 +1,168 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="cancel-enrollment-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-4" style="margin-top: 1%;">
+                  <paper-dropdown-menu id="cancelenracademicyear" label="Academic Year" on-iron-select="FnSelectacademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{cancelenrademicyear}}" id="cancelenracademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                </div>
+                <div class="col-md-4" style="margin-top: 1%;">
+                  <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchEnquiry"></paper-input>
+                  <paper-listbox class="dropdown-content" id="cancelinput" on-iron-select="FnSelectEnquiry">
+                  <template is="dom-repeat" items="{{itemArray}}" as="item">
+                  <paper-item value="{{item.admission_no}}">{{item.itemdes}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+      <div class="col-md-8" style="margin-top: 2%;" hidden$="{{hidedashboard}}">
+      <enrollment-dashboard></enrollment-dashboard>
+      </div>
+      <div class="col-md-8" style="margin-top: 2%;"  hidden$="{{hideenritemcard}}">
+      <template is="dom-repeat" items="{{cancelarr}}" as="item">
+      <cancel-enrollment-itemcard admissionno="{{item.admission_no}}" studentname="{{item.student_name}}" academicyear="{{item.academic_year}}" grade="{{item.class_for_admission}}" fathername="{{item.father_name}}"></cancel-enrollment-itemcard>
+      </template>
+    </div>
+    <cancellation-service id="service"></cancellation-service>
+    <admission-service id="admissionservice"></admission-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var academicyear;
+    var item=[];
+    Polymer({
+      is: 'cancel-enrollment-card',
+      ready:function(){
+        this.hideenritemcard=true;
+        this.hidedashboard=false;
+        this.querySelector('#cancelinput').style.visibility='hidden';
+      },
+      FnSelectacademicYear:function(e){
+        // document.querySelector('cancel-enrollment-card').callService();
+        academicyear=(e.target.selectedItem.textContent).trim();
+        sessionStorage.setItem("curr_sess_academicyear",academicyear);
+        this.callService();
+        this.$.service.getadmittedcount();
+        this.$.service.getcancelledcount();
+      },
+      callService:function(){
+        this.$.service.fetchallenrollmentsforsearchService();
+      },
+      autocompletearr:function(autocompletearr)
+      {  
+         item=autocompletearr;
+         // alert(JSON.stringify(item));
+      },
+      FnSearchEnquiry:function(e){
+      if(e.keyCode==13|| e.keyCode==40)
+      this.querySelector('#cancelinput').focus();
+      var arr=[];
+      arr.push({"itemdes":"-----Select-----"});
+      this.querySelector('#cancelinput').style.visibility='visible';
+      if(e.keyCode==8){
+        this.itemflag="true";
+        this.itemval="";
+        //alert('yes');
+        var len=(this.value).length;
+        if(len<=1){
+          this.querySelector('#cancelinput').style.visibility='hidden';
+          this.itemArray="";
+          this.itemval="";
+        }
+        if(len>1){
+          this.querySelector('#cancelinput').style.visibility='visible';
+          var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,backsubval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.value).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          this.itemArray=arr;
+        }
+      }
+      if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+        if(this.itemflag=="true") {
+          this.itemval = (this.value).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+          this.itemflag="false";
+        }
+        else
+        this.itemval = this.value +String.fromCharCode((e.keyCode));
+        if(this.itemval.length>0)
+        {
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,this.itemval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.itemval).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          if(arr.length>0)
+            this.itemArray=arr;
+          else
+          {
+            var obj={"itemdes":"","enquiry_no":""};
+            obj.itemdes="No items found";
+            arr.push(obj);
+            this.itemArray=arr;
+          }
+        }
+      }
+      // alert(JSON.stringify(this.itemArray));
+    },
+    FnSelectEnquiry:function(e){
+    this.querySelector('#cancelinput').style.visibility='hidden';
+    var enquiry_name = e.target.selectedItem.textContent.trim();
+    var admission_no = e.target.selectedItem.value.trim();
+    localStorage.setItem("curr_sess_enquiryno",admission_no);
+    localStorage.setItem("curr_sess_enquiryname",enquiry_name);
+    this.itemArray=[];
+    document.querySelector('#cancelinput').selected=-1;
+    this.value=enquiry_name;
+    this.$.service.fetchstudentinfoforpreviewService(admission_no);
+    // this.$.service.enrollmentcancelService(admission_no);
+    },
+    FnHideview:function(flag1,flag2){
+      this.hideenritemcard=flag1;
+      this.hidedashboard=flag2;
+    },
+    FnRefresh:function(){
+      this.hideenritemcard=true;
+      this.hidedashboard=false;
+      this.value="";
+      this.querySelector('#cancelinput').style.visibility='hidden';
+      document.querySelector('#cancelenracademicyear').selected=-1;
+    }
+    });
+  })();
+  </script>
+</dom-module>

@@ -1,0 +1,254 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../fee-splitup-feetype-card/fee-splitup-feetype-card.html">
+<link rel="import" href="../fee-termsplitup-feetype-card/fee-termsplitup-feetype-card.html">
+<link rel="import" href="../schedule-service/schedule-service.html">
+
+<dom-module id="fee-splitup-card">
+<style type="text/css">
+  .schooltype{
+      @apply(--layout-horizontal);
+    }
+    .incard{
+      @apply(--layout-horizontal);
+    }
+    .outcard{
+      @apply(--layout-vertical);
+    }
+</style>
+  <template>
+    <style>
+    </style>
+    <div class="row enquiry-form">
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6 enquiry-input">
+            <paper-input label="School Name" value="{{schoolname}}"></paper-input>
+        </div>
+        <div class="col-sm-4 enquiry-input">
+          <paper-dropdown-menu label="Grade" >
+            <paper-menu id="splitupgrade" class="dropdown-content" required on-iron-select="FnSelectGrade" valueattr="value" >
+              <template  is="dom-repeat" items="{{gradearr}}" as="item">
+              <paper-item value="{{item.grade_id}}">{{item.grade_name}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>        
+      </div>
+
+       <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6">
+          <paper-dropdown-menu label="Academic Year" attr-for-selected="value">
+            <paper-menu id="splitupacademicyear" class="dropdown-content" required on-iron-select="FnSelectAcademicYear" valueattr="value" >
+              <template  is="dom-repeat" items="{{academicarr}}" as="item">
+              <paper-item>{{item.academic_year}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
+
+        <div class="col-sm-6 enquiry-input">
+          <paper-dropdown-menu label="Admission Year" attr-for-selected="value">
+            <paper-menu id="splitupadmissionyear" class="dropdown-content" required on-iron-select="FnSelectAdmissionYear" valueattr="value" >
+              <template  is="dom-repeat" items="{{admissionarr}}" as="item">
+              <paper-item>{{item.admission_year}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
+      </div>
+
+      <div class="list-group col-sm-12 panel-body form-category">
+      <div class="col-sm-6">
+        <label>Commitment Fee:</label>
+        <template  is="dom-repeat" items="{{feetypearr}}" as="item">
+        <fee-splitup-feetype-card type="Commitmentfee" feetypecode="{{item.fee_type_code}}" feetype="{{item.fee_type}}"></fee-splitup-feetype-card>
+        </template>  
+      </div>
+      <div class="col-sm-6">
+        <label>Term Fee:</label>
+        <template  is="dom-repeat" items="{{feetypearr}}" as="item">
+        <fee-termsplitup-feetype-card type="Termfee" feetypecode="{{item.fee_type_code}}" feetype="{{item.fee_type}}"></fee-termsplitup-feetype-card>
+        </template>
+      </div>
+      </div>
+      
+      <div class="list-group col-sm-12 panel-body form-category"  hidden$="{{hidefeedisplaycard}}">
+        <div class='schooltype'>   
+        <template  is="dom-repeat" items="{{feesplitarr}}" as="item">
+        <div class="outcard" style="width: 80%;">
+         <label>{{item.type}}</label>         
+         <table style="width: 50%;margin-left: 5%;">         
+          <template  is="dom-repeat" items="{{item.fees}}" as="feeitem">
+          <tr>
+           <td>{{feeitem.feetype}}</td><td>{{feeitem.amount}}</td>
+          </tr>
+          </template>
+         <tr><td colspan="2">-------------------------------------------</td></tr>
+         <tr><th>Total</th><th>{{item.total}}</th>
+         </tr> 
+         </table> 
+         </div>
+        </template>     
+        </div>  
+      </div>
+
+      <div class="list-group col-sm-12 panel-body form-category">
+        <paper-button id="splitupgenerate" hidden$="{{hidegenerate}}" on-click="FnGenerate">Generate</paper-button>
+        <paper-button id="splitupsubmit" hidden$="{{hidesubmit}}" on-click="FnSubmit">Submit</paper-button>
+        <paper-button id="splitupcancel" hidden$="{{hidecancel}}" on-click="FnCancel">Cancel</paper-button>
+      </div>
+
+      <!-- It would fetch fee type -->
+      <iron-ajax
+        method="post"
+        id="fetchfeetypeajax"
+        url="{{fetchfeetypeurl}}"
+        params="{{fetchfeetypeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeetypeResponse"
+        debounce-duration="300"
+      >
+
+    </div>
+    <schedule-service id="service"></schedule-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var grade,academicyear,admissionyear;
+    var feetypearr=[];
+    var splitarr=[];
+    var overall=[];
+    Polymer({
+      is: 'fee-splitup-card',
+      ready:function(){
+        this.hidegenerate=false;
+        this.hidesubmit=true;
+        this.schoolname=localStorage.getItem("schoolname");
+        this.fetchfeetypeService();
+        this.hidefeedisplaycard=true;
+      },
+      FnAdd:function(){        
+      },
+      fetchfeetypeService:function(){        
+        this.fetchfeetypeurl=sessionStorage.getItem("addrinfo")+"/fetchfeetype-service"
+        this.$.fetchfeetypeajax.generateRequest();
+      },
+      fetchfeetypeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        for(var i=0;i<arr.length;i++){
+          arr[i].fee_type_code=(arr[i].fee_type_code).replace(' ','');
+        }
+        this.feetypearr=arr;
+      },
+      FnSetFeeType:function(obj,flag){
+        if(feetypearr.length==0)
+          feetypearr.push(obj);
+        else{
+        if(flag==true){  
+        for(var i=0;i<feetypearr.length;i++){
+          if(feetypearr[i].type==obj.type&&feetypearr[i].feetype==obj.feetype)
+            feetypearr.splice(i,1);
+        }
+        feetypearr.push(obj);
+        }
+        else
+        {
+          for(var i=0;i<feetypearr.length;i++){
+          if(feetypearr[i].type==obj.type&&feetypearr[i].feetype==obj.feetype)
+            feetypearr.splice(i,1);
+           }
+        }
+        }       
+
+      },
+      FnGenerate:function(){
+        // alert(JSON.stringify(feetypearr));
+        // alert(grade+" "+academicyear+" "+admissionyear);
+        this.hidegenerate=true;
+        this.hidesubmit=false;
+        this.$.service.fetchfeecodeforsplitupService(grade,academicyear,admissionyear);
+      },
+      FnSelectGrade:function(e){
+        grade=(e.target.selectedItem.value).trim();
+        localStorage.setItem("curr_sess_grade",grade);
+      },
+      FnSelectAdmissionYear:function(e){
+        admissionyear=(e.target.selectedItem.textContent).trim();
+        localStorage.setItem("curr_sess_admissionyear",admissionyear);
+      },
+      FnSelectAcademicYear:function(e){
+        academicyear=(e.target.selectedItem.textContent).trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+      },
+      setSplitArray:function(arr){
+        splitarr=arr;
+        for(var i=0;i<splitarr.length;i++){
+          for(var j=0;j<feetypearr.length;j++){
+            if(splitarr[i].fee_type==feetypearr[j].feetype){
+              if(feetypearr[j].type=="Commitmentfee"&&feetypearr[j].feetype!='Kit fee'){
+              feetypearr[j].amount=parseFloat(feetypearr[j].amount);
+              splitarr[j].total_fee=parseFloat(splitarr[i].total_fee)-parseFloat(feetypearr[j].amount);
+              }
+              else{
+              feetypearr[j].amount=parseFloat(splitarr[i].total_fee)-parseFloat(feetypearr[j].amount); 
+              }
+            }
+          }
+        }
+        var totalcommitmentfee=0;
+        var totaltermfee=0;        
+        for(var i=0;i<feetypearr.length;i++){
+          if(feetypearr[i].type=='Commitmentfee')
+            totalcommitmentfee=parseFloat(totalcommitmentfee)+parseFloat(feetypearr[i].amount);
+          else
+            totaltermfee=parseFloat(totaltermfee)+parseFloat(feetypearr[i].amount);
+        }
+        for(var i=0;i<feetypearr.length;i++){
+          overall.push(feetypearr[i]);
+        }
+        var a=[];
+        var arr=[];
+       for(var i=0;i<feetypearr.length;i++)
+       {       
+        var nameobj={"type":"","total":""};
+        nameobj.type=feetypearr[i].type; 
+        if(feetypearr[i].type=="Commitmentfee")
+        nameobj.total=totalcommitmentfee;
+        else
+        nameobj.total=totaltermfee;
+        var obj={"feetype":"","amount":""};
+        obj.feetype=feetypearr[i].feetype;
+        obj.amount=feetypearr[i].amount;
+        a.push(obj);
+        for(var j=i+1;j<feetypearr.length;j++)
+        {
+           if(feetypearr[i].type==feetypearr[j].type)
+           {
+             var obj1={"feetype":"","amount":""}
+             obj1.feetype=feetypearr[j].feetype;
+             obj1.amount=feetypearr[j].amount;
+             a.push(obj1);
+             feetypearr.splice(j,1);
+             j--;
+           }
+        }
+        nameobj.fees=a;
+        arr.push(nameobj);
+        a=[];
+       }
+       this.hidefeedisplaycard=false;
+       this.feesplitarr=arr;
+      },
+      FnSubmit:function(){
+        // alert(JSON.stringify(overall));
+        this.$.service.generatemasterfeesplitupcodeService(overall);
+        feetypearr=[];
+        splitarr=[];
+        overall=[];
+      }
+    });
+  })();
+  </script>
+</dom-module>

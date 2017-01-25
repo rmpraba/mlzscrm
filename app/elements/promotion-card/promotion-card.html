@@ -1,0 +1,186 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\promotion-service\promotion-service.html">
+<link rel="import" href="..\promotion-item-card\promotion-item-card.html">
+
+<dom-module id="promotion-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      #card{
+        border-bottom: 1px grey;
+      }
+    </style>
+     <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-1" style="margin-top: 2%;"> 
+                <label>From: </label>
+                </div>
+                <div class="col-md-4" style="margin-top: -1%;">            
+                <paper-dropdown-menu id="promotionfromacademicyear" label="Academic Year" on-iron-select="FnSelectFromAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedfromacademicyear}}" id="promotionfromacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+
+                 <paper-dropdown-menu label="Grade" attr-for-selected="value">
+                  <paper-menu id="promotionfromgrade" class="dropdown-content" required on-iron-select="FnSelectFromGrade" valueattr="value" >
+                    <template  is="dom-repeat" items="{{gradearr}}" as="item">
+                    <paper-item value="{{item.grade_id}}">{{item.grade_name}}</paper-item>
+                    </template>
+                  </paper-menu>
+                 </paper-dropdown-menu> 
+                </div> 
+                <div class="col-md-1" style="margin-top: 2%;"> 
+                <label>To: </label>
+                </div>
+                <div class="col-md-4" style="margin-top: -1%;">
+
+                <paper-dropdown-menu id="promotiontoacademicyear" label="Academic Year" on-iron-select="FnSelectToAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedtoacademicyear}}" id="promotiontoacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+
+                 <paper-dropdown-menu label="Grade" attr-for-selected="value">
+                  <paper-menu id="promotiontograde" class="dropdown-content" required on-iron-select="FnSelectToGrade" selected="{{selectedtograde}}">
+                    <template  is="dom-repeat" items="{{gradearr}}" as="item">
+                    <paper-item value="{{item.grade_id}}" label="{{item.grade_name}}">{{item.grade_name}}</paper-item>
+                    </template>
+                  </paper-menu>
+                 </paper-dropdown-menu> 
+                </div>
+                <div class="col-md-1" style="margin-top: 5%;">
+                  <paper-button style="height:30px;text-transform: none;margin-left: -15%;" on-click="FnView" class="btn btn-primary" hidden="{{hideviewbtn}}">View</paper-button>
+                <!-- </div>  -->
+                <!-- <div class="col-md-1" style="margin-top: 1%;"> -->
+                  <paper-button style="height:30px;text-transform: none;margin-left: -15%;margin-top: 5%;" on-click="FnPromote" class="btn btn-primary" hidden="{{hidepromotebtn}}">Promote</paper-button>
+                </div>             
+            </div>
+            <div class="col-md-12" style="margin-top: 2%;margin-left: 2%;">
+                <paper-checkbox id="promotioncheck" checked on-change="FnSelDeselect">Select All</paper-checkbox>
+            </div> 
+          </div>
+        </div>
+    </div>
+    <div>
+    <div class="col-md-12">
+    <table style="width: 60%;" class="table table-hover">
+    <template  is="dom-repeat" items="{{promotionarr}}" as="item">
+      
+      <tr id='card'><td hidden>{{item.school_id}}</td>
+      <td>
+      <promotion-item-card schoolid="{{item.school_id}}" admissionno="{{item.admission_no}}" studentname="{{item.student_name}}" grade="{{item.class_for_admission}}" flag="{{item.flag}}"></promotion-item-card>
+      </td>
+      <td><img src='../../images/login.png' style="width: 80px; height: 70px;" ></td>
+      <td>{{item.admission_no}}</td><td>{{item.student_name}}</td>
+      <!-- <td>{{item.class_for_admission}}</td>       -->
+      </tr>
+      <tr style="height: 10px;"><td colspan="4"><hr></td></tr>
+    </template>
+    </table>
+     
+    </div>
+    </div>
+    <promotion-service id="promotionservice"></promotion-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var promotearr=[];
+    var fromgrade,tograde,fromac,toac;
+    Polymer({
+      is: 'promotion-card',
+      ready:function(){
+        this.hideviewbtn=false;
+        this.hidepromotebtn=true;
+      },
+      FnSelectFromGrade:function(e){
+        fromgrade=(e.target.selectedItem.textContent).trim();
+        for(var i=0;i<this.gradearr.length;i++){
+          if(this.gradearr[i].grade_name==fromgrade){
+            if(i<this.gradearr.length){
+              this.selectedtograde=i+1;
+              tograde=(this.gradearr[i+1].grade_name).trim();
+            }
+          }
+        }
+      },
+      FnSelectToGrade:function(e){
+        tograde=(e.target.selectedItem.textContent).trim();
+      },
+      FnSelectFromAcademicYear:function(e){
+        fromac=(e.target.selectedItem.textContent).trim();
+        for(var i=0;i<this.academicarr.length;i++){
+          if(this.academicarr[i].academic_year==fromac){
+            if(i<this.academicarr.length){
+              this.selectedtoacademicyear=this.academicarr[i+1].academic_year;
+              toac=(this.academicarr[i+1].academic_year).trim();
+            }
+          }
+        }
+      },
+      FnSelectToAcademicYear:function(e){
+        toac=(e.target.selectedItem.textContent).trim();
+      },
+      FnSelDeselect:function(e){
+        // alert(document.querySelector('#promotioncheck').checked);
+        if(document.querySelector('#promotioncheck').checked==true){
+          document.querySelector('promotion-service').FnSetPromotionSourcearr(promotearr,true);
+          // for(var i=0;i<promotearr.length;i++){
+          //   promotearr[i].flag=true;
+          // }
+        }
+        if(document.querySelector('#promotioncheck').checked==false){
+          document.querySelector('promotion-service').FnSetPromotionSourcearr(promotearr,false);
+          // for(var i=0;i<promotearr.length;i++){
+          //   promotearr[i].flag=false;
+          // }
+        }
+        // alert(JSON.stringify(promotearr));        
+      },
+      FnView:function(){ 
+        this.hideviewbtn=true;
+        this.hidepromotebtn=false;       
+        this.$.promotionservice.FnFetchstudentforpromotionService(fromgrade,tograde,fromac,toac);
+      },
+      FnPromote:function(){
+        // alert(fromac+" "+toac+" "+fromgrade+" "+tograde);
+        // alert(JSON.stringify(promotearr));
+        this.hideviewbtn=false;
+        this.hidepromotebtn=true;
+        this.$.promotionservice.FnpromotioninsertService(fromgrade,tograde,fromac,toac,promotearr);
+      },
+      FnSetPromotionSource:function(arr){
+        promotearr=arr;
+      },
+      FnSplicePromotion:function(admissionno,flag){
+        for(var i=0;i<promotearr.length;i++){
+          if(promotearr[i].admission_no==admissionno){
+            promotearr[i].flag=flag;
+          }
+        }
+      },
+      FnRefresh:function(){
+        this.hideviewbtn=false;
+        this.hidepromotebtn=true;
+        document.querySelector('#promotionfromgrade').selected=-1;
+        document.querySelector('#promotiontograde').selected=-1;
+        document.querySelector('#promotionfromacademicyear').selected=-1;
+        document.querySelector('#promotiontoacademicyear').selected=-1;
+      },
+      FnClear:function(){
+        this.promotionarr=[];
+      }
+     
+    });
+  })();
+  </script>
+</dom-module>

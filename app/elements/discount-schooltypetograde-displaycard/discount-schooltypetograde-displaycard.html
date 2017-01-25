@@ -1,0 +1,116 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../schooltype-checkcard/schooltype-checkcard.html">
+<link rel="import" href="../schooltypegrade-checkcard/schooltypegrade-checkcard.html">
+
+<dom-module id="discount-schooltypetograde-displaycard">
+  <template>
+    <style>
+    .schooltype{
+      @apply(--layout-vertical);
+    }
+    .selecttype{
+      @apply(--layout-horizontal);
+    }
+    </style>
+
+    <div class='schooltype' hidden$="{{hidegradecard}}">   
+      <template  is="dom-repeat" items="{{schooltypearr}}" as="item">
+        <div class='schooltype'> 
+        <schooltype-checkcard schooltype="{{item.type}}" gradearr="{{item.grade}}"></schooltype-checkcard>
+        </div>
+      </template>     
+    </div> 
+
+  <!-- Fetching grade -->
+  <iron-ajax
+        method="post"
+        id="fetchschooltypegradeajax"
+        url="{{fetchschooltypegradeurl}}"
+        params="{{fetchschooltypegradeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchschooltypegradeResponse"
+        debounce-duration="300"
+        >
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var gradearr=[];
+    var allgrades=[];
+    var type="";
+    Polymer({
+      is: 'discount-schooltypetograde-displaycard',
+      ready:function(){
+        this.schooltypearr=[];
+        this.hidegradecard=true;
+        this.fetchschooltypegradeurl=sessionStorage.getItem("addrinfo")+"/fetchschooltypegrade-service";
+        this.$.fetchschooltypegradeajax.generateRequest();
+      },
+      fetchschooltypegradeResponse:function(e){
+        var schooltypearr=e.detail.response.returnval;
+        for(var i=0;i<schooltypearr.length;i++){
+          allgrades.push(schooltypearr[i].grade_id);
+        }
+        document.querySelector('discount-master-card').FnSetGrades(allgrades);
+        var a=[];
+        var overall=[];
+        var arr=[];
+        for(var i=0;i<schooltypearr.length;i++)
+       {       
+        var nameobj={"type":""};
+        nameobj.type=schooltypearr[i].school_type_name; 
+        var obj={"gradeid":"","gradename":""};
+        obj.gradeid=schooltypearr[i].grade_id;
+        obj.gradename=schooltypearr[i].grade_name;
+        a.push(obj);
+        for(var j=i+1;j<schooltypearr.length;j++)
+        {
+           if(schooltypearr[i].school_type_name==schooltypearr[j].school_type_name)
+           {
+             var obj1={"gradeid":"","gradename":""}
+             obj1.gradeid=schooltypearr[j].grade_id;
+             obj1.gradename=schooltypearr[j].grade_name;
+             a.push(obj1);
+             schooltypearr.splice(j,1);
+             j--;
+           }
+        }
+        nameobj.grade=a;
+        arr.push(nameobj);
+        a=[];
+       }
+       this.schooltypearr=arr;
+      },
+      FnSetGrade:function(gradeid,flag){   
+        if(gradearr.length==0){
+        if(flag==true)
+        gradearr.push(gradeid);
+        }
+        else{
+        var temp=0;
+        for(var i=0;i<gradearr.length;i++){
+          if(flag==false&&gradearr[i]==gradeid){
+            temp=1;
+            gradearr.splice(i,1);
+          }
+          else if(flag==true&&gradearr[i]!=gradeid)
+          {}
+          else if(flag==true&&gradearr[i]==gradeid)
+          {temp=1;}
+        }
+        if(temp==0)
+          gradearr.push(gradeid);
+        }
+        document.querySelector('discount-master-card').FnSetGrades(gradearr);
+      },
+      FnRefresh:function(){
+        gradearr=[];
+        allgrades=[];
+        type="";
+      }
+    });
+  })();
+  </script>
+</dom-module>

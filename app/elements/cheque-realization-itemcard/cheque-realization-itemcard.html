@@ -1,0 +1,83 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="cheque-realization-itemcard">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div>
+      <table class="table table-hover" id="collectionreport">
+      <thead>
+      <tr>
+        <td>{{sno}}</td><td>{{enrno}}</td><td>{{studentname}}</td><td>{{grade}}</td><td>{{installmenttype}}</td><td>{{chequeno}}</td><td>{{bankname}}</td><td>{{paiddate}}</td><td>{{installmentamount}}</td><td><paper-checkbox style="margin: 0; padding: 0;" id="cheque{{sno}}" class="checkbox" on-change="FnChangeStatus" checked></paper-checkbox></td>
+      </tr>
+      </thead>
+
+       <paper-dialog id="chequeprocessingstatus" modal>
+        <h4>Cheque Status</h4>
+        <div>
+          <paper-checkbox id="cleared" class="checkbox" on-change="FnClearHandler"> Cleared</paper-checkbox>
+          <paper-checkbox id="bounced" class="checkbox" on-change="FnBounceHandler"> Bounced</paper-checkbox>
+          <paper-checkbox id="cancelled" class="checkbox" on-change="FnCancelHandler"> Cancelled</paper-checkbox>
+          <paper-checkbox id="inprogress" class="checkbox" on-change="FnInprogressHandler"> Inprogress</paper-checkbox>
+        </div>
+        <div class="buttons">
+        <paper-button id="" on-click="FnOk">Ok</paper-button>
+        <paper-button id="" on-click="FnCancel">Cancel</paper-button>
+        </div>     
+       </paper-dialog>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var chequestatus="cleared";
+    var checkedbox="";
+    Polymer({
+      is: 'cheque-realization-itemcard',
+      FnChangeStatus:function(e){
+       if(document.querySelector('#cheque'+this.sno).checked==false){
+       this.$.chequeprocessingstatus.opened=true; 
+       }
+       else
+       {
+        this.$.chequeprocessingstatus.opened=false; 
+       }
+      },
+      FnClearHandler:function(e){
+        chequestatus="cleared";
+        document.querySelector('#cheque'+this.sno).checked=true;
+        document.querySelector('cheque-realization-card').FnPushPopCheques(this.sno,chequestatus,1);
+      },
+      FnBounceHandler:function(e){
+        chequestatus="bounced";
+        document.querySelector('#cheque'+this.sno).checked=true;
+        document.querySelector('cheque-realization-card').FnPushPopCheques(this.sno,chequestatus,1);
+      },
+      FnCancelHandler:function(e){
+        chequestatus="cancelled";
+        document.querySelector('#cheque'+this.sno).checked=true;
+        document.querySelector('cheque-realization-card').FnPushPopCheques(this.sno,chequestatus,1);
+      },
+      FnInprogressHandler:function(e){
+        chequestatus="inprogress";
+        document.querySelector('#cheque'+this.sno).checked=false;
+        document.querySelector('cheque-realization-card').FnPushPopCheques(this.sno,chequestatus,0);
+      },
+      FnOk:function(){
+        this.$.chequeprocessingstatus.toggle(); 
+      },
+      FnCancel:function(){
+        this.$.chequeprocessingstatus.toggle(); 
+      },
+      FnRefresh:function(){
+
+      }
+     
+    });
+  })();
+  </script>
+</dom-module>

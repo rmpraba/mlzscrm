@@ -1,0 +1,94 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="tp-realisation-service">
+  <template>
+    
+     <iron-ajax
+        method="post"
+        id="fetchtpstudentforsearchajax"
+        url="{{fetchtpstudentforsearchurl}}"
+        params="{{fetchtpstudentforsearchparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtpstudentforsearchResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchtpstudinfoajax"
+        url="{{fetchtpstudinfourl}}"
+        params="{{fetchtpstudinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtpstudinfoResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="processtprealisationajax"
+        url="{{processtprealisationurl}}"
+        params="{{processtprealisationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="processtprealisationResponse"
+        debounce-duration="300"
+        >
+        
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'tp-realisation-service',
+
+      fetchtpstudentforsearchService:function(){
+        this.fetchtpstudentforsearchurl=sessionStorage.getItem("addrinfo")+"/fetchtpstudentforsearch-service";
+        var obj={"schoolid":"","academicyear":"","statusflag":""}  
+        obj.schoolid=localStorage.getItem("schoolid");  
+        this.fetchtpstudentforsearchparam=obj;     
+        this.$.fetchtpstudentforsearchajax.generateRequest();
+      },
+      fetchtpstudentforsearchResponse:function(e){
+        document.querySelector('tp-realisation-card').autocompletearr(e.detail.response.returnval);        
+      },
+      fetchtpstudinfoService:function(admissionno){
+        this.fetchtpstudinfourl=sessionStorage.getItem("addrinfo")+"/fetchtpstudinfo-service";
+        var obj={"schoolid":"","academicyear":"","statusflag":""}  
+        obj.schoolid=localStorage.getItem("schoolid");  
+        obj.admissionno=admissionno;
+        this.fetchtpstudinfoparam=obj;     
+        this.$.fetchtpstudinfoajax.generateRequest();
+      },
+      fetchtpstudinfoResponse:function(e){
+        var arr=e.detail.response.returnval;
+        document.querySelector('tp-realisation-card').tparr=arr;
+      },
+      processtprealisation:function(admissionno,studentname,grade,installment,refno,amount,diffamt){
+        this.processtprealisationurl=sessionStorage.getItem("addrinfo")+"/processtprealisation-service";
+        var obj={"schoolid":"","academicyear":"","statusflag":""}  
+        obj.schoolid=localStorage.getItem("schoolid");  
+        obj.admissionno=admissionno;
+        obj.studentname=studentname;
+        obj.grade=grade;
+        obj.installment=installment;
+        obj.refno=refno;
+        obj.amount=amount;
+        obj.diffamount=diffamt;
+        var d=new Date();
+        var currdate=d.getDate()+"/"+((d.getMonth())+1)+"/"+d.getFullYear();
+        // alert(currdate);
+        obj.realiseddate=(currdate).trim();
+        this.processtprealisationparam=obj;     
+        this.$.processtprealisationajax.generateRequest();
+      },
+      processtprealisationResponse:function(e){
+        alert(e.detail.response.returnval);
+        if(e.detail.response.returnval=="Done!!")
+          document.querySelector('tp-realisation-card').FnRefresh();
+      } 
+    });
+  })();
+  </script>
+</dom-module>

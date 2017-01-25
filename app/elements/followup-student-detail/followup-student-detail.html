@@ -1,0 +1,258 @@
+ 
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../followup1datapicker-card/followup1datapicker-card.html">
+<link rel="import" href="../followup2datapicker-card/followup2datapicker-card.html">
+
+<dom-module id="followup-student-detail">
+  <template>
+  <style >
+    #statusdialog{
+            margin-left: -30%;
+                top: 33%;
+      }
+  </style>
+    <div class="row enquiry-form">
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="list-group col-sm-12 panel-body form-category">
+          <paper-input hidden value="{{followupid}}"></paper-input>
+          <div class="col-sm-6">
+            <paper-input label="Enquiry No" readonly value="{{enqno}}"></paper-input>
+          </div>
+          <div class="col-sm-6">
+            <paper-input label="Name" readonly value="{{name}}"></paper-input>
+          </div>
+        </div>
+        <div class="list-group col-sm-12 panel-body form-category">
+          <div class="col-sm-6">
+            <paper-input label="Grade" readonly value="{{grade}}"></paper-input>
+          </div>
+          <div class="col-sm-6">
+            <paper-input label="Enquired On" readonly value="{{enquiredon}}"></paper-input>
+          </div>
+        </div>        
+        <div >
+          <a on-click="showmoredetails"><i class="fa fa-external-link"></i> View more details...</a>
+        </div>
+      </div>
+      <div>
+              <div style="font-size: larger; text-align: center; font-weight: bolder;">FollowUp Schedule - {{schedule}}</div> 
+              <div style="text-align: right; margin-right: 5%; padding: 1%;">Status : <a href="" class="glyphicon glyphicon-pencil" on-click="changestatus">{{fnstatus}}</a></div>
+              </div>
+<div class="list-group col-sm-12 panel-body form-category">
+      <table class="table table-striped" >
+        <thead>
+        <tr class="list-group col-sm-14 panel-body form-category">
+          <th class="col-sm-2" style="text-align:center;">FollowUp No</th>
+           <th class="col-sm-3" style="text-align:center;">Call picked Status</th>
+          <th class="col-sm-2" style="text-align:center;">Schedule Date</th>
+          <th class="col-sm-3" style="text-align:center;">Next Followup</th>
+         <th class="col-sm-3" style="text-align:center;">Status</th>
+        </tr>
+        </thead>
+            
+      </table>
+          <template is="dom-repeat" items="{{followupdetailarr}}" as="view" class="list-group col-sm-12 panel-body form-category">
+        <!--   <div class="list-group col-sm-2">
+          <checkbox-card id={{view.followup_no}} status={{view.followup_status}}></checkbox-card>
+          </div>
+          <div class="list-group col-sm-10"> -->
+            <followup-listitem-card scheduledate="{{view.schedule_date}}" nextdate="{{view.next_followup_date}}" value="{{view.followup_comments}}" callstatus="{{view.followup_status}}" confidencelvl="{{view.confidence_level}}" followupno="{{view.followup_no}}" fid="{{view.schedule_id}}" enquiryid="{{view.enquiry_id}}" sno="{{view.slno}}" scheid="{{view.schedule}}" disableyes="{{view.disableyes}}" disableno="{{view.disableno}}" yesbox="{{view.yesbox}}" nobox="{{view.nobox}}" notcompleted="{{view.notcompleted}}" viewdetail="{{view.viewdetail}}" dates="{{view.dates}}" reschedule="{{view.reschedule}}"></followup-listitem-card>
+            <!-- </div> -->
+      </template>
+    </div>
+</div>
+<div hidden>{{currconfidence}}/{{followid}}</div>
+     <paper-dialog id="detailsdialog" class="paper-date-picker-dialog">
+        <div class="content">
+            <div hidden="{{parentinfo}}" class="list-group col-sm-12 panel-body form-category">
+                  <div class="col-sm-3">
+                    <paper-item style="width: 140px;">Parent Name :</paper-item>
+                  </div>
+                  <div class="col-sm-3">
+                    <paper-item>{{parentname}}</paper-item>
+                  </div>
+                  <div class="col-sm-3">
+                    <paper-item style="width: 140px;">Mobile No :</paper-item>
+                  </div>
+                  <div class="col-sm-3">
+                    <paper-item>{{mobno}}</paper-item>
+                  </div>
+            </div>
+            <div hidden="{{guardianinfo}}" class="list-group col-sm-12 panel-body form-category">
+                  <div class="col-sm-3">
+                    <paper-item style="width: 140px;">Guardian Name :</paper-item>
+                  </div>
+                  <div class="col-sm-3">
+                    <paper-item>{{guardianname}}</paper-item>
+                  </div>
+                  <div class="col-sm-3">
+                    <paper-item style="width: 140px;">Mobile No :</paper-item>
+                  </div>
+                  <div class="col-sm-3">
+                    <paper-item>{{gmobno}}</paper-item>
+                  </div>
+            </div>
+            <!--  <div hidden="{{admissiontestinfo}}" class="list-group col-sm-12 panel-body form-category">
+                  <div class="col-sm-3">
+                    <paper-item>Admission Test :</paper-item>
+                  </div>
+                  <div class="col-sm-3">
+                    <span><paper-checkbox id="testyes"  class="checkbox" disabled>Yes</paper-checkbox></span>
+                    <span><paper-checkbox id="testno"  class="checkbox" disabled>No</paper-checkbox></span>
+                  </div>
+                   <div hidden="{{subject}}">
+                      <div class="col-sm-3">
+                        <paper-item>Test Date :</paper-item>
+                      </div>
+                      <div class="col-sm-3">
+                        <paper-item>{{testdate}}</paper-item>
+                      </div>
+                  </div>
+            </div>
+            <div hidden="{{subject}}" class="list-group col-sm-12 panel-body form-category">
+                  <div class="col-sm-3">
+                    <paper-item>Subjects :</paper-item>
+                  </div>
+                  <div class="col-sm-3">
+                    <span><paper-checkbox id="cbenglsh"  class="checkbox" disabled>English</paper-checkbox></span>
+                  </div>
+                  <div class="col-sm-3">
+                    <span><paper-checkbox id="cbmaths"  class="checkbox" disabled>Maths</paper-checkbox></span>
+                  </div>
+                  <div class="col-sm-3">
+                    <span><paper-checkbox id="cbevs"  class="checkbox" disabled>EVS</paper-checkbox></span>
+                  </div>
+            </div>
+            <div hidden="{{subject}}">
+              Admission Test Result : {{result}}
+            </div> -->
+        </div>
+        <div class="buttons">
+          <paper-button on-click="detailclose">Close</paper-button>
+        </div>
+      </paper-dialog>
+
+      <paper-dialog id="statusdialog" class="paper-date-picker-dialog">
+        <paper-dropdown-menu label="Change Status" >
+              <paper-menu id="statuschange" class="dropdown-content" on-iron-select="Fnchangestatus" valueattr="value" >
+                <paper-item >Closed</paper-item>
+                <paper-item >Re-Schedule</paper-item>
+                <paper-item >Not Interested</paper-item>
+              </paper-menu>
+            </paper-dropdown-menu>
+      </paper-dialog>
+
+<paper-item hidden>{{lastdate}}</paper-item>
+    <!-- Modal -->
+     <paper-dialog id="dialog4" class="paper-date-picker-dialog">
+      <div class="content">
+            <h2>Select your option..</h2>
+            <paper-radio-group>
+              <paper-radio-button id="todaydate" on-click="Fntodaydate">Today.</paper-radio-button>
+              <paper-radio-button id="customdate" on-click="Fncustomdate">Custom Date.</paper-radio-button>
+            </paper-radio-group>
+              
+                  <custom-datepicker-card id="custdate"></custom-datepicker-card>
+      </div>
+        <div class="buttons">
+          <paper-button id="followdisk4" style="background-color: silver;" class="btn glyphicon glyphicon-floppy-disk" raised on-click="savecustomdate">Save</paper-button>
+          <paper-button raised style="background-color: silver;" on-click="FnDismissDialog4">Cancel</paper-button>
+        </div>
+      </paper-dialog>
+
+        <followup-service id="followupservice"></followup-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var confidencelevel;
+    var follupupstatus;
+    var followcall1;
+    var followcall2;
+    var followcall3;
+    var followcall4;
+    var followcall5;
+    var callpickstatus;
+    var followupno;
+    var today;
+    var takedate;
+
+    Polymer({
+      is: 'followup-student-detail',
+      ready:function(){
+        this.subject=true;
+
+          var dt=new Date();
+          today=sessionStorage.getItem("todaydate");
+      },
+      showmoredetails:function(){ 
+        document.getElementById('detailsdialog').open();
+      },
+      detailclose:function(){
+        document.getElementById('detailsdialog').close();
+      },
+      testdetails:function(enqno,Fnparent,Fnguardian){
+        /*if(admtest=='Yes'){
+          this.subject=false;
+            document.getElementById('testyes').checked=true;
+            this.$.followupservice.getsubjectinfo(enqno,this.enquiredon);
+            
+        }else{
+          document.getElementById('testyes').checked=false;
+          this.subject=true;
+        }*/
+        this.parentinfo=Fnparent;
+        this.guardianinfo=Fnguardian;
+        /*this.getlistdetails(this.enqno,this.followupid,this.schedule);*/
+      },
+     /* Fnsetsubject:function(englsh,maths,evs){
+          document.getElementById('cbenglsh').checked=englsh;
+          document.getElementById('cbmaths').checked=maths;
+          document.getElementById('cbevs').checked=evs;
+      },*/
+      changestatus:function(){
+        document.querySelector('#statusdialog').open();
+      },
+      Fnchangestatus:function(e){
+        var statuszx=(e.target.selectedItem.textContent).trim();
+        //alert(statuszx);
+        if(statuszx=='Re-Schedule'){
+            this.$.dialog4.open();
+        this.$.custdate.hidden=true;
+        }
+        else{
+          this.$.followupservice.FnChangestatus(this.followupid,statuszx,this.enqno);
+        }
+      document.querySelector('#statusdialog').close();
+      },
+
+      Fntodaydate:function(){
+            takedate="todaydate";
+            //alert(takedate);
+            this.$.custdate.hidden=true;
+      },
+      Fncustomdate:function(){
+            this.$.custdate.hidden=false;
+      },
+      customdateclear:function(){
+          takedate=null;
+      },
+      customgetdate:function(datzxc){
+        //alert(datzxc);
+          takedate=datzxc;
+          //this.$.followupservice.Fnreschedule(this.confidencelvl,this.fid,takedate);
+      },
+      savecustomdate:function(){
+        //alert(this.confidencelvl+'  '+this.fid+'  '+takedate);
+         this.$.followupservice.Fnreschedule(this.currconfidence,this.followid,takedate);
+         this.$.dialog4.close();
+      },
+      FnDismissDialog4:function(){
+        todaydate=null;
+        this.$.custdate.hidden=true;
+        this.$.dialog4.close();
+      }
+    });
+  })();
+  </script>
+</dom-module>

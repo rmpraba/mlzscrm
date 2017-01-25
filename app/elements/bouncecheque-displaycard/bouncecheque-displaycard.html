@@ -1,0 +1,81 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="bouncecheque-displaycard">
+  <template>
+    <style>
+      .datecard {
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <div class="col-md-6"> -->
+                <div class="col-md-2" style="margin-top: 2%;">
+                  <fromdate-icon-pickercard></fromdate-icon-pickercard>
+                </div>
+                <div class="col-md-1" style="margin-top: 2%;margin-left: -3%;">
+                  <todate-icon-pickercard></todate-icon-pickercard>
+                </div>
+                <div class="col-md-1" style="margin-top: 2.5%;margin-left: 10%;">
+                  <paper-button style="height:30px;text-transform: none;" on-click="FnView" class="btn btn-primary">View</paper-button>
+                </div>
+                <div class="col-md-1" style="margin-top: 1%;margin-left: 40%;">
+                <p>Download
+                <a href="#">
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('bouncechequereport', 'Bounce Cheques')"></span>
+                </a>
+                </p>
+                </div>               <!-- </div> -->
+            </div>
+          </div>
+        </div>
+    </div>
+     <table class="table table-hover" id="bouncechequereport">
+      <thead>
+      <tr>
+        <th>Sno</th><th>Enr/Enq No</th><th>Student Name</th><th>Grade</th><th>Installment Type</th><th>Mode Of Payment</th><th>Cheque No</th><th>Bank Name</th><th>Received Date</th><th>Receipt/Ack No</th><th>Amount</th><th>Fine Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+      <template  is="dom-repeat" items="{{bouncechequearr}}" as="item">
+        <tr><td>{{item.sno}}</td><td>{{item.admission_no}}</td><td>{{item.student_name}}</td><td>{{item.grade}}</td>
+        <td>{{item.installment_type}}</td><td>{{item.mode_of_payment}}</td><td>{{item.cheque_no}}</td><td>{{item.bank_name}}</td><td>{{item.paid_date}}</td>
+        <td>{{item.receipt_no}}</td><td>{{item.installment_amount}}</td><td>{{item.fine_amount}}</td></tr>
+      </template>
+      <!-- <tr><th colspan="11" style="text-align: right;">Total Amount: &nbsp;&nbsp;{{totalamount}}</th></tr> -->
+      </tbody>
+    </table>    
+    
+    <fee-report-service id="feereportservice"></fee-report-service>
+  </template>
+  <script type="text/javascript">
+      var tableToExcel = (function() {
+      var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+     return function(table, name) {
+     if (!table.nodeType) table = document.getElementById(table)
+     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+     window.location.href = uri + base64(format(template, ctx))
+     }
+     })()
+  </script>
+  <script>
+  (function() {
+    'use strict',
+    Polymer({
+      is: 'bouncecheque-displaycard',
+      FnCallService:function(){        
+        this.$.feereportservice.FnFetchBounceChequesService();
+      },
+      FnView:function(){
+        this.$.feereportservice.FnFetchBounceChequesService();
+      }
+    });
+  })();
+  </script>
+</dom-module>

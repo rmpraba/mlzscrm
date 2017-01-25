@@ -1,0 +1,52 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\..\bower_components/paper-input/paper-input.html">
+<link rel="import" href="..\..\bower_components/paper-button/paper-button.html">
+<link rel="import" href="..\..\bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="..\..\bower_components/firebase/firebase.js">
+<link rel="import" href="../../bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<dom-module id="login-card">
+  <template>
+  <iron-a11y-keys target="[[_target]]" keys="enter" on-keys-pressed="Fnlogin"></iron-a11y-keys>
+    <div class="container-fluid bg">
+      <div class="card card-container">
+        <img id="profile-img" class="profile-img-card" src="../../images/schoollogo.png"/>
+          <paper-input label="Username" value="{{username}}" type="text"></paper-input>
+          <paper-input label="Password" value="{{password}}" type="password"></paper-input>
+          <div class="form-group">
+            <paper-button on-click="login" class="btn btn-primary center">Sign in</paper-button>
+          </div>
+      </div>
+    </div>
+    <login-service id="login"></login-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'login-card',
+    ready:function(){
+      this.$.login.addinfoconfig();
+      var dt=new Date();
+      dt.setTime(dt.getTime() +(dt.getTimezoneOffset()+330)*60*1000);
+      var today=dt.getFullYear()+'-'+(dt.getMonth()+1)+'-'+dt.getDate();
+      sessionStorage.setItem("todaydate",today);
+    },
+    login:function(){
+      if(this.username==""||this.username==null||this.password==""||this.password==null){
+        alert("Please enter username/password before submit!!");
+      }
+      else
+      this.$.login.Fn_login_userlogin(this.username,this.password);
+    },
+    Fnlogin:function(){
+      // alert('coming...');
+      if(this.username==""||this.username==null||this.password==""||this.password==null){
+        alert("Please enter username/password before submit!!");
+      }
+      else
+      this.$.login.Fn_login_userlogin(this.username,this.password);
+    }
+    });
+  })();
+  </script>
+</dom-module>

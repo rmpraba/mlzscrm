@@ -1,0 +1,95 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="exchange-followup-service">
+  <template>
+  <!-- This ajax is used to submit the simple enquiry details of the student for the first time -->
+     <iron-ajax
+        method="post"
+        id="getcounsellorajax"
+        url="{{getcounsellorurl}}"
+        params="{{getcounsellorparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getcounsellorResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="getstudentsforcounselorajax"
+        url="{{getstudentsforcounselorurl}}"
+        params="{{getstudentsforcounselorparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getStudentsForCounsellorResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="exchangestudentsajax"
+        url="{{exchangestudentsurl}}"
+        params="{{exchangestudentsparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="exchangestudentsResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'exchange-followup-service',
+
+     getcounsellor:function(){
+      this.getcounsellorurl="http://localhost:8086/getcounsellor";
+      var obj={"schoolid":""};
+      obj.schoolid=localStorage.getItem("schoolid");
+      this.getcounsellorparam=obj;
+      //alert(JSON.stringify(obj));
+      this.$.getcounsellorajax.generateRequest();
+     },
+     getcounsellorResponse:function(e){
+      var result = e.detail.response.returnval;
+      document.querySelector('exchange-followup').counsellorarr=result;
+     },
+     getStudentsForCounsellor:function(counsellor){
+      this.getstudentsforcounselorurl="http://localhost:8086/getstudentsforcounselor";
+      var obj={"schoolid":"", "counsellor":""};
+      obj.schoolid=localStorage.getItem("schoolid");
+      obj.counsellor=counsellor;
+      this.getstudentsforcounselorparam=obj;
+      //alert(JSON.stringify(obj));
+      this.$.getstudentsforcounselorajax.generateRequest();
+     },
+     getStudentsForCounsellorResponse:function(e){
+      document.querySelector('exchange-followup').studentarr=e.detail.response.returnval;
+     },
+     exchangestudents:function(exchangetocounsellor, exchangearr){
+      var exchangearrlength = exchangearr.length;
+      for(var i = 0; i<exchangearrlength; i++){
+        this.exchangestudentsurl="http://localhost:8086/exchangestudents";
+        var obj={"schoolid":"", "counsellor":"", "enquiryno":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.counsellor=exchangetocounsellor;
+        obj.enquiryno = exchangearr[i];
+        this.exchangestudentsparam=obj;
+        //alert(JSON.stringify(obj));
+        this.$.exchangestudentsajax.generateRequest();
+      }
+     },
+     exchangestudentsResponse:function(e){
+        var result = e.detail.response.returnval;
+        if(result == 'success'){
+          alert('Student Exchanged');
+        }
+     }
+    });
+  })();
+  </script>
+</dom-module>

@@ -1,0 +1,41 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="tp-realisation-itemcard">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div>
+    <table>
+    <tr><td>
+    <paper-input value="{{admissionno}}"></paper-input></td><td width="30px;"></td>
+    <td><paper-input value="{{studentname}}"></paper-input></td></tr>
+    <tr><td><paper-input value="{{grade}}"></paper-input></td><td width="30px;"></td>
+    <td><paper-input value="{{installment}}"></paper-input>
+    </td><td width="30px;"></td>
+    </tr>
+    <tr><td><paper-input value="{{insamount}}"></paper-input></td></tr>
+    <tr><td><paper-input label="Enter received amount" value="{{refamount}}"></paper-input></td><td width="30px;"></td>
+    <td><paper-input label="Enter reference no" value="{{refno}}"></paper-input></td></tr>
+    <tr><td style="height:40px;margin-top: 5%;margin-left: 40%;" colspan="3" class="btn btn-primary" on-click="FnDone"><paper-button>Done</paper-button></td></tr>
+    </table>
+    </div>
+    <tp-realisation-service id='service'></tp-realisation-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'tp-realisation-itemcard',
+      FnDone:function(){
+        var diffamt=parseFloat(parseFloat(this.insamount)-parseFloat(this.refamount)).toFixed(2);
+        this.$.service.processtprealisation(this.admissionno,this.studentname,this.grade,this.installment,this.refno,this.refamount,diffamt);
+      }
+    });
+  })();
+  </script>
+</dom-module>

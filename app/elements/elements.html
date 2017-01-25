@@ -1,0 +1,236 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!-- Iron elements -->
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+
+<!-- Paper elements -->
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+
+<!-- Uncomment next block to enable Service Worker Support (2/2) -->
+<!--
+<link rel="import" href="../bower_components/platinum-sw/platinum-sw-cache.html">
+<link rel="import" href="../bower_components/platinum-sw/platinum-sw-register.html">
+-->
+
+<!-- Configure your routes here -->
+<link rel="import" href="routing.html">
+
+<!-- Add your elements here -->
+<link rel="import" href="../styles/app-theme.html">
+<link rel="import" href="../styles/shared-styles.html">
+
+<link rel="import" href="dashboard-card/dashboard-card.html">
+<link rel="import" href="login-card/login-card.html">
+<link rel="import" href="newevent-card/newevent-card.html">
+<link rel="import" href="navigation-bar/navigation-bar.html">
+<link rel="import" href="event-card/event-card.html">
+<link rel="import" href="start-datepicker-card/start-datepicker-card.html">
+<link rel="import" href="end-datepicker-card/end-datepicker-card.html">
+<link rel="import" href="enquiry-card/enquiry-card.html">
+<link rel="import" href="newenquiry-card/newenquiry-card.html">
+<link rel="import" href="organization-page/organization-page.html">
+<link rel="import" href="classdetails-page/classdetails-page.html">
+<link rel="import" href="academicyear-page/academicyear-page.html">
+<link rel="import" href="feeheads-page/feeheads-page.html">
+<link rel="import" href="feestructure-page/feestructure-page.html">
+<link rel="import" href="event-service/event-service.html">
+
+<link rel="import" href="login-card/login-card.html">
+<link rel="import" href="login-service/login-service.html">
+<link rel="import" href="CRM-app/CRM-app.html">
+<link rel="import" href="app-list/app-list.html">
+<link rel="import" href="dateofbirth-datepicker/dateofbirth-datepicker.html">
+<link rel="import" href="admission-form/admission-form.html">
+<link rel="import" href="enquiry-details-card/enquiry-details-card.html">
+<link rel="import" href="followup-card/followup-card.html">
+<link rel="import" href="nextfollowupdate-card/nextfollowupdate-card.html">
+
+
+<link rel="import" href="formpopup-card/formpopup-card.html">
+<link rel="import" href="admission-service/admission-service.html">
+
+<link rel="import" href="followup-item-card/followup-item-card.html">
+<link rel="import" href="fee-card/fee-card.html">
+
+<link rel="import" href="installment-card/installment-card.html">
+<link rel="import" href="receiptdatepicker-card/receiptdatepicker-card.html">
+<link rel="import" href="installmentout-card/installmentout-card.html">
+<link rel="import" href="prospectousfee-card/prospectousfee-card.html">
+<link rel="import" href="annualfee-card/annualfee-card.html">
+<link rel="import" href="registerationfee-card/registerationfee-card.html">
+<link rel="import" href="cautionfee-card/cautionfee-card.html">
+<link rel="import" href="tuitionfee-card/tuitionfee-card.html">
+<link rel="import" href="kitfee-card/kitfee-card.html">
+<link rel="import" href="fees-service/fees-service.html">
+
+<link rel="import" href="grade-count-itemcard/grade-count-itemcard.html">
+
+
+<link rel="import" href="schedulefee-card/schedulefee-card.html">
+
+<link rel="import" href="followup-dashboard/followup-dashboard.html">
+<link rel="import" href="follow-up-dashboard-item-card/follow-up-dashboard-item-card.html">
+<link rel="import" href="fees-card/fees-card.html">
+<link rel="import" href="installment-date-picker/installment-date-picker.html">
+<link rel="import" href="fee-schedule-service/fee-schedule-service.html">
+<link rel="import" href="fee_installment_item-card/fee_installment_item-card.html">
+<link rel="import" href="fee-installment-itemcard/fee-installment-itemcard.html">
+
+<link rel="import" href="followup-details/followup-details.html">
+<link rel="import" href="followup-details-items/followup-details-items.html">
+<link rel="import" href="followup-student-detail/followup-student-detail.html">
+
+
+<link rel="import" href="feereceipt-card/feereceipt-card.html">
+<link rel="import" href="feereceipt-outcard/feereceipt-outcard.html">
+<link rel="import" href="feereceipt-home/feereceipt-home.html">
+<link rel="import" href="admission-approval-card/admission-approval-card.html">
+
+<link rel="import" href="admission-datepicker/admission-datepicker.html">
+
+
+<link rel="import" href="feetype-schedule-card/feetype-schedule-card.html">
+<link rel="import" href="schedule-service/schedule-service.html">
+<link rel="import" href="discount-master-card/discount-master-card.html">
+<link rel="import" href="fromdate-pickercard/fromdate-pickercard.html">
+<link rel="import" href="todate-pickercard/todate-pickercard.html">
+<link rel="import" href="discount-schedule-card/discount-schedule-card.html">
+<link rel="import" href="fee-structure-schedulecard/fee-structure-schedulecard.html">
+<link rel="import" href="fee-component-card/fee-component-card.html">
+<link rel="import" href="fee-type-card/fee-type-card.html">
+<link rel="import" href="fee-type-itemcard/fee-type-itemcard.html">
+<link rel="import" href="installment-matser-card/installment-matser-card.html">
+<link rel="import" href="installment-master-itemcard/installment-master-itemcard.html">
+<link rel="import" href="feetype-delete-card/feetype-delete-card.html">
+
+<link rel="import" href="confidence-item-card/confidence-item-card.html">
+<link rel="import" href="confidence-card/confidence-card.html">
+
+<link rel="import" href="special-discount-card/special-discount-card.html">
+<link rel="import" href="master-report-card/master-report-card.html">
+<link rel="import" href="reporting-service/reporting-service.html">
+<link rel="import" href="enquiry-analysis-card/enquiry-analysis-card.html">
+<link rel="import" href="followup-service/followup-service.html">
+<link rel="import" href="walkin-analysis-card/walkin-analysis-card.html">
+<link rel="import" href="walkin-analysis-filter-card/walkin-analysis-filter-card.html">
+
+<link rel="import" href="installment-fee-component-card/installment-fee-component-card.html">
+<link rel="import" href="installment-fee-type-card/installment-fee-type-card.html">
+<link rel="import" href="installment-fee-type-itemcard/installment-fee-type-itemcard.html">
+<link rel="import" href="fee-collection-report-card/fee-collection-report-card.html">
+<link rel="import" href="fee-report-service/fee-report-service.html">
+
+<link rel="import" href="followup-listitem-card/followup-listitem-card.html">
+<link rel="import" href="from-datepicker-card/from-datepicker-card.html">
+<link rel="import" href="to-datepicker-card/to-datepicker-card.html">
+<link rel="import" href="checkbox-card/checkbox-card.html">
+
+
+<link rel="import" href="appregfee-service/appregfee-service.html">
+<link rel="import" href="appregfee-installment-card/appregfee-installment-card.html">
+
+<link rel="import" href="nextfollowup-datepicker-card/nextfollowup-datepicker-card.html">
+<link rel="import" href="followup-datepicker-card/followup-datepicker-card.html">
+
+<link rel="import" href="callanalysis-report-card/callanalysis-report-card.html">
+<link rel="import" href="cheque-realization-card/cheque-realization-card.html">
+<link rel="import" href="cheque-realization-itemcard/cheque-realization-itemcard.html">
+<link rel="import" href="processing-service/processing-service.html">
+<link rel="import" href="withdrawal-card/withdrawal-card.html">
+<link rel="import" href="withdrawal-showitem-card/withdrawal-showitem-card.html">
+<link rel="import" href="lumpsum-fee-component-card/lumpsum-fee-component-card.html">
+<link rel="import" href="exchange-followup/exchange-followup.html">
+<link rel="import" href="exchange-followup-item-card-2/exchange-followup-item-card-2.html">
+
+<link rel="import" href="schooltype-to-grade-displaycard/schooltype-to-grade-displaycard.html">
+<link rel="import" href="schooltype-checkcard/schooltype-checkcard.html">
+<link rel="import" href="schooltypegrade-checkcard/schooltypegrade-checkcard.html">
+<link rel="import" href="fee-splitup-card/fee-splitup-card.html">
+<link rel="import" href="fee-splitup-itemcard/fee-splitup-itemcard.html">
+<link rel="import" href="fee-splitup-feetype-card/fee-splitup-feetype-card.html">
+<link rel="import" href="fee-termsplitup-feetype-card/fee-termsplitup-feetype-card.html">
+<link rel="import" href="fee-structure-display-card/fee-structure-display-card.html">
+<link rel="import" href="editreceipt-datepicker/editreceipt-datepicker.html">
+<link rel="import" href="searchreceipt-card/searchreceipt-card.html">
+
+<link rel="import" href="pre-apps/pre-apps.html">
+<link rel="import" href="pre-apps-service/pre-apps-service.html">
+<link rel="import" href="sibling-detail-card/sibling-detail-card.html">
+<link rel="import" href="referral-detail-card/referral-detail-card.html">
+
+<link rel="import" href="followup-today-report/followup-today-report.html">
+
+<link rel="import" href="pendingcheques-report/pendingcheques-report.html">
+<link rel="import" href="pendingfee-report/pendingfee-report.html">
+<link rel="import" href="dailycollection-report/dailycollection-report.html">
+<link rel="import" href="bouncecheque-displaycard/bouncecheque-displaycard.html">
+
+<link rel="import" href="custom-datepicker-card/custom-datepicker-card.html">
+
+
+<link rel="import" href="followup-datepickercard/followup-datepickercard.html">
+
+<link rel="import" href="datepicker-followup-card/datepicker-followup-card.html">
+
+<link rel="import" href="enquiry-datepicker/enquiry-datepicker.html">
+<link rel="import" href="feesplitup-structure-card/feesplitup-structure-card.html">
+<link rel="import" href="feesplitup-structure-feetypecard/feesplitup-structure-feetypecard.html">
+<link rel="import" href="discount-type-ui-card/discount-type-ui-card.html">
+<link rel="import" href="discount-display-card/discount-display-card.html">
+<link rel="import" href="provisionalfee-card/provisionalfee-card.html">
+
+<link rel="import" href="counsellor-report/counsellor-report.html">
+
+
+<link rel="import" href="showgmap-card/showgmap-card.html">
+<link rel="import" href="chequebounceorcancel-card/chequebounceorcancel-card.html">
+<link rel="import" href="chequebounceorcancel-item-card/chequebounceorcancel-item-card.html">
+<link rel="import" href="editdelete-cheques-card/editdelete-cheques-card.html">
+<link rel="import" href="editdelete-cheques-itemcard/editdelete-cheques-itemcard.html">
+<link rel="import" href="cheque-datepicker/cheque-datepicker.html">
+
+<link rel="import" href="showgmap-card/showgmap-card.html">
+
+<link rel="import" href="provisional-service/provisional-service.html">
+<link rel="import" href="provisional-installment-card/provisional-installment-card.html">
+<link rel="import" href="pdccheques-report-card/pdccheques-report-card.html">
+<link rel="import" href="discount-schooltypetograde-displaycard/discount-schooltypetograde-displaycard.html">
+<link rel="import" href="discount-structure-report/discount-structure-report.html">
+<link rel="import" href="fee-structure-report/fee-structure-report.html">
+<link rel="import" href="editcheque-datepicker/editcheque-datepicker.html">
+<link rel="import" href="fromdate-icon-pickercard/fromdate-icon-pickercard.html">
+<link rel="import" href="todate-icon-pickercard/todate-icon-pickercard.html">
+<link rel="import" href="promotion-card/promotion-card.html">
+<link rel="import" href="promotion-service/promotion-service.html">
+<link rel="import" href="promotion-item-card/promotion-item-card.html">
+<link rel="import" href="generate-tc-card/generate-tc-card.html">
+<link rel="import" href="cancel-enrollment-card/cancel-enrollment-card.html">
+<link rel="import" href="enrollment-dashboard/enrollment-dashboard.html">
+<link rel="import" href="cancellation-service/cancellation-service.html">
+<link rel="import" href="cancel-enrollment-itemcard/cancel-enrollment-itemcard.html">
+<link rel="import" href="generate-tc-homecard/generate-tc-homecard.html">
+<link rel="import" href="gradewise-fee-structure-report/gradewise-fee-structure-report.html">
+<link rel="import" href="enrollment-report/enrollment-report.html">
+<link rel="import" href="tp-realisation-card/tp-realisation-card.html">
+<link rel="import" href="tp-realisation-service/tp-realisation-service.html">
+<link rel="import" href="rte-realisation-itemcard/rte-realisation-itemcard.html">
+<link rel="import" href="tp-realisation-itemcard/tp-realisation-itemcard.html">

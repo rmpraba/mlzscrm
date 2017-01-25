@@ -1,0 +1,96 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="datepicker-followup-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .paper-button{
+        background-color: silver;
+      }
+    </style>
+     <div class="content">
+    <div>
+    <div hidden>{{scheduledon}}</div>
+    <div>Next Follow-Up Date :</div> <paper-input style="width:65%; margin-left: 20%;" class="btn" on-click="FnShowDialog" raised value="{{showdate}}"></paper-input>
+    <div>( Please select next followup date..! )</div>
+    </div>
+    <paper-dialog id="dialog" class="paper-date-picker-dialog" modal on-iron-overlay-closed="FnDismissDialog" style="left: 0 !important;">
+      <paper-date-picker id="picker" date="{{date}}"></paper-date-picker>
+      <div class="buttons">
+        <paper-button style="background-color: silver;" raised dialog-dismiss>Cancel</paper-button>
+        <paper-button style="background-color: silver;" raised dialog-confirm>OK</paper-button>
+      </div>
+    </paper-dialog>
+  </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+var sdat;
+    Polymer({
+      is: 'datepicker-followup-card',
+
+      ready:function()
+      {
+        this.showdate=moment(new Date(this.showdate)).format('L');
+        localStorage.setItem("localsess_nextfollowup_date",this.showdate);
+         // document.querySelector('followup-listitem-card').showbutton(this.showdate);
+      },
+      FnShowDialog:function(){
+        this.date=new Date();
+        
+        this.$.dialog.toggle();
+      },
+      FnDismissDialog:function(e)
+      {
+       
+        if (e.detail.confirmed)
+        {
+          var pickdate=moment(this.$.picker.date).format('L');
+          var dd1=new Date();
+          var dd2=new Date(pickdate);
+          
+          /*alert(dd1+'  '+dd2);
+          dd1.setTime(dd1.getTime() +(dd1.getTimezoneOffset()+330)*60*1000);
+          dd2.setTime(dd2.getTime() +(dd2.getTimezoneOffset()+330)*60*1000);
+          alert(dd1+'  '+dd2);
+          var days=parseInt((dd1 - dd2) / (1000 * 60 * 60 * 24));*/
+          
+          var days=(dd1 - dd2);
+          //alert(days);
+          if(days>=0){
+          document.querySelector('followup-listitem-card').dateclear();
+          }
+          else{
+          var dt =new Date(moment(this.$.picker.date).format('L'));
+          dt.setTime(dt.getTime() +(dt.getTimezoneOffset()+330)*60*1000);
+          this.showdate=dt.getFullYear()+'-'+(dt.getMonth()+1)+'-'+dt.getDate();
+          localStorage.setItem("localsess_nextfollowup_date",this.showdate);
+          // document.querySelector('followup-listitem-card').getdate(this.showdate);
+          }
+        }
+      
+      },
+      FnClear:function(){
+        this.showdate = "";
+      },
+      FnSetDate:function(value){
+        this.showdate=moment(new Date(value)).format('L');
+      }
+      
+    });
+  })();
+  </script>
+</dom-module>

@@ -1,0 +1,34 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="promotion-item-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <paper-checkbox id="promote{{admissionno}}"  
+    on-change="FnChange" checked="{{flag}}"></paper-checkbox>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'promotion-item-card',
+      ready:function(){
+        // alert('ready');
+      },
+      FnChange:function(e){
+        if(document.querySelector('#promote'+this.admissionno).checked==true){
+        document.querySelector('promotion-card').FnSplicePromotion(this.admissionno,true);
+        }        
+        if(document.querySelector('#promote'+this.admissionno).checked==false){
+            document.querySelector('promotion-card').FnSplicePromotion(this.admissionno,false);
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>
