@@ -562,6 +562,45 @@
         }
         // alert(JSON.stringify(feereceiptarr));
         
+        for(var i=0;i<feereceiptarr.length;i++){
+
+            if(feereceiptarr[i].modeofpayment=="Cheque"){
+                // new Date(feereceiptarr[i].paiddate);
+                var d=new Date(feereceiptarr[i].receiptdate);
+                var dt=d.getDate();
+                if(dt<9)
+                    dt="0"+dt;
+                if(mn<9)
+                    mn="0"+mn;
+                var mn=d.getMonth()+1;
+                var yr=d.getFullYear();
+                var dat=dt+"-"+mn+"-"+yr;
+                feereceiptarr[i].receiptdate=dat
+            }
+            else{
+                var d1=new Date(feereceiptarr[i].paiddate);
+                var d2=new Date(feereceiptarr[i].receiptdate);
+                var dt1=d1.getDate();
+                if(dt1<9)
+                    dt1="0"+dt1;
+                var mn1=d1.getMonth()+1;
+                if(mn1<9)
+                    mn1="0"+mn1;
+                var yr1=d1.getFullYear();
+                var dat1=dt1+"-"+mn1+"-"+yr1;
+                var dt2=d2.getDate();
+                if(dt2<9)
+                    dt2="0"+dt2;
+                var mn2=d2.getMonth()+1;
+                if(mn2<9)
+                    mn2="0"+mn2;
+                var yr2=d2.getFullYear();
+                var dat2=dt2+"-"+mn2+"-"+yr2;
+                feereceiptarr[i].paiddate=dat1;
+                feereceiptarr[i].receiptdate=dat2;
+            }
+        }
+
         this.callFeeReceipt();
       },
 

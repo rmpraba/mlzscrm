@@ -448,7 +448,7 @@
             obj.paymentmode=paymenttype;
             obj.installmentdate=this.installmentdate;            
             obj.paiddate=current_date;
-            obj.receiptdate=current_date;
+            obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
             obj.paidstatus="paid";
 
             
@@ -479,7 +479,7 @@
             obj.paymentmode=paymenttype;
             obj.installmentdate=this.installmentdate;            
             obj.paiddate=current_date;
-            obj.receiptdate=current_date;
+            obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
             obj.paidstatus="inprogress";
 
             
