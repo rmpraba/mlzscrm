@@ -58,7 +58,33 @@
         content-type="application/json"
         on-response="fetchInstallmentseperationResponse"
         debounce-duration="300"
-        >      
+        > 
+
+     <!-- It would insert installment fee splitip for each student-->
+     <iron-ajax
+        method="post"
+        id="insertinstallmentsplitofstudajax"
+        url="{{insertinstallmentsplitofstudurl}}"
+        params="{{insertinstallmentsplitofstudparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="insertinstallmentsplitofstudResponse"
+        debounce-duration="300"
+        >  
+
+    <!-- It would insert installment fee splitip for each student-->
+     <iron-ajax
+        method="post"
+        id="fetchstudinstallmentsplitupajax"
+        url="{{fetchstudinstallmentsplitupurl}}"
+        params="{{fetchstudinstallmentsplitupparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudinstallmentsplitupResponse"
+        debounce-duration="300"
+        > 
+
+               
     
   </template>
   <script>
@@ -137,7 +163,8 @@
             paymentarr.push(e.detail.response.info);
             paymentcount++;            
             if(paymentlength==paymentcount)
-                this.fetchInstallmentseperationService();
+                this.fetchstudinstallmentsplitup();
+                // this.fetchInstallmentseperationService();
                 // this.callFeeReceipt();
             // document.querySelector('feereceipt-card').setValue(paymentarr,e.detail.response.receiptno);
           }
@@ -210,7 +237,8 @@
             paymentarr.push(e.detail.response.info);
             paymentcount++;
             if(paymentlength==paymentcount)
-                this.fetchInstallmentseperationService();
+                this.fetchstudinstallmentsplitup();
+                // this.fetchInstallmentseperationService();
                 // this.callFeeReceipt();
             // document.querySelector('feereceipt-card').setValue(paymentarr,e.detail.response.receiptno);
           }
@@ -276,7 +304,8 @@
             paymentarr.push(e.detail.response.info);
             paymentcount++;
             if(paymentlength==paymentcount){
-                this.fetchInstallmentseperationService();
+                this.fetchstudinstallmentsplitup();
+                // this.fetchInstallmentseperationService();
                 // this.callFeeReceipt();
             }
             // document.querySelector('feereceipt-card').setValue(paymentarr,e.detail.response.receiptno);
@@ -340,10 +369,192 @@
             paymentarr.push(e.detail.response.info);
             paymentcount++;
             if(paymentlength==paymentcount)
-                this.fetchInstallmentseperationService();
+                this.fetchstudinstallmentsplitup();
+                // this.fetchInstallmentseperationService();
                 // this.callFeeReceipt();
             // document.querySelector('feereceipt-card').setValue(paymentarr,e.detail.response.receiptno);
           }
+      },
+      fetchstudinstallmentsplitup:function(){
+        this.fetchstudinstallmentsplitupurl=sessionStorage.getItem("addrinfo")+"/fetchstudinstallmentsplitup";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.admissionno=localStorage.getItem("curr_sess_enquiryno");
+        this.fetchstudinstallmentsplitupparam=obj;              
+        this.$.fetchstudinstallmentsplitupajax.generateRequest();
+      },
+      fetchstudinstallmentsplitupResponse:function(e){
+        this.studinssplit=e.detail.response.returnval;
+
+        var a=[];
+        var split=[];
+        var temp=[];
+        if(localStorage.getItem("curr_sess_installmentpattern")!="3"){
+        for(var i=0;i<this.studinssplit.length;i++)
+       {       
+        var nameobj={"installment":"","installmentamount":""};
+        nameobj.installmentid=this.studinssplit[i].installment;
+        nameobj.installment=this.studinssplit[i].installment; 
+        nameobj.installmentdate=this.studinssplit[i].installmentdate;
+        var amt=0;
+        var actamt=0;
+        var obj={"feetype":"","amount":""};
+        obj.feetype=this.studinssplit[i].feetype;
+        obj.feetypeamount=this.studinssplit[i].feetype_amount;
+        obj.feetypeactualamount=this.studinssplit[i].feetype_actual_amount;
+        if(this.studinssplit[i].feetype_amount>0)
+        a.push(obj);
+        for(var j=i+1;j<this.studinssplit.length;j++)
+        {
+           // alert(termarr[i].insno+" "+termarr[j].insno);
+           if(this.studinssplit[i].installment==this.studinssplit[j].installment)
+           {
+             var obj1={"feetype":"","amount":""}
+             obj1.feetype=this.studinssplit[j].feetype;
+             obj1.feetypeamount=this.studinssplit[j].feetype_amount;
+             obj1.feetypeactualamount=this.studinssplit[j].feetype_actual_amount;
+             if(this.studinssplit[j].feetype_amount>0)
+             a.push(obj1);
+             this.studinssplit.splice(j,1);
+             j--;
+           }
+        }
+        nameobj.installmentamount=this.studinssplit[i].installment_amount;
+        nameobj.actualamount=this.studinssplit[i].actual_amount;
+        nameobj.discountamount=this.studinssplit[i].discount_amount;;
+        nameobj.fees=a;
+        // alert(JSON.stringify(nameobj));
+        split.push(nameobj);
+        // split.push(temp);
+        // temp=[];
+        a=[];        
+       }
+      }
+      else{
+        // for(var i=0;i<this.studinssplit.length;i++){
+            // var nameobj={"installment":"","installmentamount":""};
+            // nameobj.installmentid="Lumpsum";
+            // nameobj.installment="Lumpsum"; 
+            // var d=new Date();
+            // var currdate=d.getDate()+"-"+((d.getMonth())+1)+"-"+d.getFullYear();
+            // nameobj.installmentdate=currdate;
+            var amt=0;
+            var actamt=0;
+            // alert(JSON.stringify(this.studinssplit));
+            for(var i=0;i<this.studinssplit.length;i++){
+              var obj={"feetype":"","feetypeamount":""};
+              var f=0;
+              if(split.length==0){
+              obj.feetype=this.studinssplit[i].feetype;
+              obj.feetypeamount=this.studinssplit[i].feetype_actual_amount;
+              if(obj.feetypeamount>0)
+              split.push(obj);
+              // alert(JSON.stringify(obj));
+              } 
+              else{
+              for(var j=0;j<split.length;j++){              
+              // alert(this.studinssplit[i].feetype+" "+split[j].feetype);
+              if((this.studinssplit[i].feetype).trim()==(split[j].feetype).trim()){
+                // alert('come');
+              f=1;
+              obj.feetypeamount=parseFloat(this.studinssplit[i].feetype_actual_amount)+parseFloat(split[j].feetypeamount);
+              split[j].feetypeamount=obj.feetypeamount;
+              }
+              }
+              if(f==0)
+              {
+              obj.feetype=this.studinssplit[i].feetype;
+              obj.feetypeamount=this.studinssplit[i].feetype_actual_amount;
+              // alert(JSON.stringify(obj));
+              if(obj.feetypeamount>0)
+              split.push(obj);
+              }
+              }                           
+            }
+
+            // alert(JSON.stringify(split));
+            // alert(localStorage.getItem("curr_sess_discountpercentamt"));
+            for(var i=0;i<split.length;i++){
+                if(localStorage.getItem("curr_sess_discountpercentamt")>0)
+                {
+                    if(split[i].feetype=="Annual fee"){
+                       split[i].feetypeamount=parseFloat(split[i].feetypeamount)-parseFloat(localStorage.getItem("curr_sess_discountpercentamt"));
+                    }
+                }
+            }
+
+            // alert(JSON.stringify(split));
+
+            // obj.feetype=this.studinssplit[i].feetype;
+            // obj.feetypeamount=this.studinssplit[i].feetype_amount;
+            // obj.feetypeactualamount=this.studinssplit[i].feetype_actual_amount;
+            // if(this.studinssplit[i].feetype_amount>0)
+            // a.push(obj);
+            // for(var j=i+1;j<this.studinssplit.length;j++)
+            // {
+            //    // alert(termarr[i].insno+" "+termarr[j].insno);
+            //    if(this.studinssplit[i].feetype==this.studinssplit[j].feetype)
+            //    {
+            //      var obj1={"feetype":"","amount":""}
+            //      obj1.feetype=this.studinssplit[j].feetype;
+            //      obj1.feetypeamount=this.studinssplit[j].feetype_amount;
+            //      obj1.feetypeactualamount=this.studinssplit[j].feetype_actual_amount;
+            //      if(this.studinssplit[j].feetype_amount>0)
+            //      a.push(obj1);
+            //      this.studinssplit.splice(j,1);
+            //      j--;
+            //     }
+            // }
+            // nameobj.installmentamount=this.studinssplit[i].installment_amount;
+            // nameobj.actualamount=this.studinssplit[i].actual_amount;
+            // nameobj.discountamount=this.studinssplit[i].discount_amount;;
+            // nameobj.fees=a;
+            // // alert(JSON.stringify(nameobj));
+            // split.push(nameobj);
+        // }
+      }
+
+       if(localStorage.getItem("curr_sess_installmentpattern")!="3"){
+       for(var i=0;i<paymentarr.length;i++){
+            for(var j=0;j<split.length;j++){
+                if(localStorage.getItem("curr_sess_insrequirement")=="yes"){
+                    if((paymentarr[i].installment_type=="Commitment Fee (Ins1)"||paymentarr[i].installment_type=="Commitment Fee (Ins2)")&&split[j].installment=="Commitment Fee"){
+                        paymentarr[i].fees=split[j].fees;
+                    }
+                    else{
+                       if(paymentarr[i].installment_type==split[j].installment)
+                {
+                    paymentarr[i].fees=split[j].fees;
+                } 
+                    }
+                }
+                else{
+                // alert(paymentarr[i].installment_type+"  "+split[j].installment);
+                if(paymentarr[i].installment_type==split[j].installment)
+                {
+                    paymentarr[i].fees=split[j].fees;
+                }
+                }
+            }
+        }
+      }
+      else{
+        paymentarr[0].fees=split;
+      }
+
+       // alert(JSON.stringify(split));
+       // for(var i=0;i<split.length;i++){
+       //      for(var j=0;j<splitarr.length;j++){
+       //          // alert(split[i].installment+"  "+feereceiptarr[j].installment);
+       //          if(split[i].installment==feereceiptarr[j].installment){
+       //              // alert(JSON.stringify(split.fees));
+       //              feereceiptarr[j].feesplit=split[i].fees;
+       //          }
+       //      }
+       //  }
+        this.fetchInstallmentseperationService();
+        // this.FnFormStructure();
       },
       FnSetSplitarr:function(splitarr){
         arr=splitarr;
@@ -363,47 +574,45 @@
         // alert(JSON.stringify(arr));
         // alert(arr.length);
         
-        for(var i=0;i<arr.length;i++){
-            // alert(arr.length);
-            var flag=0;
-            if(splitarr.length==0)
-                splitarr.push({"installtype":arr[i].insno,"feetype":arr[i].feetype});
-            else{
-            for(var j=0;j<splitarr.length;j++){
-                if(arr[i].insno==splitarr[j].installtype){
-                    flag=1;
-                    // if(arr[i].amount>0)
-                    splitarr[j].feetype=splitarr[j].feetype+","+arr[i].feetype;
-                }
-            }
-            if(flag!=1)
-                splitarr.push({"installtype":arr[i].insno,"feetype":arr[i].feetype});
-            }
-        }
+        // for(var i=0;i<arr.length;i++){
+        //     // alert(arr.length);
+        //     var flag=0;
+        //     if(splitarr.length==0)
+        //         splitarr.push({"installtype":arr[i].insno,"feetype":arr[i].feetype});
+        //     else{
+        //     for(var j=0;j<splitarr.length;j++){
+        //         if(arr[i].insno==splitarr[j].installtype){
+        //             flag=1;
+        //             // if(arr[i].amount>0)
+        //             splitarr[j].feetype=splitarr[j].feetype+","+arr[i].feetype;
+        //         }
+        //     }
+        //     if(flag!=1)
+        //         splitarr.push({"installtype":arr[i].insno,"feetype":arr[i].feetype});
+        //     }
+        // }
 
-        
-
-        for(var i=0;i<paymentarr.length;i++){
-            for(var j=0;j<splitarr.length;j++){
-                if(localStorage.getItem("curr_sess_insrequirement")=="yes"){
-                    if((paymentarr[i].installment_type=="Commitment Fee (Ins1)"||paymentarr[i].installment_type=="Commitment Fee (Ins2)")&&splitarr[j].installtype=="Commitment Fee"){
-                        paymentarr[i].fee_type=splitarr[j].feetype;
-                    }
-                    else{
-                       if(paymentarr[i].installment_type==splitarr[j].installtype)
-                {
-                    paymentarr[i].fee_type=splitarr[j].feetype;
-                } 
-                    }
-                }
-                else{
-                if(paymentarr[i].installment_type==splitarr[j].installtype)
-                {
-                    paymentarr[i].fee_type=splitarr[j].feetype;
-                }
-                }
-            }
-        }
+        // for(var i=0;i<paymentarr.length;i++){
+        //     for(var j=0;j<splitarr.length;j++){
+        //         if(localStorage.getItem("curr_sess_insrequirement")=="yes"){
+        //             if((paymentarr[i].installment_type=="Commitment Fee (Ins1)"||paymentarr[i].installment_type=="Commitment Fee (Ins2)")&&splitarr[j].installtype=="Commitment Fee"){
+        //                 paymentarr[i].fee_type=splitarr[j].feetype;
+        //             }
+        //             else{
+        //                if(paymentarr[i].installment_type==splitarr[j].installtype)
+        //         {
+        //             paymentarr[i].fee_type=splitarr[j].feetype;
+        //         } 
+        //             }
+        //         }
+        //         else{
+        //         if(paymentarr[i].installment_type==splitarr[j].installtype)
+        //         {
+        //             paymentarr[i].fee_type=splitarr[j].feetype;
+        //         }
+        //         }
+        //     }
+        // }
 
         // alert(JSON.stringify(paymentarr));
 
@@ -426,22 +635,22 @@
         for(var i=0;i<paymentarr.length;i++){
             if(paymentarr[i].mode_of_payment=="Cash"){
                 cashtotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(cashtotal)).toFixed(2);
-                cashparticular.push({"slno":cashno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fee_type,"installmentamount":paymentarr[i].installment_amount});
+                cashparticular.push({"slno":cashno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fees,"installmentamount":paymentarr[i].installment_amount});
                 cashno++;
             }
             else if(paymentarr[i].mode_of_payment=="Cheque"){
                 chequetotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(chequetotal)).toFixed(2);
-                chequeparticular.push({"slno":chequeno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fee_type,"bankname":paymentarr[i].bank_name,"chequeno":paymentarr[i].cheque_no,"chequedate":paymentarr[i].cheque_date,"installmentamount":paymentarr[i].installment_amount});
+                chequeparticular.push({"slno":chequeno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fees,"bankname":paymentarr[i].bank_name,"chequeno":paymentarr[i].cheque_no,"chequedate":paymentarr[i].cheque_date,"installmentamount":paymentarr[i].installment_amount});
                 chequeno++;
             }
             else if(paymentarr[i].mode_of_payment=="Transfer"){
                 transfertotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(transfertotal)).toFixed(2);
-                transferparticular.push({"slno":transferno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fee_type,"bankname":paymentarr[i].bank_name,"referenceno":paymentarr[i].reference_no,"receiveddate":paymentarr[i].received_date,"installmentamount":paymentarr[i].installment_amount});
+                transferparticular.push({"slno":transferno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fees,"bankname":paymentarr[i].bank_name,"referenceno":paymentarr[i].reference_no,"receiveddate":paymentarr[i].received_date,"installmentamount":paymentarr[i].installment_amount});
                 transferno++;
             }
             else if(paymentarr[i].mode_of_payment=="Third Party"){
                 tptotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(tptotal)).toFixed(2);
-                tpparticular.push({"slno":cashno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fee_type,"installmentamount":paymentarr[i].installment_amount});
+                tpparticular.push({"slno":cashno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fees,"installmentamount":paymentarr[i].installment_amount});
                 tpno++;
             }
         }
@@ -600,7 +809,13 @@
                 feereceiptarr[i].receiptdate=dat2;
             }
         }
+        this.FnFormStructure();
+        // this.callFeeReceipt();
+      },
 
+      FnFormStructure:function(){
+        // alert(JSON.stringify(this.splitarr));
+        // alert(JSON.stringify(feereceiptarr));
         this.callFeeReceipt();
       },
 
@@ -625,6 +840,35 @@
         feechequecount=0;
         feetransfercount=0;
         arr=[];
+      },
+      FnSetSplitup:function(splitarr){
+        this.splitarr=splitarr;
+        // alert(JSON.stringify(this.splitarr));
+        // if(localStorage.getItem("curr_sess_installmentpattern")=="1"){
+        for(var i=0;i<this.splitarr.length;i++){
+        this.insertinstallmentsplitofstudurl=sessionStorage.getItem("addrinfo")+"/insertinstallmentsplitofstud";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.admissionno=localStorage.getItem("curr_sess_enquiryno");
+        obj.installment=this.splitarr[i].installment;
+        obj.installmentamount=this.splitarr[i].installmentamount;
+        obj.installmentdate=this.splitarr[i].installmentdate;
+        obj.actualamount=this.splitarr[i].actualamount;
+        obj.discountamount=this.splitarr[i].discountamount;
+        for(var j=0;j<this.splitarr[i].fees.length;j++){
+            obj.feetype=this.splitarr[i].fees[j].feetype;
+            obj.feetypeactualamount=this.splitarr[i].fees[j].actualamount;
+            obj.feetypeamount=this.splitarr[i].fees[j].amount;
+            obj.createdby=localStorage.getItem("employeeid"); 
+        this.insertinstallmentsplitofstudparam=obj;              
+        this.$.insertinstallmentsplitofstudajax.generateRequest();
+        }        
+        }        
+        // }
+      },
+      insertinstallmentsplitofstudResponse:function(e){
+        // alert(e.detail.response.returnval);
       }
     });
   })();

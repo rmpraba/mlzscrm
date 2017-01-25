@@ -6250,6 +6250,60 @@ app.post('/processtprealisation-service',  urlencodedParser,function (req, res){
     });
 });
 
+app.post('/insertinstallmentsplitofstud',  urlencodedParser,function (req, res){
+  console.log('insertinstallmentsplitofstud');
+  var qur="INSERT INTO md_studentwise_installment_splitup SET ?";
+  var response={
+        school_id:req.query.schoolid,
+        academic_year:req.query.academicyear,
+        admission_no:req.query.admissionno,
+        installment:req.query.installment,
+        installment_amount:req.query.installmentamount,
+        installment_date:req.query.installmentdate,
+        actual_amount:req.query.actualamount,
+        discount_amount:req.query.discountamount,
+        feetype:req.query.feetype,
+        feetype_actual_amount:req.query.feetypeactualamount,
+        feetype_amount:req.query.feetypeamount,
+        created_by:req.query.createdby
+  };
+  connection.query(qur,[response],
+    function(err, result){
+      if(!err){
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Done!!'});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Unable to process!!'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/fetchstudinstallmentsplitup',  urlencodedParser,function (req, res){
+  console.log('fetchstudinstallmentsplitup');
+  var qur="SELECT * FROM md_studentwise_installment_splitup WHERE "+
+  " school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.admissionno+"'";
+  connection.query(qur,
+    function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
+
 
 function setvalue(){
   console.log("calling setvalue.....");

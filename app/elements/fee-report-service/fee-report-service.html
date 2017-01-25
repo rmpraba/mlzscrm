@@ -305,6 +305,7 @@
             {
               pendingflag=1;
               pendingamount=parseFloat(pendingamount)+parseFloat(pendingarr[j].pendingamount);
+              totalarr[i].paid_amount=parseFloat(totalarr[i].paid_amount)-parseFloat(pendingamount);
               totalarr[i].pending_amount=pendingamount;
             }
           }
