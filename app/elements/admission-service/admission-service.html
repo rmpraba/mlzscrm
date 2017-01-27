@@ -1032,7 +1032,9 @@ insertstudenthistoryResponse:function(e){
         alert("Enrollment No genererated!!!"+e.detail.response.returnval);
         if(e.detail.response.returnval!='admissionfail')
         // this.callfetchadmissioncountService();
-        document.querySelector('enquiry-card').ready();
+        // document.querySelector('navigation-bar').FnCloseAdmissionWindow();
+        document.querySelector('admission-form').FnRefresh();
+        document.querySelector('admission-form').FnReady();
       },
       callFetchadmissiontestinfo:function(enquiryno){
         this.fetchadmissiontestinfourl=sessionStorage.getItem("addrinfo")+"/fetchadmissiontestinfo";

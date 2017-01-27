@@ -390,6 +390,8 @@
         var a=[];
         var split=[];
         var temp=[];
+        // alert(localStorage.getItem("curr_sess_installmentpattern"));
+        if(localStorage.getItem("curr_sess_feetypepayment")!='Application fee'&&localStorage.getItem("curr_sess_feetypepayment")!='Registration fee'){
         if(localStorage.getItem("curr_sess_installmentpattern")!="3"){
         for(var i=0;i<this.studinssplit.length;i++)
        {       
@@ -431,7 +433,8 @@
         a=[];        
        }
       }
-      else{
+      else
+      {
         // for(var i=0;i<this.studinssplit.length;i++){
             // var nameobj={"installment":"","installmentamount":""};
             // nameobj.installmentid="Lumpsum";
@@ -472,6 +475,7 @@
               }
               }                           
             }
+
 
             // alert(JSON.stringify(split));
             // alert(localStorage.getItem("curr_sess_discountpercentamt"));
@@ -520,6 +524,7 @@
             // split.push(nameobj);
         // }
       }
+     }
 
        if(localStorage.getItem("curr_sess_installmentpattern")!="3"){
        for(var i=0;i<paymentarr.length;i++){

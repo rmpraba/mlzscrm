@@ -10,6 +10,12 @@
   #inputlabel,#Religion,#Nationality{
   --paper-input-container-label: { color: red };
   }
+  #admncategory{
+        color: red;
+  }
+  .lbl{
+        @apply(--layout-horizontal);
+  }
   </style>
 
    <div class="row enquiry-form">
@@ -77,7 +83,8 @@
           <span><paper-checkbox  checked class="col-sm-6" id="general" class="checkbox" on-change="generalHandler">General</paper-checkbox></span>
           <span><paper-checkbox class="col-sm-6" id="spot" class="checkbox" on-change="spotHandler">Spot</paper-checkbox></span>          
         </div> -->
-        <label>Category</label>
+        <!-- <label>Category</label> -->
+        <div class="lbl"><label>Admission Category </label><p id="admncategory">&nbsp; *</p> </div>
         <div class="col-sm-12 enquiry-input">
           <template  is="dom-repeat" items="{{discountarr}}" as="view">
             <special-discount-card code="{{view.id}}" discountname="{{view.discount_type_name}}"></special-discount-card>
@@ -1213,8 +1220,8 @@
         this.acheivehandlerdiv=false;
       },
       FnSubmitAdmission:function(){     
-        // alert(admissionyear);
-        if (admissionyear==null||admissionyear==""||this.nationality==""||this.nationality==null||this.relegion==""||this.relegion==null) {
+        // alert(discounttype);
+        if (admissionyear==null||admissionyear==""||this.nationality==""||this.nationality==null||this.relegion==""||this.relegion==null||discounttype==null||discounttype=="") {
           if (admissionyear==null||admissionyear==""){
           alert('Please select admission year!!');
           // document.querySelector('#admnformadmnyear').validate();
@@ -1227,6 +1234,9 @@
           if (this.nationality==null||this.nationality==""){
           document.querySelector('#Nationality').validate();
           document.querySelector('#Nationality').focus();
+          }
+          if(discounttype==null||discounttype==""){
+            alert('Please select the admission category!!');
           }
           
           // alert("Please fill the mandatory fields");

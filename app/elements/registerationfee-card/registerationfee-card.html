@@ -48,8 +48,8 @@
                    </paper-listbox>
         </div>
         <div class="col-md-6" style="margin-top: 5%;">
-        <paper-checkbox id="regfeecurrentyear" on-change="FnCurrentHandler" checked style="margin-left: 5%;">Current Year</paper-checkbox>
-        <paper-checkbox id="regfeenextyear" on-change="FnNextHandler" style="margin-left: 5%;">Next Year</paper-checkbox>
+        <paper-checkbox id="regfeecurrentyear" on-change="FnCurrentHandler" style="margin-left: 5%;">Current Year</paper-checkbox>
+        <paper-checkbox checked id="regfeenextyear" on-change="FnNextHandler" style="margin-left: 5%;">Next Year</paper-checkbox>
         </div>
        </div>
 
@@ -148,18 +148,33 @@
         localStorage.setItem("curr_sess_waiveoff",0);
         localStorage.setItem("curr_sess_fees",0); 
         var academicyear=""; 
+          // var date=new Date();
+          // var y=date.getFullYear();  
+          // var m=date.getMonth();
+          // var d=date.getDate(); 
+          // if(m<4){ 
+          // var y1=y-1;
+          // var y2=y;  
+          // academicyear="AY-"+y1+"-"+y2;
+          // } 
+          // else{
+          // var y1=y;
+          // var y2=y+1;  
+          // academicyear="AY-"+y1+"-"+y2;
+          // }
+          var academicyear=""; 
           var date=new Date();
           var y=date.getFullYear();  
           var m=date.getMonth();
           var d=date.getDate(); 
           if(m<4){ 
-          var y1=y-1;
-          var y2=y;  
+          var y1=(y-1)+1;
+          var y2=y+1;  
           academicyear="AY-"+y1+"-"+y2;
           } 
           else{
-          var y1=y;
-          var y2=y+1;  
+          var y1=y+1;
+          var y2=y+1+1;  
           academicyear="AY-"+y1+"-"+y2;
           }
           localStorage.setItem("curr_sess_academicyear",academicyear); 
@@ -177,6 +192,16 @@
           var y=date.getFullYear();  
           var m=date.getMonth();
           var d=date.getDate(); 
+          // if(m<4){ 
+          // var y1=y-1;
+          // var y2=y;  
+          // academicyear="AY-"+y1+"-"+y2;
+          // } 
+          // else{
+          // var y1=y;
+          // var y2=y+1;  
+          // academicyear="AY-"+y1+"-"+y2;
+          // }
           if(m<4){ 
           var y1=y-1;
           var y2=y;  
@@ -206,6 +231,16 @@
           var y=date.getFullYear();  
           var m=date.getMonth();
           var d=date.getDate(); 
+          // if(m<4){ 
+          // var y1=(y-1)+1;
+          // var y2=y+1;  
+          // academicyear="AY-"+y1+"-"+y2;
+          // } 
+          // else{
+          // var y1=y+1;
+          // var y2=y+1+1;  
+          // academicyear="AY-"+y1+"-"+y2;
+          // }
           if(m<4){ 
           var y1=(y-1)+1;
           var y2=y+1;  
@@ -310,8 +345,8 @@
         this.enquiryarr=[];
         document.querySelector('#regwaiveoffhandler').checked=false;
         this.querySelector('#registrationinput').style.visibility='hidden';
-        document.querySelector('#regfeenextyear').checked=false;
-        document.querySelector('#regfeecurrentyear').checked=true;
+        document.querySelector('#regfeenextyear').checked=true;
+        document.querySelector('#regfeecurrentyear').checked=false;
       },
       callService:function(){
         this.$.appregfeeservice.fetchallstudentadmissionsearchService();

@@ -828,6 +828,7 @@
       },
 
       FnAdmission:function(){
+
         this.$.service.getdiscounts();
         document.querySelector('admission-form').FnRefresh();
         document.querySelector('special-discount-card').ready();
@@ -1068,6 +1069,9 @@
       },
       FnSignout:function(){
         window.location.href="../index.html";
+      },
+      FnCloseAdmissionWindow:function(){
+        this.$.newadmission.toggle();
       }
     });
   })();
