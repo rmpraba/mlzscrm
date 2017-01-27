@@ -779,6 +779,7 @@
         this.FnRefresh();
       },
       FnKit:function(e){
+        localStorage.setItem("curr_sess_feetypepayment","School fee");
         localStorage.setItem("curr_sess_feetype",e.target.text);
         localStorage.setItem("curr_sess_provisionflag",0);
         this.FnRefresh();

@@ -391,8 +391,12 @@
         var split=[];
         var temp=[];
         // alert(localStorage.getItem("curr_sess_installmentpattern"));
-        if(localStorage.getItem("curr_sess_feetypepayment")!='Application fee'&&localStorage.getItem("curr_sess_feetypepayment")!='Registration fee'){
+        if(localStorage.getItem("curr_sess_feetypepayment")=='Application fee'||localStorage.getItem("curr_sess_feetypepayment")=='Registration fee'){
+            // alert('coming');
+        }
+        else{
         if(localStorage.getItem("curr_sess_installmentpattern")!="3"){
+            // alert('in');
         for(var i=0;i<this.studinssplit.length;i++)
        {       
         var nameobj={"installment":"","installmentamount":""};
