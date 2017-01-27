@@ -108,6 +108,7 @@
             // alert(status);
             if (status == google.maps.GeocoderStatus.OK) {
               if (results[0]) {
+                // alert(JSON.stringify(results[0]));
                 var mapvalue = results[0].formatted_address;
                 localStorage.setItem("map_point",mapvalue);
                 //document.querySelector('pre-apps').getmapvalue(mapvalue);

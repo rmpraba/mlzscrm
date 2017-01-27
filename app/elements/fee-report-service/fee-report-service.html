@@ -159,6 +159,16 @@
         on-response="fetchallenrolledstudentsResponse"
         debounce-duration="300"
         >
+      <iron-ajax
+        method="post"
+        id="daycollectionajax"
+        url="{{daycollectionurl}}"
+        params="{{daycollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="daycollectionResponse"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
@@ -167,6 +177,33 @@
     var overallamountarr=[];
     Polymer({
       is: 'fee-report-service',
+      FnFetchDayCollectionService:function(grade){
+        this.daycollectionurl=sessionStorage.getItem("addrinfo")+"/daycollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        obj.grade=grade;
+        this.daycollectionparam=obj;
+        this.$.daycollectionajax.generateRequest();
+      },
+      daycollectionResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        var totalamount=0;
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+        for(var i=0;i<arr.length;i++){
+          arr[i].sno=i+1;
+          arr[i].fine_amount=0;
+          totalamount=parseFloat(parseFloat(totalamount)+parseFloat(arr[i].installment_amount)).toFixed(2);
+        }
+        }
+        else{
+          arr=[];
+        }
+        document.querySelector('daycollection-report').totalamount=totalamount;
+        document.querySelector('daycollection-report').daycollectionarr=arr;
+      },
       FnFetchFeeReportService:function(grade){
         this.fetchfeecollectionreporturl=sessionStorage.getItem("addrinfo")+"/fetchfeecollectionreport-service";
         var obj={"schoolid":"","fromdate":"","todate":""};

@@ -361,6 +361,9 @@
             <li id="dailycollectionreport">
             <a href="" aria-hidden="true" on-click="FnDailyCollectionReport">Daily Fee Collection Report</a>
             </li>
+            <li id="dailycollectionreport">
+            <a href="" aria-hidden="true" on-click="FnDayCollectionReport">Daily Collection</a>
+            </li>
             <li id="feecollectionreport">
             <a href="" aria-hidden="true" on-click="FnFeeCollectionReport">Fee Collection Report</a>
             </li>
@@ -861,6 +864,12 @@
       Fnmasteranalysis:function(){
           document.querySelector('app-list').setPage("master-enquiry-analysis","Master Walk-in Analysis");
           document.querySelector('master-report-card').Fncall();
+      },
+      FnDayCollectionReport:function(){
+          this.$.scheduleservice.fetchgradeforreportService();
+          document.querySelector('app-list').setPage("daycollection-report","Daily Collection");
+          document.querySelector('daycollection-report').FnRefresh();
+          document.querySelector('daycollection-report').FnCallService();
       },
       FnFeeCollectionReport:function(){
           this.$.scheduleservice.fetchgradeforreportService();

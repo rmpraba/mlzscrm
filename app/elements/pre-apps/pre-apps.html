@@ -252,6 +252,7 @@
         <paper-dialog id="googlemap" modal>
           <showgmap-card></showgmap-card>
           <div class="buttons">
+
             <paper-button dialog-confirm autofocus>Tap me to close</paper-button>
           </div>
         </paper-dialog>
@@ -261,7 +262,8 @@
         <label>Location:  {{textvalue}}</label>
         </div> -->
 
-        <div class="col-sm-4" style='margin-top: -2%;'>
+        <div class="col-sm-4" style='margin-top: -2
+        %;'>
           <paper-dropdown-menu label="Enquiry Source" style="margin-top: 3%;">
             <paper-menu class="dropdown-content"  class="dropdown-content" id="enquiry-source" on-iron-select="source" >
               <template  is="dom-repeat" items="{{sourcearr}}" as="item">
@@ -886,6 +888,7 @@
     },*/
     SibFnlistboxz:function(siblingnameitem){
       sibnamearr=siblingnameitem;
+      // alert(JSON.stringify(sibnamearr));
     },
     SibFnInputChanged:function(e){
           this.$.sibiditemlist.hidden=false;
@@ -1422,14 +1425,25 @@
       },
       getmapvalue:function(){
         var str = localStorage.getItem("map_point");
+        alert(JSON.stringify(str));
         var str_array = str.split(',');
-        for(var i = 0; i < str_array.length; i++) {
-          str_array[i] = str_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
+
+        // for(var i = 0; i < str_array.length; i++) {
+        //   str_array[i] = str_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
+        // }
+        // alert(JSON.stringify(str_array));
+        var place="";
+        for(var i=0;i<(str_array.length)-3;i++){
+          if(i==0){}
+          else{
+          place+=str_array[i]+",";
+          }
         }
-        var place = str_array.length - 4;
-        this.textvalue = "Location: "+str_array[place];
+
+        // var place = (str_array.length)-3;
+        this.textvalue = "Location: "+place;
         this.closeWindow();
-        this.getstudentsinlocation(str_array[place]);
+        this.getstudentsinlocation(place);
       }
     });
   })();

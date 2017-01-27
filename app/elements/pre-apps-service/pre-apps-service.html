@@ -355,6 +355,7 @@
           obj.siblistid=studentarr[i].id;
           sibnamelistarr.push(obj);
         }
+        // alert(JSON.stringify(sibnamelistarr));
         document.querySelector('pre-apps').SibFnlistboxz(sibnamelistarr);
       },
       getcounsellorattendedby:function(){
@@ -540,6 +541,7 @@
       },
       siblingdetailsResponse:function(e){
         var result=e.detail.response.returnval;
+        // alert(JSON.stringify(result));
         var parent = e.detail.response.returnval[0].parent_name;
         var grade =  e.detail.response.returnval[0].class;
         var section = e.detail.response.returnval[0].section;

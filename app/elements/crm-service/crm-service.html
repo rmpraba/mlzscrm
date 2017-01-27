@@ -1106,13 +1106,13 @@ attenderusername=attendername;
           var y=d.getFullYear();
           var m=d.getMonth()+1;
           var academicyear="";
-          if(m<=4)
-          {
-            academicyear="AY-"+(parseInt(y)-1)+"-"+y;
-          }
-          else{
-            academicyear="AY-"+y+"-"+(parseInt(y)+1);
-          }
+          // if(m<4)
+          // {
+            academicyear="AY-"+y+"-"+(parseInt(y)+1);            
+          // }
+          // else{
+          //   academicyear="AY-"+(parseInt(y)-1)+"-"+y;
+          // }
           // alert(academicyear);
           sessionStorage.setItem("curr_sess_academicyear",academicyear);
         obj.academicyear=academicyear;
@@ -1133,13 +1133,13 @@ attenderusername=attendername;
           var y=d.getFullYear();
           var m=d.getMonth()+1;
           var academicyear="";
-          if(m<=4)
-          {
-            academicyear="AY-"+(parseInt(y)-1)+"-"+y;
-          }
-          else{
+          // if(m<=4)
+          // {
+          //   academicyear="AY-"+(parseInt(y)-1)+"-"+y;
+          // }
+          // else{
             academicyear="AY-"+y+"-"+(parseInt(y)+1);
-          }
+          // }
           // alert(academicyear);
           sessionStorage.setItem("curr_sess_academicyear",academicyear);
         obj.academicyear=academicyear;
@@ -1479,7 +1479,7 @@ attenderusername=attendername;
       },
 
      getcounsellor:function(){
-      this.getcounsellorurl="http://localhost:8086/getcounsellor";
+      this.getcounsellorurl=sessionStorage.getItem("addrinfo")+"/getcounsellor";
       var obj={"schoolid":""};
       obj.schoolid=localStorage.getItem("schoolid");
       this.getcounsellorparam=obj;
@@ -1491,7 +1491,7 @@ attenderusername=attendername;
       document.querySelector('exchange-followup').counsellorarr=result;
      },
      getStudentsForCounsellor:function(counsellor){
-      this.getstudentsforcounselorurl="http://localhost:8086/getstudentsforcounselor";
+      this.getstudentsforcounselorurl=sessionStorage.getItem("addrinfo")+"/getstudentsforcounselor";
       var obj={"schoolid":"", "counsellor":""};
       obj.schoolid=localStorage.getItem("schoolid");
       obj.counsellor=counsellor;
@@ -1505,7 +1505,7 @@ attenderusername=attendername;
      exchangestudents:function(exchangetocounsellor, exchangearr){
       var exchangearrlength = exchangearr.length;
       for(var i = 0; i<exchangearrlength; i++){
-        this.exchangestudentsurl="http://localhost:8086/exchangestudents";
+        this.exchangestudentsurl=sessionStorage.getItem("addrinfo")+"/exchangestudents";
         var obj={"schoolid":"", "counsellor":"", "enquiryno":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.counsellor=exchangetocounsellor;

@@ -3075,7 +3075,7 @@ app.post('/getparentname',  urlencodedParser,function (req, res){
 
 app.post('/getstudentnamelist',  urlencodedParser,function (req, res){
     var qur={"school_id":req.query.schol};
-  //  console.log('qur');
+    console.log(qur);
     connection.query('SELECT id, student_name FROM `student_details` WHERE ?',[qur],
     function(err, rows)
     {
@@ -3992,6 +3992,32 @@ app.post('/fetchfeecollectionreport-service',  urlencodedParser,function (req, r
      });
  });
 
+
+app.post('/daycollection-service',  urlencodedParser,function (req, res){
+   if(req.query.grade=="All Grades")
+   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date>='"+req.query.fromdate+"' "+
+             "and paid_date<='"+req.query.todate+"') and mode_of_payment in('cash','Transfer')) or ((cheque_date>='"+req.query.fromdate+"' and cheque_date<='"+req.query.todate+"') and mode_of_payment in('cheque')) and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";
+   else
+   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date>='"+req.query.fromdate+"' "+
+             "and paid_date<='"+req.query.todate+"') and mode_of_payment in('cash','Transfer')) or ((cheque_date>='"+req.query.fromdate+"' and cheque_date<='"+req.query.todate+"') and mode_of_payment in('cheque')) and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";
+   
+ console.log('-----------------------collection report--------------------------');
+ console.log(qur);
+ console.log('-------------------------------------------------');
+   connection.query(qur,
+     function(err, rows){
+       if(!err){
+         if(rows.length>0){
+           res.status(200).json({'returnval': rows});
+         }else{
+           console.log(err);
+           res.status(200).json({'returnval':'no rows'});
+         }
+       }else{
+         console.log(err);
+       }
+     });
+ });
 
 app.post('/fetchfilterreport-service',  urlencodedParser,function (req, res){
   if(req.query.grade=="All Grades"){

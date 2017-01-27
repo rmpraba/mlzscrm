@@ -482,6 +482,12 @@
                        split[i].feetypeamount=parseFloat(split[i].feetypeamount)-parseFloat(localStorage.getItem("curr_sess_discountpercentamt"));
                     }
                 }
+                if(localStorage.getItem("curr_sess_payablediscount")>0)
+                {
+                    if(split[i].feetype=="Annual fee"){
+                       split[i].feetypeamount=parseFloat(split[i].feetypeamount)-parseFloat(localStorage.getItem("curr_sess_payablediscount"));
+                    }
+                }
             }
 
             // alert(JSON.stringify(split));
