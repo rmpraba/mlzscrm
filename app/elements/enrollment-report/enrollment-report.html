@@ -43,10 +43,10 @@
               <paper-button style="height:30px;text-transform: none;" on-click="FnView" class="btn btn-primary">View</paper-button>
           </div>
 
-          <div class="col-md-1" style="margin-top: -3%;margin-left: 25%;">
+          <div class="col-md-1" style="margin-top: 2.5%;margin-left: 30%;">
                 <p>Download
                 <a href="#">
-                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('enrollmentreport','Enrollment Report')"></span>
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('ayenrreport','Enrollment Report')"></span>
                 </a>
                 </p>
           </div>   
@@ -54,7 +54,7 @@
           </div>
         </div>
     </div>
-     <table class="table table-hover" id="enrollmentreport" hidden>
+     <table class="table table-hover" id="ayenrreport">
       <template  is="dom-repeat" items="{{enrollmentarr}}" as="e">
       <tr><td>{{e.enquiry_no}}</td><td>{{e.admission_no}}</td><td>{{e.admission_year}}</td><td>{{e.academic_year}}</td><td>{{e.first_name}}</td><td>{{e.middle_name}}</td><td>{{e.last_name}}</td><td>{{e.student_name}}</td><td>{{e.class_for_admission}}</td><td>{{e.dob}}</td><td>{{e.gender}}</td><td>{{e.father_name}}</td><td>{{e.mother_name}}</td><td>{{e.disabled_stuent}}</td><td>{{e.canteen_availed}}</td><td>{{e.transport_availed}}</td><td>{{e.having_sibling}}</td><td>{{e.admission_status}}</td><td>{{e.active_status}}</td><td>{{e.second_language}}</td><td>{{e.third_language}}</td><td>{{e.mother_toungue}}</td><td>{{e.blood_group}}</td><td>{{e.father_mobile}}</td><td>{{e.mother_mobile}}</td><td>{{e.father_email}}</td><td>{{e.mother_email}}</td><td>{{e.aadhar_no}}</td><td>{{e.caste}}</td><td>{{e.flat_no}}</td><td>{{e.building_name}}</td><td>{{e.street}}</td><td>{{e.town}}</td><td>{{e.city}}</td><td>{{e.pincode}}</td></tr>
       </template> 

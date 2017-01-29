@@ -182,7 +182,7 @@
         var obj={"schoolid":"","fromdate":"","todate":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.fromdate=localStorage.getItem("localsess_from_date");
-        obj.todate=localStorage.getItem("localsess_to_date");
+        // obj.todate=localStorage.getItem("localsess_to_date");
         obj.grade=grade;
         this.daycollectionparam=obj;
         this.$.daycollectionajax.generateRequest();
@@ -534,7 +534,17 @@
         var obj={"schoolid":"","fromdate":"","todate":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.fromdate=localStorage.getItem("localsess_from_date");
-        obj.todate=localStorage.getItem("localsess_to_date");
+        // obj.todate=localStorage.getItem("localsess_to_date");
+        var d=new Date();
+        var mn=(d.getMonth()+1);
+        var dt=d.getDate();
+        var yr=d.getFullYear();
+        if(mn<10)
+          mn="0"+mn;
+        if(dt<10)
+          dt="0"+dt;
+        var currdate=mn+"/"+dt+"/"+yr;
+        obj.currdate=currdate;
         this.fetchpdcchequesparam=obj;
         this.$.fetchpdcchequesajax.generateRequest();
       },

@@ -2490,6 +2490,7 @@ app.post('/insertcashfees',  urlencodedParser,function (req, res){
         fine_amount:req.query.fineamount,
         provision_payment:req.query.provisionflag,
         payment_through:req.query.paymentthrough,
+        installment_pattern:req.query.installmentpattern,
         receipt_no:""
     };
 
@@ -2603,6 +2604,7 @@ app.post('/insertchequefees',  urlencodedParser,function (req, res){
         provision_payment:req.query.provisionflag,
         cheque_date:req.query.chequedate,
         payment_through:req.query.paymentthrough,
+        installment_pattern:req.query.installmentpattern,
         receipt_no:""
     };
 
@@ -2715,6 +2717,7 @@ app.post('/inserttransferfees',  urlencodedParser,function (req, res){
         fine_amount:req.query.fineamount,
         provision_payment:req.query.provisionflag,
         payment_through:req.query.paymentthrough,
+        installment_pattern:req.query.installmentpattern,
         receipt_no:""
     };
 
@@ -2821,6 +2824,7 @@ app.post('/insertthirdpartyfees',  urlencodedParser,function (req, res){
         fine_amount:req.query.fineamount,
         provision_payment:req.query.provisionflag,
         payment_through:req.query.paymentthrough,
+        installment_pattern:req.query.installmentpattern,
         receipt_no:""
     };
 
@@ -3995,11 +3999,11 @@ app.post('/fetchfeecollectionreport-service',  urlencodedParser,function (req, r
 
 app.post('/daycollection-service',  urlencodedParser,function (req, res){
    if(req.query.grade=="All Grades")
-   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date>='"+req.query.fromdate+"' "+
-             "and paid_date<='"+req.query.todate+"') and mode_of_payment in('cash','Transfer')) or ((cheque_date>='"+req.query.fromdate+"' and cheque_date<='"+req.query.todate+"') and mode_of_payment in('cheque')) and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";
+   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date='"+req.query.fromdate+"' "+
+             ") and mode_of_payment in('cash','Transfer')) or ((cheque_date='"+req.query.fromdate+"') and mode_of_payment in('cheque')) and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";
    else
-   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date>='"+req.query.fromdate+"' "+
-             "and paid_date<='"+req.query.todate+"') and mode_of_payment in('cash','Transfer')) or ((cheque_date>='"+req.query.fromdate+"' and cheque_date<='"+req.query.todate+"') and mode_of_payment in('cheque')) and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";
+   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date='"+req.query.fromdate+"' "+
+             ") and mode_of_payment in('cash','Transfer')) or ((cheque_date='"+req.query.fromdate+"') and mode_of_payment in('cheque')) and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";
    
  console.log('-----------------------collection report--------------------------');
  console.log(qur);
@@ -5364,8 +5368,8 @@ app.post('/fetchbouncecheques-service',  urlencodedParser,function (req, res){
  });
 
 app.post('/fetchpdccheques-service',  urlencodedParser,function (req, res){
-   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where cheque_date>='"+req.query.fromdate+"' "+
-             "and cheque_date<='"+req.query.todate+"' and school_id='"+req.query.schoolid+"' and paid_status in('inprogress') or cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
+   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where cheque_date>'"+req.query.fromdate+"' "+
+             "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
  console.log('-----------------------fetch pdc cheque--------------------------');
  console.log(qur);
  console.log('-------------------------------------------------');
@@ -6301,8 +6305,15 @@ app.post('/insertinstallmentsplitofstud',  urlencodedParser,function (req, res){
         feetype_amount:req.query.feetypeamount,
         created_by:req.query.createdby
   };
-  // connection.query("SELECT * FROM mlzscrm.md_studentwise_installment_splitup WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.admissionno+"' and installment='"+req.query.installment+"' and feetype='"+req.query.feetype+"'",
-    // function(err, rows){
+  var checkqur="SELECT * FROM mlzscrm.md_studentwise_installment_splitup"+
+  " WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' "+
+  " and admission_no='"+req.query.admissionno+"' and installment='"+req.query.installment+"' "+
+  " and feetype='"+req.query.feetype+"'";
+  console.log('-----------------------------');
+  console.log(checkqur);
+  console.log('-----------------------------');
+  // connection.query(checkqur,
+  // function(err, rows){
   // if(rows.length==0){
   connection.query(qur,[response],
     function(err, result){

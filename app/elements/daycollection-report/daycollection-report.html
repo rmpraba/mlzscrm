@@ -16,9 +16,9 @@
               <div class="col-md-2" style="margin-top: 2%;">
                   <fromdate-icon-pickercard></fromdate-icon-pickercard>
                 </div>
-                <div class="col-md-1" style="margin-top: 2%;margin-left: -3%;">
-                  <todate-icon-pickercard></todate-icon-pickercard>
-                </div>
+                <!-- <div class="col-md-1" style="margin-top: 2%;margin-left: -3%;"> -->
+                  <!-- <todate-icon-pickercard></todate-icon-pickercard> -->
+                <!-- </div> -->
                 <div class="col-sm-2" style="margin-left: 5%;">
                 <paper-dropdown-menu label="Grade" attr-for-selected="value">
                   <paper-menu id="daycollectiongrade" class="dropdown-content" required on-iron-select="FnSelectGrade" valueattr="value" >
@@ -66,7 +66,7 @@
         <td>{{item.installment_type}}</td><td>{{item.mode_of_payment}}</td><td>{{item.cheque_no}}</td><td>{{item.bank_name}}</td><td>{{item.cheque_date}}</td><td>{{item.paid_date}}</td>
         <td>{{item.receipt_no}}</td><td>{{item.installment_amount}}</td><td>{{item.fine_amount}}</td></tr>
       </template>
-      <tr><th colspan="11" style="text-align: right;">Total Amount: &nbsp;&nbsp;{{totalamount}}</th></tr>
+      <tr><th colspan="12" style="text-align: right;">Total Amount: &nbsp;&nbsp;{{totalamount}}</th></tr>
       </tbody>
     </table>    
     
@@ -89,7 +89,7 @@
   (function() {
     'use strict';
     var grade="All Grades";
-    var filtertype="1";
+    
     Polymer({
       is: 'daycollection-report',
       FnCallService:function(){        
@@ -98,11 +98,6 @@
       FnView:function(){
         this.$.feereportservice.FnFetchDayCollectionService(grade);
       },
-      // FnSelectFilterType:function(e){
-      //   // alert(e.target.selectedItem.textContent);
-      //   filtertype=(e.target.selectedItem.textContent).trim();
-      //   this.$.feereportservice.FnFilterReportService(grade,filtertype);
-      // },
       FnSelectGrade:function(e){
         grade=(e.target.selectedItem.textContent).trim();
       },
@@ -111,7 +106,7 @@
         // document.querySelector('#reportfiltertype').selected=-1;
         this.daycollectionarr="";
         document.querySelector('fromdate-icon-pickercard').ready();
-        document.querySelector('todate-icon-pickercard').ready();
+        // document.querySelector('todate-icon-pickercard').ready();
       }
     });
   })();
