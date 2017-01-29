@@ -927,8 +927,9 @@
 
       },
       FnSearchReceipt:function(){
-        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchacademicyearService();        
         document.querySelector('app-list').setPage("searchreceipt","Search Receipt");
+        document.querySelector('searchreceipt-card').callService();
         document.querySelector('searchreceipt-card').ready();
       },
       FnPendingCheques:function(){
