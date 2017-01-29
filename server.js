@@ -2611,8 +2611,9 @@ app.post('/insertchequefees',  urlencodedParser,function (req, res){
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
     var new_receipt_no="";
     var new_ack_no="";
+    
     connection.query("SELECT * FROM receipt_sequence",function(err, rows){
-    if(req.query.installment=="Commitment Fee"||req.query.installment=="Lumpsum"){
+    if((req.query.chequedate<=req.query.receiveddate)){
       response.ack_no="REC-"+response.academic_year+"-"+rows[0].receipt_seq;
       response1.receipt_no="REC-"+response.academic_year+"-"+rows[0].receipt_seq;
       new_ack_no=parseInt(rows[0].receipt_seq)+1;

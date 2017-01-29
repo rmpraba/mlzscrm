@@ -487,13 +487,14 @@
                        split[i].feetypeamount=parseFloat(split[i].feetypeamount)-parseFloat(localStorage.getItem("curr_sess_discountpercentamt"));
                     }
                 }
+            }
                 // if(localStorage.getItem("curr_sess_payablediscount")>0)
                 // {
                 //     if(split[i].feetype=="Annual fee"){
                 //        split[i].feetypeamount=parseFloat(split[i].feetypeamount)-parseFloat(localStorage.getItem("curr_sess_payablediscount"));
                 //     }
                 // }
-            }
+            
             // alert(JSON.stringify(split));
       }
       else if(localStorage.getItem("curr_sess_installmentpattern")=="4")
@@ -708,7 +709,7 @@
                 cashno++;
             }
             else if(paymentarr[i].mode_of_payment=="Cheque"){
-                if(paymentarr[i].installment=="Commitment Fee"||paymentarr[i].installment=="Lumpsum"){
+                if(paymentarr[i].cheque_date<=paymentarr[i].received_date){
                 currchequetotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(currchequetotal)).toFixed(2);
                 currchequeparticular.push({"slno":chequeno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fees,"bankname":paymentarr[i].bank_name,"chequeno":paymentarr[i].cheque_no,"chequedate":paymentarr[i].cheque_date,"installmentamount":paymentarr[i].installment_amount});
                 currchequeno++;
@@ -794,7 +795,7 @@
             }
             if(paymentarr[i].mode_of_payment=="Cheque"){
                 var obj={"schoolid":"","academicyear":"","admissionno":"","studentname":"","grade":"","installment":"","paiddate":"","receiptno":"","receipttype":"","hidereceipt":"","hideack":"","chequeview":"","transferview":"","paymentarr":""};
-                if(paymentarr[i].installment=="Commitment Fee"||paymentarr[i].installment=="Lumpsum"){
+                if(paymentarr[i].cheque_date<=paymentarr[i].received_date){
                     obj.modeofpayment=paymentarr[i].mode_of_payment;
                 obj.schoolid=paymentarr[i].school_id;
                 obj.academicyear=paymentarr[i].academic_year;
