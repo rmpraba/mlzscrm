@@ -1956,6 +1956,12 @@ insertstudenthistoryResponse:function(e){
            for(var i=0;i<arr.length;i++){
            finalarr.push(arr[i]); 
            }
+           for(var i=0;i<finalarr.length;i++){
+            if(finalarr[i].installment=="Commitment Fee"){
+                finalarr[i].installmentdate=installdate;
+            }
+           }
+
         }
         else{
            for(var i=0;i<arr.length;i++){
