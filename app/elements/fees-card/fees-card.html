@@ -674,6 +674,7 @@
       autocompletearr:function(autocompletearr)
       {
          item=autocompletearr;
+         // alert(JSON.stringify(item));
       },
       FnSearchEnquiryy:function(e){
       if(e.keyCode==13|| e.keyCode==40)
@@ -696,6 +697,7 @@
           var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
           for(var i=0;i<item.length;i++)
           {
+            // alert(item[i].student_name);
             var subval=((item[i].student_name).trim()).substring(0,backsubval.length);
             if((item[i].student_name).toUpperCase().indexOf((this.value).toUpperCase())!=-1)
             {
@@ -719,7 +721,9 @@
         {
           for(var i=0;i<item.length;i++)
           {
+            // alert((item[i].student_name).trim());
             var subval=((item[i].student_name).trim()).substring(0,this.itemval.length);
+            // alert((item[i].student_name).toUpperCase().indexOf((this.itemval).toUpperCase()));
             if((item[i].student_name).toUpperCase().indexOf((this.itemval).toUpperCase())!=-1)
             {
               var obj={"itemdes":"","enquiry_no":""};
@@ -739,6 +743,7 @@
           }
         }
       }
+      // alert(JSON.stringify(this.itemArray));
     },
     FnSelectEnquiryy:function(e){
     this.querySelector('#schoolfeeinput').style.visibility='hidden';

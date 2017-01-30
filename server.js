@@ -5957,6 +5957,7 @@ app.post('/fetchallstudentenquirysearch-service',  urlencodedParser,function (re
 
 app.post('/fetchallstudentadmissionsearch-service',  urlencodedParser,function (req, res){
   var qur="SELECT distinct(admission_no),student_name FROM md_admission where school_id='"+req.query.schoolid+"' ";
+  console.log(qur);
   connection.query(qur,
     function(err, rows){
       if(!err){
@@ -6357,8 +6358,56 @@ app.post('/fetchstudinstallmentsplitup',  urlencodedParser,function (req, res){
 });
 
 
+app.post('/insertstudwisefeesplitup',  urlencodedParser,function (req, res){
+  console.log('insertstudwisefeesplitup');
+  var qur="INSERT INTO md_studwise_fee_splitup SET ?";
+  var response={
+        school_id:req.query.schoolid,
+        academic_year:req.query.academicyear,
+        admission_no:req.query.admissionno,
+        installment:req.query.installment,
+        installment_amount:req.query.installmentamount,
+        actual_amount:req.query.actualamount,
+        discount_amount:req.query.discountamount,
+        feetype:req.query.feetype,
+        feetype_actual_amount:req.query.feetypeactualamount,
+        feetype_amount:req.query.feetypeamount
+  };
+
+  connection.query(qur,[response],
+    function(err, result){
+      if(!err){
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Done!!'});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Unable to process!!'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
 
 
+app.post('/fetchstudfeesplitup-service',  urlencodedParser,function (req, res){
+  // console.log('fetchstudinstallmentsplitup');
+  var qur="SELECT * FROM md_studwise_fee_splitup WHERE "+
+  " school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.admissionno+"'";
+  connection.query(qur,
+    function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
 function setvalue(){
   console.log("calling setvalue.....");
 }

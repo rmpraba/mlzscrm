@@ -38,10 +38,10 @@
           src="../../images/schoollogo.png"></td>
           <th colspan="5" style="text-align: left;"><h3 style="margin-left: 20px;">{{schoolname}}</h3></th>
           <th></th></tr>
-          <tr><th colspan="5" style="text-align: center;">{{schooladdress}}</th>
+          <tr><th></th><th colspan="5" style="text-align: center;">{{schooladdress}}</th>
         </tr>
       </table>
-      <hr></hr>
+      <hr></hr><br>
       <template  is="dom-repeat" items="{{tcarr}}" as="tc">
         <generate-tc-card admissionno="{{tc.admission_no}}" student="{{tc.student_name}}" father="{{tc.father_name}}" mother="{{tc.mother_name}}" admissionno="{{tc.admission_no}}" dob="{{tc.dob}}" nationality="{{tc.nationality}}" nationality="{{tc.nationality}}" mothertoungue="{{tc.mother_toungue}}" caste="{{tc.caste}}" class="{{tc.class_for_admission}}" nationality="{{tc.nationality}}" doj="{{tc.created_on}}" academicyear="{{tc.academic_year}}" reason="{{tc.reason}}"></generate-tc-card>
       </template>
@@ -88,7 +88,12 @@
               this.$.pdf.hidden=false;
               this.$.email.hidden=false;
               this.$.print.hidden=false;
+      },
+      FnHome:function(){
+        // alert("hi");
+        document.querySelector('CRM-app').setPage('applist');
       }
+
     });
   })();
   </script>

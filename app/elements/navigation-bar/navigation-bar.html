@@ -355,10 +355,10 @@
               </li>
             </ul>
             </li>
-            <li id="collectionreports">
+            <!-- <li id="collectionreports">
             <a href="" aria-hidden="true">Fee Collection<span class="fa arrow"></span></a>
-            <ul class="nav nav-third-level">
-            <li id="dailycollectionreport">
+            <ul class="nav nav-third-level"> -->
+            <!-- <li id="dailycollectionreport">
             <a href="" aria-hidden="true" on-click="FnDailyCollectionReport">Daily Fee Collection Report</a>
             </li>
             <li id="dailycollectionreport">
@@ -366,8 +366,8 @@
             </li>
             <li id="feecollectionreport">
             <a href="" aria-hidden="true" on-click="FnFeeCollectionReport">Fee Collection Report</a>
-            </li>
-            <li id="chequerealization">
+            </li> -->
+            <!-- <li id="chequerealization">
             <a href="" aria-hidden="true" on-click="FnChequerealization">Cheque Realization</a>
            </li>
            <li id="tprealisation">
@@ -384,9 +384,9 @@
             </li> 
             <li id="bounceprocess">
             <a href="" aria-hidden="true" on-click="FnChequeEditDelete">Edit/Delete Cheques</a>
-            </li>        
-            </ul>
-            </li>
+            </li>         -->
+            <!-- </ul>
+            </li> -->
             <li id="pendingreport">
             <a href="" aria-hidden="true">Pending Collection report<span class="fa arrow"></span></a>
              <ul class="nav nav-third-level">
@@ -396,14 +396,53 @@
             <li id="pendingcheques">
             <a href="" aria-hidden="true" on-click="FnPendingCheques">Pending Cheques</a>
             </li>
-            <li id="pdccheques">
-            <a href="" aria-hidden="true" on-click="FnPdcCheques">PDC Cheques</a>
-            </li>
            </ul>
             </li>
             </ul>
           </li>         
+
+          <li id="reports" hidden$="{{hidereportmenu}}">
+          <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Daily Collection Report<span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">          
+            <li id="currdailycollectionreport">
+            <a href="" aria-hidden="true" on-click="FnDayCollectionReport">Current Date Collection</a>
+            </li>
+            <li id="pdccheques">
+            <a href="" aria-hidden="true" on-click="FnPdcCheques">PDC Cheques</a>
+            </li>
+            <li id="dailycollectionreport">
+            <a href="" aria-hidden="true" on-click="FnDailyCollectionReport">Daily Fee Collection Report</a>
+            </li>            
+            <li id="feecollectionreport">
+            <a href="" aria-hidden="true" on-click="FnFeeCollectionReport">Fee Collection Report</a>
+            </li>
+          </ul>
+          </li>
+
+          <li id="reports" hidden$="{{hidereportmenu}}">
+          <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Process<span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">
           
+           <li id="searchreceipt">
+            <a href="" aria-hidden="true" on-click="FnSearchReceipt">Search Receipt</a>
+           </li> 
+            <li id="bounceprocess">
+            <a href="" aria-hidden="true" on-click="FnBounceProcessing">Bounce/Cancel Process</a>
+            </li> 
+            <li id="bounceprocess">
+            <a href="" aria-hidden="true" on-click="FnChequeEditDelete">Edit/Delete Cheques</a>
+            </li>
+            <li id="tprealisation">
+            <a href="" aria-hidden="true" on-click="FnTprealisation">Third Party Realization</a>
+           </li>
+            <li id="chequerealization">
+            <a href="" aria-hidden="true" on-click="FnChequerealization">Cheque Realization</a>
+           </li>           
+           <li id="bouncecheques">
+            <a href="" aria-hidden="true" on-click="FnShowBounceCheques">Bounce Cheques</a>
+           </li>        
+            </ul>
+            </li>
           <!-- <li id="admform">
             <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Admission Form<!-- <span class="fa arrow"></span> -->
             <!-- </a>
