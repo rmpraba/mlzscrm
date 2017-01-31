@@ -1033,11 +1033,14 @@ insertstudenthistoryResponse:function(e){
 
       insertadmissionResponse:function(e){
         alert("Enrollment No genererated!!!"+e.detail.response.returnval);
-        if(e.detail.response.returnval!='admissionfail')
+        if(e.detail.response.returnval!='admissionfail'){
+            document.querySelector('crm-service').getenquirycount();
+            document.querySelector('crm-service').getadmittedcount();
+        }
         // this.callfetchadmissioncountService();
         // document.querySelector('navigation-bar').FnCloseAdmissionWindow();
         document.querySelector('admission-form').FnRefresh();
-        document.querySelector('admission-form').FnReady();
+        document.querySelector('admission-form').ready();
       },
       callFetchadmissiontestinfo:function(enquiryno){
         this.fetchadmissiontestinfourl=sessionStorage.getItem("addrinfo")+"/fetchadmissiontestinfo";
@@ -1808,6 +1811,7 @@ insertstudenthistoryResponse:function(e){
                     var obj={};
                     obj.installment=paidfeearr[i].installment;
                     obj.installmentamount=paidfeearr[i].installment_amount;
+                    obj.installmentdate=current_date;
                     if(paidfeearr[i].installment=="Commitment Fee (Ins1)"){
                     obj.installmentid="CommitmentFee1";
                     // alert(arr[j].installmentamount+"   "+paidfeearr[i].installment_amount);
@@ -1926,11 +1930,13 @@ insertstudenthistoryResponse:function(e){
                     // alert('true');
                     arr[i].editdate=false;
                    }
-                   else
+                   else if(arr[i].installmentdate>current_date)
                    {
                     // alert('false');
                     arr[i].editdate=true;
                    }
+                   else
+                    arr[i].editdate=false;
         }
         } 
         // alert(JSON.stringify(arr));

@@ -842,6 +842,7 @@
       enquiry:function()
       {
         this.$.service.getenquirycount();
+        this.$.service.getadmittedcount();
         document.querySelector('detailed-enquiry-form').country();
         document.querySelector('app-list').setPage("enquiry");
 
