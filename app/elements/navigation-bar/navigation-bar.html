@@ -422,7 +422,9 @@
           <li id="reports" hidden$="{{hidereportmenu}}">
           <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Process<span class="fa arrow"></span></a>
           <ul class="nav nav-second-level">
-          
+           <li id="discounts">
+            <a href="" aria-hidden="true" on-click="FnAddDiscount">Discounts</a>
+           </li> 
            <li id="searchreceipt">
             <a href="" aria-hidden="true" on-click="FnSearchReceipt">Search Receipt</a>
            </li> 
@@ -964,6 +966,11 @@
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchadmissionyearService();
 
+      },
+      FnAddDiscount:function(){
+        document.querySelector('app-list').setPage("adddiscount","Add Discount");
+        document.querySelector('attachdiscount-card').callService();
+        document.querySelector('attachdiscount-card').ready();
       },
       FnSearchReceipt:function(){
         this.$.scheduleservice.fetchacademicyearService();        

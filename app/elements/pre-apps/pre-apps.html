@@ -267,17 +267,17 @@
           <paper-dropdown-menu label="Enquiry Source" style="margin-top: 3%;">
             <paper-menu class="dropdown-content"  class="dropdown-content" id="enquiry-source" on-iron-select="source" >
               <template  is="dom-repeat" items="{{sourcearr}}" as="item">
-                <paper-item>{{item.source}}</paper-item>
+                <paper-item value="{{item.id}}">{{item.source}}</paper-item>
               </template>
             </paper-menu>
           </paper-dropdown-menu>
         </div>
 
         <div class="col-sm-3" style='margin-top: -2%;' hidden$="{{selectreferral}}">
-          <paper-dropdown-menu label="Referral" style="margin-top: 3%;">
+          <paper-dropdown-menu label="Referral" style="margin-top: 6%;">
             <paper-menu class="dropdown-content"  class="dropdown-content" id="referral" on-iron-select="Fnreferral" >
               <template  is="dom-repeat" items="{{referralarr}}" as="item">
-                <paper-item>{{item.referral}}</paper-item>
+                <paper-item value="{{item.id}}">{{item.referral}}</paper-item>
               </template>
             </paper-menu>
           </paper-dropdown-menu>
@@ -678,6 +678,8 @@
       }
     },
     source:function(e){
+      var enquiysourceid=(e.target.selectedItem.value).trim();
+      localStorage.setItem("curr_sess_referralid",enquiysourceid);
       enquiysource=(e.target.selectedItem.textContent).trim();
       if(enquiysource=="Sibling"){
         this.schooldetail = true;
@@ -709,7 +711,11 @@
       }
     },
     Fnreferral:function(e){
+
       referralvalue = (e.target.selectedItem.textContent).trim();
+      var referralid=e.target.selectedItem.value;
+      // alert(referralid);
+      localStorage.setItem("curr_sess_referralid",referralid);
       if(referralvalue == "Parent"){
         this.$.referrer.hidden=false;
         this.referraldetail =false; 
@@ -803,6 +809,9 @@
       this.querySelector('paper-listbox').style.visibility='hidden';
       this.getreferraldetails((e.target.selectedItem.value));
       this.referrername = e.target.selectedItem.textContent.trim();
+      var referrerid = e.target.selectedItem.value.trim();
+      // alert(referrerid);
+      localStorage.setItem("curr_sess_referrerid",referrerid);
       this.itemArrayz=[];
       document.querySelector('#iditemlist').selected=-1;
       this.$.iditemlistz.hidden=true;
@@ -959,6 +968,9 @@
       this.querySelector('paper-listbox').style.visibility='hidden';
       this.getsiblingdetails((e.target.selectedItem.value));
       this.siblingname = e.target.selectedItem.textContent.trim();
+      var siblingid = e.target.selectedItem.value.trim();
+      // alert(siblingid);
+      localStorage.setItem("curr_sess_referrerid",siblingid);
       this.sibitemArray=[];
       document.querySelector('#sibiditemlist').selected=-1;
       this.$.sibiditemlist.hidden=true;
@@ -1334,8 +1346,8 @@
       this.$.siblingremark.hidden = true;
       this.$.nextacademicyear.checked = true;
 
-
-
+      localStorage.setItem("curr_sess_referralid","");
+      localStorage.setItem("curr_sess_referrerid","");
       enrolltype="fullyear";
       var dt=new Date();
       yr1=(dt.getFullYear()+1)-2000;

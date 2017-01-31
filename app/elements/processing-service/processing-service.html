@@ -149,6 +149,39 @@
         on-response="fetchstudfeesplitupResponse"
         debounce-duration="300"
         >
+        
+        <iron-ajax
+        method="post"
+        id="fetchdiscounttypesajax"
+        url="{{fetchdiscounttypesurl}}"
+        params="{{fetchdiscounttypesparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchdiscounttypesResponse"
+        debounce-duration="300"
+        >
+
+        <iron-ajax
+        method="post"
+        id="fetchstudenttoattachdiscountajax"
+        url="{{fetchstudenttoattachdiscounturl}}"
+        params="{{fetchstudenttoattachdiscountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudenttoattachdiscountResponse"
+        debounce-duration="300"
+        >
+
+        <iron-ajax
+        method="post"
+        id="attachdiscountajax"
+        url="{{attachdiscounturl}}"
+        params="{{attachdiscountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="attachdiscountResponse"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
@@ -788,6 +821,46 @@
       deletechequeResponse:function(e){
         alert(e.detail.response.returnval);
         this.fetchchequeforeditordelete(localStorage.getItem("curr_sess_enquiryno"));
+      },
+      fetchdiscounttypesService:function(){
+        this.fetchdiscounttypesurl=sessionStorage.getItem("addrinfo")+"/fetchdiscounttypes-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.fetchdiscounttypesparam=obj;
+        this.$.fetchdiscounttypesajax.generateRequest();
+      },
+      fetchdiscounttypesResponse:function(e){
+        var arr=e.detail.response.returnval;
+        document.querySelector('attachdiscount-card').discountarr=arr;
+      },
+      fetchstudenttoattachdiscountService:function(admissionno){
+        this.fetchstudenttoattachdiscounturl=sessionStorage.getItem("addrinfo")+"/fetchstudenttoattachdiscount-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionno=admissionno;
+        this.fetchstudenttoattachdiscountparam=obj;
+        this.$.fetchstudenttoattachdiscountajax.generateRequest();
+      },
+      fetchstudenttoattachdiscountResponse:function(e){
+        var arr=e.detail.response.returnval;
+        document.querySelector('attachdiscount-card').admissionno=arr[0].admission_no;
+        document.querySelector('attachdiscount-card').studentname=arr[0].student_name;
+        document.querySelector('attachdiscount-card').grade=arr[0].class_for_admission;
+        document.querySelector('attachdiscount-card').Fnhidediscountmapcard();
+      },
+      attachdiscountService:function(admissionno,discounttypeid){
+        this.attachdiscounturl=sessionStorage.getItem("addrinfo")+"/attachdiscount-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionno=admissionno;
+        obj.discountid=discounttypeid;
+        this.attachdiscountparam=obj;
+        this.$.attachdiscountajax.generateRequest();
+      },
+      attachdiscountResponse:function(e){
+        alert(e.detail.response.returnval);
+        document.querySelector('attachdiscount-card').FnRefresh();
+        document.querySelector('attachdiscount-itemcard').FnRefresh();
       }
     });
   })();

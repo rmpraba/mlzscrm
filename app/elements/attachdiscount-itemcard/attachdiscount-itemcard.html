@@ -1,0 +1,53 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="attachdiscount-itemcard">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      table{
+        width:70%;
+      }
+    </style>
+    <table class="table table-hover">
+      <tr>
+        <td>{{admissionno}}<br>{{studentname}}<br>{{grade}}</td>
+        <td></td>
+        <td>
+          <paper-dropdown-menu label="Discount Type" attr-for-selected="value">
+            <paper-menu id="attachdiscounttype" class="dropdown-content" required on-iron-select="FnSelectDiscount" valueattr="value" >
+              <template  is="dom-repeat" items="{{discountarr}}" as="item">
+              <paper-item value="{{item.discount_type_id}}">{{item.discount_type}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </td>
+        <td>
+          <paper-button style="margin-top: 3%;" class="btn btn-primary left" on-click="FnAdd">Add</paper-button>
+        </td>
+      </tr>
+    </table>
+    <processing-service id="service"></processing-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var discounttype,discounttypeid;
+    Polymer({
+      is: 'attachdiscount-itemcard',
+      FnSelectDiscount:function(e){
+        discounttype=(e.target.selectedItem.textContent).trim();
+        discounttypeid=(e.target.selectedItem.value).trim();
+      },
+      FnAdd:function(){
+        this.$.service.attachdiscountService(this.admissionno,discounttypeid);
+      },
+      FnRefresh:function(){
+        discounttypeid="";
+      }
+    });
+  })();
+  </script>
+</dom-module>

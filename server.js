@@ -1431,7 +1431,7 @@ app.post('/checkregfeepaidstatus-service',  urlencodedParser,function (req, res)
 
 // Fetching enquiry no for admission
 app.post('/fetchenquiryinfo',  urlencodedParser,function (req, res){
-    var qur="SELECT * FROM student_enquiry_details WHERE school_id='"+req.query.schoolid+"' and enquiry_no = '"+req.query.enquiryno+"' and status='Enquired' and prospectus_status='yes'";
+    var qur="SELECT * FROM student_enquiry_details WHERE school_id='"+req.query.schoolid+"' and enquiry_no = '"+req.query.enquiryno+"' and status='Enquired' ";
    // console.log(qur);
     connection.query(qur,
     function(err, rows)
@@ -1662,7 +1662,8 @@ app.post('/insertadmission',  urlencodedParser,function (req, res){
         previous_history:req.query.admissionhistory,
         having_sibling:req.query.admissionsibling,
         admission_status:'New',
-        active_status:'Admitted'
+        active_status:'Admitted',
+        referral_type:req.query.referraltype
     }
 
     var qur="SELECT * FROM auto_admission_no";
@@ -2216,13 +2217,24 @@ app.post('/fetchdiscount-service',  urlencodedParser,function (req, res){
     var qur;
     if((req.query.installmentpattern=='3')||(req.query.installmentpattern=='4')){
     console.log('in');
+    if(req.query.referraltype==""||req.query.referraltype==null)
     qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','5') "+
     " AND grade=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"') "+
     " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee')";
+    else
+    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','5','"+req.query.referraltype+"') "+
+    " AND grade=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"') "+
+    " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee')";
+    
     }
     else{
     console.log('out');
+    if(req.query.referraltype==""||req.query.referraltype==null)
     qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code='"+req.query.discounttype+"' "+
+    " AND grade=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"') "+
+    " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee','Lumpsum')";
+    else
+    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','"+req.query.referraltype+"')  "+
     " AND grade=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"') "+
     " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee','Lumpsum')";
     }
@@ -4697,6 +4709,10 @@ app.post('/getenquirysource',  urlencodedParser,function (req, res){
  });
 
 app.post('/submitenqdetails',  urlencodedParser,function (req, res){
+      if(req.query.discountreferraltype=='1'||req.query.discountreferraltype=='9')
+      var refferaltype=''
+      else
+      var refferaltype=req.query.discountreferraltype
     var response={
       school_id:req.query.schol,
       created_on:req.query.createdon,
@@ -4734,11 +4750,25 @@ app.post('/submitenqdetails',  urlencodedParser,function (req, res){
       school_name:req.query.school_name,
       school_area:req.query.school_area,
       sibling_remark:req.query.sibling_remark,
-      parent_or_guard:req.query.parentorguard
+      parent_or_guard:req.query.parentorguard,
+      refferal_type:refferaltype 
     };
     connection.query('INSERT INTO student_enquiry_details SET ?',[response],function(err, rows){
-      if(!err)
-      res.status(200).json({'returnval': 'inserted'});
+      if(!err){
+      if(req.query.discountreferraltype=="1"||req.query.discountreferraltype=="9")
+      {
+        console.log('---------------------------');
+        console.log(req.query.discountreferraltype+" "+req.query.referrerid);
+        console.log('---------------------------');
+        connection.query("UPDATE md_admission SET referral_type='"+req.query.discountreferraltype+"' WHERE admission_no='"+req.query.referrerid+"'",function(err, rows){
+        if(!err)
+        res.status(200).json({'returnval': 'inserted'});
+        });
+
+      }
+      else
+        res.status(200).json({'returnval': 'inserted'});
+      }
       else{
       console.log(err);
       res.status(200).json({'returnval': 'not inserted'});
@@ -6408,6 +6438,66 @@ app.post('/fetchstudfeesplitup-service',  urlencodedParser,function (req, res){
       }
     });
 });
+
+
+app.post('/fetchdiscounttypes-service',  urlencodedParser,function (req, res){
+  // console.log('fetchstudinstallmentsplitup');
+  var qur="SELECT * FROM md_discount_type WHERE discount_type_id not in('4','5','6')";
+  console.log(qur);
+  connection.query(qur,
+    function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/fetchstudenttoattachdiscount-service',  urlencodedParser,function (req, res){
+  // console.log('fetchstudinstallmentsplitup');
+  var qur="SELECT * FROM md_admission WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"'";
+  connection.query(qur,
+    function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/attachdiscount-service',  urlencodedParser,function (req, res){
+  // console.log('fetchstudinstallmentsplitup');
+  var qur="update md_admission set referral_type='"+req.query.discountid+"' WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"'";
+  connection.query(qur,
+    function(err, result){
+      if(!err){
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Done!!'});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Unable to process!!'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
 function setvalue(){
   console.log("calling setvalue.....");
 }

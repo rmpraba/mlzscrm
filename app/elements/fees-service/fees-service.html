@@ -490,12 +490,12 @@
             // alert(localStorage.getItem("curr_sess_payablediscount"));
 
             for(var i=0;i<split.length;i++){
-                if(localStorage.getItem("curr_sess_discountpercentamt")>0)
-                {
+                // if(localStorage.getItem("curr_sess_discountpercentamt")>0)
+                // {
                     if(split[i].feetype=="Annual fee"){
-                       split[i].feetypeamount=parseFloat(split[i].feetypeamount)-parseFloat(localStorage.getItem("curr_sess_discountpercentamt"));
+                       split[i].feetypeamount=parseFloat(split[i].feetypeamount)-parseFloat(localStorage.getItem("curr_sess_payablediscount"));
                     }
-                }
+                // }
             }
                 // if(localStorage.getItem("curr_sess_payablediscount")>0)
                 // {
@@ -632,16 +632,16 @@
        // alert(JSON.stringify(split));
        // alert(localStorage.getItem("curr_sess_discountpercentamt"));
        for(var i=0;i<split.length;i++){
-                if(localStorage.getItem("curr_sess_discountpercentamt")>0)
-                {
+                // if(localStorage.getItem("curr_sess_discountpercentamt")>0)
+                // {
                    if(split[i].installment=="Installment1"){ 
                     for(var j=0;j<split[i].fees.length;j++){
                     if(split[i].fees[j].feetype=="Annual fee"){
-                       split[i].fees[j].feetypeamount=parseFloat(split[i].fees[j].feetypeamount)-parseFloat(localStorage.getItem("curr_sess_discountpercentamt"));
+                       split[i].fees[j].feetypeamount=parseFloat(split[i].fees[j].feetypeamount)-parseFloat(localStorage.getItem("curr_sess_payablediscount"));
                     }
                     }
                    }
-                }
+                // }
         }
         
            
@@ -979,7 +979,7 @@
         // alert(e.detail.response.returnval);
       },
       insertstudwisefeesplitupService:function(split,paymentarr){
-        alert(JSON.stringify(paymentarr));
+        // alert(JSON.stringify(paymentarr));
         if((localStorage.getItem("curr_sess_installmentpattern")!="3")){
         for(var i=0;i<split.length;i++){
         this.insertstudwisefeesplitupurl=sessionStorage.getItem("addrinfo")+"/insertstudwisefeesplitup";

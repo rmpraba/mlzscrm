@@ -445,6 +445,14 @@
         obj.school_area = schoolarea;
         obj.sibling_remark = siblingremark;
         obj.parentorguard=paga;
+        // alert(localStorage.getItem("curr_sess_referralid"));
+        // if(localStorage.getItem("curr_sess_referralid")=='1'||localStorage.getItem("curr_sess_referralid")=='9'){
+        // // alert('come');
+        // obj.discountreferraltype="";
+        // }
+        // else
+        obj.discountreferraltype=localStorage.getItem("curr_sess_referralid");
+        obj.referrerid=localStorage.getItem("curr_sess_referrerid");
         this.submitenqdetailsparam=obj;
         this.$.submitenqdetailsajax.generateRequest();
 
@@ -604,6 +612,7 @@
       },
         getenquiryreferralsResponse:function(e){
         var result=e.detail.response.returnval;
+        // alert(JSON.stringify(result));
         document.querySelector('pre-apps').referralarr=result;
       }
     });
