@@ -263,6 +263,7 @@
       selfHandler:function(e){
         if(document.querySelector('#structureselfmode').checked==true)
         { 
+          this.hidecommitinstallment=false;
           this.feearr=""; 
           installmentpattern="1";
           localStorage.setItem("curr_sess_installmentpattern",installmentpattern);
@@ -282,6 +283,7 @@
 
         if(document.querySelector('#structurethirdpartymode').checked==true)
         { 
+          this.hidecommitinstallment=true;
           this.feearr=""; 
           localStorage.setItem("curr_sess_paymentthrough","thirdparty");
           document.querySelector('#structureselfmode').checked=false;
@@ -582,6 +584,7 @@
       generalHandler:function(e){
         if(document.querySelector("#structuregeneral1").checked==true)
         {
+         this.hidecommitinstallment=false;
          this.flag=1;
          document.querySelector("#structurelumpsumcommit1").checked=false;
          document.querySelector("#structurelumpsum1").checked=false;
@@ -614,6 +617,7 @@
       lumpsumHandler:function(e){
         if(document.querySelector("#structurelumpsum1").checked==true)
         {
+         this.hidecommitinstallment=true;
          document.querySelector("#structuregeneral1").checked=false;
          document.querySelector("#structurelumpsumcommit1").checked=false;
          this.feearr=[];
@@ -633,6 +637,7 @@
       lumpsumcommitHandler:function(e){
         if(document.querySelector("#structurelumpsumcommit1").checked==true)
         {
+         this.hidecommitinstallment=false;
          document.querySelector("#structuregeneral1").checked=false;
          // document.querySelector("#structureinstallment1").checked=false;
          document.querySelector("#structurelumpsum1").checked=false;
@@ -771,6 +776,7 @@
     Fnhidepattern:function(flag){
     // alert(flag);
     if(flag==true){
+      this.hidecommitinstallment=true;
       document.querySelector('#structurelumpsum1').checked=true;
       // document.querySelector('#structuregeneral1').checked=false;
       // document.querySelector('#structurelumpsumcommit1').checked=false;
@@ -793,16 +799,19 @@
         document.querySelector('#structureselfmode').checked=false;    
       }
       if(pattern=="1"){
+        this.hidecommitinstallment=false;
         document.querySelector("#structuregeneral1").checked=true;
         document.querySelector("#structurelumpsumcommit1").checked=false;
         document.querySelector("#structurelumpsum1").checked=false;
       }
       if(pattern=="4"){
+      this.hidecommitinstallment=false;
       document.querySelector("#structurelumpsumcommit1").checked=true;
       document.querySelector("#structuregeneral1").checked=false;
       document.querySelector("#structurelumpsum1").checked=false;
       }
       if(pattern=="3"){
+      this.hidecommitinstallment=true;
       document.querySelector("#structurelumpsum1").checked=true;
       document.querySelector("#structurelumpsumcommit1").checked=false;
       document.querySelector("#structuregeneral1").checked=false;

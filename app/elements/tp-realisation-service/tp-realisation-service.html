@@ -34,6 +34,18 @@
         on-response="processtprealisationResponse"
         debounce-duration="300"
         >
+
+        
+      <iron-ajax
+        method="post"
+        id="checkalreadyinspaidajax"
+        url="{{checkalreadyinspaidurl}}"
+        params="{{checkalreadyinspaidparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="checkalreadyinspaidResponse"
+        debounce-duration="300"
+        >
         
   </template>
   <script>
@@ -63,23 +75,34 @@
       },
       fetchtpstudinfoResponse:function(e){
         var arr=e.detail.response.returnval;
+        for(var i=0;i<arr.length;i++){
+          arr[i].paid_amount=parseFloat(arr[i].installment_amount)-parseFloat(arr[i].difference_amount);
+          if(arr[i].difference_amount>0)
+          arr[i].due_amount=parseFloat(arr[i].installment_amount)-parseFloat(parseFloat(arr[i].installment_amount)-parseFloat(arr[i].difference_amount));
+          else
+          arr[i].due_amount=parseFloat(arr[i].installment_amount); 
+        }
         document.querySelector('tp-realisation-card').tparr=arr;
       },
-      processtprealisation:function(admissionno,studentname,grade,installment,refno,amount,diffamt){
+      processtprealisation:function(admissionno,studentname,grade,insamount,refno,amount,diffamt,installment,dueinstallment){
         this.processtprealisationurl=sessionStorage.getItem("addrinfo")+"/processtprealisation-service";
         var obj={"schoolid":"","academicyear":"","statusflag":""}  
-        obj.schoolid=localStorage.getItem("schoolid");  
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear"); 
         obj.admissionno=admissionno;
         obj.studentname=studentname;
         obj.grade=grade;
-        obj.installment=installment;
+        obj.insamount=insamount;
         obj.refno=refno;
         obj.amount=amount;
         obj.diffamount=diffamt;
+        obj.installment=installment;
+        obj.dueinstallment=dueinstallment;
         var d=new Date();
         var currdate=d.getDate()+"/"+((d.getMonth())+1)+"/"+d.getFullYear();
+        obj.createdby=localStorage.getItem("employeeid");  
         // alert(currdate);
-        obj.realiseddate=(currdate).trim();
+        obj.realiseddate=localStorage.getItem("localsess_curr_date");
         this.processtprealisationparam=obj;     
         this.$.processtprealisationajax.generateRequest();
       },
@@ -87,7 +110,25 @@
         alert(e.detail.response.returnval);
         if(e.detail.response.returnval=="Done!!")
           document.querySelector('tp-realisation-card').FnRefresh();
-      } 
+      },
+      checkalreadyinspaidService:function(admissionno,installment){
+        this.checkalreadyinspaidurl=sessionStorage.getItem("addrinfo")+"/checkalreadyinspaid-service";
+        var obj={"schoolid":"","academicyear":"","statusflag":""}  
+        obj.schoolid=localStorage.getItem("schoolid");  
+        obj.admissionno=admissionno;
+        obj.installment=installment;
+        this.checkalreadyinspaidparam=obj;     
+        this.$.checkalreadyinspaidajax.generateRequest();
+      },
+      checkalreadyinspaidResponse:function(e){
+        if(e.detail.response.returnval!='no rows'){
+          alert('Amount already realised for this installment!!');
+          document.querySelector('tp-realisation-itemcard').FnRefresh();
+        }
+        else{
+
+        }
+      }
     });
   })();
   </script>

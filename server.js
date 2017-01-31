@@ -6284,7 +6284,24 @@ app.post('/fetchtpstudentforsearch-service',  urlencodedParser,function (req, re
 });
 
 app.post('/fetchtpstudinfo-service',  urlencodedParser,function (req, res){
-  var qur="SELECT * from md_student_paidfee where school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"'and mode_of_payment='Third Party' and payment_through='thirdparty' and mode_of_payment='Third Party' and payment_through='thirdparty'";
+  var qur="SELECT * from md_student_paidfee where school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"'and mode_of_payment='Third Party' and payment_through='thirdparty' and mode_of_payment='Third Party' and payment_through='thirdparty' and paid_status='inprogress'";
+  connection.query(qur,
+    function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/checkalreadyinspaid-service',  urlencodedParser,function (req, res){
+  var qur="SELECT * from tp_realization_details where installment='"+req.query.installment+"' and school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"'";
   connection.query(qur,
     function(err, rows){
       if(!err){
@@ -6302,14 +6319,42 @@ app.post('/fetchtpstudinfo-service',  urlencodedParser,function (req, res){
 
 
 app.post('/processtprealisation-service',  urlencodedParser,function (req, res){
-  var qur="UPDATE md_student_paidfee SET installment_amount='"+req.query.amount+"',"+
-  " paid_status='paid',realised_date='"+req.query.realiseddate+"',difference_amount='"+req.query.diffamount+"',cheque_no='"+req.query.refno+"' "+
+  console.log('diffamount.......'+req.query.diffamount);
+  if(req.query.diffamount=='0.00')
+  var qur="UPDATE md_student_paidfee SET paid_status='paid',realised_date='"+req.query.realiseddate+"',difference_amount='"+req.query.diffamount+"' "+
   " where school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"' and installment='"+req.query.installment+"'";
-  connection.query(qur,
-    function(err, result){
+  else
+  var qur="UPDATE md_student_paidfee SET difference_amount='"+req.query.diffamount+"' "+
+  " where school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"' and installment='"+req.query.installment+"'";  
+  var insertqur="INSERT INTO tp_realization_details SET ?";
+  var response={
+    school_id:req.query.schoolid,
+    academic_year:req.query.academicyear,
+    admission_no:req.query.admissionno,
+    student_name:req.query.studentname,
+    grade:req.query.grade,
+    actual_amount:req.query.insamount,
+    installment:req.query.dueinstallment,
+    installment_date:req.query.realiseddate,
+    installment_amount:req.query.amount,
+    reference_no:req.query.refno,
+    difference_amount:req.query.diffamount,
+    created_By:req.query.createdby
+  };
+
+  var checkqur="SELECT * from tp_realization_details where installment='"+req.query.dueinstallment+"' and school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"'";
+  connection.query(checkqur,function(err, rows){
+  if(rows.length==0){
+  connection.query(qur,function(err, result){
       if(!err){
         if(result.affectedRows>0){
+          connection.query(insertqur,[response],function(err, result){
+          if(result.affectedRows>0){
           res.status(200).json({'returnval': 'Done!!'});
+          }
+          else
+          res.status(200).json({'returnval': 'Unable to process!!'});  
+          });
         } else {
           console.log(err);
           res.status(200).json({'returnval': 'Unable to process!!'});
@@ -6318,6 +6363,10 @@ app.post('/processtprealisation-service',  urlencodedParser,function (req, res){
         console.log(err);
       }
     });
+  }
+  else
+  res.status(200).json({'returnval': 'Unable to process!!Already Done!'});  
+});
 });
 
 app.post('/insertinstallmentsplitofstud',  urlencodedParser,function (req, res){

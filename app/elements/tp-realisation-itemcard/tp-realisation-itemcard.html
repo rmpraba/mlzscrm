@@ -11,16 +11,36 @@
         width:100%;
       }
       paper-input{
-        margin-top: -2%;
+        width:85%;
+        /*top:-5%;*/
       }
+      paper-dropdown-menu{
+        width:80%;
+        /*top:-3%;*/
+      }
+    .striped:nth-child(even) {background: #F2F3F4}
+    .striped:nth-child(odd) {background: #EDEDED}
     </style>
     <div>
-    <table>
-    <tr><td>{{admissionno}}</td><td>{{studentname}}</td><td>{{grade}}</td><td>{{insamount}}</td>
-    <td style="text-align: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<paper-input style="width: 75%;margin-top: -2%;" label="Enter received amount" value="{{refamount}}"></paper-input></td><td style="text-align: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <paper-input style="width: 75%;margin-top: -2%;" label="Enter reference no" value="{{refno}}"></paper-input></td>
-    <td style="text-align: center;"><fromdate-icon-pickercard></fromdate-icon-pickercard></td>
-    <td><paper-button id="{{chequeno}}" class="btn btn-primary left" on-click="FnDone">Done</paper-button></td>
+    <table class="striped">
+    <tr>
+    <td hidden>{{installment}}</td>
+    <td hidden>{{insamount}}</td>
+    <td style="vertical-align: center;padding-top: 2%;">{{admissionno}}</td><td style="vertical-align: center;padding-top: 2%;">{{studentname}}</td><td style="vertical-align: center;padding-top: 2%;">{{grade}}</td><td style="vertical-align: center;padding-top: 2%;">{{dueamount}}</td>
+    <td style="width:14%;vertical-align: top;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<paper-input label="Received amount" value="{{refamount}}"></paper-input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="text-align: center;width:14%;vertical-align: top;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <paper-input  label="Reference no" value="{{refno}}"></paper-input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    
+    <td style="text-align: center;width:15%;">
+      <paper-dropdown-menu label="Installment" on-iron-select="FnSelectInstallment">
+        <paper-listbox class="dropdown-content" id="tpselectinstallment">
+          <paper-item value="Installment1">Installment1</paper-item>
+          <paper-item value="Installment2">Installment2</paper-item>
+        </paper-listbox>
+      </paper-dropdown-menu>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </td>
+    <td style="text-align: center;vertical-align: center;padding-top: 2%;"><general-icon-datepicker></general-icon-datepicker></td>
+    <td style="padding-top: 1%;"><!-- <paper-button id="{{chequeno}}" class="btn btn-primary left" on-click="FnDone">Done</paper-button> -->
+    <button class="btn" on-click="FnDone" data-toggle="modal" data-target="#studentfollowup"><a>Done</a></button></td>
     </tr>
     </table>
 
@@ -42,12 +62,20 @@
   <script>
   (function() {
     'use strict';
-
+    var installment="";
     Polymer({
       is: 'tp-realisation-itemcard',
+      FnSelectInstallment:function(e){
+        installment=e.target.selectedItem.textContent.trim();
+        this.$.service.checkalreadyinspaidService(this.admissionno,installment);
+      },
       FnDone:function(){
-        var diffamt=parseFloat(parseFloat(this.insamount)-parseFloat(this.refamount)).toFixed(2);
-        this.$.service.processtprealisation(this.admissionno,this.studentname,this.grade,this.installment,this.refno,this.refamount,diffamt);
+        var diffamt=parseFloat(parseFloat(this.dueamount)-parseFloat(this.refamount)).toFixed(2);
+        this.$.service.processtprealisation(this.admissionno,this.studentname,this.grade,this.dueamount,this.refno,this.refamount,diffamt,this.installment,installment);
+      },
+      FnRefresh:function(){
+        installment="";
+        document.querySelector('#tpselectinstallment').selected=-1;
       }
     });
   })();

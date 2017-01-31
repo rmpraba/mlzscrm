@@ -30,7 +30,7 @@
      <div>
      
      <template is="dom-repeat" items="{{tparr}}" as="item">
-     <tp-realisation-itemcard admissionno="{{item.admission_no}}"
+     <tp-realisation-itemcard dueamount="{{item.due_amount}}" admissionno="{{item.admission_no}}"
      studentname="{{item.student_name}}" grade="{{item.grade}}" installment="{{item.installment}}" insamount="{{item.installment_amount}}">
      </tp-realisation-itemcard>
      </template>
@@ -135,7 +135,7 @@
     },
     FnRefresh:function(){
       this.tparr="";
-      tis.value="";
+      this.value="";
     }
     });
   })();
