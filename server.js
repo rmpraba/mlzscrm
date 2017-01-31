@@ -2838,7 +2838,8 @@ app.post('/insertthirdpartyfees',  urlencodedParser,function (req, res){
         provision_payment:req.query.provisionflag,
         payment_through:req.query.paymentthrough,
         installment_pattern:req.query.installmentpattern,
-        receipt_no:""
+        receipt_no:"",
+        difference_amount:0
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
