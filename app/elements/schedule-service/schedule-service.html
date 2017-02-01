@@ -478,16 +478,23 @@
         this.fetchadmissionyearurl=sessionStorage.getItem("addrinfo")+"/fetchadmissionyear-service"
         this.$.fetchadmissionyearajax.generateRequest();
       },
-      fetchadmissionyearResponse:function(e){        
+      fetchadmissionyearResponse:function(e){
+
         document.querySelector('feetype-schedule-card').admissionarr=e.detail.response.returnval;
         document.querySelector('discount-master-card').admissionarr=e.detail.response.returnval;
         document.querySelector('fee-structure-schedulecard').admissionarr=e.detail.response.returnval;
-        document.querySelector('installment-master-card').admissionarr=e.detail.response.returnval;
-        document.querySelector('discount-structure-report').admissionarr=e.detail.response.returnval;
-        document.querySelector('fee-structure-report').admissionarr=e.detail.response.returnval;
+        document.querySelector('installment-master-card').admissionarr=e.detail.response.returnval; 
+        document.querySelector('feesplitup-structure-card').admissionarr=e.detail.response.returnval;       
         // document.querySelector('fee-splitup-card').admissionarr=e.detail.response.returnval;
-        document.querySelector('feesplitup-structure-card').admissionarr=e.detail.response.returnval;
-        document.querySelector('gradewise-fee-structure-report').admissionarr=e.detail.response.returnval;
+        var arr=e.detail.response.returnval;
+        var admnarr=[];
+        admnarr.push({"admission_year":"All"});
+        for(var i=0;i<arr.length;i++){
+        admnarr.push(arr[i]);
+        }
+        document.querySelector('discount-structure-report').admissionarr=admnarr;
+        document.querySelector('fee-structure-report').admissionarr=admnarr;
+        document.querySelector('gradewise-fee-structure-report').admissionarr=admnarr;
       },
       fetchfeetypeService:function(){        
         this.fetchfeetypeurl=sessionStorage.getItem("addrinfo")+"/fetchfeetype-service"

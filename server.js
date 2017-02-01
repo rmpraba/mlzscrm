@@ -5422,11 +5422,17 @@ app.post('/fetchpdccheques-service',  urlencodedParser,function (req, res){
 
 
 app.post('/fetchdiscountstructure-service',  urlencodedParser,function (req, res){
- if(req.query.grade!="all")
+ if(req.query.admissionyear=="All"&&req.query.grade=="all")
+ var qur = "SELECT * FROM mlzscrm.md_discount_master where academic_year='"+req.query.academicyear+"'  and (from_date>='"+req.query.fromdate+"' "+
+             "or to_date<='"+req.query.todate+"') and school_id='"+req.query.schoolid+"' ";
+ else if(req.query.admissionyear=="All"&&req.query.grade!="all")
+ var qur = "SELECT * FROM mlzscrm.md_discount_master where academic_year='"+req.query.academicyear+"'  and grade='"+req.query.grade+"' and (from_date>='"+req.query.fromdate+"' "+
+             "or to_date<='"+req.query.todate+"') and school_id='"+req.query.schoolid+"' ";
+ else if(req.query.admissionyear!="All"&&req.query.grade!="all")
  var qur = "SELECT * FROM mlzscrm.md_discount_master where academic_year='"+req.query.academicyear+"' and admission_year='"+req.query.admissionyear+"' and grade='"+req.query.grade+"' and (from_date>='"+req.query.fromdate+"' "+
              "or to_date<='"+req.query.todate+"') and school_id='"+req.query.schoolid+"' ";
- else
-  var qur = "SELECT * FROM mlzscrm.md_discount_master where academic_year='"+req.query.academicyear+"' and admission_year='"+req.query.admissionyear+"' and (from_date>='"+req.query.fromdate+"' "+
+ else if(req.query.admissionyear!="All"&&req.query.grade=="all")
+ var qur = "SELECT * FROM mlzscrm.md_discount_master where academic_year='"+req.query.academicyear+"' and admission_year='"+req.query.admissionyear+"' and (from_date>='"+req.query.fromdate+"' "+
              "or to_date<='"+req.query.todate+"') and school_id='"+req.query.schoolid+"' ";
  
  console.log('-----------------------fetch discount structure--------------------------');
@@ -5450,11 +5456,19 @@ app.post('/fetchdiscountstructure-service',  urlencodedParser,function (req, res
 app.post('/fetchfeestructure-service',  urlencodedParser,function (req, res){
 
  var titlequr="SELECT distinct(fee_type) FROM fee_splitup where school_id='"+req.query.schoolid+"'"; 
- if(req.query.grade!="all")
+ if(req.query.admissionyear=='All'&&req.query.grade=="all")
+ var qur = "SELECT * FROM mlzscrm.fee_master fm join "+
+ "fee_splitup fs on (fm.fee_code=fs.fee_code) where fm.academic_year='"+req.query.academicyear+"' "+
+ " and fm.school_id='"+req.query.schoolid+"' and fs.school_id='"+req.query.schoolid+"' ";
+ else if(req.query.admissionyear=='All'&&req.query.grade!="all")
+ var qur = "SELECT * FROM mlzscrm.fee_master fm join "+
+ "fee_splitup fs on (fm.fee_code=fs.fee_code) where fm.academic_year='"+req.query.academicyear+"' "+
+ " and grade_id='"+req.query.grade+"' and fm.school_id='"+req.query.schoolid+"' and fs.school_id='"+req.query.schoolid+"' ";
+ else if(req.query.admissionyear!='All'&&req.query.grade!="all")
  var qur = "SELECT * FROM mlzscrm.fee_master fm join "+
  "fee_splitup fs on (fm.fee_code=fs.fee_code) where fm.academic_year='"+req.query.academicyear+"' and fm.admission_year='"+req.query.admissionyear+"' "+
  " and grade_id='"+req.query.grade+"' and fm.school_id='"+req.query.schoolid+"' and fs.school_id='"+req.query.schoolid+"' ";
- else
+ else if(req.query.admissionyear!='All'&&req.query.grade=="all")
  var qur = "SELECT * FROM mlzscrm.fee_master fm join "+
  "fee_splitup fs on (fm.fee_code=fs.fee_code) where fm.academic_year='"+req.query.academicyear+"' and fm.admission_year='"+req.query.admissionyear+"' "+
  " and fm.school_id='"+req.query.schoolid+"' and fs.school_id='"+req.query.schoolid+"' ";
@@ -6180,7 +6194,11 @@ app.post('/fetchinfofortc-service',  urlencodedParser,function (req, res){
 app.post('/fetchstructureallstudent-service',  urlencodedParser,function (req, res){
   console.log('ady..'+req.query.admissionyear);
   console.log('acy..'+req.query.academicyear);
-  if(req.query.grade=='All Grades')
+  if(req.query.admissionyear=='All'&&req.query.grade=='All Grades')
+  var qur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";
+  else if(req.query.admissionyear=='All'&&req.query.grade!='All Grades')
+  var qur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and class_for_admission='"+req.query.grade+"'"; 
+  else if(req.query.admissionyear!='All'&&req.query.grade=='All Grades')
   var qur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_year='"+req.query.admissionyear+"'";
   else
   var qur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_year='"+req.query.admissionyear+"' and class_for_admission='"+req.query.grade+"'";  
@@ -6202,7 +6220,11 @@ app.post('/fetchstructureallstudent-service',  urlencodedParser,function (req, r
 
 
 app.post('/fetchgradewisefeestructure-service',  urlencodedParser,function (req, res){
-  if(req.query.grade=='All Grades')
+  if(req.query.admissionyear=='All'&&req.query.grade=='All Grades')
+  var qur="SELECT *,(SELECT grade_name from grade_master WHERE grade_id=f.grade_id) as grade FROM fee_master f WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' ";
+  else if(req.query.admissionyear=='All'&&req.query.grade!='All Grades')
+  var qur="SELECT *,(SELECT grade_name from grade_master WHERE grade_id=f.grade_id) as grade FROM fee_master f WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade_id=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"')";  
+  else if(req.query.admissionyear!='All'&&req.query.grade=='All Grades')
   var qur="SELECT *,(SELECT grade_name from grade_master WHERE grade_id=f.grade_id) as grade FROM fee_master f WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_year='"+req.query.admissionyear+"'";
   else
   var qur="SELECT *,(SELECT grade_name from grade_master WHERE grade_id=f.grade_id) as grade FROM fee_master f WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_year='"+req.query.admissionyear+"' and grade_id=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"')";  
