@@ -204,11 +204,13 @@
       },
       fetchprocessingchequeResponse:function(e){
         var arr=e.detail.response.returnval;
+        if(arr.length!='no rows'){
         for(var i=0;i<arr.length;i++){
           arr[i].sno=i+1;
         }
         document.querySelector('cheque-realization-card').chequearr=arr;
         document.querySelector('cheque-realization-card').FnSetChequeArray(arr);
+        }
       },
       searchfeeadmissionService:function(admissionno){
         this.searchfeeadmissionurl=sessionStorage.getItem("addrinfo")+"/searchfeeadmission";
@@ -389,8 +391,8 @@
            alert('Cheques are updated!');
            count1=0;
            count2=0;
-           document.querySelector('cheque-realization-card').FnRefresh();
-           this.FnFetchprocessingchequeService();
+           document.querySelector('chequebounceorcancel-card').FnRefresh();
+           // this.FnFetchprocessingchequeService();
         }      
       },
       fetchreceiptService:function(admissionno,name){
@@ -762,6 +764,7 @@
       },
       processbouncechequeResponse:function(e){
         var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
         if(arr.length>0){
           for(var i=0;i<arr.length;i++){
             arr[i].sno=parseInt(i)+1;
@@ -769,6 +772,12 @@
           }
         document.querySelector('chequebounceorcancel-card').chequearr=arr;
         document.querySelector('chequebounceorcancel-card').FnSetChequeArray(arr);
+        }
+        }
+        else{
+            arr=[];
+        document.querySelector('chequebounceorcancel-card').chequearr=arr;
+        document.querySelector('chequebounceorcancel-card').FnSetChequeArray(arr);  
         }
       },
       fetchchequeforeditordelete:function(searchvalue){

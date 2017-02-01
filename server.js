@@ -4317,11 +4317,11 @@ app.post('/updatewithdrawstatus-service',  urlencodedParser,function (req, res){
 
 app.post('/updatechequestatus-service',  urlencodedParser,function (req, res){
   
-  var masterupdate="UPDATE md_student_paidfee SET paid_status='"+req.query.chequestatus+"' , cheque_status='"+req.query.chequestatus+"' WHERE (admission_no='"+req.query.admissionno+"' or admission_no='"+req.query.enquiryno+"') "+
+  var masterupdate="UPDATE md_student_paidfee SET paid_status='inprogress' , cheque_status='"+req.query.chequestatus+"' WHERE (admission_no='"+req.query.admissionno+"' or admission_no='"+req.query.enquiryno+"') "+
   " and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment='"+req.query.installment+"' and "+
   " cheque_no='"+req.query.chequeno+"' and bank_name='"+req.query.bankname+"' and paid_status='"+req.query.paidstatus+"'";
 
-  var chequeupdate="UPDATE tr_cheque_details SET paid_status='"+req.query.chequestatus+"',cheque_status='"+req.query.chequestatus+"' WHERE (admission_no='"+req.query.admissionno+"' or admission_no='"+req.query.enquiryno+"') "+
+  var chequeupdate="UPDATE tr_cheque_details SET paid_status='inprogress',cheque_status='"+req.query.chequestatus+"' WHERE (admission_no='"+req.query.admissionno+"' or admission_no='"+req.query.enquiryno+"') "+
   " and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment='"+req.query.installment+"' and "+
   " cheque_no='"+req.query.chequeno+"' and bank_name='"+req.query.bankname+"' and cheque_status='"+req.query.paidstatus+"'";
 
@@ -5683,7 +5683,7 @@ app.post('/fetchallstudentforsearch-service',  urlencodedParser,function (req, r
 
 
 app.post('/processbouncecheque-service',  urlencodedParser,function (req, res){
-  var qur="SELECT * FROM md_student_paidfee where school_id='"+req.query.schoolid+"' and (admission_no like '%"+req.query.searchvalue+"%' or cheque_no like '%"+req.query.searchvalue+"%') and mode_of_payment='Cheque'";
+  var qur="SELECT * FROM md_student_paidfee where school_id='"+req.query.schoolid+"' and (admission_no like '%"+req.query.searchvalue+"%' or cheque_no like '%"+req.query.searchvalue+"%') and mode_of_payment='Cheque' and cheque_status in('inprogress')";
   console.log('-------------------------------------------');
   console.log(qur);
   connection.query(qur,
