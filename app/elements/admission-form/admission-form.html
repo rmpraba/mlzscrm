@@ -87,7 +87,7 @@
         <div class="lbl"><label>Admission Category </label><p id="admncategory">&nbsp; *</p> </div>
         <div class="col-sm-12 enquiry-input">
           <template  is="dom-repeat" items="{{discountarr}}" as="view">
-            <special-discount-card code="{{view.id}}" discountname="{{view.discount_type_name}}"></special-discount-card>
+            <special-discount-card dtype="{{dtype}}" code="{{view.id}}" discountname="{{view.discount_type_name}}" checked="{{view.checked}}"></special-discount-card>
           </template>
         </div>
       </div>
@@ -696,6 +696,7 @@
     Polymer({
       is: 'admission-form',
         ready:function(){
+        
         this.hideenqenrno=true;
         this.hidethirdlanguage=true;
         this.$.physicdetailhandler.hidden=true;
@@ -1117,16 +1118,16 @@
         relegions=value;
         document.querySelector("#"+value).checked=true;
       },
-      FnFindAge:function(value){
-          admissiondob=value;
-          var dt1=new Date(value);
-          var dobdate=value;
-          var dt=new Date();
-          var pr_year=dt.getFullYear();
-          var bt_year=dt1.getFullYear();
-          var diff=parseInt(pr_year-bt_year);
-          this.age=diff+" Years";
-      },
+      // FnFindAge:function(value){
+      //     admissiondob=value;
+      //     var dt1=new Date(value);
+      //     var dobdate=value;
+      //     var dt=new Date();
+      //     var pr_year=dt.getFullYear();
+      //     var bt_year=dt1.getFullYear();
+      //     var diff=parseInt(pr_year-bt_year);
+      //     this.age=diff+" Years";
+      // },
       FnSelectAdmissionYear:function(e){
         admissionyear=(e.target.selectedItem.textContent).trim();
       },
@@ -1428,7 +1429,7 @@
         this.$.CYes.checked=false;
         this.$.CNo.checked=false;   
         admissiontype="0";
-        discounttype="";
+        // discounttype="";
         discountname="";
         this.guardianoccupation="";
         // this.$.spot.checked=false;
@@ -1439,8 +1440,10 @@
         document.querySelector('#sibno').checked=false;
         document.querySelector('#hisyes').checked=false;
         document.querySelector('#hisno').checked=false;
+        // document.querySelector('special-discount-card').setDefaultCheck(discounttype);
       },
       FnRefresh1:function(){
+        // document.querySelector('special-discount-card').setDefaultCheck(discounttype);
         this.aadharno="";
         this.guardianoccupation="";
         this.parentguardhandlerdiv=true;
@@ -1598,7 +1601,7 @@
         admissiontype="0";
         // this.$.spot.checked=false;
         // this.$.general.checked=true;   
-        discounttype="";
+        // discounttype="";
         discountname="";
         this.$.divsiblinghandler.hidden=true;
         this.$.divhistoryhandler.hidden=true;
@@ -1610,7 +1613,6 @@
       setDiscountType:function(dtype){
         // alert(dtype);
         discounttype=dtype;
-        // discountname=dname;
       }
     });
   })();

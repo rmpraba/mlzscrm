@@ -428,7 +428,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         on-response="getclassesResponse"
         debounce-duration="300"
         >
-    <iron-ajax
+    <!-- <iron-ajax
       method="post"
       id="discountajax"
       url="{{discounturl}}"
@@ -437,7 +437,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       content-type="application/json"
       on-response="getdiscountsResponse"
       debounce-duration="300"
-    >
+    > -->
   </template>
   <script>
   (function() {
@@ -505,19 +505,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        document.querySelector('detailed-enquiry-form').itemarr=result;
        // document.querySelector('admission-approval-card').itemarr=result;
      },
-     getdiscounts:function(){
-        this.discounturl=sessionStorage.getItem("addrinfo")+"/discount";
-        var obj={"schol":""};
-        obj.schol=localStorage.getItem("schoolid");
-        this.discountparam=obj;
-        this.$.discountajax.generateRequest();
-      },
-      getdiscountsResponse:function(e){
-        var res=e.detail.response.returnval;
-        //alert(JSON.stringify(res));
-        document.querySelector('special-discount-card').discountarr=res;
+     // getdiscounts:function(){
+     //    this.discounturl=sessionStorage.getItem("addrinfo")+"/discount";
+     //    var obj={"schol":""};
+     //    obj.schol=localStorage.getItem("schoolid");
+     //    this.discountparam=obj;
+     //    this.$.discountajax.generateRequest();
+     //  },
+     //  getdiscountsResponse:function(e){
+     //    var res=e.detail.response.returnval;
+     //    //alert(JSON.stringify(res));
+     //    document.querySelector('special-discount-card').discountarr=res;
         
-      },
+     //  },
       followupResponse:function(e){
          firstfollowup=e.detail.response.firstfollowup;
          secondfollowup=e.detail.response.secondfollowup;
@@ -1308,10 +1308,21 @@ attenderusername=attendername;
       },
       getdiscountsResponse:function(e){
         var res=e.detail.response.returnval;
-        //alert(JSON.stringify(res));
-        document.querySelector('newenquiry-card').discountarr=res;
+        for(var i=0;i<res.length;i++){
+          if(res[i].flag=="true"){
+            res[i].checked=true;
+            document.querySelector('admission-form').setDiscountType(res[i].id);
+            localStorage.setItem('curr_sess_discounttype',res[i].id);
+          }
+          if(res[i].flag=="false"){
+            res[i].checked=false;
+          }
+        }
+        // alert(JSON.stringify(res));
+        // document.querySelector('newenquiry-card').discountarr=res;
         document.querySelector('admission-form').discountarr=res;
-        document.querySelector('detailed-enquiry-form').discountarr=res;
+        // document.querySelector('detailed-enquiry-form').discountarr=res;
+        // document.querySelector('special-discount-card').discountarr=res;
       },
       rtenumberResponse:function(e){
         var res=e.detail.response.returnval;

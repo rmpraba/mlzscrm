@@ -1350,9 +1350,9 @@
       localStorage.setItem("curr_sess_referrerid","");
       enrolltype="fullyear";
       var dt=new Date();
-      yr1=(dt.getFullYear()+1)-2000;
-      yr2=(dt.getFullYear()+2)-2000;
-      yearsxz='AY-'+(dt.getFullYear()+1)+'-'+(dt.getFullYear()+2);
+      yr1=(dt.getFullYear()+0)-2000;
+      yr2=(dt.getFullYear()+1)-2000;
+      yearsxz='AY-'+(dt.getFullYear()+0)+'-'+(dt.getFullYear()+1);
       this.academicyear=yearsxz;
       document.querySelector('enquiry-datepicker').ready();
       document.querySelector('dateofbirth-datepicker').ready();

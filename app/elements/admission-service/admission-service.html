@@ -537,7 +537,8 @@
         }
         document.querySelector('dateofbirth-datepicker').FnSetDate(arr[0].dob);
         document.querySelector('admission-form').dob=arr[0].dob;
-        document.querySelector('admission-form').FnFindAge(arr[0].dob);
+        document.querySelector('admission-form').age=arr[0].age;
+        // document.querySelector('admission-form').FnFindAge(arr[0].dob);
         document.querySelector('admission-form').FnSetGender(arr[0].gender);
 
         // document.querySelector('admission-form').flatno=arr[0].flat_no;
@@ -620,7 +621,8 @@
         localStorage.setItem("curr_sess_referralid",arr[0].refferal_type);
        
         document.querySelector('admission-form').dob=arr[0].dob;
-        document.querySelector('admission-form').FnFindAge(arr[0].dob);
+        document.querySelector('admission-form').age=arr[0].age;
+        // document.querySelector('admission-form').FnFindAge(arr[0].dob);
         document.querySelector('admission-form').FnSetGender(arr[0].gender);
         
         document.querySelector('admission-form').fathername=arr[0].father_name;
@@ -635,6 +637,7 @@
         // document.querySelector('admission-form').FnShowAcheivement(arr[0].academic_acheivement);
 
         document.querySelector('admission-form').FnSetAcheivement(arr[0].academic_acheivement);
+        document.querySelector('admission-form').FnSetDiscountType(arr[0].discount_type);
         }
       },
       fetchexistingadmissionstudinfoService:function(){
@@ -663,7 +666,8 @@
         }
         document.querySelector('dateofbirth-datepicker').FnSetDate(arr[0].dob);
         document.querySelector('admission-form').dob=arr[0].dob;
-        document.querySelector('admission-form').FnFindAge(arr[0].dob);
+        document.querySelector('admission-form').age=arr[0].age;
+        // document.querySelector('admission-form').FnFindAge(arr[0].dob);
         document.querySelector('admission-form').FnSetGender(arr[0].gender);
 
         document.querySelector('admission-form').flatno=arr[0].flat_no;
@@ -862,6 +866,7 @@
         obj.secondlanguage=secondlanguage;
         obj.thirdlanguage=thirdlanguage;
         obj.admissiondob=dob;
+        obj.age=age;
         obj.admissiongender=gender;
         obj.flatno=flatno;
         obj.bulidingname=bulidingname;
@@ -1013,6 +1018,7 @@
         obj.discounttype=discounttype;
         obj.admissionsibling=admissionsibling;
         obj.admissionhistory=admissionhistory;
+        obj.age=age;
         obj.referraltype=localStorage.getItem("curr_sess_referralid");
         this.insertadmissionparam=obj;
         this.$.insertadmissionajax.generateRequest();

@@ -8,7 +8,11 @@
         display: block;
       }
     </style>
-    <span class="col-sm-3"><paper-checkbox id="checkk{{code}}" value="{{code}}" on-change="discountHandler">{{discountname}}</paper-checkbox></span>
+    <paper-input hidden value="{{dtype}}"></paper-input>
+    <span class="col-sm-2">
+    <paper-checkbox id="checkk{{code}}" value="{{code}}" on-change="discountHandler" checked="{{checked}}">{{discountname}}
+    </paper-checkbox>
+    </span>
   </template>
   <script>
   (function() {
@@ -17,26 +21,29 @@
     Polymer({
       is: 'special-discount-card',
       ready:function(){
-        if(checkedbox=="")
-        {}
-        else{        
-        // document.querySelector('#checkk'+checkedbox).checked=false;   
-        }
+        // alert('ready'+this.dtype);
+        checkedbox=localStorage.getItem('curr_sess_discounttype');
+        // alert(checkedbsox);
       },
       discountHandler:function(e){ 
-        // alert(e.target.id);
+        // alert(this.code);
         document.querySelector('admission-form').setDiscountType(this.code);
-        if(checkedbox=="")
+        if(checkedbox==""){
+          // alert('in'+this.code);
           checkedbox=this.code;
-        else{
-        if(checkedbox!=this.code)
-        document.querySelector('#checkk'+checkedbox).checked=false;   
         }
-        if(document.querySelector('#checkk'+this.code).checked==true){        
+        else{
+        // alert('out'+this.code);
+        if(checkedbox!=this.code){
+        // alert('outin'+this.code);
+        document.querySelector('#checkk'+checkedbox).checked=false;
+        }   
+        }
+        if(document.querySelector('#checkk'+this.code).checked==true){   
         checkedbox=this.code;
         // document.querySelector('newenquiry-card').setDiscountType(this.code);
         document.querySelector('admission-form').setDiscountType(this.code);
-      }
+        }
       },
       setCheckedHandler:function(dcode){
         this.code=(dcode).trim();

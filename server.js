@@ -1663,7 +1663,8 @@ app.post('/insertadmission',  urlencodedParser,function (req, res){
         having_sibling:req.query.admissionsibling,
         admission_status:'New',
         active_status:'Admitted',
-        referral_type:req.query.referraltype
+        referral_type:req.query.referraltype,
+        age:req.query.age
     }
 
     var qur="SELECT * FROM auto_admission_no";
@@ -3475,7 +3476,7 @@ app.post('/verifyage',  urlencodedParser,function (req, res){
  });
 
  app.post('/discount',  urlencodedParser,function (req, res){
-   connection.query("SELECT * from md_discounts",
+   connection.query("SELECT * from md_discounts where id not in('1','5')",
      function(err, rows)
      {
        if(!err)
@@ -4752,7 +4753,8 @@ app.post('/submitenqdetails',  urlencodedParser,function (req, res){
       school_area:req.query.school_area,
       sibling_remark:req.query.sibling_remark,
       parent_or_guard:req.query.parentorguard,
-      refferal_type:refferaltype 
+      refferal_type:refferaltype,
+      age:req.query.ageofyr
     };
     connection.query('INSERT INTO student_enquiry_details SET ?',[response],function(err, rows){
       if(!err){
