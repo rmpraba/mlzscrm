@@ -485,18 +485,40 @@
               }                           
             }
 
+            // alert(localStorage.getItem("curr_sess_discountfeetype"));
             // alert(JSON.stringify(split));
             // alert(localStorage.getItem("curr_sess_discountpercentamt"));
             // alert(localStorage.getItem("curr_sess_payablediscount"));
-
+            this.flag=0;
+            this.remainingdiscount=0;
             for(var i=0;i<split.length;i++){
                 // if(localStorage.getItem("curr_sess_discountpercentamt")>0)
                 // {
-                    if(split[i].feetype=="Annual fee"){
+                    if(split[i].feetype==localStorage.getItem("curr_sess_discountfeetype")){
+                       if(parseFloat(split[i].feetypeamount)>=parseFloat(localStorage.getItem("curr_sess_payablediscount"))) 
+                       {
+                       this.flag=1;
                        split[i].feetypeamount=parseFloat(split[i].feetypeamount)-parseFloat(localStorage.getItem("curr_sess_payablediscount"));
+                       }
+                       else{                       
+                       this.remainingdiscount=parseFloat(localStorage.getItem("curr_sess_payablediscount"))-parseFloat(split[i].feetypeamount);
+                       split[i].feetypeamount=0;
+                       }
                     }
                 // }
             }
+
+            if(this.flag==0){
+                for(var i=0;i<split.length;i++){
+                    if(split[i].feetype=="Tution fee"){
+                        if(parseFloat(this.remainingdiscount)>0){
+                            split[i].feetypeamount=parseFloat(split[i].feetypeamount)-parseFloat(this.remainingdiscount);
+                        }
+                    }
+                }
+            }
+
+
                 // if(localStorage.getItem("curr_sess_payablediscount")>0)
                 // {
                 //     if(split[i].feetype=="Annual fee"){
@@ -631,19 +653,36 @@
 
        // alert(JSON.stringify(split));
        // alert(localStorage.getItem("curr_sess_discountpercentamt"));
+       this.remainingdiscount=0;
        for(var i=0;i<split.length;i++){
-                // if(localStorage.getItem("curr_sess_discountpercentamt")>0)
-                // {
+                   this.flag=0;
                    if(split[i].installment=="Installment1"){ 
                     for(var j=0;j<split[i].fees.length;j++){
-                    if(split[i].fees[j].feetype=="Annual fee"){
+                    if(split[i].fees[j].feetype==localStorage.getItem("curr_sess_discountfeetype")){
+                       if(parseFloat(split[i].fees[j].feetypeamount)>=parseFloat(localStorage.getItem("curr_sess_payablediscount"))){
+                       this.flag=1;
                        split[i].fees[j].feetypeamount=parseFloat(split[i].fees[j].feetypeamount)-parseFloat(localStorage.getItem("curr_sess_payablediscount"));
+                       }
+                       else{
+                        this.remainingdiscount=parseFloat(localStorage.getItem("curr_sess_payablediscount"))-parseFloat(split[i].fee[j].feetypeamount);
+                        split[i].fees[j].feetypeamount=0;
+                       }
                     }
                     }
                    }
-                // }
         }
-        
+        if(this.flag==0){
+            for(var i=0;i<split.length;i++){
+            if(split[i].installment=="Installment1"){ 
+                    for(var j=0;j<split[i].fees.length;j++){
+                    if(split[i].fees[j].feetype=="Tution fee"){
+                       if(parseFloat(this.remainingdiscount>0))
+                       split[i].fees[j].feetypeamount=parseFloat(split[i].fees[j].feetypeamount)-parseFloat(this.remainingdiscount); 
+                    }
+                }
+            }
+            }
+        }
            
         for(var i=0;i<paymentarr.length;i++){
             for(var j=0;j<split.length;j++){

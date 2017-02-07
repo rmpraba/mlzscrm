@@ -80,7 +80,7 @@
                 <paper-item value=6><10%</paper-item>
               </paper-listbox>
             </paper-dropdown-menu>
-</div>
+        </div>
             <iron-autogrow-textarea id="followbox1" placeholder="Please type your comments here..." error-message="needs comments!" required value="{{value}}"></iron-autogrow-textarea>
               <datepicker-followup-card scheduledon="{{scheduledate}}" showdate="{{nextdate}}"></datepicker-followup-card>
       </div>
@@ -266,8 +266,13 @@
         var nextdatez=localStorage.getItem("localsess_nextfollowup_date");
         var sdat=new Date(nextdatez);
         var res=parseInt(sdat-selected);
+        // alert(res);
         if(res==0){
           alert('Kindly, select different date, The date which you have selected same with the current scheduledate ... ');
+          this.showdate='';
+        }
+        else if(res<0){
+          alert('Please choose the future date!!');
           this.showdate='';
         }
         else{

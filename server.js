@@ -2,10 +2,11 @@
  var mysql      = require('mysql');
  var email   = require("emailjs/email");
  var connection = mysql.createConnection({
-   host     : 'localhost',
-   user     : 'root',
-   password : 'admin',
-   database : 'mlzscrm'
+  host     : 'localhost',
+  port     : '3306',
+  user     : 'root',
+  password : 'admin',
+  database : 'mlzscrm'
  });
 
 var bodyParser = require('body-parser');
@@ -3797,7 +3798,7 @@ app.post('/getlistdetails',  urlencodedParser,function (req, res){
     var school={"school_id":req.query.schol};
     var flwpid={"schedule_id":req.query.fid};
     var scheduleno={"schedule":req.query.flag};
-    var qur="SELECT * FROM followupdetail WHERE school_id='"+req.query.schol+"' and schedule_id='"+req.query.fid+"' and schedule='"+req.query.flag+"' and followup_status!='Cancelled' ORDER BY(schedule_date)";
+    var qur="SELECT * FROM followupdetail WHERE school_id='"+req.query.schol+"' and schedule_id='"+req.query.fid+"' and schedule='"+req.query.flag+"' and followup_status!='Cancelled' ORDER BY(str_to_date(schedule_date,'%Y-%m-%d'))";
   //  console.log('qur');
 
     connection.query(qur,
@@ -4846,7 +4847,7 @@ app.post('/getprovisionallyadmittedstudentsinlocation',  urlencodedParser,functi
 });
 
  app.post('/scheduledates',  urlencodedParser,function (req, res){
-   connection.query("SELECT schedule_date FROM followupdetail WHERE `school_id` =  '"+req.query.schol+"' and schedule_id='"+req.query.folowid+"' and followup_status!='Cancelled' order by(schedule_date)",
+   connection.query("SELECT schedule_date FROM followupdetail WHERE `school_id` =  '"+req.query.schol+"' and schedule_id='"+req.query.folowid+"' and followup_status!='Cancelled' order by(str_to_date(schedule_date,'%Y-%m-%d'))",
      function(err, rows)
      {
        if(!err)
@@ -4867,8 +4868,6 @@ app.post('/getprovisionallyadmittedstudentsinlocation',  urlencodedParser,functi
        }
      });
  });
-
-
 
 app.post('/siblingdetails',  urlencodedParser,function (req, res){
   var qur = "SELECT p.parent_name, (SELECT class FROM class_details WHERE id = s.class_id AND school_id = '"+req.query.schol+"') as class, (SELECT section FROM class_details WHERE id = s.class_id AND school_id = '"+req.query.schol+"') as section FROM student_details s JOIN parent p ON s.id = p.student_id WHERE s.school_id = '"+req.query.schol+"' AND s.id = '"+req.query.student_id+"'";
