@@ -1284,7 +1284,8 @@ insertstudenthistoryResponse:function(e){
           d="0"+d;
         if(m<10)
           m="0"+m;
-        obj.currdate=m+"/"+d+"/"+y;
+        // obj.currdate=m+"/"+d+"/"+y;
+        obj.currdate=localStorage.getItem("curr_sess_date");
         obj.referraltype=localStorage.getItem("curr_sess_referralid");  
         // obj.noofinstallment=localStorage.getItem("curr_sess_noofinstallment");
         obj.schoolid=localStorage.getItem("schoolid");     

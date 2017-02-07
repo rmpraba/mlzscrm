@@ -52,9 +52,13 @@
                    </template>
                    </paper-listbox>
           </div>
-          <div class="col-md-6" style="margin-top: 5%;">
+          <div class="col-md-5" style="margin-top: 5%;">
           <paper-checkbox id="schoolfeecurrentyear" on-change="FnCurrentHandler" style="margin-left: 5%;">Current Year</paper-checkbox>
           <paper-checkbox id="schoolfeenextyear" on-change="FnNextHandler" checked style="margin-left: 5%;">Next Year</paper-checkbox>
+          </div>
+
+          <div class="col-md-3" style="margin-top: 4.5%;margin-left: -15%;">
+            <datepicker-icon-card></datepicker-icon-card>
           </div>
 
      </div>
@@ -504,6 +508,7 @@
         document.querySelector('#waiveoff').checked=false;
       },
       FnRefresh:function(){
+
         this.payablepaidflag="Payable Amount";
         document.querySelector('#structureselfmode').checked=true;
         document.querySelector('#structurethirdpartymode').checked=false;
@@ -542,6 +547,7 @@
         splitarr=[];
         document.querySelector('#schoolfeenextyear').checked=true;
         document.querySelector('#schoolfeecurrentyear').checked=false;
+        document.querySelector('datepicker-icon-card').ready();
       },
       FnRefresh1:function(){
         document.querySelector('#structureselfmode').checked=true;
@@ -580,6 +586,7 @@
          this.querySelector('#schoolfeeinput').style.visibility='hidden';
         // document.querySelector('#schoolfeenextyear').checked=false;
         // document.querySelector('#schoolfeecurrentyear').checked=true;
+        document.querySelector('datepicker-icon-card').ready();
       },
       generalHandler:function(e){
         if(document.querySelector("#structuregeneral1").checked==true)
@@ -763,7 +770,7 @@
     document.querySelector("#structurelumpsumcommit1").checked=false;
     document.querySelector("#structurelumpsum1").checked=false;
     localStorage.setItem("curr_sess_installmentpattern",1);
-
+    document.querySelector('datepicker-icon-card').ready();
     // this.$.processingservice.fetchchequeforeditordelete(admission_no);
     // localStorage.setItem("curr_sess_enquiryno",enquiry_no);
     // localStorage.setItem("curr_sess_enquiryname",enquiry_name);
