@@ -59,7 +59,7 @@
         </div>
 
         <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hidefeecard}}">
-          <div class="col-sm-6 enquiry-input">
+          <div class="col-sm-4 enquiry-input">
             <paper-dropdown-menu label="Select Category" attr-for-selected="value">
             <paper-menu id="distype" class="dropdown-content" required on-iron-select="FnSelectDiscountType" valueattr="value" >
               <template  is="dom-repeat" items="{{discountarr}}" as="item">
@@ -68,7 +68,7 @@
             </paper-menu>
             </paper-dropdown-menu>
           </div>
-           <div class="col-sm-6 enquiry-input">
+           <div class="col-sm-4 enquiry-input">
             <paper-dropdown-menu label="Select Fee Type" attr-for-selected="value">
             <paper-menu id="discountfeetype" class="dropdown-content" required on-iron-select="FnSelectFeeType" valueattr="value" >
               <template  is="dom-repeat" items="{{feetypearr}}" as="item">
@@ -76,6 +76,10 @@
               </template>
             </paper-menu>
             </paper-dropdown-menu>
+          </div>
+          <div class="col-sm-4 enquiry-input">
+            <paper-checkbox on-change="generalHandler" id="discountmastergeneral" checked>General</paper-checkbox>
+            <paper-checkbox on-change="tpHandler" id="discountmastertp">Third Party</paper-checkbox>
           </div>
         </div>
        
@@ -107,7 +111,7 @@
   <script>
   (function() {
     'use strict';
-    var grade,admissionyear,academicyear,feetype,discounttype,discounttypecode,admissiontype,gradetype,valuetype; 
+    var grade,admissionyear,academicyear,feetype,discounttype,discounttypecode,admissiontype,gradetype,valuetype,mode; 
     var gradearr=[];   
     Polymer({
       is: 'discount-master-card',
@@ -117,7 +121,23 @@
         this.hidegradecard=true;
         this.hidepercent=true;
         this.percentage=0;
+        // document.querySelector('#discountmastergeneral').checked=true;
+        mode="self";
         // gradearr=[];
+      },
+      generalHandler:function(){
+        if(document.querySelector("#discountmastergeneral").checked==true)
+        {
+          mode="self";
+          document.querySelector("#discountmastertp").checked=false;
+        }
+      },
+      tpHandler:function(){
+        if(document.querySelector("#discountmastertp").checked==true)
+        {
+          mode="thirdparty";
+          document.querySelector("#discountmastergeneral").checked=false;
+        }
       },
       allHandler:function(){
         if(document.querySelector("#discountformall").checked==true)
@@ -197,12 +217,14 @@
         this.hidegradecard=true;
         document.querySelector('schooltype-to-grade-displaycard').FnRefresh();
         document.querySelector('schooltype-to-grade-displaycard').ready();
-        
+        document.querySelector('#discountmastergeneral').checked=true;
+        document.querySelector('#discountmastertp').checked=false;
+        mode="self";
       },
       FnSubmit:function(){
         // alert(JSON.stringify(gradearr));
         // alert(this.schoolname+" "+grade+" "+academicyear+" "+admissionyear+" "+feetype+" "+this.totalfees);
-        this.$.schedulefee.setDiscountInfo(this.schoolname,gradearr,admissionyear,academicyear,discounttypecode,discounttype,feetype,this.fromdate,this.todate,this.amount,admissiontype,this.percentage);
+        this.$.schedulefee.setDiscountInfo(this.schoolname,gradearr,admissionyear,academicyear,discounttypecode,discounttype,feetype,this.fromdate,this.todate,this.amount,admissiontype,this.percentage,mode);
       },
       FnCancel:function(){
         grade="";
@@ -225,6 +247,9 @@
         this.hidegradecard=true;
         document.querySelector('schooltype-to-grade-displaycard').ready();
         document.querySelector('schooltype-to-grade-displaycard').FnRefresh();
+        document.querySelector('#discountmastergeneral').checked=true;
+        document.querySelector('#discountmastertp').checked=false;
+        mode="self";
       },
       FnSetFromDate:function(date){
         this.fromdate=date;

@@ -379,7 +379,7 @@ connection.query("SELECT * FROM prefix_master WHERE prefix_id='"+req.query.prefi
 app.post('/fetchdiscountcodes-service',  urlencodedParser,function (req, res){
     
     var checkqur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' "+
-    " and admission_year='"+req.query.admissionyear+"' and discount_type_code='"+req.query.discounttypecode+"' "+
+    " and admission_year='"+req.query.admissionyear+"' and discount_type_code='"+req.query.discounttypecode+"' and mode='"+req.query.mode+"'"+
     " and (from_date<='"+req.query.fromdate+"' and to_date>='"+req.query.fromdate+"') and fee_type='"+req.query.feetype+"'";
 
     // var qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' "+
@@ -429,18 +429,19 @@ app.post('/creatediscountcode-service',  urlencodedParser,function (req, res){
       to_date:req.query.todate,
       created_by:req.query.createdby,
       amount:req.query.amount,
-      discount_percentage:req.query.percentage
+      discount_percentage:req.query.percentage,
+      mode:req.query.mode
     };
 
     console.log(response);
 
     var qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' "+
     " and admission_year='"+req.query.admissionyear+"' and grade='"+req.query.grade+"' and discount_type_code='"+req.query.discounttypecode+"' and discount_type='"+req.query.discounttype+"' "+
-    " and fee_type='"+req.query.feetype+"' and (from_date<='"+req.query.fromdate+"' and to_date>='"+req.query.fromdate+"')";
+    " and fee_type='"+req.query.feetype+"' and mode='"+req.query.mode+"' and (from_date<='"+req.query.fromdate+"' and to_date>='"+req.query.fromdate+"')";
 
     var updatequr="UPDATE md_discount_master SET amount='"+req.query.amount+"',from_date='"+req.query.fromdate+"',to_date='"+req.query.todate+"' WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' "+
     " and admission_year='"+req.query.admissionyear+"' and grade='"+req.query.grade+"' and discount_type_code='"+req.query.discounttypecode+"' and discount_type='"+req.query.discounttype+"' "+
-    " and fee_type='"+req.query.feetype+"' and (from_date<='"+req.query.fromdate+"' and to_date>='"+req.query.fromdate+"')";
+    " and fee_type='"+req.query.feetype+"' and mode='"+req.query.mode+"' and (from_date<='"+req.query.fromdate+"' and to_date>='"+req.query.fromdate+"')";
 
     console.log('-------------check--------------');
 
@@ -2220,11 +2221,11 @@ app.post('/fetchdiscount-service',  urlencodedParser,function (req, res){
     if((req.query.installmentpattern=='3')||(req.query.installmentpattern=='4')){
     console.log('in');
     if(req.query.referraltype==""||req.query.referraltype==null)
-    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','5') "+
+    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND mode='"+req.query.mode+"' and academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','5') "+
     " AND grade=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"') "+
     " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee')";
     else
-    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','5','"+req.query.referraltype+"') "+
+    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND mode='"+req.query.mode+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','5','"+req.query.referraltype+"') "+
     " AND grade=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"') "+
     " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee')";
     
@@ -2232,11 +2233,11 @@ app.post('/fetchdiscount-service',  urlencodedParser,function (req, res){
     else{
     console.log('out');
     if(req.query.referraltype==""||req.query.referraltype==null)
-    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code='"+req.query.discounttype+"' "+
+    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND mode='"+req.query.mode+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code='"+req.query.discounttype+"' "+
     " AND grade=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"') "+
     " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee','Lumpsum')";
     else
-    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','"+req.query.referraltype+"')  "+
+    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND mode='"+req.query.mode+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','"+req.query.referraltype+"')  "+
     " AND grade=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"') "+
     " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee','Lumpsum')";
     }

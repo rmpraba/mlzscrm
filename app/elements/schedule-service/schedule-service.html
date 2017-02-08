@@ -643,7 +643,7 @@
         count2=0;
         }
       },
-      setDiscountInfo:function(schoolname,gradearr,admissionyear,academicyear,discounttypecode,discounttype,feetype,fromdate,todate,amount,admissiontype,percentage){
+      setDiscountInfo:function(schoolname,gradearr,admissionyear,academicyear,discounttypecode,discounttype,feetype,fromdate,todate,amount,admissiontype,percentage,mode){
         this.schoolname=schoolname;
         this.grade=gradearr;
         this.admissionyear=admissionyear;
@@ -656,6 +656,7 @@
         this.todate=todate;
         this.amount=amount;
         this.percentage=percentage;
+        this.mode=mode;
         this.fetchdiscountcodeseqService();
         // this.generatediscountcodeService();
       },
@@ -683,6 +684,7 @@
         obj.todate=this.todate;
         obj.feetype=this.feetype;
         obj.discounttypecode=this.discounttypecode;
+        obj.mode=this.mode;
         this.fetchdiscountcodesparam=obj;
         this.$.fetchdiscountcodesajax.generateRequest();
       },
@@ -759,7 +761,8 @@
         obj.amount=this.amount;
         obj.percentage=this.percentage;
         obj.fromdate=this.fromdate;
-        obj.todate=this.todate;  
+        obj.todate=this.todate;
+        obj.mode=this.mode;  
 
         obj.createdby=localStorage.getItem("employeeid");
         // alert(JSON.stringify(discountarr));
