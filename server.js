@@ -5739,7 +5739,7 @@ app.post('/fetchchequeforeditordelete-service',  urlencodedParser,function (req,
 
 
 app.post('/editcheque-Service',  urlencodedParser,function (req, res){
-  var qur="UPDATE md_student_paidfee SET cheque_no='"+req.query.chequeno+"',bank_name='"+req.query.bankname+"',cheque_date='"+req.query.chequedate+"',installment_amount='"+req.query.amount+"' where school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"' and cheque_no='"+req.query.chequeno+"' ";
+  var qur="UPDATE md_student_paidfee SET cheque_no='"+req.query.chequeno+"',bank_name='"+req.query.bankname+"',cheque_date='"+req.query.chequedate+"',installment_amount='"+req.query.amount+"',installment_date='"+req.query.chequedate+"' where school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"' and installment='"+req.query.installment+"' ";
   console.log('-------------------------------------------');
   console.log(qur);
   connection.query(qur,
@@ -5759,6 +5759,7 @@ app.post('/editcheque-Service',  urlencodedParser,function (req, res){
 
 
 app.post('/deletecheque-Service',  urlencodedParser,function (req, res){
+  
   var qur="DELETE FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"' and cheque_no='"+req.query.chequeno+"' ";
   console.log('-------------------------------------------');
   console.log(qur);

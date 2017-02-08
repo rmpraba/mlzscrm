@@ -798,8 +798,13 @@
         document.querySelector('editdelete-cheques-card').chequearr=arr;
         document.querySelector('editdelete-cheques-card').FnSetChequeArray(arr);
         }
+        else{
+            arr=[];
+           document.querySelector('editdelete-cheques-card').chequearr=arr;
+        document.querySelector('editdelete-cheques-card').FnSetChequeArray(arr); 
+        }
       },
-      editchequeService:function(enrno,chequeno,bankname,chequedate,installmentamount,paiddate){
+      editchequeService:function(enrno,chequeno,bankname,chequedate,installmentamount,paiddate,installmenttype){
         this.editchequeurl=sessionStorage.getItem("addrinfo")+"/editcheque-service";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
@@ -808,6 +813,7 @@
         obj.bankname=bankname;
         obj.chequedate=localStorage.getItem("curr_sess_chequedate");
         obj.amount=installmentamount;
+        obj.installment=installmenttype;
         this.editchequeparam=obj;
         this.$.editchequeajax.generateRequest();
       },
