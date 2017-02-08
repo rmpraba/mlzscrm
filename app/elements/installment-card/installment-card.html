@@ -180,7 +180,8 @@
           m="0"+m;
         if(d<10)
           d="0"+d;
-        var current_date=m+"/"+d+"/"+y;
+        // var current_date=m+"/"+d+"/"+y;
+        var current_date=localStorage.getItem("curr_sess_date");
         paymenttype = (e.target.selectedItem.textContent).trim();
         // if(this.installment!='Commitmentfee'||localStorage.getItem("curr_sess_installmentpattern")!='3')
         document.querySelector('installment-date-picker').FnSetDate(this.installmentdate);
@@ -283,7 +284,8 @@
           m="0"+m;
         if(d<10)
           d="0"+d;
-        var current_date=m+"/"+d+"/"+y; 
+        // var current_date=m+"/"+d+"/"+y;
+        var current_date=localStorage.getItem("curr_sess_date"); 
             obj.paymenttype=paymenttype;
             // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
             obj.installment=this.installment;
@@ -339,7 +341,8 @@
           m="0"+m;
         if(d<10)
           d="0"+d;
-        var current_date=m+"/"+d+"/"+y; 
+        // var current_date=m+"/"+d+"/"+y; 
+        var current_date=localStorage.getItem("curr_sess_date");
             obj.paymenttype=paymenttype;       
             // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
             obj.installment=this.installment;
@@ -423,7 +426,8 @@
           m="0"+m;
         if(d<10)
           d="0"+d;
-        var current_date=m+"/"+d+"/"+y;
+        // var current_date=m+"/"+d+"/"+y;
+        var current_date=localStorage.getItem("curr_sess_date");
       
         if(paymenttype=="Cash"){
             this.hiddeninputtflag=true; 
@@ -503,7 +507,8 @@
           m="0"+m;
         if(d<10)
           d="0"+d;
-        var current_date=m+"/"+d+"/"+y; 
+        // var current_date=m+"/"+d+"/"+y; 
+        var current_date=localStorage.getItem("curr_sess_date");
             this.modeofpayment=paymenttype;
             this.bankname=this.bankname;
             this.chequeno=(this.chequeno).trim();
@@ -549,7 +554,8 @@
           m="0"+m;
         if(d<10)
           d="0"+d;
-        var current_date=m+"/"+d+"/"+y; 
+        // var current_date=m+"/"+d+"/"+y; 
+        var current_date=localStorage.getItem("curr_sess_date");
             this.modeofpayment=paymenttype;
             this.bankname=this.bankname;
             this.chequeno=(this.chequeno).trim();

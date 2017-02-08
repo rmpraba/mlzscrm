@@ -17,7 +17,7 @@
     <div>
     <paper-dialog id="editdeletecheque" modal>
       <h4>EDIT/DELETE Cheques</h4>
-       <div  class="layout" style='margin-left: 5%;'><paper-input required error-message="needs Cheque number!" allowed-pattern="[1-9a-zA-Z ]" id="edchequeno" label="Cheque Number" value="{{chequeno}}"> </paper-input></div>
+       <div  class="layout" style='margin-left: 5%;'><paper-input required error-message="needs Cheque number!" allowed-pattern="[0-9a-zA-Z ]" id="edchequeno" label="Cheque Number" value="{{chequeno}}"> </paper-input></div>
        <div  class="layout" style='margin-left: 5%;margin-top: -2%;'> <paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires bankName!"  id="edbankname" label="Bank Name" value="{{bankname}}"> </paper-input></div>
        <div style="width: 100%;margin-top: -2%;margin-left: 3%;"><cheque-datepicker showdate="{{chequedate}}"></cheque-datepicker></div>
        <div  class="layout" style='margin-left: 5%;margin-top: -2%;'> <paper-input required allowed-pattern="[a-zA-Z ]"  error-message="!"  id="edbankname" label="Installment Amount" value="{{installmentamount}}"> </paper-input></div>
