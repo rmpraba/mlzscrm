@@ -308,7 +308,10 @@
               </li>
               <li>
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#feepayment"  on-click="FnKit">School fee</a>
-              </li>             
+              </li>
+              <li>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#customfeepayment"  on-click="FnCustomfee">Custom fee payment</a>
+              </li>              
               <li>
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#provisionfee"  on-click="FnProvisionfee">Provision fee</a>
               </li> 
@@ -574,6 +577,24 @@
       </div>
     </div>
 
+    <div class="modal fade bd-example-modal-lg" id="customfeepayment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              School Fee 
+            </h4>
+          </div>
+          <div class="modal-body">
+            <custompattern-fee-card></custompattern-fee-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade bd-example-modal-lg" id="registerationfee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
         <div class="modal-content" id="fee-content">
@@ -824,6 +845,12 @@
         localStorage.setItem("curr_sess_feetype",e.target.text);
         localStorage.setItem("curr_sess_provisionflag",0);
         this.FnRefresh();
+      },
+      FnCustomfee:function(e){
+        localStorage.setItem("curr_sess_feetypepayment","Custom fee");
+        localStorage.setItem("curr_sess_feetype",e.target.text);
+        document.querySelector('custompattern-fee-card').callService();
+        document.querySelector('custompattern-fee-card').FnRefresh();
       },
       FnMiscellaneous:function(e){
         localStorage.setItem("curr_sess_feetype",e.target.text);
