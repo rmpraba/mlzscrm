@@ -6573,6 +6573,25 @@ app.post('/attachdiscount-service',  urlencodedParser,function (req, res){
 });
 
 
+app.post('/updateadhocdiscount-service',  urlencodedParser,function (req, res){
+  // console.log('fetchstudinstallmentsplitup');
+  var qur="update md_student_paidfee set adhoc_discount='"+req.query.amount+"',adhoc_feetype='"+req.query.feetype+"' WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"'";
+  console.log(qur);
+  connection.query(qur,
+    function(err, result){
+      if(!err){
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Done!!'});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Unable to process!!'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
 function setvalue(){
   console.log("calling setvalue.....");
 }
