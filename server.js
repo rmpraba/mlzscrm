@@ -2506,7 +2506,10 @@ app.post('/insertcashfees',  urlencodedParser,function (req, res){
         provision_payment:req.query.provisionflag,
         payment_through:req.query.paymentthrough,
         installment_pattern:req.query.installmentpattern,
-        receipt_no:""
+        receipt_no:"",
+        adhoc_discount:req.query.adhocdiscount,
+        adhoc_feetype:req.query.adhocfeetype,
+        adhoc_reason:req.query.adhocreason
     };
 
 
@@ -2620,7 +2623,10 @@ app.post('/insertchequefees',  urlencodedParser,function (req, res){
         cheque_date:req.query.chequedate,
         payment_through:req.query.paymentthrough,
         installment_pattern:req.query.installmentpattern,
-        receipt_no:""
+        receipt_no:"",
+        adhoc_discount:req.query.adhocdiscount,
+        adhoc_feetype:req.query.adhocfeetype,
+        adhoc_reason:req.query.adhocreason
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
@@ -2734,7 +2740,10 @@ app.post('/inserttransferfees',  urlencodedParser,function (req, res){
         provision_payment:req.query.provisionflag,
         payment_through:req.query.paymentthrough,
         installment_pattern:req.query.installmentpattern,
-        receipt_no:""
+        receipt_no:"",
+        adhoc_discount:req.query.adhocdiscount,
+        adhoc_feetype:req.query.adhocfeetype,
+        adhoc_reason:req.query.adhocreason
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
@@ -2842,7 +2851,10 @@ app.post('/insertthirdpartyfees',  urlencodedParser,function (req, res){
         payment_through:req.query.paymentthrough,
         installment_pattern:req.query.installmentpattern,
         receipt_no:"",
-        difference_amount:0
+        difference_amount:0,
+        adhoc_discount:req.query.adhocdiscount,
+        adhoc_feetype:req.query.adhocfeetype,
+        adhoc_reason:req.query.adhocreason
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
@@ -6575,7 +6587,7 @@ app.post('/attachdiscount-service',  urlencodedParser,function (req, res){
 
 app.post('/updateadhocdiscount-service',  urlencodedParser,function (req, res){
   // console.log('fetchstudinstallmentsplitup');
-  var qur="update md_student_paidfee set adhoc_discount='"+req.query.amount+"',adhoc_feetype='"+req.query.feetype+"' WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"'";
+  var qur="update md_student_paidfee set adhoc_discount='"+req.query.amount+"',adhoc_feetype='"+req.query.feetype+"',adhoc_reason='"+req.query.reason+"' WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"'";
   console.log(qur);
   connection.query(qur,
     function(err, result){

@@ -295,11 +295,16 @@
         var discountpercentamt=0;
         var totalwosdfee=0;
         var totalpayableamount=0;
+
+        if(localStorage.getItem("curr_sess_adhocdiscount")>0)
+            discountamt=parseFloat(discountamt)+parseFloat(localStorage.getItem("curr_sess_adhocdiscount"));
         if(discountarr.length>0){
             for(var i=0;i<discountarr.length;i++){   
             // if(discountarr[i].discount_type_code!='5')
             discountamt=parseFloat(discountarr[i].amount)+parseFloat(discountamt);
             }
+
+            
 
             totalwosdfee=parseFloat(localStorage.getItem("curr_sess_totalfees"))-parseFloat(discountamt);           
             for(var i=0;i<discountarr.length;i++){   
@@ -327,6 +332,7 @@
         document.querySelector('custompattern-fee-card').discountpercent=discountpercent+"%";
         document.querySelector('custompattern-fee-card').payableamount=payableamount;
         var totaldiscount=parseFloat(discountamt)+(parseFloat(discountpercentamt));
+        document.querySelector('custompattern-fee-card').totdiscount=totaldiscount;
         localStorage.setItem("curr_sess_discountpercent",discountpercent);
         localStorage.setItem("curr_sess_payablediscount",totaldiscount);
         localStorage.setItem("curr_sess_payableamount",payableamount);

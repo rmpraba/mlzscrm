@@ -150,6 +150,9 @@
         obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");   
         obj.createdby=localStorage.getItem("employeeid"); 
         obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");   
+        obj.adhocdiscount=localStorage.getItem("curr_sess_adhocdiscount");
+        obj.adhocfeetype=localStorage.getItem("curr_sess_adhocfeetype");
+        obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");
         this.insertcashfeesparam=obj;   
         // paymentarr.push(obj);            
         this.$.insertcashfeesajax.generateRequest();
@@ -215,8 +218,12 @@
         obj.paymentthrough=localStorage.getItem("curr_sess_paymentthrough");  
         obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");
         obj.createdby=localStorage.getItem("employeeid"); 
-        obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");   
+        obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");
+        obj.adhocdiscount=localStorage.getItem("curr_sess_adhocdiscount");
+        obj.adhocfeetype=localStorage.getItem("curr_sess_adhocfeetype");
+        obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");   
         this.Thirdpartyfeesparam=obj;   
+
         // paymentarr.push(obj);            
         this.$.Thirdpartyfeesajax.generateRequest();
         thirdparty=[];
@@ -278,6 +285,9 @@
         obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");  
         obj.createdby=localStorage.getItem("employeeid"); 
         obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");   
+        obj.adhocdiscount=localStorage.getItem("curr_sess_adhocdiscount");
+        obj.adhocfeetype=localStorage.getItem("curr_sess_adhocfeetype");
+        obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");
         obj.receiptdate=cheque[i].receiptdate;     
         this.insertchequefeesparam=obj; 
         // alert(JSON.stringify(obj)); 
@@ -346,6 +356,9 @@
         obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");
         obj.createdby=localStorage.getItem("employeeid"); 
         obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");   
+        obj.adhocdiscount=localStorage.getItem("curr_sess_adhocdiscount");
+        obj.adhocfeetype=localStorage.getItem("curr_sess_adhocfeetype");
+        obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");
         obj.receiptdate=transfer[i].receiptdate;     
         this.inserttransferfeesparam=obj; 
         // paymentarr.push(obj);   

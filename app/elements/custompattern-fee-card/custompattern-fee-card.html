@@ -84,16 +84,45 @@
         <div class="col-sm-2 enquiry-input">          
           <paper-input readonly label="Standard Discount" value="{{totaldiscount}}"></paper-input>
         </div>
-        <div class="col-sm-3 enquiry-input">          
+        <div class="col-sm-2 enquiry-input">          
           <paper-input readonly label="Total Payable Amount" value="{{totalpayableamount}}"></paper-input>
         </div>
         <div class="col-sm-2 enquiry-input">
           <paper-input  readonly label="Discount Percentage" value="{{discountpercent}}"></paper-input>
         </div>
-        <div class="col-sm-3 enquiry-input">          
+        <div class="col-sm-2 enquiry-input">
+          <paper-input  readonly label="Total discount" value="{{totdiscount}}"></paper-input>
+        </div>
+        <div class="col-sm-2 enquiry-input">          
           <paper-input readonly label="{{payablepaidflag}}" value="{{payableamount}}"></paper-input>
         </div>
       </div>
+
+      <div class="form-group-heading">
+        <h4>Adhoc discount</h4>
+      </div>
+
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-3">
+        <paper-input label="Adhoc discount" value="{{adhocdiscount}}"></paper-input>        
+        </div> 
+        <div class="col-sm-3">
+         <paper-dropdown-menu label="Fee Type" attr-for-selected="value">
+            <paper-menu id="customadhocfeetype" class="dropdown-content" required on-iron-select="FnSelectAdhocFeetype" valueattr="value" >              
+              <paper-item value="Kit fee">Kit fee</paper-item>
+              <paper-item value="Annual fee">Annual fee</paper-item>
+              <paper-item value="Tution fee">Tution fee</paper-item> 
+            </paper-menu>
+          </paper-dropdown-menu>       
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="Reason" value="{{adhocreason}}"></paper-input>  
+        </div> 
+        <div class="col-sm-3" style="margin-top: 2%;">
+        <paper-icon-button icon="refresh" on-click="FnProcessAdhoc"></paper-icon-button>  
+        </div> 
+      </div>
+
       <div class="form-group-heading" hidden>
         <h4>Payment Mode</h4>
       </div>
@@ -122,6 +151,8 @@
             </div>
       </div>
 
+      
+
       <div class="list-group col-sm-12 panel-body form-category">
         <div class="col-sm-3 enquiry-input">
             <h4>Choose installment</h4>
@@ -136,7 +167,8 @@
               <paper-item>5</paper-item>
             </paper-menu>
           </paper-dropdown-menu>
-        </div>    
+        </div>   
+
       </div>
     
       <div class="form-group-heading" hidden$="{{hiddenpayment}}">
@@ -195,6 +227,7 @@
       var installmentarr=[];
       var installmenttemparr=[];
       var item=[];
+      var adhocfeetype="";
     Polymer({
       is: 'custompattern-fee-card',
       ready:function(){
@@ -230,7 +263,11 @@
           var y2=y+1+1;  
           academicyear="AY-"+y1+"-"+y2;
           }
-          localStorage.setItem("curr_sess_academicyear",academicyear); 
+          localStorage.setItem("curr_sess_academicyear",academicyear);
+          localStorage.setItem("curr_sess_adhocdiscount",0); 
+          localStorage.setItem("curr_sess_adhocdiscount",0);
+          localStorage.setItem("curr_sess_adhocfeetype","");
+          localStorage.setItem("curr_sess_adhocreason","");
         // document.querySelector('#structuregeneral1').checked=true;
       },  
       FnCurrentHandler:function(e){
@@ -330,6 +367,7 @@
       document.querySelector('custompattern-installment-card').FnRefresh();
       },
      FnRefresh:function(){
+      localStorage.setItem("curr_sess_adhocdiscount",0);
         this.payablepaidflag="Payable Amount";
         document.querySelector('#structureselfmode').checked=true;
         document.querySelector('#structurethirdpartymode').checked=false;
@@ -370,8 +408,16 @@
         document.querySelector('#customfeenextyear').checked=true;
         document.querySelector('#customfeecurrentyear').checked=false;
         document.querySelector('datepicker-icon-card').ready();
+        document.querySelector('#customadhocfeetype').selected=-1;
+        this.adhocdiscount="";
+        this.adhocreason="";
+        adhocfeetype="";
+        // localStorage.setItem("curr_sess_adhocdiscount",0);
+        // localStorage.setItem("curr_sess_adhocfeetype","");
+        // localStorage.setItem("curr_sess_adhocreason","");
       },
       FnRefresh1:function(){
+        localStorage.setItem("curr_sess_adhocdiscount",0);
         document.querySelector('#structureselfmode').checked=true;
         document.querySelector('#structurethirdpartymode').checked=false;
         this.payablepaidflag="Payable Amount";
@@ -410,6 +456,13 @@
         // document.querySelector('#schoolfeecurrentyear').checked=true;
         document.querySelector('#custominstallment').selected=-1;
         document.querySelector('datepicker-icon-card').ready();
+        document.querySelector('#customadhocfeetype').selected=-1;
+        this.adhocdiscount="";
+        this.adhocreason="";
+        adhocfeetype="";
+        // localStorage.setItem("curr_sess_adhocdiscount",0);
+        // localStorage.setItem("curr_sess_adhocfeetype","");
+        // localStorage.setItem("curr_sess_adhocreason","");
       },
       generalHandler:function(e){
         if(document.querySelector("#customgeneral1").checked==true)
@@ -698,6 +751,15 @@
       // }
       this.disableflag=flag;
       // this.hiddenaddbtn=flag; 
+    },
+    FnSelectAdhocFeetype:function(e){
+      adhocfeetype=(e.target.selectedItem.textContent).trim();
+    },
+    FnProcessAdhoc:function(){
+      localStorage.setItem("curr_sess_adhocdiscount",this.adhocdiscount);
+      localStorage.setItem("curr_sess_adhocfeetype",adhocfeetype);
+      localStorage.setItem("curr_sess_adhocreason",this.adhocreason);
+      this.$.admissionservice.searchfeeadmissionpaidinfoService(localStorage.getItem("curr_sess_enquiryno"));
     }
 
     });

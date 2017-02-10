@@ -26,6 +26,7 @@
             </paper-menu>
           </paper-dropdown-menu>
         </td>
+        <td><paper-input label="Reason" value="{{reason}}"></paper-input></td>
         <td>
           <paper-button style="margin-top: 3%;" class="btn btn-primary left" on-click="FnAdd">Add</paper-button>
         </td>
@@ -45,13 +46,14 @@
       },
       FnAdd:function(){
         if(this.discountamount>0&&discountfeetype!="")
-        this.$.service.updateadhocdiscountService(this.admissionno,this.discountamount,discountfeetype);
+        this.$.service.updateadhocdiscountService(this.admissionno,this.discountamount,discountfeetype,this.reason);
         else
           alert('Please choose feetype or enter discount amount!!');
       },
       FnRefresh:function(){
         discountfeetype="";
         this.discountamount="";
+        this.reason="";
         document.querySelector('#adhocfeetype').selected=-1;
       }
     });

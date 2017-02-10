@@ -892,13 +892,14 @@
         document.querySelector('attachdiscount-card').FnRefresh();
         document.querySelector('attachdiscount-itemcard').FnRefresh();
       },
-      updateadhocdiscountService:function(admissionno,amount,feetype){
+      updateadhocdiscountService:function(admissionno,amount,feetype,reason){
         this.updateadhocdiscounturl=sessionStorage.getItem("addrinfo")+"/updateadhocdiscount-service";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.admissionno=admissionno;
         obj.amount=amount;
         obj.feetype=feetype;
+        obj.reason=reason;
         this.updateadhocdiscountparam=obj;
         this.$.updateadhocdiscountajax.generateRequest();
       },
