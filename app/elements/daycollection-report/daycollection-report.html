@@ -57,14 +57,14 @@
      <table class="table table-hover" id="daycollectionreport">
       <thead>
       <tr>
-        <th>Sno</th><th>Enr/Enq No</th><th>Student Name</th><th>Grade</th><th>Installment Type</th><th>Mode Of Payment</th><th>Cheque No</th><th>Bank Name</th><th>Cheque Date</th><th>Received Date</th><th>Receipt/Ack No</th><th>Amount</th><th>Fine Amount</th>
+        <th>Sno</th><th>Enr/Enq No</th><th>Student Name</th><th>Grade</th><th>Installment Type</th><th>Mode Of Payment</th><th>Cheque No</th><th>Bank Name</th><th>Cheque Date</th><th>Received Date</th><th>Receipt/Ack No</th><th>Actual Amount</th><th>Fine Amount</th><th>Adhoc Amount</th><th>Total Amount</th>
       </tr>
       </thead>
       <tbody>
       <template  is="dom-repeat" items="{{daycollectionarr}}" as="item">
         <tr><td>{{item.sno}}</td><td>{{item.admission_no}}</td><td>{{item.student_name}}</td><td>{{item.grade}}</td>
         <td>{{item.installment_type}}</td><td>{{item.mode_of_payment}}</td><td>{{item.cheque_no}}</td><td>{{item.bank_name}}</td><td>{{item.cheque_date}}</td><td>{{item.paid_date}}</td>
-        <td>{{item.receipt_no}}</td><td>{{item.installment_amount}}</td><td>{{item.fine_amount}}</td></tr>
+        <td>{{item.receipt_no}}</td><td>{{item.installment_amount}}</td><td>{{item.fine_amount}}</td><td>{{item.adhoc_discount}}</td><td>{{item.total}}</td></tr>
       </template>
       <tr><th colspan="12" style="text-align: right;">Total Amount: &nbsp;&nbsp;{{totalamount}}</th></tr>
       </tbody>

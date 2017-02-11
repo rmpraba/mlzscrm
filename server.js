@@ -2497,7 +2497,7 @@ app.post('/insertcashfees',  urlencodedParser,function (req, res){
         actual_amount:req.query.actualamount,
         discount_amount:req.query.discountamount,
         receipt_date:req.query.receiptdate,
-        received_date:req.query.paiddate,
+        received_date:req.query.receiveddate,
         paid_date:req.query.paiddate,
         paid_status:req.query.paidstatus,
         cheque_status:req.query.paidstatus,

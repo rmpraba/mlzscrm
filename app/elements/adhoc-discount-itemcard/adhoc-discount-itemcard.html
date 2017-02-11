@@ -45,7 +45,7 @@
         // discounttypeid=(e.target.selectedItem.value).trim();
       },
       FnAdd:function(){
-        if(this.discountamount>0&&discountfeetype!="")
+        if(this.discountamount!=""&&discountfeetype!="")
         this.$.service.updateadhocdiscountService(this.admissionno,this.discountamount,discountfeetype,this.reason);
         else
           alert('Please choose feetype or enter discount amount!!');

@@ -205,7 +205,11 @@
           }
           // arr[i].fine_amount=0;
           // alert(JSON.stringify(arr[i].cheque_no));
-          totalamount=parseFloat(parseFloat(totalamount)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount)).toFixed(2);
+          if(arr[i].adhoc_discount==""||arr[i].adhoc_discount==null)
+            arr[i].adhoc_discount=0;
+        var total=parseFloat(parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount)+parseFloat(arr[i].adhoc_discount)).toFixed(2);
+        arr[i].total=total;
+        totalamount=parseFloat(parseFloat(totalamount)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount)+parseFloat(arr[i].adhoc_discount)).toFixed(2);
         }
         }
         else{
