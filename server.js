@@ -6429,7 +6429,7 @@ app.post('/insertinstallmentsplitofstud',  urlencodedParser,function (req, res){
   " and admission_no='"+req.query.admissionno+"' and installment='"+req.query.installment+"' "+
   " and feetype='"+req.query.feetype+"'";
   console.log('-----------------------------');
-  console.log(checkqur);
+  console.log(qur);
   console.log('-----------------------------');
   // connection.query(checkqur,
   // function(err, rows){
@@ -6598,6 +6598,34 @@ app.post('/updateadhocdiscount-service',  urlencodedParser,function (req, res){
           console.log(err);
           res.status(200).json({'returnval': 'Unable to process!!'});
         }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/deletestudwisefeesplitup-service',  urlencodedParser,function (req, res){
+  var qur1="update md_student_paidfee set installment_pattern='"+req.query.installmentpattern+"' WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";
+  var qur2="delete from md_studentwise_installment_splitup where admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";
+  var qur3="delete from md_studwise_fee_splitup where admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'"
+  console.log('----------------------');
+  console.log(qur1);
+  console.log(qur2);
+  console.log(qur3);
+  console.log('----------------------');
+  connection.query(qur1,function(err, result){
+      if(!err){        
+          connection.query(qur2,function(err, result){
+            connection.query(qur3,function(err, result){
+              if(!err){
+              res.status(200).json({'returnval': 'Deleted'});
+              }
+              else {
+              console.log(err);
+              res.status(200).json({'returnval': 'Unable to process!!'});
+              }
+            });
+          });
       } else {
         console.log(err);
       }

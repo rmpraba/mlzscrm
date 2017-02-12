@@ -1,0 +1,30 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="installment-pattern-change">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div>Hello from <span>{{foo}}</span></div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'installment-pattern-change',
+
+      properties: {
+        foo: {
+          type: String,
+          value: 'installment-pattern-change',
+          notify: true
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>

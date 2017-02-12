@@ -94,6 +94,17 @@
         on-response="insertstudwisefeesplitupResponse"
         debounce-duration="300"
         >
+
+    <iron-ajax
+        method="post"
+        id="deletestudwisefeesplitupajax"
+        url="{{deletestudwisefeesplitupurl}}"
+        params="{{deletestudwisefeesplitupparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="deletestudwisefeesplitupResponse"
+        debounce-duration="300"
+        >
         
   </template>
   <script>
@@ -113,6 +124,8 @@
     var feereceiptarr=[];
     var arr=[];
     var studsplitarr=[];
+    var count1=0;
+    var count2=0;
     Polymer({
       is: 'fees-service',
 
@@ -992,12 +1005,14 @@
         for(var i=0;i<splitarr.length;i++){
             studsplitarr.push(splitarr[i]);
         }
-        // alert(JSON.stringify(this.splitarr));
+        // alert(JSON.stringify(studsplitarr));
         // if(localStorage.getItem("curr_sess_installmentpattern")=="1"){
         
         // }
       },
       insertinstallmentsplitofstudService:function(){
+        count1=0;
+        count2=0;
         for(var i=0;i<studsplitarr.length;i++){
         this.insertinstallmentsplitofstudurl=sessionStorage.getItem("addrinfo")+"/insertinstallmentsplitofstud";
         var obj={};
@@ -1009,6 +1024,8 @@
         obj.installmentdate=studsplitarr[i].installmentdate;
         obj.actualamount=studsplitarr[i].actualamount;
         obj.discountamount=studsplitarr[i].discountamount;
+        count1=studsplitarr[i].fees.length;
+        // alert(count1);
         for(var j=0;j<studsplitarr[i].fees.length;j++){
             obj.feetype=studsplitarr[i].fees[j].feetype;
             obj.feetypeactualamount=studsplitarr[i].fees[j].actualamount;
@@ -1021,6 +1038,13 @@
       },
       insertinstallmentsplitofstudResponse:function(e){
         // alert(e.detail.response.returnval);
+        // alert(count1+" "+count2);
+        count2++;
+        if(count1==count2){
+            count1=0;
+            count2=0;
+            document.querySelector('fees-card').FnProceedPayment();
+        }
       },
       insertstudwisefeesplitupService:function(split,paymentarr){
         // alert(JSON.stringify(paymentarr));
@@ -1035,6 +1059,7 @@
         obj.installmentamount=split[i].installmentamount;
         obj.actualamount=split[i].actualamount;
         obj.discountamount=split[i].discountamount;
+        // count1=split[i].fees.length;
         for(var j=0;j<split[i].fees.length;j++){
             obj.feetype=split[i].fees[j].feetype;
             obj.feetypeactualamount=split[i].fees[j].feetypeactualamount;
@@ -1056,6 +1081,7 @@
         obj.installmentamount=paymentarr[i].installment_amount;
         obj.actualamount=paymentarr[i].installment_amount;
         obj.discountamount=localStorage.getItem("curr_sess_discountpercentamt");
+        // count1=paymentarr[i].fees.length;
         for(var j=0;j<paymentarr[i].fees.length;j++){
             obj.feetype=paymentarr[i].fees[j].feetype;
             // obj.feetypeactualamount=paymentarr[i].fees[j].feetypeactualamount;
@@ -1068,7 +1094,24 @@
         }
       },
       insertstudwisefeesplitupResponse:function(e){
-
+        // alert('in..'+e.detail.response.returnval);
+      },
+      deletestudwisefeesplitupService:function(){       
+        this.deletestudwisefeesplitupurl=sessionStorage.getItem("addrinfo")+"/deletestudwisefeesplitup-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.admissionno=localStorage.getItem("curr_sess_enquiryno");
+        obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");
+        this.deletestudwisefeesplitupparam=obj;              
+        this.$.deletestudwisefeesplitupajax.generateRequest();
+      },
+      deletestudwisefeesplitupResponse:function(e){
+        // alert(e.detail.response.returnval);
+        if(e.detail.response.returnval=="Deleted")
+        {
+          this.insertinstallmentsplitofstudService();
+        }
       }
     });
   })();

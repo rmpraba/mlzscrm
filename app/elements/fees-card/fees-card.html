@@ -114,6 +114,17 @@
       <span><paper-checkbox class="col-sm-3" id="structurethirdpartymode" readonly class="checkbox" on-change="thirdpartyHandler" disabled="{{disableflag}}">Thirdparty</paper-checkbox></span>
       </div>
 
+
+      <div class="form-group-heading">
+        <h4>Want to change installment pattern??</h4>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+            <div class="col-sm-12 enquiry-input" hidden$="{{hidechangeinspattern}}">
+            <span><paper-checkbox class="col-sm-3" id="inspatternchangeyes" readonly class="checkbox" on-change="inspatternyesHandler" >Yes</paper-checkbox></span>
+            <span><paper-checkbox class="col-sm-3" id="inspatternchangeno" readonly class="checkbox" on-change="inspatternnoHandler" >No</paper-checkbox></span>
+            </div>
+      </div>
+
       <div class="form-group-heading">
         <h4>Installment Pattern</h4>
       </div>
@@ -475,7 +486,16 @@
       FnPayfee:function(){  
       // alert(JSON.stringify(installment));  
       // alert(JSON.stringify(installment.length));
-      this.$.feeservice.insertinstallmentsplitofstudService();    
+      if(localStorage.getItem("curr_sess_alreadypaidflag")==1){
+      this.$.feeservice.deletestudwisefeesplitupService();
+      }
+      else{
+      this.$.feeservice.insertinstallmentsplitofstudService(); 
+      }   
+      
+      },
+      FnProceedPayment:function(){
+      // alert(JSON.stringify(installment));
       for(var i=0;i<installment.length;i++){ 
       if(installment[i].paymenttype=="Cash")
         this.$.feeservice.callInsertCashfeesService(installment[i],installment.length);
@@ -548,6 +568,7 @@
         document.querySelector('#schoolfeenextyear').checked=true;
         document.querySelector('#schoolfeecurrentyear').checked=false;
         document.querySelector('datepicker-icon-card').ready();
+        localStorage.setItem("curr_sess_installmentpatternchange",'false');
       },
       FnRefresh1:function(){
         document.querySelector('#structureselfmode').checked=true;
@@ -587,6 +608,7 @@
         // document.querySelector('#schoolfeenextyear').checked=false;
         // document.querySelector('#schoolfeecurrentyear').checked=true;
         document.querySelector('datepicker-icon-card').ready();
+        localStorage.setItem("curr_sess_installmentpatternchange",'false');
       },
       generalHandler:function(e){
         if(document.querySelector("#structuregeneral1").checked==true)
@@ -658,6 +680,22 @@
          // this.$.admissionservice.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
         }
       } ,
+      inspatternyesHandler:function(e){
+        if(document.querySelector("#inspatternchangeyes").checked==true)
+        {
+          document.querySelector("#inspatternchangeno").checked=false;
+          this.disableflag=false;
+          localStorage.setItem("curr_sess_installmentpatternchange",'true');
+        }
+      },
+      inspatternnoHandler:function(e){
+        if(document.querySelector("#inspatternchangeno").checked==true)
+        {
+          document.querySelector("#inspatternchangeyes").checked=false;
+          this.disableflag=true;
+          localStorage.setItem("curr_sess_installmentpatternchange",'false');
+        }
+      },
       // thirdpartyHandler:function(e){
       //   if(document.querySelector("#structurethirdparty1").checked==true)
       //   {

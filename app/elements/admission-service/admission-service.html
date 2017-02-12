@@ -1130,14 +1130,23 @@ insertstudenthistoryResponse:function(e){
      searchfeeadmissionpaidinfoResponse:function(e){
         paidfeearr=e.detail.response.returnval;
         if(paidfeearr!='no rows'){
+            document.querySelector('fees-card').hidechangeinspattern=false;
+            localStorage.setItem("curr_sess_alreadypaidflag",1);
+            // alert(localStorage.getItem("curr_sess_installmentpatternchange"));
+            if(localStorage.getItem("curr_sess_installmentpatternchange")!='true')
+            {
+                // alert('coming');
             var mode=paidfeearr[0].payment_through;
             localStorage.setItem("curr_sess_installmentpattern",paidfeearr[0].installment_pattern);
             var pattern=paidfeearr[0].installment_pattern;
             document.querySelector('fees-card').FnSetPaidPattern(mode,pattern);
             document.querySelector('fees-card').FnSetDisableFlag(true);
+            }
             this.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
         }
         else{
+            document.querySelector('fees-card').hidechangeinspattern=true;
+            localStorage.setItem("curr_sess_alreadypaidflag",0);
             document.querySelector('fees-card').FnSetDisableFlag();
             this.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
         }
@@ -1603,7 +1612,7 @@ insertstudenthistoryResponse:function(e){
                       } 
 
                       arr[i].actualamount=parseFloat(arr[i].amount);
-
+                      if(localStorage.getItem("curr_sess_alreadypaidflag")==0){
                       if(arr[i].amount>=discountarr[j].amount){
                         var discountamt=parseFloat(arr[i].amount)-parseFloat(discountarr[j].amount);
                         arr[i].amount=parseFloat(parseFloat(arr[i].amount)-parseFloat(discountarr[j].amount)).toFixed(2);
@@ -1613,37 +1622,10 @@ insertstudenthistoryResponse:function(e){
                       if(noofinstallment>1){
                       var discountamt=parseFloat(parseFloat(discountarr[j].amount)-parseFloat(arr[i].amount)).toFixed(2);
                       arr[i].amount=0;
-                      discountarr[j].amount=discountamt;
-                      // var discountamt=(Math.ceil(Math.abs(parseFloat(
-                      //    parseFloat(discountarr[j].amount)/(parseInt(noofinstallment))-parseInt(arr[i].amount))/1000))*1000).toFixed(2);
-                      // arr[i].amount=parseFloat(parseFloat(arr[i].amount)-(Math.ceil(Math.abs(parseFloat(
-                      //    parseFloat(discountarr[j].amount)/(parseInt(noofinstallment))-parseInt(arr[i].amount))/1000))*1000)).toFixed(2);
-                      // discountarr[j].amount=parseFloat(parseFloat(discountarr[j].amount)-parseFloat(discountamt)).toFixed(2);      
+                      discountarr[j].amount=discountamt;   
                       }
-                      // else
-                      // {
-                      //   arr[i].amount=parseFloat(parseFloat(arr[i].amount)-
-                      //    parseFloat(discountarr[j].amount)).toFixed(2); 
-                      //   discountarr[j].amount=0;
-                      // }
-
                       }
-                      
-                      // if(noofinstallment>1){
-                      // var discountamt=(Math.ceil(Math.abs(parseFloat(
-                      //    parseFloat(discountarr[j].amount)/(parseInt(noofinstallment))-parseInt(arr[i].amount))/1000))*1000).toFixed(2);
-                      // arr[i].amount=parseFloat(parseFloat(arr[i].amount)-(Math.ceil(Math.abs(parseFloat(
-                      //    parseFloat(discountarr[j].amount)/(parseInt(noofinstallment))-parseInt(arr[i].amount))/1000))*1000)).toFixed(2);
-
-                      // discountarr[j].amount=parseFloat(parseFloat(discountarr[j].amount)-parseFloat(discountamt)).toFixed(2);
-                      
-                      // }
-                      // else
-                      // {
-                      //   arr[i].amount=parseFloat(parseFloat(arr[i].amount)-
-                      //    parseFloat(discountarr[j].amount)).toFixed(2); 
-                      //   discountarr[j].amount=0;
-                      // }
+                      }
 
                        for(var n=0;n<inscount.length;n++){
                         if(inscount[n].fee_type==arr[i].fee_type){
@@ -1667,35 +1649,16 @@ insertstudenthistoryResponse:function(e){
                        flag=1;
                        arr[i].actualamount=parseFloat(arr[i].amount);
                        if(noofinstallment>1){
-                        // alert(JSON.stringify(discountarr[j].amount));
-                        // alert(JSON.stringify(parseInt(noofinstallment)-parseInt(arr[i].amount)));
-                        // alert(JSON.stringify(Math.abs(parseFloat(
-                        //  parseFloat(discountarr[j].amount)/(parseInt(noofinstallment))-parseInt(arr[i].amount))/1000)));
-                        // alert(JSON.stringify((Math.ceil(Math.abs(parseFloat(
-                        //  parseFloat(discountarr[j].amount)/(parseInt(noofinstallment))-parseInt(arr[i].amount))/1000))*1000)));
-
                         var discountamt=(Math.ceil(Math.abs(parseFloat(
                          parseFloat(discountarr[j].amount)/(parseInt(noofinstallment))-parseInt(arr[i].amount))/1000))*1000).toFixed(2);
                         arr[i].amount=parseFloat(parseFloat(arr[i].amount)-(Math.ceil(Math.abs(parseFloat(
                          parseFloat(discountarr[j].amount)/(parseInt(noofinstallment))-parseInt(arr[i].amount))/1000))*1000)).toFixed(2);
-                       // arr[i].amount=parseFloat(parseFloat(arr[i].amount)-(Math.ceil(Math.abs(parseFloat(parseFloat(discountarr[j].amount)/(parseInt(noofinstallment)-parseInt(arr[i].installment_no)))/1000))*1000)).toFixed(2);
-                       // alert((Math.ceil(Math.abs(parseFloat(
-                       //   parseFloat(discountarr[j].amount)/(parseInt(noofinstallment)-parseInt(arr[i].amount)))/1000))*1000));
-                           // alert('dicount...'+discountarr[j].amount+" "+discountamt);
                        discountarr[j].amount=parseFloat(parseFloat(discountarr[j].amount)-parseFloat(discountamt)).toFixed(2);
-
-                       // discountarr[j].amount=parseFloat(parseFloat(discountarr[j].amount)-(Math.ceil(Math.abs(parseFloat(
-                       //   parseFloat(discountarr[j].amount)/(parseInt(noofinstallment)-parseInt(arr[i].amount)))/1000))*1000)).toFixed(2);
-                       
-                       // discountarr[j].amount=parseFloat(parseFloat(discountarr[j].amount)-(Math.ceil(Math.abs(parseFloat(parseFloat(discountarr[j].amount)/(parseInt(noofinstallment)-parseInt(arr[i].installment_no)))/1000))*1000)).toFixed(2);
-                       // alert(discountarr[j].amount);
                        }
                        else
                        {
-                        // alert(parseFloat(arr[i].amount)+" "+parseFloat(discountarr[j].amount));
                         arr[i].amount=parseFloat(parseFloat(arr[i].amount)-
                          parseFloat(discountarr[j].amount)).toFixed(2);
-                        // alert('else'+discountarr[j].amount); 
                         discountarr[j].amount=0;
                        }
                       for(var n=0;n<inscount.length;n++){
