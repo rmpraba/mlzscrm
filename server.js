@@ -2509,7 +2509,8 @@ app.post('/insertcashfees',  urlencodedParser,function (req, res){
         receipt_no:"",
         adhoc_discount:req.query.adhocdiscount,
         adhoc_feetype:req.query.adhocfeetype,
-        adhoc_reason:req.query.adhocreason
+        adhoc_reason:req.query.adhocreason,
+        admission_status:req.query.admissionstatus
     };
 
 
@@ -2626,7 +2627,8 @@ app.post('/insertchequefees',  urlencodedParser,function (req, res){
         receipt_no:"",
         adhoc_discount:req.query.adhocdiscount,
         adhoc_feetype:req.query.adhocfeetype,
-        adhoc_reason:req.query.adhocreason
+        adhoc_reason:req.query.adhocreason,
+        admission_status:req.query.admissionstatus
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
@@ -2743,7 +2745,8 @@ app.post('/inserttransferfees',  urlencodedParser,function (req, res){
         receipt_no:"",
         adhoc_discount:req.query.adhocdiscount,
         adhoc_feetype:req.query.adhocfeetype,
-        adhoc_reason:req.query.adhocreason
+        adhoc_reason:req.query.adhocreason,
+        admission_status:req.query.admissionstatus
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
@@ -2854,7 +2857,8 @@ app.post('/insertthirdpartyfees',  urlencodedParser,function (req, res){
         difference_amount:0,
         adhoc_discount:req.query.adhocdiscount,
         adhoc_feetype:req.query.adhocfeetype,
-        adhoc_reason:req.query.adhocreason
+        adhoc_reason:req.query.adhocreason,
+        admission_status:req.query.admissionstatus
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
@@ -5232,7 +5236,11 @@ console.log(req.query.schoolid);
 
 app.post('/fetchreceipt-service',  urlencodedParser,function (req, res){
 console.log(req.query.schoolid);
-  var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' or student_name='"+req.query.name+"' or enquiry_no like '"+req.query.admissionno+"')";
+  var qur="SELECT *,(select father_name from md_admission where school_id='"+req.query.schoolid+"' "+
+  "and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' "+ 
+  "or enquiry_no like '"+req.query.admissionno+"')) as fathername,(select mother_name from md_admission where school_id='"+req.query.schoolid+"' "+
+  "and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' "+
+  "or enquiry_no like '"+req.query.admissionno+"')) as mothername FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' or student_name='"+req.query.name+"' or enquiry_no like '"+req.query.admissionno+"')";
   console.log('-----------------------------------------------');
   console.log(qur);
   console.log('-----------------------------------------------');

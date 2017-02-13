@@ -422,6 +422,9 @@
         var arr=e.detail.response.returnval;
         if(arr.length>0)
         {
+          // alert(arr[0].fathername);
+          localStorage.setItem("curr_sess_parentname",arr[0].fathername);
+          document.querySelector('feereceipt-outcard').Fnsetinfo();
           paymentarr=arr;
           this.fetchstudfeesplitupService();
           // var feecode=arr[0].fee_code;

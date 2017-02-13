@@ -165,6 +165,7 @@
         obj.receiveddate=localStorage.getItem("curr_sess_date");
         obj.paymentthrough=localStorage.getItem("curr_sess_paymentthrough");
         obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");   
+        obj.admissionstatus=localStorage.getItem("curr_sess_admissionstatus");
         obj.createdby=localStorage.getItem("employeeid"); 
         obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");   
         this.insertcashfeesparam=obj;   
@@ -231,6 +232,7 @@
         obj.receiveddate=localStorage.getItem("curr_sess_date");
         obj.paymentthrough=localStorage.getItem("curr_sess_paymentthrough");  
         obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");
+        obj.admissionstatus=localStorage.getItem("curr_sess_admissionstatus");
         obj.createdby=localStorage.getItem("employeeid"); 
         obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");   
         this.Thirdpartyfeesparam=obj;   
@@ -307,7 +309,8 @@
         obj.fineamount=0;
         obj.receiveddate=localStorage.getItem("curr_sess_date"); 
         obj.paymentthrough=localStorage.getItem("curr_sess_paymentthrough");
-        obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");  
+        obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");
+        obj.admissionstatus=localStorage.getItem("curr_sess_admissionstatus");  
         obj.createdby=localStorage.getItem("employeeid"); 
         obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");   
         obj.receiptdate=cheque[i].receiptdate;     
@@ -376,6 +379,7 @@
         obj.receiveddate=localStorage.getItem("curr_sess_date");         
         obj.paymentthrough=localStorage.getItem("curr_sess_paymentthrough");
         obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");
+        obj.admissionstatus=localStorage.getItem("curr_sess_admissionstatus");
         obj.createdby=localStorage.getItem("employeeid"); 
         obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");   
         obj.receiptdate=transfer[i].receiptdate;     
