@@ -4033,10 +4033,10 @@ app.post('/fetchfeecollectionreport-service',  urlencodedParser,function (req, r
 app.post('/daycollection-service',  urlencodedParser,function (req, res){
    if(req.query.grade=="All Grades")
    var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date='"+req.query.fromdate+"' "+
-             ") and mode_of_payment in('cash','Transfer')) or ((cheque_date='"+req.query.fromdate+"') and mode_of_payment in('cheque')) and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";
+             ") and mode_of_payment in('cash','Transfer')) or ((cheque_date<='"+req.query.fromdate+"' and received_date='"+req.query.fromdate+"') and mode_of_payment in('cheque')) and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";
    else
    var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date='"+req.query.fromdate+"' "+
-             ") and mode_of_payment in('cash','Transfer')) or ((cheque_date='"+req.query.fromdate+"') and mode_of_payment in('cheque')) and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";
+             ") and mode_of_payment in('cash','Transfer')) or ((cheque_date='"+req.query.fromdate+"' and received_date='"+req.query.fromdate+"') and mode_of_payment in('cheque')) and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";
    
  console.log('-----------------------collection report--------------------------');
  console.log(qur);
