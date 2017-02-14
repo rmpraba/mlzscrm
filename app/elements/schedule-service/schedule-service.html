@@ -437,6 +437,8 @@
         document.querySelector('gradewise-fee-structure-report').gradearr=gradearr;
         document.querySelector('enrollment-report').gradearr=gradearr;
         document.querySelector('daycollection-report').gradearr=gradearr;
+        document.querySelector('notpaid-report').gradearr=gradearr;
+        document.querySelector('notpaid-report').FnSetArray(gradearr);
       },
       fetchgradeService:function(){       
         this.fetchgradeurl=sessionStorage.getItem("addrinfo")+"/fetchgrade-service"
@@ -473,6 +475,7 @@
         document.querySelector('cancel-enrollment-card').academicarr=e.detail.response.returnval;
         document.querySelector('gradewise-fee-structure-report').academicarr=e.detail.response.returnval;
         document.querySelector('enrollment-report').academicarr=e.detail.response.returnval;
+        document.querySelector('notpaid-report').academicarr=e.detail.response.returnval;
       },
       fetchadmissionyearService:function(){        
         this.fetchadmissionyearurl=sessionStorage.getItem("addrinfo")+"/fetchadmissionyear-service"

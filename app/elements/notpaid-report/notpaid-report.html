@@ -1,7 +1,7 @@
 
 <link rel="import" href="..\..\bower_components/polymer/polymer.html">
 
-<dom-module id="pendingfee-report">
+<dom-module id="notpaid-report">
   <template>
     <style>
       .datecard {
@@ -13,8 +13,8 @@
           <div class="row">
             <div class="col-md-12">
                  <div class="col-md-3" style="margin-top: 0%;">
-                 <paper-dropdown-menu id="pendingacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
-                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="pendingacademicyear" attr-for-selected="value">
+                 <paper-dropdown-menu id="notpaidacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="notpaidacademicyear" attr-for-selected="value">
                   <template  is="dom-repeat" items="{{academicarr}}" as="item">
                   <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
                   </template>
@@ -23,7 +23,7 @@
                  </div>
                  <div class="col-sm-2" style="margin-left: 5%;">
                 <paper-dropdown-menu label="Grade" attr-for-selected="value">
-                  <paper-menu id="pendinggrade" class="dropdown-content" required on-iron-select="FnSelectGrade" valueattr="value" >
+                  <paper-menu id="notpaidgrade" class="dropdown-content" required on-iron-select="FnSelectGrade" valueattr="value" >
                     <template  is="dom-repeat" items="{{gradearr}}" as="item">
                     <paper-item value="{{item.grade_id}}">{{item.grade_name}}</paper-item>
                     </template>
@@ -33,7 +33,7 @@
                 <div class="col-md-1" style="margin-top: 1%;margin-left: 35%;">
                 <p>Download
                 <a href="#">
-                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('pendingfeereportt', 'Pending fee report')"></span>
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('notpaidreportt','Not paid report')"></span>
                 </a>
                 </p>
                 </div> 
@@ -41,15 +41,15 @@
           </div>
         </div>
     </div>
-     <table class="table table-hover" id="pendingfeereportt">
+     <table class="table table-hover" id="notpaidreportt">
       <thead>
       <tr>
-        <th>Sno</th><th>Enr/Enq No</th><th>Student Name</th><th>Grade</th><th>Actual Fee</th><th>Discount</th><th>Total Fee</th><th>Paid Fee</th><th>Pending Fee</th>
+        <th>Sno</th><th>Enr/Enq No</th><th>Student Name</th><th>Grade</th><th>Father Name</th><th>Father Mobileno</th><th>Mother Name</th><th>Mother Mobileno</th><th>Email</th>
       </tr>
       </thead>
       <tbody>
-      <template  is="dom-repeat" items="{{pendingfeearr}}" as="item">
-        <tr><td>{{item.sno}}</td><td>{{item.admission_no}}</td><td>{{item.student_name}}</td><td>{{item.class_for_admission}}</td><td>{{item.fees}}</td><td>{{item.discount_amount}}</td><td>{{item.total_amount}}</td><td>{{item.paid_amount}}</td><td>{{item.pending_amount}}</td></tr>
+      <template  is="dom-repeat" items="{{notpaidarr}}" as="item">
+        <tr><td>{{item.sno}}</td><td>{{item.admission_no}}</td><td>{{item.student_name}}</td><td>{{item.class_for_admission}}</td><td>{{item.father_name}}</td><td>{{item.father_mobile}}</td><td>{{item.mother_name}}</td><td>{{item.mother_mobile}}</td><td>{{item.father_email}}</td></tr>
       </template>
       <!-- <tr><th colspan="11" style="text-align: right;">Total Amount: &nbsp;&nbsp;{{totalamount}}</th></tr> -->
       </tbody>
@@ -74,9 +74,10 @@
   (function() {
     'use strict';
     var academicyear;
-    var grade='all';
+    var grade='All Grades';
+    var gradearr=[];
     Polymer({
-      is: 'pendingfee-report',
+      is: 'notpaid-report',
       ready:function(){
         this.flag=0;
       },
@@ -95,26 +96,43 @@
         }
         academicyear="AY-"+cy+"-"+ny;
         // this.$.feereportservice.FnFetchallstudentstructureService(academicyear,grade);
-        this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade);
+        this.$.feereportservice.FnFetchNotpaidReportService(academicyear,grade);
       },
       FnView:function(){
-        this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade);
+        this.$.feereportservice.FnFetchNotpaidReportService(academicyear,grade);
       },
       FnRefresh:function(){
-        this.pendingfeearr=[];
-        document.querySelector('#pendingacademicyear').selected=-1;
-        document.querySelector('#pendinggrade').selected=-1;
+        this.notpaidarr=[];
+        document.querySelector('#notpaidacademicyear').selected=-1;
+        document.querySelector('#notpaidgrade').selected=-1;
+      },
+      FnSetArray:function(arr){
+        gradearr=arr;
       },
       FnSelectGrade:function(e){
         this.flag=1;
         grade=(e.target.selectedItem.textContent).trim();
-        this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade);
+        // alert(grade);
+        // alert(JSON.stringify(gradearr));
+        for(var i=0;i<gradearr.length;i++)
+        {
+            if(grade!='All Grades'){
+            if(gradearr[i].grade_name==grade){
+             // alert('in'+gradearr[i+1].grade_name);
+             grade= gradearr[i+1].grade_name;
+             break;
+            }
+            }
+
+        }
+        // alert(grade);
+        this.$.feereportservice.FnFetchNotpaidReportService(academicyear,grade);
       },
       FnSelectAcademicYear:function(e){
         academicyear=(e.target.selectedItem.textContent).trim();
         localStorage.setItem("curr_sess_academicyear",academicyear);
         if(this.flag==1)
-        this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade);
+        this.$.feereportservice.FnFetchNotpaidReportService(academicyear,grade);
       }
     });
   })();

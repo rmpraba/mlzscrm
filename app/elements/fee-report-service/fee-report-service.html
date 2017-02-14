@@ -168,13 +168,25 @@
         content-type="application/json"
         on-response="daycollectionResponse"
         debounce-duration="300"
+        >      
+        <iron-ajax
+        method="post"
+        id="fetchnotpaidreportajax"
+        url="{{fetchnotpaidreporturl}}"
+        params="{{fetchnotpaidreportparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchnotpaidreportResponse"
+        debounce-duration="300"
         >
+
   </template>
   <script>
   (function() {
     'use strict';
     var splitupamountarr=[];
     var overallamountarr=[];
+    var studstructure=[];
     Polymer({
       is: 'fee-report-service',
       FnFetchDayCollectionService:function(grade){
@@ -307,10 +319,50 @@
         }
         }
         else{
-          arr=[]
+          arr=[];
         }
         document.querySelector('pendingcheques-report').totalamount=totalamount;
         document.querySelector('pendingcheques-report').pendingarr=arr;
+      },
+      FnFetchNotpaidReportService:function(academicyear,grade){
+        this.fetchnotpaidreporturl=sessionStorage.getItem("addrinfo")+"/fetchnotpaidreport-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        this.fetchnotpaidreportparam=obj;
+        this.$.fetchnotpaidreportajax.generateRequest();
+      },
+      fetchnotpaidreportResponse:function(e){
+        var studarr=e.detail.response.studarr;
+        var admnarr=e.detail.response.admnarr;
+        var gradearr=e.detail.response.gradearr;
+        var arr=[];
+        var n=1;
+        if(admnarr.length>0){
+          if(studarr.length>0){
+          for(var i=0;i<studarr.length;i++){
+            for(var j=0;j<admnarr.length;j++){
+              if(studarr[i].admission_no==admnarr[j].admission_no){
+                studarr[i].sno=n;
+                for(var k=0;k<gradearr.length;k++){
+                  if(studarr[i].class_for_admission==gradearr[k].grade_name){
+                    if(k-1<0){}
+                    else
+                    studarr[i].class_for_admission=gradearr[k-1].grade_name;
+                  }
+                }
+                arr.push(studarr[i]);
+                n++;
+              }
+            }
+          }
+          }
+          document.querySelector('notpaid-report').notpaidarr=arr;
+        }
+        else
+          document.querySelector('notpaid-report').notpaidarr=studarr;
+
       },
       FnFetchPendingCollectionReportService:function(academicyear,grade){
         this.pendingfeecollectionreporturl=sessionStorage.getItem("addrinfo")+"/pendingfeecollectionreport-service";
@@ -333,6 +385,7 @@
           var paidflag=0;
           var pendingamount=0;
           var pendingflag=0;
+          var discountamount=0;
           if(paidarr.length>0){
           for(var j=0;j<paidarr.length;j++){
             if(totalarr[i].admission_no==paidarr[j].admission_no)
@@ -340,37 +393,46 @@
               paidflag=1;
               paidamount=parseFloat(paidamount)+parseFloat(paidarr[j].paidamount);
               totalarr[i].paid_amount=paidamount;
+              discountamount=parseFloat(discountamount)+parseFloat(paidarr[j].discountamount);
+              totalarr[i].discount_amount=discountamount;
             }
           }
           if(paidflag==0)
             {
             paidamount=parseFloat(paidamount)+parseFloat(0);
             totalarr[i].paid_amount=paidamount;
+            totalarr[i].discount_amount=0;
             }
           paidamount=0;
           paidflag=0;
+          discountamount=0;
           }
-          if(pendingarr.length>0){
-          for(var j=0;j<pendingarr.length;j++){
-            if(totalarr[i].admission_no==pendingarr[j].admission_no)
-            {
-              pendingflag=1;
-              pendingamount=parseFloat(pendingamount)+parseFloat(pendingarr[j].pendingamount);
-              totalarr[i].paid_amount=parseFloat(totalarr[i].paid_amount)-parseFloat(pendingamount);
-              totalarr[i].pending_amount=pendingamount;
-            }
-          }
-          if(pendingflag==0)
-            {
-            pendingamount=parseFloat(pendingamount)+parseFloat(0);
-            totalarr[i].pending_amount=pendingamount;
-            }
-          pendingamount=0;
-          pendingflag=0;
-          }
-          else
-            totalarr[i].pending_amount=pendingamount;
+          // if(pendingarr.length>0){
+          // for(var j=0;j<pendingarr.length;j++){
+          //   if(totalarr[i].admission_no==pendingarr[j].admission_no)
+          //   {
+          //     pendingflag=1;
+          //     pendingamount=parseFloat(pendingamount)+parseFloat(pendingarr[j].pendingamount);
+          //     totalarr[i].paid_amount=parseFloat(totalarr[i].paid_amount)-parseFloat(pendingamount);
+          //     totalarr[i].pending_amount=pendingamount;
+          //   }
+          // }
+          // if(pendingflag==0)
+          //   {
+          //   pendingamount=parseFloat(pendingamount)+parseFloat(0);
+          //   totalarr[i].pending_amount=pendingamount;
+          //   }
+          // pendingamount=0;
+          // pendingflag=0;
+          // }
+          // else
+          //   totalarr[i].pending_amount=pendingamount;
         }
+        }
+
+        for(var i=0;i<totalarr.length;i++){
+          totalarr[i].total_amount=parseFloat(totalarr[i].fees)-parseFloat(totalarr[i].discount_amount);
+          totalarr[i].pending_amount=parseFloat(totalarr[i].total_amount)-parseFloat(totalarr[i].paid_amount);
         }
         // alert(JSON.stringify(totalarr));
         if(totalarr.length>0)

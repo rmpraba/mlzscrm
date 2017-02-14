@@ -319,7 +319,7 @@
             </nav-second-level>
           </li>
 
-           <li id="masterreport" hidden$="{{hidemasterreportmenu}}">
+           <!-- <li id="masterreport" hidden$="{{hidemasterreportmenu}}">
             <a href="#" aria-hidden="true" data-toggle="modal" on-click="Master"><i class="fa fa-money fa-fw"></i>Master Reports<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
               <li>
@@ -330,7 +330,7 @@
               </li>             
             </ul>
             </nav-second-level>
-          </li>
+          </li> -->
 
           <li id="reports" hidden$="{{hidereportmenu}}">
             <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Report<span class="fa arrow"></span></a>
@@ -394,11 +394,14 @@
             <a href="" aria-hidden="true">Pending Collection report<span class="fa arrow"></span></a>
              <ul class="nav nav-third-level">
             <li id="pendingcollectionreport">
-            <a href="" aria-hidden="true" on-click="FnPendingFeeReport">Pending Collection Report</a>
+            <a href="" aria-hidden="true" on-click="FnPendingFeeReport">Fee Due Report</a>
             </li>
-            <li id="pendingcheques">
+            <li id="notpaidreport">
+            <a href="" aria-hidden="true" on-click="FnNotpaidReport">Not paid List</a>
+            </li>
+            <!-- <li id="pendingcheques">
             <a href="" aria-hidden="true" on-click="FnPendingCheques">Pending Cheques</a>
-            </li>
+            </li> -->
            </ul>
             </li>
             </ul>
@@ -1027,6 +1030,14 @@
         document.querySelector('pendingfee-report').ready();
         document.querySelector('pendingfee-report').FnRefresh();
         document.querySelector('pendingfee-report').FnCallService();
+      },
+      FnNotpaidReport:function(){
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchgradeforreportService();
+        document.querySelector('app-list').setPage("notpaid-report","Not paid list");
+        document.querySelector('notpaid-report').ready();
+        document.querySelector('notpaid-report').FnRefresh();
+        document.querySelector('notpaid-report').FnCallService();
       },
       FnDailyCollectionReport:function(){
         this.$.scheduleservice.fetchgradeforreportService();
