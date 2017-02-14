@@ -150,11 +150,13 @@
         obj.paymentthrough=localStorage.getItem("curr_sess_paymentthrough");
         obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");   
         obj.createdby=localStorage.getItem("employeeid"); 
-        obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");   
+        obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");  
         obj.adhocdiscount=localStorage.getItem("curr_sess_adhocdiscount");
         obj.adhocfeetype=localStorage.getItem("curr_sess_adhocfeetype");
         obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");
         obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");
+        obj.admissionstatus=localStorage.getItem("curr_sess_admissionstatus");
+
         this.insertcashfeesparam=obj;   
         // paymentarr.push(obj);            
         this.$.insertcashfeesajax.generateRequest();
@@ -226,6 +228,7 @@
         obj.adhocfeetype=localStorage.getItem("curr_sess_adhocfeetype");
         obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");
         obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");   
+        obj.admissionstatus=localStorage.getItem("curr_sess_admissionstatus");
         this.Thirdpartyfeesparam=obj;   
 
         // paymentarr.push(obj);            
@@ -294,6 +297,7 @@
         obj.adhocfeetype=localStorage.getItem("curr_sess_adhocfeetype");
         obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");
         obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");
+        obj.admissionstatus=localStorage.getItem("curr_sess_admissionstatus");
         obj.receiptdate=cheque[i].receiptdate;     
         this.insertchequefeesparam=obj; 
         // alert(JSON.stringify(obj)); 
@@ -367,6 +371,7 @@
         obj.adhocfeetype=localStorage.getItem("curr_sess_adhocfeetype");
         obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");
         obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");
+        obj.admissionstatus=localStorage.getItem("curr_sess_admissionstatus");
         obj.receiptdate=transfer[i].receiptdate;     
         this.inserttransferfeesparam=obj; 
         // paymentarr.push(obj);   

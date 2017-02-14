@@ -139,6 +139,8 @@
         document.querySelector('custompattern-fee-card').studentname=arr[0].student_name;
         document.querySelector('custompattern-fee-card').parentname=arr[0].father_name;
         document.querySelector('custompattern-fee-card').dob=arr[0].dob;
+
+        localStorage.setItem("curr_sess_admissionstatus",arr[0].admission_status);
         localStorage.setItem("curr_sess_admissiontype",arr[0].admission_type);
         localStorage.setItem("curr_sess_discounttype",arr[0].discount_type);
         localStorage.setItem("curr_sess_referralid",arr[0].referral_type);

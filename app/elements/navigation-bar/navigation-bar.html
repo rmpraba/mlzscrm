@@ -804,6 +804,7 @@
       FnProspect:function(e){
       // alert(e.target.text);
         localStorage.setItem("curr_sess_feetypepayment","Application fee");
+        localStorage.setItem("curr_sess_feetypepaymentflag","1");
         document.querySelector('prospectousfee-card').callService();
         document.querySelector('prospectousfee-card').FnRefresh();
         document.querySelector('prospectousfee-card').ready();
@@ -812,6 +813,7 @@
       FnRegister:function(e){
       // alert(e.target.text);
         localStorage.setItem("curr_sess_feetypepayment","Registration fee");
+        localStorage.setItem("curr_sess_feetypepaymentflag","1");
         document.querySelector('registerationfee-card').callService();
         document.querySelector('registerationfee-card').FnRefresh();
         document.querySelector('registerationfee-card').ready();

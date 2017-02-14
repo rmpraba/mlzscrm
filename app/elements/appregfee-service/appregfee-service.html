@@ -168,7 +168,7 @@
         document.querySelector('prospectousfee-card').enquiredclass=enqarr[0].class;
         document.querySelector('prospectousfee-card').studentname=enqarr[0].enquiry_name;
         document.querySelector('prospectousfee-card').parentname=enqarr[0].father_name;
-
+        localStorage.setItem("curr_sess_admissionstatus","New");
         // localStorage.setItem("curr_sess_academicyear",enqarr[0].academic_year);
         localStorage.setItem("curr_sess_grade",enqarr[0].class);
         localStorage.setItem("curr_sess_studentname",enqarr[0].enquiry_name);
