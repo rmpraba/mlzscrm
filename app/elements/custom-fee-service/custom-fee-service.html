@@ -154,6 +154,7 @@
         obj.adhocdiscount=localStorage.getItem("curr_sess_adhocdiscount");
         obj.adhocfeetype=localStorage.getItem("curr_sess_adhocfeetype");
         obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");
+        obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");
         this.insertcashfeesparam=obj;   
         // paymentarr.push(obj);            
         this.$.insertcashfeesajax.generateRequest();
@@ -223,7 +224,8 @@
         obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");
         obj.adhocdiscount=localStorage.getItem("curr_sess_adhocdiscount");
         obj.adhocfeetype=localStorage.getItem("curr_sess_adhocfeetype");
-        obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");   
+        obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");
+        obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");   
         this.Thirdpartyfeesparam=obj;   
 
         // paymentarr.push(obj);            
@@ -291,6 +293,7 @@
         obj.adhocdiscount=localStorage.getItem("curr_sess_adhocdiscount");
         obj.adhocfeetype=localStorage.getItem("curr_sess_adhocfeetype");
         obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");
+        obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");
         obj.receiptdate=cheque[i].receiptdate;     
         this.insertchequefeesparam=obj; 
         // alert(JSON.stringify(obj)); 
@@ -363,6 +366,7 @@
         obj.adhocdiscount=localStorage.getItem("curr_sess_adhocdiscount");
         obj.adhocfeetype=localStorage.getItem("curr_sess_adhocfeetype");
         obj.adhocreason=localStorage.getItem("curr_sess_adhocreason");
+        obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");
         obj.receiptdate=transfer[i].receiptdate;     
         this.inserttransferfeesparam=obj; 
         // paymentarr.push(obj);   

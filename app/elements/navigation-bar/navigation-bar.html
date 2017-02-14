@@ -848,12 +848,14 @@
       },
       FnKit:function(e){
         localStorage.setItem("curr_sess_feetypepayment","School fee");
+        localStorage.setItem("curr_sess_feetypepaymentflag","0");
         localStorage.setItem("curr_sess_feetype",e.target.text);
         localStorage.setItem("curr_sess_provisionflag",0);
         this.FnRefresh();
       },
       FnCustomfee:function(e){
         localStorage.setItem("curr_sess_feetypepayment","Custom fee");
+        localStorage.setItem("curr_sess_feetypepaymentflag","1");
         localStorage.setItem("curr_sess_feetype",e.target.text);
         document.querySelector('custompattern-fee-card').callService();
         document.querySelector('custompattern-fee-card').FnRefresh();

@@ -2510,7 +2510,8 @@ app.post('/insertcashfees',  urlencodedParser,function (req, res){
         adhoc_discount:req.query.adhocdiscount,
         adhoc_feetype:req.query.adhocfeetype,
         adhoc_reason:req.query.adhocreason,
-        admission_status:req.query.admissionstatus
+        admission_status:req.query.admissionstatus,
+        paymenttype_flag:req.query.type
     };
 
 
@@ -2628,7 +2629,8 @@ app.post('/insertchequefees',  urlencodedParser,function (req, res){
         adhoc_discount:req.query.adhocdiscount,
         adhoc_feetype:req.query.adhocfeetype,
         adhoc_reason:req.query.adhocreason,
-        admission_status:req.query.admissionstatus
+        admission_status:req.query.admissionstatus,
+        paymenttype_flag:req.query.type
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
@@ -2746,7 +2748,8 @@ app.post('/inserttransferfees',  urlencodedParser,function (req, res){
         adhoc_discount:req.query.adhocdiscount,
         adhoc_feetype:req.query.adhocfeetype,
         adhoc_reason:req.query.adhocreason,
-        admission_status:req.query.admissionstatus
+        admission_status:req.query.admissionstatus,
+        paymenttype_flag:req.query.type
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
@@ -2858,7 +2861,8 @@ app.post('/insertthirdpartyfees',  urlencodedParser,function (req, res){
         adhoc_discount:req.query.adhocdiscount,
         adhoc_feetype:req.query.adhocfeetype,
         adhoc_reason:req.query.adhocreason,
-        admission_status:req.query.admissionstatus
+        admission_status:req.query.admissionstatus,
+        paymenttype_flag:req.query.type
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
@@ -5219,6 +5223,23 @@ app.post('/fetchtotalsplitupamount-service',  urlencodedParser,function (req, re
 app.post('/fetchinstallmentdate-service',  urlencodedParser,function (req, res){
 console.log(req.query.schoolid);
   var qur="SELECT * FROM md_installment_date WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and installment_pattern='"+req.query.installmentpattern+"' ";
+  console.log('-----------------------------------------------');
+  console.log(qur);
+  console.log('-----------------------------------------------');
+    connection.query(qur,function(err, rows)
+     {
+       if(!err)
+       {        
+        res.status(200).json({'returnval': rows});
+       }
+       else
+        res.status(200).json({'returnval': 'no rows'});
+     });
+});
+
+
+app.post('/fetchmasterpaidfee-service',  urlencodedParser,function (req, res){
+  var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' or enquiry_no like '"+req.query.admissionno+"')";
   console.log('-----------------------------------------------');
   console.log(qur);
   console.log('-----------------------------------------------');
