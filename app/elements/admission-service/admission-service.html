@@ -1818,6 +1818,7 @@ insertstudenthistoryResponse:function(e){
             for(var i=0;i<paidfeearr.length;i++){
                 for(var j=0;j<arr.length;j++){
                 if((paidfeearr[i].installment=="Commitment Fee (Ins1)"&&arr[j].installment=="Commitment Fee")||(paidfeearr[i].installment=="Commitment Fee (Ins2)"&&arr[j].installment=="Commitment Fee")){
+                    // localStorage.setItem("curr_sess_insrequirement","yes");
                     var obj={};
                     obj.installment=paidfeearr[i].installment;
                     obj.installmentamount=paidfeearr[i].installment_amount;
@@ -1989,21 +1990,90 @@ insertstudenthistoryResponse:function(e){
             var actualamount=0;
             var insdate;
             var feearr=[];
+            var feearr1=[];
+            var feearr2=[];
+            var compflag=0;
+            var diffexamount=0;
+            var diffinsexamount=0;
+            var diffadjustamount=0;
+            var fullarr=[];
+            for(var i=0;i<arr.length;i++){                
+                if(arr[i].installment=="Commitment Fee (Ins1)"){
+                    for(var j=0;j<arr[i].fees.length;j++){
+                    var obj={};
+                    obj.feetype=arr[i].fees[j].feetype;
+                    obj.amount=arr[i].fees[j].amount;
+                    obj.actualamount=arr[i].fees[j].actualamount;
+                    feearr.push(obj);
+                    }
+
+                }
+            }
+
        for(var i=0;i<arr.length;i++){
+        // alert(arr[i].installment);
         if(arr[i].installment=="Commitment Fee (Ins1)"){
             ramount=parseFloat(arr[i].installmentamount)-parseFloat(amount);
             actualamount=ramount;
             insdate=arr[i].installmentdate;
-            feearr=arr[i].fees;
+            // feearr=arr[i].fees;
             arr[i].installmentamount=amount;
+            
+            for(j=0;j<arr[i].fees.length;j++){
+             if(arr[i].fees[j].amount>0&&arr[i].fees[j].feetype=='Kit fee'){
+                if(arr[i].installmentamount<=arr[i].fees[j].amount){                
+                  if(arr[i].installmentamount==arr[i].fees[j].amount)
+                    compflag=1;
+                  else
+                  {
+                    compflag=2;
+                    diffexamount=parseFloat(arr[i].fees[j].amount)-parseFloat(arr[i].installmentamount);
+                    arr[i].fees[j].amount=parseFloat(arr[i].fees[j].amount)-parseFloat(diffexamount);
+                  }                  
+
+                }
+                else{
+                    compflag=3;
+                    diffinsexamount=parseFloat(arr[i].installmentamount)-parseFloat(arr[i].fees[j].amount);
+                }
+             }
+             // alert('out'+" "+compflag+" "+arr[i].fees[j].feetype);
+             if((compflag==1||compflag==2)&&arr[i].fees[j].feetype=='Annual fee'){
+                // alert('coming');
+                arr[i].fees[j].amount=0;
+             }
+             if(compflag==3&&arr[i].fees[j].feetype=='Annual fee'&&arr[i].fees[j].amount>0){
+                diffadjustamount=parseFloat(arr[i].fees[j].amount)-parseFloat(diffinsexamount);
+                arr[i].fees[j].amount=diffinsexamount;
+             }
+             }
+
         }
         if(arr[i].installment=="Commitment Fee (Ins2)"){
         arr[i].installmentamount=ramount;
         arr[i].actualamount=actualamount;
         arr[i].discountamount=0;
         arr[i].fees=feearr;
+
         arr[i].installmentdate=insdate;
+        
+        for(var j=0;j<arr[i].fees.length;j++){
+            // if(arr[i].fees[j].amount>0){
+              // alert(arr[i].fees[j].feetype+" "+compflag+"  "+diffexamount+" "+diffinsexamount);
+              if(arr[i].fees[j].feetype=="Kit fee"&&(compflag==1||compflag==3))
+                arr[i].fees[j].amount=0;
+              if(arr[i].fees[j].feetype=="Kit fee"&&diffexamount>0&&compflag==2)
+                arr[i].fees[j].amount=diffexamount;
+              else
+              {
+                if(diffinsexamount>0&&arr[i].fees[j].feetype=="Annual fee"&&compflag=='3')
+                arr[i].fees[j].amount=diffadjustamount;
+              }
+            // }
         }
+        }
+
+
         arr[i].hiddencommitinput=true;
         arr[i].hiddencommititem=false;
        }
