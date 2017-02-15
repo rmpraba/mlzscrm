@@ -30,7 +30,18 @@
                   </paper-menu>
                 </paper-dropdown-menu> 
                 </div>  
-                <div class="col-md-1" style="margin-top: 1%;margin-left: 35%;">
+                <div class="col-sm-2" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Select Type" attr-for-selected="value">
+                  <paper-menu id="pendingtype" class="dropdown-content" required on-iron-select="FnSelectType" valueattr="value" >
+                    <!-- <template  is="dom-repeat" items="{{}}" as="item"> -->
+                    <paper-item value="all">All</paper-item>
+                    <paper-item value="new">New</paper-item>
+                    <paper-item value="promoted">Promoted</paper-item>
+                    <!-- </template> -->
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div>  
+                <div class="col-md-1" style="margin-top: 1%;margin-left: 20%;">
                 <p>Download
                 <a href="#">
                 <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('pendingfeereportt', 'Pending fee report')"></span>
@@ -74,7 +85,8 @@
   (function() {
     'use strict';
     var academicyear;
-    var grade='all';
+    var grade='All Grades';
+    var type='All';
     Polymer({
       is: 'pendingfee-report',
       ready:function(){
@@ -95,26 +107,32 @@
         }
         academicyear="AY-"+cy+"-"+ny;
         // this.$.feereportservice.FnFetchallstudentstructureService(academicyear,grade);
-        this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade);
+        // this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade,type);
+      },
+      FnSelectType:function(e){
+        this.flag=1;
+        type=(e.target.selectedItem.textContent).trim();
+        this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade,type);
       },
       FnView:function(){
-        this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade);
+        this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade,type);
       },
       FnRefresh:function(){
         this.pendingfeearr=[];
         document.querySelector('#pendingacademicyear').selected=-1;
         document.querySelector('#pendinggrade').selected=-1;
+        document.querySelector('#pendingtype').selected=-1;
       },
       FnSelectGrade:function(e){
-        this.flag=1;
         grade=(e.target.selectedItem.textContent).trim();
-        this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade);
+        if(this.flag==1)
+        this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade,type);
       },
       FnSelectAcademicYear:function(e){
         academicyear=(e.target.selectedItem.textContent).trim();
         localStorage.setItem("curr_sess_academicyear",academicyear);
         if(this.flag==1)
-        this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade);
+        this.$.feereportservice.FnFetchPendingCollectionReportService(academicyear,grade,type);
       }
     });
   })();

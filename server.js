@@ -5393,34 +5393,87 @@ var qur2 = "SELECT admission_no FROM md_admission WHERE admission_no NOT IN "+
 
 
 app.post('/pendingfeecollectionreport-service',  urlencodedParser,function (req, res){
+   console.log('-------------------');
+   console.log(req.query.grade+"   "+req.query.type);
    if(req.query.grade=='All Grades'){
+    console.log('all grades...................');
    // var totalqur = "select admission_no,student_name,grade,sum(actual_amount) as actualamount,sum(discount_amount) as discountamount,sum(installment_amount) as payableamount from "+
    // "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and cheque_status not in('bounced') group by school_id,admission_no,student_name,grade";
+   
+   if(req.query.type=='All'){
+   var paidqur = "select admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount   from "+
+   "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and paid_status in "+
+   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') group by school_id,admission_no,student_name,grade";
    var totalqur = "select * from md_admission pf join fee_master m "+
     "on(pf.admission_year=m.admission_year) where pf.academic_year='AY-2017-2018' "+
     " and pf.academic_year='AY-2017-2018' and pf.school_id='SCH002' "+
     " and m.school_id='SCH002' and pf.class_for_admission= "+
-    " (select grade_name from grade_master where grade_id=m.grade_id) "+
+    " (select grade_name from grade_master where grade_id=m.grade_id)"+
     " group by pf.admission_no";
-   var paidqur = "select admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount   from "+
+   }
+   if(req.query.type=='New'){
+    var paidqur = "select admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount   from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') group by school_id,admission_no,student_name,grade";
+   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='New' group by school_id,admission_no,student_name,grade";
+   var totalqur = "select * from md_admission pf join fee_master m "+
+    "on(pf.admission_year=m.admission_year) where pf.academic_year='AY-2017-2018' "+
+    " and pf.academic_year='AY-2017-2018' and pf.school_id='SCH002' "+
+    " and m.school_id='SCH002' and pf.class_for_admission= "+
+    " (select grade_name from grade_master where grade_id=m.grade_id) and admission_status='New'"+
+    " group by pf.admission_no";
+   }
+   if(req.query.type=='Promoted'){
+    var paidqur = "select admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount   from "+
+   "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and paid_status in "+
+   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='Promoted' group by school_id,admission_no,student_name,grade";
+   var totalqur = "select * from md_admission pf join fee_master m "+
+    "on(pf.admission_year=m.admission_year) where pf.academic_year='AY-2017-2018' "+
+    " and pf.academic_year='AY-2017-2018' and pf.school_id='SCH002' "+
+    " and m.school_id='SCH002' and pf.class_for_admission= "+
+    " (select grade_name from grade_master where grade_id=m.grade_id) and admission_status='Promoted'"+
+    " group by pf.admission_no";
+   }
    var pendingqur = "select admission_no,student_name,grade,sum(installment_amount) as pendingamount from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and paid_status not in "+
    "('paid','cleared','inprogress') and cheque_status in('bounced','cancelled') group by school_id,admission_no,student_name,grade";
   }
   else{
+    console.log('spec grades...................');
    // var totalqur = "select admission_no,student_name,grade,sum(actual_amount) as actualamount,sum(discount_amount) as discountamount,sum(installment_amount) as payableamount from "+
    // "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and cheque_status not in('bounced') group by school_id,admission_no,student_name,grade";
+   if(req.query.type=='All'){
+   var paidqur = "select admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount  from "+
+   "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and paid_status in "+
+   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') group by school_id,admission_no,student_name";
    var totalqur = "select * from md_admission pf join fee_master m "+
     "on(pf.admission_year=m.admission_year) where pf.academic_year='AY-2017-2018' "+
     " and pf.academic_year='AY-2017-2018' and pf.school_id='SCH002' "+
     " and m.school_id='SCH002' and pf.class_for_admission= "+
     " (select grade_name from grade_master where grade_id=m.grade_id) "+
     " and pf.class_for_admission='"+req.query.grade+"' group by pf.admission_no" ;
+   }
+   if(req.query.type=='New'){
    var paidqur = "select admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount  from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') group by school_id,admission_no,student_name";
+   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='New' group by school_id,admission_no,student_name";
+   var totalqur = "select * from md_admission pf join fee_master m "+
+    "on(pf.admission_year=m.admission_year) where pf.academic_year='AY-2017-2018' "+
+    " and pf.academic_year='AY-2017-2018' and pf.school_id='SCH002' "+
+    " and m.school_id='SCH002' and pf.class_for_admission= "+
+    " (select grade_name from grade_master where grade_id=m.grade_id) "+
+    " and pf.class_for_admission='"+req.query.grade+"' and admission_status='New' group by pf.admission_no" ;
+   }
+   if(req.query.type=='Promoted'){
+   var paidqur = "select admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount  from "+
+   "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and paid_status in "+
+   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='Promoted' group by school_id,admission_no,student_name";
+   var totalqur = "select * from md_admission pf join fee_master m "+
+    "on(pf.admission_year=m.admission_year) where pf.academic_year='AY-2017-2018' "+
+    " and pf.academic_year='AY-2017-2018' and pf.school_id='SCH002' "+
+    " and m.school_id='SCH002' and pf.class_for_admission= "+
+    " (select grade_name from grade_master where grade_id=m.grade_id) "+
+    " and pf.class_for_admission='"+req.query.grade+"' and admission_status='Promoted' group by pf.admission_no" ;
+   }
    var pendingqur = "select admission_no,student_name,grade,sum(installment_amount) as pendingamount from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' AND school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and  paid_status not in "+
    "('paid','cleared','inprogress') and cheque_status in('bounced','cancelled') group by school_id,admission_no,student_name,grade";

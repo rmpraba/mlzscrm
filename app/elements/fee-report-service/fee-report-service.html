@@ -364,12 +364,13 @@
           document.querySelector('notpaid-report').notpaidarr=studarr;
 
       },
-      FnFetchPendingCollectionReportService:function(academicyear,grade){
+      FnFetchPendingCollectionReportService:function(academicyear,grade,type){
         this.pendingfeecollectionreporturl=sessionStorage.getItem("addrinfo")+"/pendingfeecollectionreport-service";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=academicyear;
         obj.grade=grade;
+        obj.type=type;
         this.pendingfeecollectionreportparam=obj;
         this.$.pendingfeecollectionreportajax.generateRequest();
       },
@@ -438,6 +439,8 @@
         if(totalarr.length>0)
         {
           document.querySelector('pendingfee-report').pendingfeearr=totalarr;
+          totalarr=[];
+          paidarr=[];
         }
         else
         {
