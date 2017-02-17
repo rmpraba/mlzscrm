@@ -52,7 +52,8 @@
           </div>
         </div>
     </div>
-     <table class="table table-hover" id="pendingfeereportt">
+    <div id="pendingfeereportt">
+     <table class="table table-hover">
       <thead>
       <tr>
         <th>Sno</th><th>Enr/Enq No</th><th>Student Name</th><th>Grade</th><th>Type</th><th>Actual Fee</th><th>Discount</th><th>Total Fee</th><th>Paid Fee</th><th>Pending Fee</th>
@@ -65,7 +66,13 @@
       <!-- <tr><th colspan="11" style="text-align: right;">Total Amount: &nbsp;&nbsp;{{totalamount}}</th></tr> -->
       </tbody>
     </table>    
-    
+
+    <table style="margin-left: 70%;" hidden$="{{hidecount}}">
+      <tr><th>No of students paid: </th><th>{{paidcount}}</th></tr>
+      <tr><th>No of student not paid: </th><th>{{notpaidcount}}</th></tr>
+      <tr><th>Total students: </th><th>{{totalcount}}</th></tr>
+    </table>
+    </div>
     <fee-report-service id="feereportservice"></fee-report-service>
   </template>
   <script type="text/javascript">
@@ -91,6 +98,10 @@
       is: 'pendingfee-report',
       ready:function(){
         this.flag=0;
+        this.hidecount=true;
+      },
+      FnHideView:function(){
+        this.hidecount=false;
       },
       FnCallService:function(){
         var d=new Date(); 
@@ -122,6 +133,7 @@
         document.querySelector('#pendingacademicyear').selected=-1;
         document.querySelector('#pendinggrade').selected=-1;
         document.querySelector('#pendingtype').selected=-1;
+        this.hidecount=true;
       },
       FnSelectGrade:function(e){
         grade=(e.target.selectedItem.textContent).trim();

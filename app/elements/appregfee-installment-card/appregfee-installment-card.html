@@ -54,7 +54,7 @@
 
     <paper-dialog id="chequeinfo" modal>
       <h4>ADD CHEQUE DETAILS</h4>
-       <div  class="layout" style='margin-left: -4%;'><paper-input required error-message="needs Cheque number!" allowed-pattern="[1-9a-zA-Z]" id="chequeno" label="Enter the Cheque No:" value="{{chequeno}}"> </paper-input></div>
+       <div  class="layout" style='margin-left: -4%;'><paper-input required error-message="needs Cheque number!" allowed-pattern="[0-9a-zA-Z]" id="chequeno" label="Enter the Cheque No:" value="{{chequeno}}"> </paper-input></div>
        <div  class="layout" style='margin-left: 8%;'> <paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires bankName!"  id="bankname" label="Enter the Bank Name" value="{{bankname}}"> </paper-input></div>
        <div><installment-date-picker showdate="{{installmentdate}}"></installment-date-picker></div>
        <div>
@@ -68,7 +68,7 @@
 
     <paper-dialog id="creditinfo" modal>
     <h4>ADD CREDIT DETAILS</h4>
-     <div  class="layout" style='margin-left: -4%;'><paper-input required allowed-pattern="[1-9a-zA-Z]" error-message="Requiress Reference number!"  id="chequeno" label="Enter Reference No:" value="{{referenceno}}"> </paper-input></div>
+     <div  class="layout" style='margin-left: -4%;'><paper-input required allowed-pattern="[0-9a-zA-Z]" error-message="Requiress Reference number!"  id="chequeno" label="Enter Reference No:" value="{{referenceno}}"> </paper-input></div>
      <div  class="layout" style='margin-left: 8%;'> <paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires BankName!"  id="bankname" label="Enter the Bank Name" value="{{refbankname}}"> </paper-input></div>
      <div><installment-date-picker showdate="{{installmentdate}}"></installment-date-picker></div>
      <div>

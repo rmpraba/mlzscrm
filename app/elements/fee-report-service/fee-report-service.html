@@ -379,6 +379,8 @@
         var paidarr=e.detail.response.paidarr;
         var pendingarr=e.detail.response.pendingarr;
         if(totalarr.length>0){
+        var pflag=0;
+        var npflag=0;
         for(var i=0;i<totalarr.length;i++)
         {
           totalarr[i].sno=(i+1);
@@ -392,10 +394,11 @@
             if(totalarr[i].admission_no==paidarr[j].admission_no)
             {
               paidflag=1;
-              paidamount=parseFloat(paidamount)+parseFloat(paidarr[j].paidamount);
+              paidamount=parseFloat(paidamount)+(parseFloat(paidarr[j].paidamount)-parseFloat(paidarr[j].diffamount));
               totalarr[i].paid_amount=paidamount;
               discountamount=parseFloat(discountamount)+parseFloat(paidarr[j].discountamount);
               totalarr[i].discount_amount=discountamount;
+              pflag++;
             }
           }
           if(paidflag==0)
@@ -403,6 +406,7 @@
             paidamount=parseFloat(paidamount)+parseFloat(0);
             totalarr[i].paid_amount=paidamount;
             totalarr[i].discount_amount=0;
+            npflag++;
             }
           paidamount=0;
           paidflag=0;
@@ -434,18 +438,28 @@
         for(var i=0;i<totalarr.length;i++){
           totalarr[i].total_amount=parseFloat(totalarr[i].fees)-parseFloat(totalarr[i].discount_amount);
           totalarr[i].pending_amount=parseFloat(totalarr[i].total_amount)-parseFloat(totalarr[i].paid_amount);
+
         }
         // alert(JSON.stringify(totalarr));
         if(totalarr.length>0)
         {
           document.querySelector('pendingfee-report').pendingfeearr=totalarr;
+          document.querySelector('pendingfee-report').paidcount=pflag;
+          document.querySelector('pendingfee-report').notpaidcount=npflag;
+          document.querySelector('pendingfee-report').totalcount=parseInt(pflag)+parseInt(npflag);
+          document.querySelector('pendingfee-report').FnHideView();
           totalarr=[];
           paidarr=[];
         }
         else
         {
           totalarr=[];
+          pflag=0;
+          npflag=0;
           document.querySelector('pendingfee-report').pendingfeearr=totalarr;
+          document.querySelector('pendingfee-report').paidcount=pflag;
+          document.querySelector('pendingfee-report').notpaidcount=npflag;
+          document.querySelector('pendingfee-report').totalcount=parseInt(pflag)+parseInt(npflag);
         }
       },
       FnFetchDailyFeeReportService:function(grade){
