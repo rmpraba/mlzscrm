@@ -38,6 +38,17 @@
                 </paper-menu>
                 </paper-dropdown-menu> 
                 </div> -->
+                 <div class="col-sm-2" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Select Type" attr-for-selected="value">
+                  <paper-menu id="daycollectiontype" class="dropdown-content" required on-iron-select="FnSelectType" valueattr="value" >
+                    <!-- <template  is="dom-repeat" items="{{}}" as="item"> -->
+                    <paper-item value="all">All</paper-item>
+                    <paper-item value="new">New</paper-item>
+                    <paper-item value="promoted">Promoted</paper-item>
+                    <!-- </template> -->
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div> 
                 <div class="col-md-1" style="margin-top: 2.5%;margin-left: 10%;">
                   <paper-button style="height:30px;text-transform: none;" on-click="FnView" class="btn btn-primary">View</paper-button>
                 </div>
@@ -97,7 +108,7 @@
   (function() {
     'use strict';
     var grade="All Grades";
-    
+    var type="";
     Polymer({
       is: 'daycollection-report',
       ready:function(){
@@ -107,13 +118,15 @@
         this.hidetotal=false;
       },
       FnCallService:function(){        
-        this.$.feereportservice.FnFetchDayCollectionService(grade);
+        this.$.feereportservice.FnFetchDayCollectionService(grade,type);
       },
       FnView:function(){
-        this.$.feereportservice.FnFetchDayCollectionService(grade);
+        this.$.feereportservice.FnFetchDayCollectionService(grade,type);
       },
       FnSelectGrade:function(e){
         grade=(e.target.selectedItem.textContent).trim();
+        if(this.flag==1)
+         this.$.feereportservice.FnFetchDayCollectionService(grade,type); 
       },
       FnRefresh:function(){
         document.querySelector('#daycollectiongrade').selected=-1;
@@ -122,6 +135,13 @@
         document.querySelector('fromdate-icon-pickercard').ready();
         // document.querySelector('todate-icon-pickercard').ready();
         this.hidetotal=true;
+        document.querySelector('#daycollectiontype').selected=-1;
+        type="";
+      },
+      FnSelectType:function(e){
+        this.flag=1;
+        type=(e.target.selectedItem.textContent).trim();
+        this.$.feereportservice.FnFetchDayCollectionService(grade,type);
       }
     });
   })();
