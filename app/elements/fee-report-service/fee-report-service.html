@@ -171,6 +171,16 @@
         >      
         <iron-ajax
         method="post"
+        id="tpcollectionajax"
+        url="{{tpcollectionurl}}"
+        params="{{tpcollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="tpcollectionResponse"
+        debounce-duration="300"
+        > 
+        <iron-ajax
+        method="post"
         id="fetchnotpaidreportajax"
         url="{{fetchnotpaidreporturl}}"
         params="{{fetchnotpaidreportparam}}"
@@ -227,8 +237,53 @@
         else{
           arr=[];
         }
+        var cashtotal=0;
+        var chequetotal=0;
+        var transfertotal=0;
+        for(var i=0;i<arr.length;i++){
+          if(arr[i].mode_of_payment=="Cash")
+            cashtotal=parseFloat(arr[i].total)+parseFloat(cashtotal);
+          if(arr[i].mode_of_payment=="Cheque")
+            chequetotal=parseFloat(arr[i].total)+parseFloat(chequetotal);
+          if(arr[i].mode_of_payment=="Transfer")
+            transfertotal=parseFloat(arr[i].total)+parseFloat(transfertotal);
+        }
+        document.querySelector('daycollection-report').cashamount=cashtotal;
+        document.querySelector('daycollection-report').chequeamount=chequetotal;
+        document.querySelector('daycollection-report').transferamount=transfertotal;
         document.querySelector('daycollection-report').totalamount=totalamount;
         document.querySelector('daycollection-report').daycollectionarr=arr;
+        document.querySelector('daycollection-report').FnHideView();
+      },
+      FnFetchTPCollectionService:function(grade){
+        this.tpcollectionurl=sessionStorage.getItem("addrinfo")+"/tpcollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        // obj.todate=localStorage.getItem("localsess_to_date");
+        obj.grade=grade;
+        this.tpcollectionparam=obj;
+        this.$.tpcollectionajax.generateRequest();
+      },
+      tpcollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        var total=0;
+        var n=0;
+        if(arr!='no rows'){          
+          for(var i=0;i<arr.length;i++){
+            n=i+1;
+            arr[i].sno=n;
+            total=parseFloat(total)+parseFloat(arr[i].installment_amount);
+          }
+          document.querySelector('neevcollection-report').tpcollectionarr=arr;
+          document.querySelector('neevcollection-report').totalamount=total;
+        }
+        else
+        {
+          arr=[];
+          document.querySelector('neevcollection-report').tpcollectionarr=arr;
+          document.querySelector('neevcollection-report').totalamount=total;
+        }
       },
       FnFetchFeeReportService:function(grade){
         this.fetchfeecollectionreporturl=sessionStorage.getItem("addrinfo")+"/fetchfeecollectionreport-service";

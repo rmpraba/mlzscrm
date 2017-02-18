@@ -4039,14 +4039,44 @@ app.post('/fetchfeecollectionreport-service',  urlencodedParser,function (req, r
 
 
 app.post('/daycollection-service',  urlencodedParser,function (req, res){
-   if(req.query.grade=="All Grades")
+   if(req.query.grade=="All Grades"){
    var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date='"+req.query.fromdate+"' "+
-             ") and mode_of_payment in('cash','Transfer')) or ((cheque_date<='"+req.query.fromdate+"' and received_date='"+req.query.fromdate+"') and mode_of_payment in('cheque')) and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";
+             ") and mode_of_payment in('cash','Transfer')) or ((cheque_date<='"+req.query.fromdate+"' and received_date='"+req.query.fromdate+"') and mode_of_payment in('cheque')) and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";          
+   }
    else
+   {
    var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date='"+req.query.fromdate+"' "+
              ") and mode_of_payment in('cash','Transfer')) or ((cheque_date='"+req.query.fromdate+"' and received_date='"+req.query.fromdate+"') and mode_of_payment in('cheque')) and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared')";
-   
+   var qur1 = "";
+   }
  console.log('-----------------------collection report--------------------------');
+ console.log(qur);
+ console.log('-------------------------------------------------');
+   connection.query(qur,
+     function(err, rows){
+       if(!err){
+         if(rows.length>0){
+           res.status(200).json({'returnval': rows});
+         }else{
+           console.log(err);
+           res.status(200).json({'returnval':'no rows'});
+         }
+       }else{
+         console.log(err);
+       }
+     });
+ });
+
+
+app.post('/tpcollection-service',  urlencodedParser,function (req, res){
+   if(req.query.grade=="All Grades"){
+   var qur = "SELECT * FROM tp_realization_details where (installment_date='"+req.query.fromdate+"') and school_id='"+req.query.schoolid+"'";          
+   }
+   else
+   {
+   var qur = "SELECT * FROM tp_realization_details where (installment_date='"+req.query.fromdate+"') and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' ";
+   }
+ console.log('-----------------------tpcollection report--------------------------');
  console.log(qur);
  console.log('-------------------------------------------------');
    connection.query(qur,
@@ -6507,7 +6537,7 @@ app.post('/checkalreadyinspaid-service',  urlencodedParser,function (req, res){
 app.post('/processtprealisation-service',  urlencodedParser,function (req, res){
   console.log('diffamount.......'+req.query.diffamount);
   if(req.query.diffamount=='0.00')
-  var qur="UPDATE md_student_paidfee SET paid_status='paid',realised_date='"+req.query.realiseddate+"',difference_amount='"+req.query.diffamount+"' "+
+  var qur="UPDATE md_student_paidfee SET paid_status='paid',cheque_status='paid',realised_date='"+req.query.realiseddate+"',difference_amount='"+req.query.diffamount+"' "+
   " where school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"' and installment='"+req.query.installment+"'";
   else
   var qur="UPDATE md_student_paidfee SET difference_amount='"+req.query.diffamount+"' "+
