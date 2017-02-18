@@ -79,18 +79,22 @@
   <script>
   (function() {
     'use strict';
+    var flag=0;
     Polymer({
       is: 'pdccheques-report-card',
-      callService:function(){        
-        this.$.feereportservice.FnFetchPDCService();
+      callService:function(){ 
+        flag=0;       
+        this.$.feereportservice.FnFetchPDCService(flag);
       },
       FnView:function(){
-        this.$.feereportservice.FnFetchPDCService();
+        flag=1;
+        this.$.feereportservice.FnFetchPDCService(flag);
       },
       FnRefresh:function(){
         this.pdcarr=[];
         this.totalcollection=0;
         this.noofstudents=0;
+        flag=0;
       }
     });
   })();

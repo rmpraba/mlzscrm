@@ -108,7 +108,7 @@
   (function() {
     'use strict';
     var grade="All Grades";
-    var type="";
+    var type="All";
     Polymer({
       is: 'daycollection-report',
       ready:function(){
@@ -118,7 +118,7 @@
         this.hidetotal=false;
       },
       FnCallService:function(){        
-        this.$.feereportservice.FnFetchDayCollectionService(grade,type);
+        this.$.feereportservice.FnFetchDayCollectionService(grade,"All");
       },
       FnView:function(){
         this.$.feereportservice.FnFetchDayCollectionService(grade,type);

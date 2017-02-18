@@ -678,7 +678,7 @@
           document.querySelector('bouncecheque-displaycard').bouncechequearr=arr;
         }
       },
-      FnFetchPDCService:function(){
+      FnFetchPDCService:function(flag){
         this.fetchpdcchequesurl=sessionStorage.getItem("addrinfo")+"/fetchpdccheques-service";
         var obj={"schoolid":"","fromdate":"","todate":""};
         obj.schoolid=localStorage.getItem("schoolid");
@@ -694,6 +694,7 @@
           dt="0"+dt;
         var currdate=mn+"/"+dt+"/"+yr;
         obj.currdate=currdate;
+        obj.flag=flag;
         this.fetchpdcchequesparam=obj;
         this.$.fetchpdcchequesajax.generateRequest();
       },

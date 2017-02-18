@@ -5606,8 +5606,13 @@ app.post('/fetchbouncecheques-service',  urlencodedParser,function (req, res){
  });
 
 app.post('/fetchpdccheques-service',  urlencodedParser,function (req, res){
-   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where cheque_date>='"+req.query.fromdate+"' and cheque_date<='"+req.query.todate+"' "+
+ if(req.query.flag==0)
+ var qur = "SELECT * FROM mlzscrm.md_student_paidfee where STR_TO_DATE(cheque_date,'%m/%d/%Y')>STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') "+
              "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
+ else
+ var qur = "SELECT * FROM mlzscrm.md_student_paidfee where cheque_date>='"+req.query.fromdate+"' and cheque_date<='"+req.query.todate+"' "+
+             "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
+
  console.log('-----------------------fetch pdc cheque--------------------------');
  console.log(qur);
  console.log('-------------------------------------------------');
