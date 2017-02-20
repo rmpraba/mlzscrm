@@ -60,15 +60,17 @@
           var dd1=new Date();
           var dd2=new Date(pickdate);
           var days=parseInt((dd1 - dd2) / (1000 * 60 * 60 * 24));
-          if(days>0){
-          alert("From date shouldn't exceed the current date!!");
-          this.showdate=moment(new Date()).format('L');
-          localStorage.setItem("localsess_from_date",this.showdate);
-          }
-          else{
           this.showdate = moment(this.$.picker.date).format('L');
           localStorage.setItem("localsess_from_date",this.showdate);
-          }
+          // if(days>0){
+          // alert("From date shouldn't exceed the current date!!");
+          // this.showdate=moment(new Date()).format('L');
+          // localStorage.setItem("localsess_from_date",this.showdate);
+          // }
+          // else{
+          // this.showdate = moment(this.$.picker.date).format('L');
+          // localStorage.setItem("localsess_from_date",this.showdate);
+          // }
         }
       },
       FnClear:function(){

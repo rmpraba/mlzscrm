@@ -206,7 +206,8 @@
             obj.referenceno=this.referenceno;
             obj.bankname=this.refbankname;            
             obj.receiveddate=localStorage.getItem("curr_sess_chequedate");   
-            obj.paiddate=localStorage.getItem("curr_sess_chequedate");            
+            obj.paiddate=localStorage.getItem("curr_sess_chequedate");       
+            obj.chequedate=localStorage.getItem("curr_sess_installmentdate");
             obj.paidstatus="paid";  
             obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");        
             // installmentarr.push(obj);

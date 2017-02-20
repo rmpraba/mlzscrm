@@ -214,7 +214,35 @@
         // alert(JSON.stringify(e.detail.response.returnval));
         var totalamount=0;
         var arr=e.detail.response.returnval;
+
         if(arr!='no rows'){
+        for(var i=0;i<arr.length;i++){
+          if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
+
+          }
+          else{
+          var d=new Date(arr[i].cheque_date);
+          var d1=d.getDate();
+          var m1=(d.getMonth())+1;
+          var y1=d.getFullYear();
+          if(d1<10)
+            d1='0'+d1;
+          if(m1<10)
+            m1='0'+m1;
+          var dd1=d1+'/'+m1+'/'+y1;
+          arr[i].cheque_date=dd1
+          }
+          var dd=new Date(arr[i].received_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].received_date=dd2;
+        }  
         for(var i=0;i<arr.length;i++){
           arr[i].sno=i+1;
           if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
@@ -268,9 +296,22 @@
       },
       tpcollectionResponse:function(e){
         var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
         var total=0;
         var n=0;
-        if(arr!='no rows'){          
+        if(arr!='no rows'){   
+          for(var i=0;i<arr.length;i++){       
+          var dd=new Date(arr[i].installment_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].installment_date=dd2;
+          }
           for(var i=0;i<arr.length;i++){
             n=i+1;
             arr[i].sno=n;
@@ -704,6 +745,34 @@
         var noofstudents=0;
         var totalamount=0;
         if(arr!='no rows'){
+        for(var i=0;i<arr.length;i++){
+          if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
+
+          }
+          else{
+          var d=new Date(arr[i].cheque_date);
+          var d1=d.getDate();
+          var m1=(d.getMonth())+1;
+          var y1=d.getFullYear();
+          if(d1<10)
+            d1='0'+d1;
+          if(m1<10)
+            m1='0'+m1;
+          var dd1=d1+'/'+m1+'/'+y1;
+          arr[i].cheque_date=dd1
+          }
+          var dd=new Date(arr[i].received_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].received_date=dd2;
+          
+        }
         for(var i=0;i<arr.length;i++)
         {
         arr[i].sno=i+1;        

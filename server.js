@@ -2752,7 +2752,8 @@ app.post('/inserttransferfees',  urlencodedParser,function (req, res){
         adhoc_reason:req.query.adhocreason,
         admission_status:req.query.admissionstatus,
         difference_amount:0,
-        paymenttype_flag:req.query.type
+        paymenttype_flag:req.query.type,
+        cheque_date:req.query.chequedate
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
@@ -4042,24 +4043,24 @@ app.post('/daycollection-service',  urlencodedParser,function (req, res){
   if(req.query.type!="All"){
    if(req.query.grade=="All Grades"){
    var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date='"+req.query.fromdate+"' "+
-             ") and mode_of_payment in('cash','Transfer') and admission_status='"+req.query.type+"') or ((cheque_date<='"+req.query.fromdate+"' and received_date='"+req.query.fromdate+"') and mode_of_payment in('cheque') and admission_status='"+req.query.type+"') and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared') and admission_status='"+req.query.type+"'";          
+             ") and mode_of_payment in('cash','Transfer') and admission_status='"+req.query.type+"') or ((received_date='"+req.query.fromdate+"' and cheque_date not in(select installment_date from md_installment_date where school_id='"+req.query.schoolid+"')) and mode_of_payment in('cheque') and admission_status='"+req.query.type+"') and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared') and admission_status='"+req.query.type+"' ";          
    }
    else
    {
    var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date='"+req.query.fromdate+"' "+
-             ") and mode_of_payment in('cash','Transfer') and admission_status='"+req.query.type+"' and grade='"+req.query.grade+"') or ((cheque_date='"+req.query.fromdate+"' and received_date='"+req.query.fromdate+"') and mode_of_payment in('cheque') and admission_status='"+req.query.type+"' and grade='"+req.query.grade+"') and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared') and admission_status='"+req.query.type+"'";
+             ") and mode_of_payment in('cash','Transfer') and admission_status='"+req.query.type+"' and grade='"+req.query.grade+"') or ((received_date='"+req.query.fromdate+"' and cheque_date not in(select installment_date from md_installment_date where school_id='"+req.query.schoolid+"')) and mode_of_payment in('cheque') and admission_status='"+req.query.type+"' and grade='"+req.query.grade+"') and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared') and admission_status='"+req.query.type+"'";
    var qur1 = "";
    }
   }
   else{
-    if(req.query.grade=="All Grades"){
+   if(req.query.grade=="All Grades"){
    var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date='"+req.query.fromdate+"' "+
-             ") and mode_of_payment in('cash','Transfer') ) or ((cheque_date<='"+req.query.fromdate+"' and received_date='"+req.query.fromdate+"') and mode_of_payment in('cheque') ) and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared') ";          
+             ") and mode_of_payment in('cash','Transfer') ) or ((received_date='"+req.query.fromdate+"' and cheque_date not in(select installment_date from md_installment_date where school_id='"+req.query.schoolid+"')) and mode_of_payment in('cheque') ) and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared') ";          
    }
    else
    {
    var qur = "SELECT * FROM mlzscrm.md_student_paidfee where ((paid_date='"+req.query.fromdate+"' "+
-             ") and mode_of_payment in('cash','Transfer')  and grade='"+req.query.grade+"') or ((cheque_date='"+req.query.fromdate+"' and received_date='"+req.query.fromdate+"') and mode_of_payment in('cheque')  and grade='"+req.query.grade+"') and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared') ";
+             ") and mode_of_payment in('cash','Transfer')  and grade='"+req.query.grade+"') or ((received_date='"+req.query.fromdate+"' and cheque_date not in(select installment_date from md_installment_date where school_id='"+req.query.schoolid+"')) and mode_of_payment in('cheque')  and grade='"+req.query.grade+"') and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared') ";
    var qur1 = "";
    }
   }
@@ -4080,7 +4081,6 @@ app.post('/daycollection-service',  urlencodedParser,function (req, res){
        }
      });
  });
-
 
 app.post('/tpcollection-service',  urlencodedParser,function (req, res){
    if(req.query.grade=="All Grades"){
@@ -5525,7 +5525,7 @@ app.post('/pendingfeecollectionreport-service',  urlencodedParser,function (req,
    var pendingqur = "select admission_no,student_name,grade,sum(installment_amount) as pendingamount from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' AND school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and  paid_status not in "+
    "('paid','cleared','inprogress') and cheque_status in('bounced','cancelled') group by school_id,admission_no,student_name,grade";
-  }
+   }
  console.log('-----------------------pending fee report--------------------------');
  console.log(totalqur);
  console.log('-------------------------------------------------');
@@ -5606,12 +5606,20 @@ app.post('/fetchbouncecheques-service',  urlencodedParser,function (req, res){
  });
 
 app.post('/fetchpdccheques-service',  urlencodedParser,function (req, res){
+ // if(req.query.flag==0)
+ // var qur = "SELECT * FROM mlzscrm.md_student_paidfee where STR_TO_DATE(cheque_date,'%m/%d/%Y')>STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') "+
+ //             "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
+ // else
+ // var qur = "SELECT * FROM mlzscrm.md_student_paidfee where STR_TO_DATE(cheque_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(cheque_date,'%m/%d/%Y')>STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y') "+
+ //             "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
+
  if(req.query.flag==0)
- var qur = "SELECT * FROM mlzscrm.md_student_paidfee where STR_TO_DATE(cheque_date,'%m/%d/%Y')>STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') "+
-             "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
+ var qur = "SELECT * FROM mlzscrm.md_student_paidfee where cheque_date in (select installment_date from md_installment_date where school_id='"+req.query.schoolid+"') and received_date='"+req.query.fromdate+"' "+
+           "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
  else
- var qur = "SELECT * FROM mlzscrm.md_student_paidfee where cheque_date>='"+req.query.fromdate+"' and cheque_date<='"+req.query.todate+"' "+
-             "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
+ var qur = "SELECT * FROM mlzscrm.md_student_paidfee where cheque_date in (select installment_date from md_installment_date where school_id='"+req.query.schoolid+"') and "+
+           "STR_TO_DATE(received_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(received_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y') "+
+           "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
 
  console.log('-----------------------fetch pdc cheque--------------------------');
  console.log(qur);
