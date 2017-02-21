@@ -4082,6 +4082,57 @@ app.post('/daycollection-service',  urlencodedParser,function (req, res){
      });
  });
 
+app.post('/detaildaycollection-service',  urlencodedParser,function (req, res){
+  if(req.query.type!="All"){
+   if(req.query.grade=="All Grades"){
+   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where (((STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) "+
+             ") and mode_of_payment in('cash','Transfer') and admission_status='"+req.query.type+"') or (((STR_TO_DATE(received_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')  and STR_TO_DATE(received_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and cheque_date not in(select installment_date from md_installment_date where school_id='"+req.query.schoolid+"')) and mode_of_payment in('cheque') and admission_status='"+req.query.type+"') and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared') and admission_status='"+req.query.type+"' ";          
+   var qur1= "SELECT * FROM md_studwise_fee_splitup WHERE school_id='"+req.query.schoolid+"'";
+   }
+   else
+   {
+   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where (((STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) "+
+             ") and mode_of_payment in('cash','Transfer') and admission_status='"+req.query.type+"' and grade='"+req.query.grade+"') or (((STR_TO_DATE(received_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')  and STR_TO_DATE(received_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and cheque_date not in(select installment_date from md_installment_date where school_id='"+req.query.schoolid+"')) and mode_of_payment in('cheque') and admission_status='"+req.query.type+"' and grade='"+req.query.grade+"') and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared') and admission_status='"+req.query.type+"'";
+   var qur1= "SELECT * FROM md_studwise_fee_splitup WHERE school_id='"+req.query.schoolid+"'";
+   }
+  }
+  else{
+   if(req.query.grade=="All Grades"){
+   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where (((STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) "+
+             ") and mode_of_payment in('cash','Transfer') ) or (((STR_TO_DATE(received_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')  and STR_TO_DATE(received_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and cheque_date not in(select installment_date from md_installment_date where school_id='"+req.query.schoolid+"')) and mode_of_payment in('cheque') ) and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared') ";          
+   var qur1= "SELECT * FROM md_studwise_fee_splitup WHERE school_id='"+req.query.schoolid+"'";
+   }
+   else
+   {
+   var qur = "SELECT * FROM mlzscrm.md_student_paidfee where (((STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) "+
+             ") and mode_of_payment in('cash','Transfer')  and grade='"+req.query.grade+"') or (((STR_TO_DATE(received_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')  and STR_TO_DATE(received_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and cheque_date not in(select installment_date from md_installment_date where school_id='"+req.query.schoolid+"')) and mode_of_payment in('cheque')  and grade='"+req.query.grade+"') and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' and paid_status in('paid','inprogress','cleared') ";
+   var qur1= "SELECT * FROM md_studwise_fee_splitup WHERE school_id='"+req.query.schoolid+"'";
+   }
+  }
+ console.log('-----------------------collection report--------------------------');
+ console.log(qur1);
+ console.log(qur);
+ console.log('--------------------------------------------------');
+ var feesplitarr=[];
+  connection.query(qur1,function(err, rows){
+   if(!err){
+   feesplitarr=rows;
+   connection.query(qur,function(err, rows){
+       if(!err){
+         if(rows.length>0){
+           res.status(200).json({'feesplit':feesplitarr,'returnval': rows});
+         }else{
+           console.log(err);
+           res.status(200).json({'feesplit':feesplitarr,'returnval':'no rows'});
+         }
+       }else{
+         console.log(err);
+       }
+     });
+   }
+  });
+});
+
 app.post('/tpcollection-service',  urlencodedParser,function (req, res){
    if(req.query.grade=="All Grades"){
    var qur = "SELECT * FROM tp_realization_details where (installment_date='"+req.query.fromdate+"') and school_id='"+req.query.schoolid+"'";          

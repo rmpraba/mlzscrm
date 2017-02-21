@@ -419,6 +419,9 @@
             <li id="pdccheques">
             <a href="" aria-hidden="true" on-click="FnPdcCheques">PDC Cheques</a>
             </li>
+            <li id="detaildaycollection">
+            <a href="" aria-hidden="true" on-click="FnDetaildaycollection">Day Collection</a>
+            </li>
             <li id="dailycollectionreport">
             <a href="" aria-hidden="true" on-click="FnDailyCollectionReport">Daily Fee Collection Report</a>
             </li>            
@@ -959,6 +962,12 @@
           document.querySelector('app-list').setPage("daycollection-report","Daily Collection");
           document.querySelector('daycollection-report').FnRefresh();
           document.querySelector('daycollection-report').FnCallService();
+      },
+      FnDetaildaycollection:function(){
+          this.$.scheduleservice.fetchgradeforreportService();
+          document.querySelector('app-list').setPage("detaildaycollection-report","Daily Collection");
+          document.querySelector('detaildaycollection-report').FnRefresh();
+          document.querySelector('detaildaycollection-report').FnCallService();
       },
       FnTPCollectionReport:function(){
           this.$.scheduleservice.fetchgradeforreportService();
