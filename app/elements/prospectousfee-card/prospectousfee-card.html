@@ -51,7 +51,12 @@
         <paper-checkbox id="applnfeecurrentyear" on-change="FnCurrentHandler" style="margin-left: 5%;">Current Year</paper-checkbox>
         <paper-checkbox checked id="applnfeenextyear" on-change="FnNextHandler" style="margin-left: 5%;">Next Year</paper-checkbox>
         </div>
+
+        <div class="col-md-3" style="margin-top: 4.5%;margin-left: -15%;">
+            <datepicker-icon-card></datepicker-icon-card>
+        </div>
      </div>
+
 
      <div class="list-group col-sm-12 panel-body form-category">
       <div class="col-sm-5 enquiry-input" hidden>
@@ -162,6 +167,7 @@
           }
           // localStorage.setItem("curr_sess_academicyear",academicyear);
           localStorage.setItem("curr_sess_academicyear",academicyear); 
+
       },  
       FnCurrentHandler:function(e){
         if(document.querySelector('#applnfeecurrentyear').checked==true)
@@ -326,6 +332,7 @@
         this.querySelector('#prospectinput').style.visibility='hidden';
         document.querySelector('#applnfeenextyear').checked=true;
         document.querySelector('#applnfeecurrentyear').checked=false;
+        document.querySelector('datepicker-icon-card').ready();
       },
       callService:function(){
         this.$.appregfeeservice.fetchallstudentenquirysearchService();

@@ -473,14 +473,18 @@
         for(var i=0;i<cash.length;i++){
         obj.installmenttype=cash[i].installment; 
         obj.installment=cash[i].installment; 
-        obj.installmentdate==(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear(); 
+        // obj.installmentdate==(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear(); 
+        obj.installmentdate=localStorage.getItem("curr_sess_date");
         obj.installmentamount=0;
         obj.actualamount=cash[i].actualamount;
         obj.discountamount=cash[i].discountamount; 
         obj.waiveoffamount=cash[i].payableamount; 
         obj.modeofpayment="waiveoff"; 
-        obj.receiptdate==(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();; 
-        obj.paiddate==(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();; 
+        // obj.receiptdate==(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();; 
+        obj.receiptdate=localStorage.getItem("curr_sess_date");
+        // obj.paiddate==(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();; 
+        obj.paiddate=cash[i].paiddate;
+        obj.receiveddate=localStorage.getItem("curr_sess_date");
         obj.paidstatus="waiveoff";   
         obj.fineamount=0;  
         obj.feecashcount=0;   
