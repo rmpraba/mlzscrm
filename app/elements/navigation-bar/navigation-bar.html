@@ -221,12 +221,15 @@
               <a href="" on-click="Fnpreapp">Enquiry Form</a>
                 <!-- <a href="flot.html"></a> -->
               </li>
+              <li>
+              <a href="" on-click="Fnpreappupdate">Update Enquiry</a>
+              </li>
               <!-- <li>
                 <a href="" on-click="Fnenqform" aria-hidden="true" data-toggle="modal" data-target="#addDetailedEnquiry">Enquiry Form</a>
               </li> -->
-               <li id="">
+            <li id="">
             <a href="" aria-hidden="true" on-click="followupdashboard" data-toggle="modal"> Follow Up</a>
-          </li>
+            </li>
             </ul>
           </li>
 
@@ -403,6 +406,12 @@
             <a href="" aria-hidden="true" on-click="FnPendingCheques">Pending Cheques</a>
             </li> -->
            </ul>
+            </li>
+            <li id="detailduereport">
+            <a href="" aria-hidden="true" on-click="FnDetailduereport">Due report<span class="fa arrow"></span></a>
+            </li>
+            <li id="dailycollectiondashboard">
+            <a href="" aria-hidden="true" on-click="FnDailycollectionDashboard">Daily Collection Dashboard<span class="fa arrow"></span></a>
             </li>
             </ul>
           </li>         
@@ -925,8 +934,12 @@
         document.querySelector('pre-apps').ready();
         document.querySelector('pre-apps').callnextyearhandler();
           // document.querySelector('newenquiry-card').Fnclear();
-          // document.querySelector('special-discount-card').ready();
-          
+          // document.querySelector('special-discount-card').ready();          
+      },
+      Fnpreappupdate:function(){
+        document.querySelector('app-list').setPage("update-preapps","Pre Application");
+        document.querySelector('update-preapps').ready();
+        document.querySelector('update-preapps').callnextyearhandler();
       },
       Fnenqform:function(){
           document.querySelector('detailed-enquiry-form').Fnclear();
@@ -1052,6 +1065,22 @@
         document.querySelector('pendingfee-report').ready();
         document.querySelector('pendingfee-report').FnRefresh();
         document.querySelector('pendingfee-report').FnCallService();
+      },
+      FnDetailduereport:function(){
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchgradeforreportService();
+        document.querySelector('app-list').setPage("detailed-feedue-report","Due Report");
+        document.querySelector('detailed-feedue-report').ready();
+        document.querySelector('detailed-feedue-report').FnRefresh();
+        document.querySelector('detailed-feedue-report').FnCallService();
+      },
+      FnDailycollectionDashboard:function(){
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchgradeforreportService();
+        document.querySelector('app-list').setPage("dailycollection-dashboard","Daily Collection Dashboard");
+        document.querySelector('dailycollection-dashboard').ready();
+        document.querySelector('dailycollection-dashboard').FnRefresh();
+        document.querySelector('dailycollection-dashboard').FnCallService();
       },
       FnNotpaidReport:function(){
         this.$.scheduleservice.fetchacademicyearService();

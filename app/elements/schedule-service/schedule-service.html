@@ -436,11 +436,13 @@
         document.querySelector('pendingfee-report').gradearr=gradearr;
         document.querySelector('gradewise-fee-structure-report').gradearr=gradearr;
         document.querySelector('detaildaycollection-report').gradearr=gradearr;
+        document.querySelector('detailed-feedue-report').gradearr=gradearr;
         document.querySelector('enrollment-report').gradearr=gradearr;
         document.querySelector('daycollection-report').gradearr=gradearr;
         document.querySelector('notpaid-report').gradearr=gradearr;
         document.querySelector('notpaid-report').FnSetArray(gradearr);
         document.querySelector('neevcollection-report').gradearr=gradearr;
+        document.querySelector('dailycollection-dashboard').gradearr=gradearr;
       },
       fetchgradeService:function(){       
         this.fetchgradeurl=sessionStorage.getItem("addrinfo")+"/fetchgrade-service"
@@ -478,6 +480,8 @@
         document.querySelector('gradewise-fee-structure-report').academicarr=e.detail.response.returnval;
         document.querySelector('enrollment-report').academicarr=e.detail.response.returnval;
         document.querySelector('notpaid-report').academicarr=e.detail.response.returnval;
+        document.querySelector('detailed-feedue-report').academicarr=e.detail.response.returnval;
+        document.querySelector('dailycollection-dashboard').academicarr=e.detail.response.returnval;
       },
       fetchadmissionyearService:function(){        
         this.fetchadmissionyearurl=sessionStorage.getItem("addrinfo")+"/fetchadmissionyear-service"

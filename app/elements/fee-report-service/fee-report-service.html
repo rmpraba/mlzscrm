@@ -199,6 +199,46 @@
         on-response="detaildaycollectionResponse"
         debounce-duration="300"
         > 
+        <iron-ajax
+        method="post"
+        id="duereportajax"
+        url="{{duereporturl}}"
+        params="{{duereportparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="fetchallstudentstructureajax"
+        url="{{fetchallstudentstructureurl}}"
+        params="{{fetchallstudentstructureparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallstudentstructureResponse"
+        debounce-duration="300"
+        > 
+        <iron-ajax
+        method="post"
+        id="fetchdailycollectiondashboardajax"
+        url="{{fetchdailycollectiondashboardurl}}"
+        params="{{fetchdailycollectiondashboardparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchdailycollectiondashboardResponse"
+        debounce-duration="300"
+        >        
+        <iron-ajax
+        method="post"
+        id="dailycollectionthirdpartydashboardajax"
+        url="{{dailycollectionthirdpartydashboardurl}}"
+        params="{{dailycollectionthirdpartydashboardparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="dailycollectionthirdpartydashboardResponse"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
@@ -1182,7 +1222,216 @@
         {
 
         }
-      }         
+      },
+      FnFetchAllStudentStructureService:function(academicyear,grade){
+        this.fetchallstudentstructureurl=sessionStorage.getItem("addrinfo")+"/fetchallstudentstructure-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        this.fetchallstudentstructureparam=obj;
+        this.$.fetchallstudentstructureajax.generateRequest();
+      },
+      fetchallstudentstructureResponse:function(e){
+        var structure=e.detail.response.structure;
+        var group=e.detail.response.group;
+        // alert(JSON.stringify(structure));
+        // alert(JSON.stringify(group));
+        this.structarr=[];
+        for(var i=0;i<structure.length;i++){
+          var obj={};
+          var total=0;
+          for(var j=0;j<group.length;j++){            
+            if(structure[i].fee_code==group[j].fee_code)
+            {
+              obj.academicyear=structure[i].academic_year;
+              obj.academicyear=structure[i].academic_year;
+              obj.grade=group[j].grade;
+              var x=(group[j].fee_type).replace(' ','');
+              obj[x]=group[j].amount;
+              total=parseFloat(total)+parseFloat(group[j].amount);
+              obj.total=total;
+            }
+          }
+          this.structarr.push(obj);
+        }
+        // alert(this.structarr.length);
+        // alert(JSON.stringify(this.structarr));
+      },
+      FnFetchDueReportService:function(academicyear,grade,type){
+        this.duereporturl=sessionStorage.getItem("addrinfo")+"/duereport-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        obj.type=type;
+        this.duereportparam=obj;
+        this.$.duereportajax.generateRequest();
+      },
+      duereportResponse:function(e){
+        var totalarr=e.detail.response.totalarr;
+        var paidarr=e.detail.response.paidarr;
+        var inssplit=e.detail.response.inssplit;
+        var feesplit=e.detail.response.feesplit;
+
+        // for(var i=0;i<paidarr.length;i++){
+        // var flag=paidarr[i].paymenttype_flag;
+        // if(flag=='0'){
+        // for(var j=0;j<feesplit.length;j++)
+        // { 
+        // if(paidarr[i].admission_no==feesplit[j].admission_no){      
+        // var nameobj={"installment":"","installmentamount":""};
+        // nameobj.installment=feesplit[j].installment; 
+        // var amt=0;
+        // var actamt=0;
+        // var obj={"feetype":"","amount":""};
+        // obj.feetype=feesplit[j].feetype;
+        // obj.feetypeamount=feesplit[j].feetype_amount;
+        // a.push(obj);
+        // for(var k=i+1;k<feesplit.length;k++)
+        // {
+        //    if(feesplit[j].installment==feesplit[k].installment)
+        //    {
+        //      var obj1={"feetype":"","amount":""}
+        //      obj1.feetype=feesplit[k].feetype;
+        //      obj1.feetypeamount=feesplit[k].feetype_amount;
+        //      if(feesplit[k].feetype_amount>0)
+        //      a.push(obj1);
+        //      feesplit.splice(k,1);
+        //      k--;
+        //    }
+        // }
+        // nameobj.fees=a;
+        // split.push(nameobj);
+        // a=[];        
+        // }
+        // }
+        // }
+        // }
+
+
+
+        // if(paidarr!='no rows'){
+        //   for(var i=0;i<paidarr.length;i++){
+        //     if(paidarr[i].installment_pattern=="1"){
+        //       var p=[];
+        //       p.push(paidarr[i]);
+        //       this.standardpattern(p,inssplit,feesplit);
+        //     }
+        //     else if(paidarr[i].installment_pattern=="3"){
+        //       var p=[];
+        //       p.push(paidarr[i]);
+        //       this.lumpsumpattern(p,inssplit,feesplit); 
+        //     }
+        //     else if(paidarr[i].installment_pattern=="4"){
+        //       var p=[];
+        //       p.push(paidarr[i]);
+        //       this.commitlumpsumpattern(p,inssplit,feesplit);
+        //     }
+        //   }
+        // }
+      },
+      standardpattern:function(paidarr,inssplit,feesplit){
+
+      },
+      lumpsumpattern:function(paidarr,inssplit,feesplit){
+
+      },
+      commitlumpsumpattern:function(paidarr,inssplit,feesplit){
+
+      },
+      custompatternn:function(paidarr,inssplit,feesplit){
+
+      },
+      FnFetchDailycollectionDashboardService:function(academicyear,grade,type){
+        this.fetchdailycollectiondashboardurl=sessionStorage.getItem("addrinfo")+"/fetchdailycollectiondashboard-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        obj.type=type;
+        this.fetchdailycollectiondashboardparam=obj;
+        this.dailycollectionthirdpartydashboardService(academicyear,grade,type);
+        this.$.fetchdailycollectiondashboardajax.generateRequest();
+        
+      },
+      fetchdailycollectiondashboardResponse:function(e){
+        this.admncount=e.detail.response.admncount;
+        this.totalpaid=e.detail.response.totalpaid;
+        this.totalpaidamount=e.detail.response.totalpaidamount;
+        this.patternpaid=e.detail.response.patternpaid;
+        this.patternpaidamount=e.detail.response.patternpaidamount;
+
+        document.querySelector('dailycollection-dashboard').strength=this.admncount[0].totaladmissioncount;
+        document.querySelector('dailycollection-dashboard').totalpaidcount=this.totalpaid[0].totalpaidcount;
+        document.querySelector('dailycollection-dashboard').totalpaidcountp=
+        parseFloat((parseInt(this.totalpaid[0].totalpaidcount)/parseInt(this.admncount[0].totaladmissioncount))*100).toFixed(2)+'%';
+        document.querySelector('dailycollection-dashboard').totalamount=this.totalpaidamount[0].totalpaidamount;
+        // alert(JSON.stringify(this.patternpaid));
+        for(var i=0;i<this.patternpaid.length;i++){
+          if(this.patternpaid[i].installment_pattern=='1'){
+            document.querySelector('dailycollection-dashboard').commitcount=this.patternpaid[i].patternadmncount;
+            document.querySelector('dailycollection-dashboard').commitcountp=
+            parseFloat((parseInt(this.patternpaid[i].patternadmncount)/parseInt(this.admncount[0].totaladmissioncount))*100).toFixed(2)+'%';
+          }
+          if(this.patternpaid[i].installment_pattern=='3'){
+            document.querySelector('dailycollection-dashboard').lumpsumcount=this.patternpaid[i].patternadmncount;
+            document.querySelector('dailycollection-dashboard').lumpsumcountp=
+            parseFloat((parseInt(this.patternpaid[i].patternadmncount)/parseInt(this.admncount[0].totaladmissioncount))*100).toFixed(2)+'%';
+          }
+          if(this.patternpaid[i].installment_pattern=='4'){
+            document.querySelector('dailycollection-dashboard').commitlumpsumcount=this.patternpaid[i].patternadmncount;
+            document.querySelector('dailycollection-dashboard').commitlumpsumcountp=
+            parseFloat((parseInt(this.patternpaid[i].patternadmncount)/parseInt(this.admncount[0].totaladmissioncount))*100).toFixed(2)+'%';
+          }
+        }
+        for(var i=0;i<this.patternpaidamount.length;i++){
+          if(this.patternpaidamount[i].installment_pattern=='1')
+            document.querySelector('dailycollection-dashboard').commitamount=this.patternpaidamount[i].patternpaidamount;
+          if(this.patternpaidamount[i].installment_pattern=='3')
+            document.querySelector('dailycollection-dashboard').lumpsumamount=this.patternpaidamount[i].patternpaidamount;
+          if(this.patternpaidamount[i].installment_pattern=='4')
+            document.querySelector('dailycollection-dashboard').commitlumpsumamount=this.patternpaidamount[i].patternpaidamount;
+        }
+
+        if(this.admncount[0].totaladmissioncount>0){
+         document.querySelector('dailycollection-dashboard').neevcountp=
+            parseFloat((parseInt(this.neevpaid[0].neevadmncount)/parseInt(this.admncount[0].totaladmissioncount))*100).toFixed(2)+'%'; 
+         document.querySelector('dailycollection-dashboard').paytmcountp=
+            parseFloat((parseInt(this.paytmpaid[0].paytmadmncount)/parseInt(this.admncount[0].totaladmissioncount))*100).toFixed(2)+'%'; 
+        }
+
+        document.querySelector('dailycollection-dashboard').hidetable=false;
+        // alert(JSON.stringify(this.admncount)+" "+JSON.stringify(this.totalpaid)+" "+JSON.stringify(this.totalpaidamount)+" "+JSON.stringify(this.patternpaid)+" "+JSON.stringify(this.patternpaidamount));
+      },
+      dailycollectionthirdpartydashboardService:function(academicyear,grade,type){
+        this.dailycollectionthirdpartydashboardurl=sessionStorage.getItem("addrinfo")+"/dailycollectionthirdpartydashboard-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        obj.type=type;
+        this.dailycollectionthirdpartydashboardparam=obj;
+        this.$.dailycollectionthirdpartydashboardajax.generateRequest();
+      },
+      dailycollectionthirdpartydashboardResponse:function(e){
+        this.neevpaid=e.detail.response.neevpaid;
+        this.neevpaidamount=e.detail.response.neevpaidamount;
+        this.paytmpaid=e.detail.response.paytmpaid;
+        this.paytmpaidamount=e.detail.response.paytmpaidamount;
+        // alert(JSON.stringify(this.neevpaid)+" "+JSON.stringify(this.neevpaidamount)+" "+JSON.stringify(this.paytmpaid)+" "+JSON.stringify(this.paytmpaidamount));
+        // alert(JSON.stringify(this.admncount[0]));
+        document.querySelector('dailycollection-dashboard').neevcount=this.neevpaid[0].neevadmncount;
+        document.querySelector('dailycollection-dashboard').neevamount=this.neevpaidamount[0].neevpaidamount;
+        document.querySelector('dailycollection-dashboard').paytmcount=this.paytmpaid[0].paytmadmncount;
+        document.querySelector('dailycollection-dashboard').paytmamount=this.paytmpaidamount[0].paytmpaidamount;
+        if(this.admncount[0].totaladmissioncount>0){
+         document.querySelector('dailycollection-dashboard').neevcountp=
+            parseFloat((parseInt(this.neevpaid[0].neevadmncount)/parseInt(this.admncount[0].totaladmissioncount))*100).toFixed(2)+'%'; 
+         document.querySelector('dailycollection-dashboard').paytmcountp=
+            parseFloat((parseInt(this.paytmpaid[0].paytmadmncount)/parseInt(this.admncount[0].totaladmissioncount))*100).toFixed(2)+'%'; 
+        }
+      }      
     });
   })();
   </script>

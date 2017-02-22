@@ -1,0 +1,151 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="dailycollection-dashboard">
+  <template>
+    <style>
+      .datecard {
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                 <div class="col-md-3" style="margin-top: 0%;">
+                 <paper-dropdown-menu id="dailydashboardacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="dailydashboardacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                 </div>
+                 <div class="col-sm-2" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Grade" attr-for-selected="value">
+                  <paper-menu id="dailydashboardgrade" class="dropdown-content" required on-iron-select="FnSelectGrade" valueattr="value" >
+                    <template  is="dom-repeat" items="{{gradearr}}" as="item">
+                    <paper-item value="{{item.grade_id}}">{{item.grade_name}}</paper-item>
+                    </template>
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div>  
+                <div class="col-sm-2" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Select Type" attr-for-selected="value">
+                  <paper-menu id="dailydashboardtype" class="dropdown-content" required on-iron-select="FnSelectType" valueattr="value" >
+                    <!-- <template  is="dom-repeat" items="{{}}" as="item"> -->
+                    <paper-item value="all">All</paper-item>
+                    <paper-item value="new">New</paper-item>
+                    <paper-item value="promoted">Promoted</paper-item>
+                    <!-- </template> -->
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div>  
+                <div class="col-md-1" style="margin-top: 1%;margin-left: 20%;">
+                <p>Download
+                <a href="#">
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('dailydashboard', 'Daily Collection Dashboard')"></span>
+                </a>
+                </p>
+                </div> 
+            </div>
+          </div>
+        </div>
+    </div>
+    <div id="dailydashboard" hidden="{{hidetable}}">
+     <table border="1" style="border-collapse: collapse;border: 1px grey;">
+      <thead>
+      <tr>
+        <th>School Name</th><th>Strength</th><th>Commitment Fee Paid by</th><th>Lumpsum Fee Paid by</th><th>Commitment Fee with Lumpsum</th><th>Total Paid</th><th>Commitment Fee</th><th>Lumpsum Fee</th><th>Commitment Fee with Lumpsum</th><th>Total Collection</th><th>Paid through Neev Finance</th><th>Neev Finance-Collection</th><th>Paid Through Paytm</th><th>Paytm Collection</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- <template  is="dom-repeat" items="{{dailydashboardarr}}" as="item"> -->
+        <tr style="text-align: center;"><td>{{schoolname}}</td><td>{{strength}}</td><td>{{commitcount}}</td><td>{{lumpsumcount}}</td><td>{{commitlumpsumcount}}</td><td>{{totalpaidcount}}</td><td>{{commitamount}}</td><td>{{lumpsumamount}}</td><td>{{commitlumpsumamount}}</td><td>{{totalamount}}</td><td>{{neevcount}}</td><td>{{neevamount}}</td><td>{{paytmcount}}</td><td>{{paytmamount}}</td></tr>
+
+        <tr style="text-align: center;"><td>%</td><td>{{strengthp}}</td><td>{{commitcountp}}</td><td>{{lumpsumcountp}}</td><td>{{commitlumpsumcountp}}</td><td>{{totalpaidcountp}}</td><td>{{commitamountp}}</td><td>{{lumpsumamountp}}</td><td>{{commitlumpsumamountp}}</td><td>{{totalamountp}}</td><td>{{neevcountp}}</td><td>{{neevamountp}}</td><td>{{paytmcountp}}</td><td>{{paytmamountp}}</td></tr>
+      <!-- </template> -->
+      <!-- <tr><th colspan="11" style="text-align: right;">Total Amount: &nbsp;&nbsp;{{totalamount}}</th></tr> -->
+      </tbody>
+    </table>    
+
+    </div>
+    <fee-report-service id="feereportservice"></fee-report-service>
+  </template>
+  <script type="text/javascript">
+      var tableToExcel = (function() {
+      var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+     return function(table, name) {
+     if (!table.nodeType) table = document.getElementById(table)
+     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+     window.location.href = uri + base64(format(template, ctx))
+     }
+     })()
+  </script>
+  <script>
+  (function() {
+    'use strict';
+    var academicyear;
+    var grade='All Grades';
+    var type='All';
+    Polymer({
+      is: 'dailycollection-dashboard',
+      ready:function(){
+        this.flag=0;
+        this.hidecount=true;
+        this.schoolname=localStorage.getItem("schoolname");
+        this.hidetable=true;
+      },
+      FnHideView:function(){
+        this.hidecount=false;
+      },
+      FnCallService:function(){
+        var d=new Date(); 
+        var cy=d.getFullYear(); 
+        var ny='';
+        var m=d.getMonth()+1;
+        if(m>4){
+          cy=parseInt(cy)+1;
+          ny=parseInt(cy)+1;
+        }
+        else{
+          cy=parseInt(cy)-1;
+          ny=parseInt(cy)+1;
+        }
+        academicyear="AY-"+cy+"-"+ny;
+        // this.$.feereportservice.FnFetchDailycollectionDashboardService(academicyear,grade,type);
+      },
+      FnSelectType:function(e){
+        this.flag=1;
+        type=(e.target.selectedItem.textContent).trim();
+        this.$.feereportservice.FnFetchDailycollectionDashboardService(academicyear,grade,type);
+      },
+      FnView:function(){
+        this.$.feereportservice.FnFetchDailycollectionDashboardService(academicyear,grade,type);
+      },
+      FnRefresh:function(){
+        this.duearr=[];
+        document.querySelector('#dailydashboardacademicyear').selected=-1;
+        document.querySelector('#dailydashboardgrade').selected=-1;
+        document.querySelector('#dailydashboardtype').selected=-1;
+      },
+      FnSelectGrade:function(e){
+        grade=(e.target.selectedItem.textContent).trim();
+        if(this.flag==1){
+        this.$.feereportservice.FnFetchDailycollectionDashboardService(academicyear,grade,type);
+        }
+      },
+      FnSelectAcademicYear:function(e){
+        academicyear=(e.target.selectedItem.textContent).trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+        if(this.flag==1){
+        this.$.feereportservice.FnFetchDailycollectionDashboardService(academicyear,grade,type);
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>
