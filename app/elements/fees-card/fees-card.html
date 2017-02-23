@@ -115,7 +115,7 @@
       </div>
 
 
-      <div class="form-group-heading">
+      <div class="form-group-heading" hidden$="{{hidechangeinspattern}}">
         <h4>Want to change installment pattern??</h4>
       </div>
       <div class="list-group col-sm-12 panel-body form-category">
@@ -137,12 +137,21 @@
             </div>
       </div>
 
-      <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hidecommitinstallment}}">
-            <div class="col-sm-4 enquiry-input">
+      <div class="list-group col-sm-12 panel-body form-category" >
+            <div class="col-sm-4 enquiry-input" hidden$="{{hidecommitinstallment}}" style="margin-top: 2%;">
             <label>Installment required in commitment fee?</label>
             </div>
-            <div class="col-sm-3enquiry-input">
-            <span><paper-checkbox class="col-sm-3" id="insrequirement" class="checkbox" on-change="insrequirementHandler">Yes</paper-checkbox disabled="{{}}"></span>
+            <div class="col-sm-2 enquiry-input" hidden$="{{hidecommitinstallment}}" style="margin-top: 2%;">
+            <span><paper-checkbox class="col-sm-2" id="insrequirement" class="checkbox" on-change="insrequirementHandler">Yes</paper-checkbox></span>
+            </div>
+            <div class="col-sm-2 enquiry-input" style="margin-top: 2%;">
+            <label>If any Latefee amount?</label>
+            </div>
+            <div class="col-sm-2 enquiry-input" hidden$="{{hidelatefeecheckbox}}" style="margin-top: 2%;">
+            <span><paper-checkbox class="col-sm-1" id="collectlatefee" class="checkbox" on-change="latefeeHandler">Yes</paper-checkbox></span>
+            </div>
+            <div style="margin-left: -5%;"  class="col-sm-2 enquiry-input" hidden$="{{hidelatefeeinput}}">
+            <span><paper-input label="Enter amount" required value="{{latefeeamount}}" id='latefeeinput' on-change="latefeeamountHandler"></paper-input></span>
             </div>
       </div>
 
@@ -189,10 +198,12 @@
     </div>
     <br><br>
 
-    <paper-dialog id="waiveoffdialog" modal>
-      <div><paper-input label="Amount to waiveoff" value="{{waiveoff}}"></paper-input></div>
-      <paper-button on-click="FnConfirm">Ok</paper-button>
-      <paper-button on-click="FnCancel">Cancel</paper-button>
+    <paper-dialog id="latefeedialog" modal>
+      <div>
+        
+      </div>
+      <paper-button on-click="FnConfirmlatefee">Ok</paper-button>
+      <paper-button on-click="FnCancellatefeee">Cancel</paper-button>
     </paper-dialog>
 
     <admission-service id="admissionservice"></admission-service>
@@ -273,6 +284,10 @@
           academicyear="AY-"+y1+"-"+y2;
           }
           localStorage.setItem("curr_sess_academicyear",academicyear); 
+          this.hidechangeinspattern=true;
+          this.hidelatefeecheckbox=false;
+          this.hidelatefeeinput=true;
+          // this.latefeeamount=0;
         // document.querySelector('#structuregeneral1').checked=true;
       },  
       selfHandler:function(e){
@@ -388,6 +403,18 @@
           // this.$.admissionservice.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
         }
       },
+      latefeeHandler:function(){
+        if(document.querySelector('#collectlatefee').checked==true)
+        {
+          localStorage.setItem("curr_sess_latefeecollection",'yes');
+          this.hidelatefeeinput=false;
+        }
+        else if(document.querySelector('#collectlatefee').checked==false)
+        {
+          localStorage.setItem("curr_sess_latefeecollection",'no');
+          this.hidelatefeeinput=true;
+        }
+      },
       Fnsetinstallmentarr:function(arr){
         installmentarr=arr;
         installmenttemparr=arr;
@@ -486,13 +513,29 @@
       FnPayfee:function(){  
       // alert(JSON.stringify(installment));  
       // alert(JSON.stringify(installment.length));
+      var flag=0;
+      if(localStorage.getItem("curr_sess_latefeecollection")=='yes'){
+        if(this.latefeeamount==""||this.latefeeamount==null){
+          this.$.latefeeinput.validate();
+          this.$.latefeeinput.focus();
+          flag=1;
+        }
+        else
+        localStorage.setItem("curr_sess_latefeeamount",this.latefeeamount);
+      }
+      if(localStorage.getItem("curr_sess_latefeecollection")=='no'){
+        this.latefeeamount=0;
+        localStorage.setItem("curr_sess_latefeeamount",this.latefeeamount);
+      }
+
+      if(flag==0){
       if(localStorage.getItem("curr_sess_alreadypaidflag")==1){
       this.$.feeservice.deletestudwisefeesplitupService();
       }
       else{
       this.$.feeservice.insertinstallmentsplitofstudService(); 
       }   
-      
+      }
       },
       FnProceedPayment:function(){
       // alert(JSON.stringify(installment));
@@ -569,6 +612,12 @@
         document.querySelector('#schoolfeecurrentyear').checked=false;
         document.querySelector('datepicker-icon-card').ready();
         localStorage.setItem("curr_sess_installmentpatternchange",'false');
+        this.hidechangeinspattern=true;
+        document.querySelector('#collectlatefee').checked=false;
+        // this.latefeeamount=0;
+        this.hidelatefeecheckbox=false;
+        this.hidelatefeeinput=true;
+        localStorage.setItem("curr_sess_latefeecollection","no");
       },
       FnRefresh1:function(){
         document.querySelector('#structureselfmode').checked=true;
@@ -609,6 +658,11 @@
         // document.querySelector('#schoolfeecurrentyear').checked=true;
         document.querySelector('datepicker-icon-card').ready();
         localStorage.setItem("curr_sess_installmentpatternchange",'false');
+        document.querySelector('#collectlatefee').checked=false;
+        // this.latefeeamount=0;
+        this.hidelatefeecheckbox=false;
+        this.hidelatefeeinput=true;
+        localStorage.setItem("curr_sess_latefeecollection","no");
       },
       generalHandler:function(e){
         if(document.querySelector("#structuregeneral1").checked==true)
