@@ -204,6 +204,16 @@
         on-response="fetchmasterpaidfeeResponse"
         debounce-duration="300"
         >
+        <iron-ajax
+        method="post"
+        id="updatelatefeeajax"
+        url="{{updatelatefeeurl}}"
+        params="{{updatelatefeeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updatelatefeeResponse"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
@@ -1145,6 +1155,10 @@
         document.querySelector('adhoc-discount').studentname=arr[0].student_name;
         document.querySelector('adhoc-discount').grade=arr[0].class_for_admission;
         document.querySelector('adhoc-discount').Fnhidediscountmapcard();
+        document.querySelector('latefee-card').admissionno=arr[0].admission_no;
+        document.querySelector('latefee-card').studentname=arr[0].student_name;
+        document.querySelector('latefee-card').grade=arr[0].class_for_admission;
+        document.querySelector('latefee-card').Fnhidelatefeecard();
       },
       attachdiscountService:function(admissionno,discounttypeid){
         this.attachdiscounturl=sessionStorage.getItem("addrinfo")+"/attachdiscount-service";
@@ -1175,6 +1189,24 @@
         alert(e.detail.response.returnval);
         document.querySelector('adhoc-discount').FnRefresh();
         document.querySelector('adhoc-discount-itemcard').FnRefresh();
+      },
+      updatelatefeeService:function(admissionno,amount,reason){
+        this.updatelatefeeurl=sessionStorage.getItem("addrinfo")+"/updatelatefee-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionno=admissionno;
+        obj.amount=amount;
+        obj.reason=reason;
+        var d=new Date();
+        var currdate=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+        obj.latefeedate=currdate;
+        this.updatelatefeeparam=obj;
+        this.$.updatelatefeeajax.generateRequest();
+      },
+      updatelatefeeResponse:function(e){
+        alert(e.detail.response.returnval);
+        document.querySelector('latefee-card').FnRefresh();
+        document.querySelector('latefee-itemcard').FnRefresh();
       }
     });
   })();

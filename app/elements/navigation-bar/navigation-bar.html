@@ -449,6 +449,9 @@
            <li id="discounts">
             <a href="" aria-hidden="true" on-click="FnAdhocDiscount">Adhoc Discount</a>
            </li> 
+           <li id="discounts">
+            <a href="" aria-hidden="true" on-click="FnLatefee">Latefee Collection</a>
+           </li>
            <li id="searchreceipt">
             <a href="" aria-hidden="true" on-click="FnSearchReceipt">Search Receipt</a>
            </li> 
@@ -958,7 +961,13 @@
         document.querySelector('adhoc-discount').callService();
         document.querySelector('adhoc-discount').ready();
         // document.querySelector('discount-display-card').ready();   
-      },      
+      },  
+      FnLatefee:function(){
+        document.querySelector('app-list').setPage("latefee-card","Latefee Collection");
+        document.querySelector('latefee-card').callService();
+        document.querySelector('latefee-card').ready();
+        // document.querySelector('discount-display-card').ready();   
+      },     
        FnInstallment:function()
       {
 

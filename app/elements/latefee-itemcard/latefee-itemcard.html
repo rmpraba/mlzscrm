@@ -1,0 +1,40 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="latefee-itemcard">
+  <template>
+  <style>
+  paper-input,paper-button{
+    width: 30%;
+  }
+  </style>
+    <div>
+      <paper-input hidden value="{{studentname}}"></paper-input>
+      <paper-input hidden value="{{admissionno}}"></paper-input>
+      <paper-input hidden value="{{grade}}"></paper-input>
+      <h4>{{studentname}}&nbsp;&nbsp;{{admissionno}}&nbsp;&nbsp;{{grade}}</h4>
+      <paper-input label="Enter amount" value="{{amount}}"></paper-input>
+      <paper-input label="Reason" value="{{reason}}"></paper-input>
+      <paper-button style="margin-top: 3%;" class="btn btn-primary left" 
+      on-click="FnAdd">Add</paper-button>
+      <processing-service id="service"></processing-service>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'latefee-itemcard',
+      FnAdd:function(){
+        this.$.service.updatelatefeeService(this.admissionno,this.amount,this.reason);
+      },
+      FnRefresh:function(){
+        this.studentname="";
+        this.admissionno="";
+        this.amount="";
+        this.reason="";
+      }
+    });
+  })();
+  </script>
+</dom-module>
