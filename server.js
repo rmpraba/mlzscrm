@@ -7219,6 +7219,30 @@ app.post('/dailycollectionthirdpartydashboard-service',  urlencodedParser,functi
 
  });
 
+
+
+app.post('/updatedefaulter-service',  urlencodedParser,function (req, res){
+  // console.log('fetchstudinstallmentsplitup');
+  var qur="update md_admission set active_status='Admitted' WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"'";
+  console.log(qur);
+  connection.query(qur,
+    function(err, result){
+      if(!err){
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Done!!'});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Unable to process!!'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
+
+
 function setvalue(){
   console.log("calling setvalue.....");
 }

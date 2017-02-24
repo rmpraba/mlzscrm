@@ -1,0 +1,41 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="defaulter-update-itemcard">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      table{
+        width:70%;
+      }
+    </style>
+    <table class="table table-hover">
+      <tr>
+        <td>{{admissionno}}<br>{{studentname}}<br>{{grade}}</td>
+        <td></td>
+        <td>
+          <paper-button style="margin-top: 3%;" class="btn btn-primary left" on-click="FnUpdate">Update</paper-button>
+        </td>
+      </tr>
+    </table>
+    <processing-service id="service"></processing-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'defaulter-update-itemcard',
+      FnUpdate:function(){
+        this.$.service.updatedefaulterService(this.admissionno);
+      },
+      FnRefresh:function(){
+        this.admissionno="";
+        this.studentname="";
+        this.grade="";
+      }
+    });
+  })();
+  </script>
+</dom-module>

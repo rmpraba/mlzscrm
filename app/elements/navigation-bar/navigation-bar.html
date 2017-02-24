@@ -455,6 +455,9 @@
            <li id="searchreceipt">
             <a href="" aria-hidden="true" on-click="FnSearchReceipt">Search Receipt</a>
            </li> 
+           <li id="defaulterupdate">
+            <a href="" aria-hidden="true" on-click="FnDefaulterUpdate">Defaulter Update</a>
+           </li> 
             <li id="bounceprocess">
             <a href="" aria-hidden="true" on-click="FnBounceProcessing">Bounce/Cancel Process</a>
             </li> 
@@ -1060,6 +1063,11 @@
         document.querySelector('app-list').setPage("searchreceipt","Search Receipt");
         document.querySelector('searchreceipt-card').callService();
         document.querySelector('searchreceipt-card').ready();
+      },
+      FnDefaulterUpdate:function(){
+        document.querySelector('app-list').setPage("defaulter-update","Defaulter Update");
+        document.querySelector('defaulter-update').callService();
+        document.querySelector('defaulter-update').ready();
       },
       FnPendingCheques:function(){
         document.querySelector('app-list').setPage("pendingcheques-report","Pending Cheques Report");
