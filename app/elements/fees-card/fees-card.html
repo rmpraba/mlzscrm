@@ -23,6 +23,9 @@
   paper-dropdown-menu{
     width: 80%;
   }
+  /*#group{
+    @apply(--layout-horizontal);
+  }*/
     
 </style>
   <template>
@@ -63,9 +66,14 @@
 
      </div>
 
-     <div class="form-group-heading">
-        <h4>Student Detail</h4>
-      </div>
+     <div class="form-group-heading" id="group">
+     <!-- <div class="col-sm-3"> -->
+        <h4>Student Detail <span><h5 hidden$="{{hidedefaulterlabel}}" style="color: red;margin-left: 18%;margin-top: -4%;">The given student is a defaulter</h5></span></h4>
+     <!-- </div> -->
+     <!-- <div class="col-sm-4"> -->
+        
+     <!-- </div> -->
+     </div>
       <div class="list-group col-sm-12 panel-body form-category">
         <div class="col-sm-3 enquiry-input">
           <paper-input label="Student Name" value="{{studentname}}"></paper-input>
@@ -118,7 +126,7 @@
       <div class="form-group-heading" hidden$="{{hidechangeinspattern}}">
         <h4>Want to change installment pattern??</h4>
       </div>
-      <div class="list-group col-sm-12 panel-body form-category">
+      <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hidechangeinspattern}}">
             <div class="col-sm-12 enquiry-input" hidden$="{{hidechangeinspattern}}">
             <span><paper-checkbox class="col-sm-3" id="inspatternchangeyes" readonly class="checkbox" on-change="inspatternyesHandler" >Yes</paper-checkbox></span>
             <span><paper-checkbox class="col-sm-3" id="inspatternchangeno" readonly class="checkbox" on-change="inspatternnoHandler" >No</paper-checkbox></span>
@@ -288,6 +296,7 @@
           this.hidelatefeecheckbox=false;
           this.hidelatefeeinput=true;
           this.latefeeamount=0;
+          this.hidedefaulterlabel=true;
         // document.querySelector('#structuregeneral1').checked=true;
       },  
       selfHandler:function(e){
@@ -617,6 +626,7 @@
         this.hidelatefeecheckbox=false;
         this.hidelatefeeinput=true;
         localStorage.setItem("curr_sess_latefeecollection","no");
+        this.hidedefaulterlabel=true;
       },
       FnRefresh1:function(){
         document.querySelector('#structureselfmode').checked=true;
@@ -662,6 +672,7 @@
         this.hidelatefeecheckbox=false;
         this.hidelatefeeinput=true;
         localStorage.setItem("curr_sess_latefeecollection","no");
+        this.hidedefaulterlabel=true;
       },
       generalHandler:function(e){
         if(document.querySelector("#structuregeneral1").checked==true)
@@ -862,6 +873,7 @@
     document.querySelector("#structurelumpsum1").checked=false;
     localStorage.setItem("curr_sess_installmentpattern",1);
     document.querySelector('datepicker-icon-card').ready();
+    this.hidedefaulterlabel=true;
     // this.$.processingservice.fetchchequeforeditordelete(admission_no);
     // localStorage.setItem("curr_sess_enquiryno",enquiry_no);
     // localStorage.setItem("curr_sess_enquiryname",enquiry_name);
@@ -872,8 +884,10 @@
       this.hidecommitinstallment=flag;
     },
     Fnhidepattern:function(flag){
+    
     // alert(flag);
     if(flag==true){
+      this.hidedefaulterlabel=false;
       this.hidecommitinstallment=true;
       document.querySelector('#structurelumpsum1').checked=true;
       // document.querySelector('#structuregeneral1').checked=false;
