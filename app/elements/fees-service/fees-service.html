@@ -168,7 +168,14 @@
         obj.admissionstatus=localStorage.getItem("curr_sess_admissionstatus");
         obj.createdby=localStorage.getItem("employeeid"); 
         obj.provisionflag=localStorage.getItem("curr_sess_provisionflag"); 
-        obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");  
+        obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");
+        if(localStorage.getItem("curr_sess_feetypepayment")=="School fee") {
+        obj.latefee=localStorage.getItem("curr_sess_latefeeamount");
+        // alert(JSON.stringify(obj.latefee));
+        } 
+        else{
+        obj.latefee=0;
+        }
         this.insertcashfeesparam=obj;   
         // paymentarr.push(obj);            
         this.$.insertcashfeesajax.generateRequest();
@@ -237,6 +244,12 @@
         obj.createdby=localStorage.getItem("employeeid"); 
         obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");
         obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");   
+        if(localStorage.getItem("curr_sess_feetypepayment")=="School fee") {
+        obj.latefee=localStorage.getItem("curr_sess_latefeeamount");
+        } 
+        else{
+        obj.latefee=0;
+        }
         this.Thirdpartyfeesparam=obj;   
         // paymentarr.push(obj);            
         this.$.Thirdpartyfeesajax.generateRequest();
@@ -317,6 +330,12 @@
         obj.provisionflag=localStorage.getItem("curr_sess_provisionflag"); 
         obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");  
         obj.receiptdate=cheque[i].receiptdate;     
+        if(localStorage.getItem("curr_sess_feetypepayment")=="School fee") {
+        obj.latefee=localStorage.getItem("curr_sess_latefeeamount");
+        } 
+        else{
+        obj.latefee=0;
+        }
         this.insertchequefeesparam=obj; 
         // alert(JSON.stringify(obj)); 
         // paymentarr.push(obj);     
@@ -388,6 +407,12 @@
         obj.provisionflag=localStorage.getItem("curr_sess_provisionflag");
         obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");   
         obj.receiptdate=transfer[i].receiptdate;     
+        if(localStorage.getItem("curr_sess_feetypepayment")=="School fee") {
+        obj.latefee=localStorage.getItem("curr_sess_latefeeamount");
+        } 
+        else{
+        obj.latefee=0;
+        }
         this.inserttransferfeesparam=obj; 
         // paymentarr.push(obj);   
         this.$.inserttransferfeesajax.generateRequest();

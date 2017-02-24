@@ -2512,7 +2512,9 @@ app.post('/insertcashfees',  urlencodedParser,function (req, res){
         adhoc_reason:req.query.adhocreason,
         admission_status:req.query.admissionstatus,
         difference_amount:0,
-        paymenttype_flag:req.query.type
+        paymenttype_flag:req.query.type,
+        latefee_amount:req.query.latefee,
+        latefee_date:req.query.receiveddate
     };
 
 
@@ -2632,7 +2634,9 @@ app.post('/insertchequefees',  urlencodedParser,function (req, res){
         adhoc_reason:req.query.adhocreason,
         admission_status:req.query.admissionstatus,
         difference_amount:0,
-        paymenttype_flag:req.query.type
+        paymenttype_flag:req.query.type,
+        latefee_amount:req.query.latefee,
+        latefee_date:req.query.receiveddate
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
@@ -2753,7 +2757,9 @@ app.post('/inserttransferfees',  urlencodedParser,function (req, res){
         admission_status:req.query.admissionstatus,
         difference_amount:0,
         paymenttype_flag:req.query.type,
-        cheque_date:req.query.chequedate
+        cheque_date:req.query.chequedate,
+        latefee_amount:req.query.latefee,
+        latefee_date:req.query.receiveddate
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";
@@ -2867,7 +2873,9 @@ app.post('/insertthirdpartyfees',  urlencodedParser,function (req, res){
         adhoc_reason:req.query.adhocreason,
         admission_status:req.query.admissionstatus,
         difference_amount:0,
-        paymenttype_flag:req.query.type
+        paymenttype_flag:req.query.type,
+        latefee_amount:req.query.latefee,
+        latefee_date:req.query.receiveddate
     };
 
     var masterinsert="INSERT INTO md_student_paidfee SET ?";

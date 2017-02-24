@@ -287,7 +287,7 @@
           this.hidechangeinspattern=true;
           this.hidelatefeecheckbox=false;
           this.hidelatefeeinput=true;
-          // this.latefeeamount=0;
+          this.latefeeamount=0;
         // document.querySelector('#structuregeneral1').checked=true;
       },  
       selfHandler:function(e){
@@ -513,12 +513,10 @@
       FnPayfee:function(){  
       // alert(JSON.stringify(installment));  
       // alert(JSON.stringify(installment.length));
-      var flag=0;
       if(localStorage.getItem("curr_sess_latefeecollection")=='yes'){
         if(this.latefeeamount==""||this.latefeeamount==null){
           this.$.latefeeinput.validate();
           this.$.latefeeinput.focus();
-          flag=1;
         }
         else
         localStorage.setItem("curr_sess_latefeeamount",this.latefeeamount);
@@ -527,15 +525,14 @@
         this.latefeeamount=0;
         localStorage.setItem("curr_sess_latefeeamount",this.latefeeamount);
       }
-
-      if(flag==0){
+      // alert(localStorage.getItem("curr_sess_latefeeamount"));
       if(localStorage.getItem("curr_sess_alreadypaidflag")==1){
       this.$.feeservice.deletestudwisefeesplitupService();
       }
       else{
       this.$.feeservice.insertinstallmentsplitofstudService(); 
       }   
-      }
+      
       },
       FnProceedPayment:function(){
       // alert(JSON.stringify(installment));
@@ -614,7 +611,7 @@
         localStorage.setItem("curr_sess_installmentpatternchange",'false');
         this.hidechangeinspattern=true;
         document.querySelector('#collectlatefee').checked=false;
-        // this.latefeeamount=0;
+        this.latefeeamount=0;
         this.hidelatefeecheckbox=false;
         this.hidelatefeeinput=true;
         localStorage.setItem("curr_sess_latefeecollection","no");
@@ -659,7 +656,7 @@
         document.querySelector('datepicker-icon-card').ready();
         localStorage.setItem("curr_sess_installmentpatternchange",'false');
         document.querySelector('#collectlatefee').checked=false;
-        // this.latefeeamount=0;
+        this.latefeeamount=0;
         this.hidelatefeecheckbox=false;
         this.hidelatefeeinput=true;
         localStorage.setItem("curr_sess_latefeecollection","no");
