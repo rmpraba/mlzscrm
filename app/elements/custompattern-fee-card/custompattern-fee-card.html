@@ -358,8 +358,9 @@
         this.$.feeservice.callInsertCashfeesService(installment[i],installment.length);
       if(installment[i].paymenttype=="Cheque")
         this.$.feeservice.callInsertChequefeesService(installment[i],installment.length);
-      if(installment[i].paymenttype=="Transfer")
+      if(installment[i].paymenttype=="Transfer"||installment[i].paymenttype=="Card Swipe"){
         this.$.feeservice.callInsertTransferfeesService(installment[i],installment.length);
+      }
       if(installment[i].paymenttype=="Third Party")
         this.$.feeservice.callInsertThirdpartyfeesService(installment[i],installment.length);
       }

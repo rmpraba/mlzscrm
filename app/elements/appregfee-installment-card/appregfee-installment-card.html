@@ -47,6 +47,7 @@
           <paper-menu class="dropdown-content" id="paymodemenu" on-iron-select="FnPaymentMode" valueattr="value" >
             <paper-item value="Cheque" id="{{installment}}">Cheque</paper-item>
             <paper-item value="Cash" id="{{installment}}">Cash</paper-item>
+            <paper-item value="Card Swipe" id="{{installment}}">Card Swipe</paper-item>
             <paper-item value="Transfer" id="{{installment}}">Transfer</paper-item>
           </paper-menu>
     </paper-dropdown-menu>    
@@ -132,7 +133,7 @@
         if(paymenttype=="Cheque"){          
           this.$.chequeinfo.toggle();                               
         }
-        if(paymenttype=="Transfer"){          
+        if(paymenttype=="Transfer"||paymenttype=="Card Swipe"){          
           this.$.creditinfo.toggle();                       
         }
       },

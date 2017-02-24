@@ -801,7 +801,7 @@
                 chequeno++;
                 }
             }
-            else if(paymentarr[i].mode_of_payment=="Transfer"){
+            else if(paymentarr[i].mode_of_payment=="Transfer"||paymentarr[i].mode_of_payment=="Card Swipe"){
                 transfertotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(transfertotal)).toFixed(2);
                 transferparticular.push({"slno":transferno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fees,"bankname":paymentarr[i].bank_name,"referenceno":paymentarr[i].reference_no,"receiveddate":paymentarr[i].received_date,"installmentamount":paymentarr[i].installment_amount});
                 transferno++;
@@ -870,6 +870,8 @@
                 obj.hidechequeparticular=true;
                 obj.hidetransferparticular=true;
                 obj.hidecurrreceipt=true;
+                if(obj.installment="Application fee")
+                    obj.hidesplit=true;
                 if(tpcnt==0)
                     feereceiptarr.push(obj);
                 tpcnt++;
@@ -899,6 +901,8 @@
                 obj.hidechequeparticular=false;
                 obj.hidetransferparticular=true;
                 obj.hidecurrreceipt=false;
+                if(obj.installment="Application fee")
+                    obj.hidesplit=true;
                 if(currchequecnt==0)
                     feereceiptarr.push(obj);
                 currchequecnt++;
@@ -926,12 +930,14 @@
                 obj.hidechequeparticular=false;
                 obj.hidetransferparticular=true;
                 obj.hidecurrreceipt=true;
+                if(obj.installment="Application fee")
+                    obj.hidesplit=true;
                 if(chequecnt==0)
                     feereceiptarr.push(obj);
                 chequecnt++;
                 }
             }
-            if(paymentarr[i].mode_of_payment=="Transfer"){
+            if(paymentarr[i].mode_of_payment=="Transfer"||paymentarr[i].mode_of_payment=="Card Swipe"){
                 var obj={"schoolid":"","academicyear":"","admissionno":"","studentname":"","grade":"","installment":"","paiddate":"","receiptno":"","receipttype":"","hidereceipt":"","hideack":"","chequeview":"","transferview":"","paymentarr":""};
                 obj.modeofpayment=paymentarr[i].mode_of_payment;
                 obj.schoolid=paymentarr[i].school_id;
@@ -955,6 +961,8 @@
                 obj.hidechequeparticular=true;
                 obj.hidetransferparticular=false;
                 obj.hidecurrreceipt=true;
+                if(obj.installment="Application fee")
+                    obj.hidesplit=true;
                 if(transfercnt==0)
                     feereceiptarr.push(obj);
                 transfercnt++;

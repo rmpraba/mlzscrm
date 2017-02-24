@@ -663,7 +663,7 @@
             feereceiptarr.push(obj);
           }
 
-          if(paymentarr[i].mode_of_payment=="Transfer"&&paymentarr[i].flag==0)
+          if((paymentarr[i].mode_of_payment=="Transfer"||paymentarr[i].mode_of_payment=="Card Swipe")&&paymentarr[i].flag==0)
           {
             var obj={"schoolid":"","academicyear":"","admissionno":"","studentname":"","grade":"","installment":"","paiddate":"","receiptno":"","receipttype":"","hidereceipt":"","hideack":"","chequeview":"","transferview":"","paymentarr":""};
             obj.modeofpayment=paymentarr[i].mode_of_payment;
@@ -976,7 +976,7 @@
             feereceiptarr.push(obj);
           }
 
-          if(paymentarr[i].mode_of_payment=="Transfer"&&paymentarr[i].flag==0)
+          if((paymentarr[i].mode_of_payment=="Transfer"||paymentarr[i].mode_of_payment=="Card Swipe")&&paymentarr[i].flag==0)
           {
             var obj={"schoolid":"","academicyear":"","admissionno":"","studentname":"","grade":"","installment":"","paiddate":"","receiptno":"","receipttype":"","hidereceipt":"","hideack":"","chequeview":"","transferview":"","paymentarr":""};
             obj.modeofpayment=paymentarr[i].mode_of_payment;

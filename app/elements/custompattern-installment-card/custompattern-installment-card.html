@@ -90,6 +90,7 @@
           <paper-menu class="dropdown-content" id="installmentid" on-iron-select="FnPaymentMode" valueattr="value" >
             <paper-item value="Cheque" id="{{installment}}">Cheque</paper-item>
             <paper-item value="Cash" id="{{installment}}">Cash</paper-item>
+            <paper-item value="Card Swipe" id="{{installment}}">Card Swipe</paper-item>
             <paper-item value="Transfer" id="{{installment}}">Transfer</paper-item>
             <paper-item value="Third Party" id="{{installment}}">Third Party</paper-item>
           </paper-menu>
@@ -245,7 +246,7 @@
           this.hiddeninputtflag=true;         
           this.$.chequeinfo.toggle();                               
         }
-        if(paymenttype=="Transfer"){ 
+        if(paymenttype=="Transfer"||paymenttype=="Card Swipe"){ 
           this.hiddenflag=true;
           if(this.flag=1)
           this.hiddeninputtflag=true;                  
@@ -527,7 +528,7 @@
            
             this.FnPrepareInstallment(obj);                                 
         }
-        if(paymenttype=="Transfer"){ 
+        if(paymenttype=="Transfer"||paymenttype=="Card Swipe"){ 
           this.hiddenflag=false;
           if(this.flag=1)
           this.hiddeninputtflag=true;                  
