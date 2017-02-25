@@ -779,7 +779,12 @@
       },
       updateenqdetailsResponse:function(e){
         var result=e.detail.response.returnval;
-        alert(result);       
+        alert(result); 
+        if(result=="Updated!!"){
+        document.querySelector('crm-service').getenquirycount();
+        document.querySelector('crm-service').getadmittedcount();
+        document.querySelector('app-list').setPage("enquiry"); 
+        }     
       }
     });
   })();
