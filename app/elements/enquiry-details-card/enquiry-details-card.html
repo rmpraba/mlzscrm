@@ -19,7 +19,10 @@
       <template  is="dom-repeat" items="{{listdetails}}" as="view">
        <tr>
         <td>{{view.sl_no}}</td>
-        <td>{{view.enquiry_id}}</td>
+        <td>
+        <enquirylink-card enquiryno="{{view.enquiry_id}}"></enquirylink-card>
+        <!-- <a href="" on-click="{{FnFetchEnquiry}}">{{view.enquiry_id}}</a> -->
+        </td>
         <td>{{view.student_name}}</td>
         <td>{{view.enquiry_grade}}</td>
         <td>{{view.enquired_year}}</td>

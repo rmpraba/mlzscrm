@@ -132,6 +132,18 @@
   </iron-ajax> 
   <iron-ajax
         method="post"
+        id="updateenqdetailsajax"
+        url="{{updateenqdetailsurl}}"
+        params="{{updateenqdetailsparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updateenqdetailsResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax> 
+
+  <iron-ajax
+        method="post"
         id="getenquirynoajax"
         url="{{getenquirynourl}}"
         params="{{getenquirynoparam}}"
@@ -238,6 +250,18 @@
         handle-as="json"
         content-type="application/json"
         on-response="getprovisionallyadmittedstudentsinlocationResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+
+  <iron-ajax
+        method="post"
+        id="fetchpreappinfoajax"
+        url="{{fetchpreappinfourl}}"
+        params="{{fetchpreappinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchpreappinfoResponse"
         debounce-duration="300"
         >
   </iron-ajax>
@@ -405,7 +429,7 @@
         var result=e.detail.response.returnval;
         document.querySelector('pre-apps').professionarr=result;
       },
-      submitenqdetails:function(todate,enrolltype,academicyear,grade,firstname,middlename,lastname,gender,havesibling,ageofyr,dobdate,mothertonguelanguage,fathername,mothername,mob,mothermob,email,motheremail,guardianname,guardianmobile,guardianemail,dadoccupationinfo,motheroccupationinfo,textvalue,enquiysource,attenedcounsellorname,enqno,guardianoccupationinfo,parent_or_guardian_work,referralvalue, schoolname,schoolarea,siblingremark,paga){
+      submitenqdetails:function(todate,enrolltype,academicyear,grade,firstname,middlename,lastname,gender,havesibling,ageofyr,dobdate,mothertonguelanguage,fathername,mothername,mob,mothermob,email,motheremail,guardianname,guardianmobile,guardianemail,dadoccupationinfo,motheroccupationinfo,textvalue,enquiysource,attenedcounsellorname,enqno,guardianoccupationinfo,parent_or_guardian_work,referralvalue, schoolname,schoolarea,siblingremark,paga,bothparentswork,guardianwork,whoworking){
         this.submitenqdetailsurl=sessionStorage.getItem("addrinfo")+"/submitenqdetails";
         var obj={"schol":"","createdon":"","enrolltype":"","academicyear":"","grade":"","firstname":"","middlename":"","lastname":"","gender":"","havesibling":"","ageofyr":"","dobdate":"","mothertonguelanguage":"","fathername":"","mothername":"","mob":"","mothermob":"","email":"","motheremail":"","guardianname":"","guardianmobile":"","guardianemail":"","dadoccupationinfo":"","motheroccupationinfo":"","location":"","enquiysource":"","attenedcounsellorname":"","status":"","enquiryname":"","enquiry_no":"","parent_or_guardian_work":"","guardianoccupationinfo":"","referralvalue":"","school_name":"","school_area":"","sibling_remark":""};
         obj.schol=localStorage.getItem("schoolid");
@@ -445,6 +469,10 @@
         obj.school_area = schoolarea;
         obj.sibling_remark = siblingremark;
         obj.parentorguard=paga;
+        obj.bothworking=bothparentswork;
+        obj.guardianwork=guardianwork;
+        obj.whoworking=whoworking;
+
         // obj.age=ageofyr;
         // alert(localStorage.getItem("curr_sess_referralid"));
         // if(localStorage.getItem("curr_sess_referralid")=='1'||localStorage.getItem("curr_sess_referralid")=='9'){
@@ -615,6 +643,143 @@
         var result=e.detail.response.returnval;
         // alert(JSON.stringify(result));
         document.querySelector('pre-apps').referralarr=result;
+      },
+      FnFetchPreappinfoService:function(enquiryno){
+        this.fetchpreappinfourl=sessionStorage.getItem("addrinfo")+"/fetchpreappinfo-service";
+        var obj={"schol":""}
+        obj.enquiryno=enquiryno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.fetchpreappinfoparam=obj;
+        this.$.fetchpreappinfoajax.generateRequest();
+      },
+      fetchpreappinfoResponse:function(e)
+      {
+      var enqarr=e.detail.response.returnval;
+      // alert(JSON.stringify(enqarr));
+      var d=new Date(enqarr[0].created_on);
+      document.querySelector('pre-apps').enquireddate=d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear();
+      var enqdate=d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear();
+      document.querySelector('pre-apps').academicyear=enqarr[0].academic_year;
+      document.querySelector('pre-apps').selectedgrade=enqarr[0].class;
+      document.querySelector('pre-apps').firstname=enqarr[0].first_name;
+      document.querySelector('pre-apps').middlename=enqarr[0].middle_name;
+      document.querySelector('pre-apps').lastname=enqarr[0].last_name;
+      document.querySelector('pre-apps').selectedgender=enqarr[0].gender;
+      document.querySelector('pre-apps').havingsibling=enqarr[0].have_sibling;
+      if(enqarr[0].have_sibling=="yes")
+      document.querySelector('pre-apps').FnShowRemark();
+      document.querySelector('pre-apps').siblingremark=enqarr[0].sibling_remark;
+      document.querySelector('pre-apps').showdate=enqarr[0].dob;
+      document.querySelector('pre-apps').ageofyr=enqarr[0].age;
+      document.querySelector('pre-apps').selectedmothertongue=enqarr[0].mother_tongue;
+      document.querySelector('pre-apps').FnSetParentorguardian(enqarr[0].parent_or_guard);
+      if(enqarr[0].parent_or_guard=="parent"){
+      document.querySelector('pre-apps').guardianinfo=true;
+      document.querySelector('pre-apps').guardianworkinfo=true;
+      document.querySelector('pre-apps').parentinfo=false;
+      document.querySelector('pre-apps').parentworkinfo=false;
+      document.querySelector('pre-apps').fathername=enqarr[0].father_name;
+      document.querySelector('pre-apps').mothername=enqarr[0].mother_name;
+      document.querySelector('pre-apps').mob=enqarr[0].father_mob;
+      document.querySelector('pre-apps').mothermob=enqarr[0].mother_mob;
+      document.querySelector('pre-apps').email=enqarr[0].father_email;
+      document.querySelector('pre-apps').motheremail=enqarr[0].mother_email;
+      document.querySelector('pre-apps').bothworking=enqarr[0].both_working;
+      document.querySelector('pre-apps').hideoccupation=false;
+      document.querySelector('pre-apps').guardianoccupation=true;
+      document.querySelector('pre-apps').whoworks=enqarr[0].who_works;
+      if(enqarr[0].both_working=="Yes"){
+        document.querySelector('pre-apps').hideoccupation=true;
+        document.querySelector('pre-apps').dadoccupation=false;
+        document.querySelector('pre-apps').motheroccupation=false;
+        document.querySelector('pre-apps').fatherprofession=enqarr[0].father_occupation;
+        document.querySelector('pre-apps').motherprofession=enqarr[0].mother_occupation;
+      }
+      else{
+        if(enqarr[0].who_works=="Father"){
+         document.querySelector('pre-apps').dadoccupation=false;
+         document.querySelector('pre-apps').fatherprofession=enqarr[0].father_occupation;
+        }
+        else{
+         document.querySelector('pre-apps').motheroccupation=false;
+         document.querySelector('pre-apps').motherprofession=enqarr[0].mother_occupation;
+        }
+      }
+      }
+      else
+      {
+      document.querySelector('pre-apps').parentinfo=true;
+      document.querySelector('pre-apps').parentworkinfo=true;
+      document.querySelector('pre-apps').guardianinfo=false;
+      document.querySelector('pre-apps').guardianworkinfo=false;
+      document.querySelector('pre-apps').guardianname=enqarr[0].guardian_name;
+      document.querySelector('pre-apps').guardianmobile=enqarr[0].guardian_mobile;
+      document.querySelector('pre-apps').guardianemail=enqarr[0].guardian_mail;
+      document.querySelector('pre-apps').guardianworking=enqarr[0].guard_working;
+      document.querySelector('pre-apps').hideoccupation=true;
+      if(enqarr[0].guard_working=="Yes"){
+      document.querySelector('pre-apps').guardianoccupation=false;
+      document.querySelector('pre-apps').guardianprofession=enqarr[0].guardian_occup;
+      }
+      else
+      document.querySelector('pre-apps').guardianoccupation=true; 
+      }
+      document.querySelector('pre-apps').textvalue=enqarr[0].locality;
+      document.querySelector('pre-apps').selectedenqsource=enqarr[0].refferal_type;
+      document.querySelector('pre-apps').FnSetPreappInfo(enqarr[0].year_type,enqarr[0].class,enqarr[0].gender,enqarr[0].dob,enqarr[0].locality,enqarr[0].enquiry_source,enqarr[0].mother_tongue,enqdate,enqarr[0].guard_working,enqarr[0].parent_or_guard,enqarr[0].first_name,enqarr[0].academic_year,enqarr[0].age,enqarr[0].father_name,enqarr[0].mother_name,enqarr[0].father_mob,enqarr[0].mother_mob,enqarr[0].father_email,enqarr[0].mother_email,enqarr[0].both_working,enqarr[0].father_occupation,enqarr[0].mother_occupation,enqarr[0].who_works,enqarr[0].have_sibling);
+      },
+      updateenqdetails:function(todate,enrolltype,academicyear,grade,
+        firstname,middlename,lastname,gender,havesibling,ageofyr,dobdate,mothertonguelanguage,fathername,mothername,mob,mothermob,email,motheremail,guardianname,guardianmobile,guardianemail,dadoccupationinfo,motheroccupationinfo,textvalue,enquiysource,attenedcounsellorname,enqno,guardianoccupationinfo,parent_or_guardian_work,referralvalue, schoolname,schoolarea,siblingremark,paga,bothparentswork,guardianwork,whoworking){
+        this.updateenqdetailsurl=sessionStorage.getItem("addrinfo")+"/updateenqdetails";
+        var obj={"schol":"","createdon":"","enrolltype":"","academicyear":"","grade":"","firstname":"","middlename":"","lastname":"","gender":"","havesibling":"","ageofyr":"","dobdate":"","mothertonguelanguage":"","fathername":"","mothername":"","mob":"","mothermob":"","email":"","motheremail":"","guardianname":"","guardianmobile":"","guardianemail":"","dadoccupationinfo":"","motheroccupationinfo":"","location":"","enquiysource":"","attenedcounsellorname":"","status":"","enquiryname":"","enquiry_no":"","parent_or_guardian_work":"","guardianoccupationinfo":"","referralvalue":"","school_name":"","school_area":"","sibling_remark":""};
+        obj.schol=localStorage.getItem("schoolid");
+        // obj.createdon = todate;
+        obj.enrolltype = enrolltype;
+        obj.academicyear = academicyear;
+        obj.grade = grade;
+        obj.firstname = firstname;
+        obj.middlename = middlename;
+        obj.lastname = lastname;
+        obj.gender = gender;
+        obj.havesibling = havesibling;
+        obj.ageofyr = ageofyr;
+        obj.dobdate= dobdate;
+        obj.mothertonguelanguage = mothertonguelanguage;
+        obj.fathername = fathername;
+        obj.mothername = mothername;
+        obj.mob =mob;
+        obj.mothermob= mothermob;
+        obj.email = email;
+        obj.motheremail = motheremail;
+        obj.guardianname = guardianname;
+        obj.guardianmobile = guardianmobile;
+        obj.guardianemail = guardianemail;
+        obj.dadoccupationinfo = dadoccupationinfo;
+        obj.motheroccupationinfo = motheroccupationinfo;
+        obj.location = textvalue;
+        obj.enquiysource = enquiysource;
+        obj.attenedcounsellorname = attenedcounsellorname;
+        obj.enquiryname = firstname+' '+middlename+' '+lastname;
+        // obj.status = "Enquired";
+        obj.enquiryno = localStorage.getItem("curr_sess_enquiryno");
+        obj.guardianoccupationinfo = guardianoccupationinfo;
+        obj.parent_or_guardian_work = parent_or_guardian_work;
+        obj.referralvalue = referralvalue;
+        obj.school_name = schoolname;
+        obj.school_area = schoolarea;
+        obj.sibling_remark = siblingremark;
+        obj.parentorguard=paga;
+        obj.bothworking=bothparentswork;
+        obj.guardianwork=guardianwork;
+        obj.whoworking=whoworking;
+        // obj.discountreferraltype=localStorage.getItem("curr_sess_referralid");
+        // obj.referrerid=localStorage.getItem("curr_sess_referrerid");
+        this.updateenqdetailsparam=obj;
+        this.$.updateenqdetailsajax.generateRequest();
+      },
+      updateenqdetailsResponse:function(e){
+        var result=e.detail.response.returnval;
+        alert(result);       
       }
     });
   })();

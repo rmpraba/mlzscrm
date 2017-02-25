@@ -50,7 +50,7 @@
       </div>
       <div class="list-group col-sm-12 panel-body form-category">
         <div class="col-sm-6">
-          <enquiry-datepicker></enquiry-datepicker>
+          <enquiry-datepicker showdate="{{enquireddate}}"></enquiry-datepicker>
         </div>
         <div class="col-sm-3" style='margin-top: 1%;'>
           <paper-checkbox id="nextacademicyear" class="checkbox" on-change="nextyearhandler"> Next Year</paper-checkbox>
@@ -65,7 +65,7 @@
         </div>
         <div class="col-sm-4">
           <paper-dropdown-menu label="Grade">
-            <paper-menu  class="dropdown-content" id="newenqcardgrades" required on-iron-select="classes" valueattr="value" >
+            <paper-menu  class="dropdown-content" id="newenqcardgrades" required on-iron-select="classes" valueattr="value" attr-for-selected="value" selected="{{selectedgrade}}">
               <template  is="dom-repeat" items="{{gradeinschoolarr}}" as="grade">
                 <paper-item value="{{grade.class}}">{{grade.class}}</paper-item>
               </template>
@@ -94,16 +94,16 @@
         <div class="col-sm-4 enquiry-input">
           <div class="lbl"><label>Gender </label><p id="mangender">&nbsp; *</p> </div>
           <div class="gender">
-            <paper-radio-group>
-              <paper-radio-button id="boyid" name="yes" on-click="maleHandler">Boy</paper-radio-button>
-              <paper-radio-button id="girlid" name="no" on-click="femaleHandler">Girl</paper-radio-button>
+            <paper-radio-group attr-for-selected="name" selected="{{selectedgender}}">
+              <paper-radio-button id="boyid" name="girl" on-click="maleHandler">Boy</paper-radio-button>
+              <paper-radio-button id="girlid" name="boy" on-click="femaleHandler">Girl</paper-radio-button>
             </paper-radio-group>
           </div>
         </div>
         <div class="col-sm-4 enquiry-input">
           <div class="lbl"><label>Sibling </label></div>
           <div class="gender">
-            <paper-radio-group>
+            <paper-radio-group attr-for-selected="name" selected="{{havingsibling}}">
               <paper-radio-button id="siblingyes" name="yes" on-click="siblingyes">Yes</paper-radio-button>
               <paper-radio-button id="siblingno" name="no" on-click="siblingno">No</paper-radio-button>
             </paper-radio-group>
@@ -122,7 +122,7 @@
         </div>
         <div class="col-sm-4">
           <paper-dropdown-menu label="Mother Tongue">
-            <paper-menu id="mothertongue" class="dropdown-content" required on-iron-select="mothertongue" valueattr="value" >
+            <paper-menu id="mothertongue" class="dropdown-content" required on-iron-select="mothertongue" valueattr="value" attr-for-selected="value" selected="{{selectedmothertongue}}">
               <template  is="dom-repeat" items="{{mothertonguearr}}" as="language">
                 <paper-item value="{{language.mother_tongue}}">{{language.mother_tongue}}</paper-item>
               </template>
@@ -182,26 +182,26 @@
         <div class="col-sm-4 enquiry-input" hidden$="{{parentworkinfo}}">
           <div class="lbl"><label>Both are Working? </label><p id="mangender">&nbsp; *</p> </div>
           <div class="gender">
-            <paper-radio-group>
-              <paper-radio-button id="parentworkyes" name="yes" on-click="parentworkyes">Yes</paper-radio-button>
-              <paper-radio-button  id="parentworkno" name="no" on-click="parentworkno">No</paper-radio-button>
+            <paper-radio-group attr-for-selected="name" selected="{{bothworking}}">
+              <paper-radio-button id="parentworkyes" name="Yes" on-click="parentworkyes">Yes</paper-radio-button>
+              <paper-radio-button  id="parentworkno" name="No" on-click="parentworkno">No</paper-radio-button>
             </paper-radio-group>
           </div>
         </div>
         <div class="col-sm-4 enquiry-input" hidden$="{{guardianworkinfo}}">
           <div class="lbl"><label>Guardian is Working? </label><p id="mangender">&nbsp; *</p> </div>
           <div class="gender">
-            <paper-radio-group>
-              <paper-radio-button id="guardianworkyes" name="yes" on-click="guardianworkyes">Yes</paper-radio-button>
-              <paper-radio-button  id="guardianworkno" name="no" on-click="guardianworkno">No</paper-radio-button>
+            <paper-radio-group attr-for-selected="name" selected="{{guardianworking}}">
+              <paper-radio-button id="guardianworkyes" name="Yes" on-click="guardianworkyes">Yes</paper-radio-button>
+              <paper-radio-button  id="guardianworkno" name="No" on-click="guardianworkno">No</paper-radio-button>
             </paper-radio-group>
           </div>
         </div>
         <div class="col-sm-4 enquiry-input" hidden$="{{guardianoccupation}}">
           <paper-dropdown-menu label="Guardian's Profession" style="margin-top: 3%;">
-            <paper-menu class="dropdown-content"  class="dropdown-content" id="idguardianoccupation" on-iron-select="guardianoccupationselector" >
+            <paper-menu class="dropdown-content"  class="dropdown-content" id="idguardianoccupation" on-iron-select="guardianoccupationselector" attr-for-selected="value" selected="{{guardianprofession}}">
               <template  is="dom-repeat" items="{{professionarr}}" as="item">
-                <paper-item>{{item.profession}}</paper-item>
+                <paper-item value="{{item.profession}}">{{item.profession}}</paper-item>
               </template>
             </paper-menu>
           </paper-dropdown-menu>
@@ -209,26 +209,26 @@
         <div  class="col-sm-4 enquiry-input" hidden$="{{hideoccupation}}">
           <div class="lbl"><label>Choose Who is working</label><p id="mangender">&nbsp; *</p> </div>
           <div class="gender">
-              <paper-radio-group>
-                <paper-radio-button id="father" name="yes" on-click="father">Father</paper-radio-button>
-                <paper-radio-button id="mother" name="no" on-click="mother">Mother</paper-radio-button>
+              <paper-radio-group attr-for-selected="name" selected="{{whoworks}}">
+                <paper-radio-button id="father" name="Father" on-click="father">Father</paper-radio-button>
+                <paper-radio-button id="mother" name="Mother" on-click="mother">Mother</paper-radio-button>
               </paper-radio-group>
             </div>
         </div>
         <div class="col-sm-4 enquiry-input" hidden$="{{dadoccupation}}">
           <paper-dropdown-menu label="Father's Profession" style="margin-top: 3%;">
-            <paper-menu class="dropdown-content"  class="dropdown-content" id="iddadoccupation" on-iron-select="dadoccupationselector" >
+            <paper-menu class="dropdown-content"  class="dropdown-content" id="iddadoccupation" on-iron-select="dadoccupationselector" attr-for-selected="value" selected="{{fatherprofession}}">
               <template  is="dom-repeat" items="{{professionarr}}" as="item">
-                <paper-item>{{item.profession}}</paper-item>
+                <paper-item value="{{item.profession}}">{{item.profession}}</paper-item>
               </template>
             </paper-menu>
           </paper-dropdown-menu>
         </div>
         <div class="col-sm-4 enquiry-input" hidden$="{{motheroccupation}}">
           <paper-dropdown-menu label="Mother's Profession" style="margin-top: 3%;">
-            <paper-menu class="dropdown-content"  class="dropdown-content" id="idmotheroccupation" on-iron-select="motheroccupationselector" >
+            <paper-menu class="dropdown-content"  class="dropdown-content" id="idmotheroccupation" on-iron-select="motheroccupationselector" attr-for-selected="value" selected="{{motherprofession}}">
               <template  is="dom-repeat" items="{{professionarr}}" as="item">
-                <paper-item>{{item.profession}}</paper-item>
+                <paper-item value="{{item.profession}}">{{item.profession}}</paper-item>
               </template>
             </paper-menu>
           </paper-dropdown-menu>
@@ -265,7 +265,7 @@
         <div class="col-sm-4" style='margin-top: -2
         %;'>
           <paper-dropdown-menu label="Enquiry Source" style="margin-top: 3%;">
-            <paper-menu class="dropdown-content"  class="dropdown-content" id="enquiry-source" on-iron-select="source" >
+            <paper-menu class="dropdown-content"  class="dropdown-content" id="enquiry-source" on-iron-select="source" attr-for-selected="value" selected="{{selectedenqsource}}">
               <template  is="dom-repeat" items="{{sourcearr}}" as="item">
                 <paper-item value="{{item.id}}">{{item.source}}</paper-item>
               </template>
@@ -436,6 +436,7 @@
     var enquiry_date;
     var referralvalue;
     var windowmap;
+    var whoworking;
     Polymer({
       is: 'pre-apps',
 
@@ -984,13 +985,13 @@
       this.$.siblingremark.hidden = true;
     },
     parentworkyes:function(){
-      bothparentswork = "yes";
+      bothparentswork = "Yes";
       this.hideoccupation = true;
       this.dadoccupation = false;
       this.motheroccupation = false;
     },
     parentworkno:function(){
-      bothparentswork = "no";
+      bothparentswork = "No";
       this.hideoccupation = false;
       this.dadoccupation = true;
       this.motheroccupation = true;
@@ -999,16 +1000,18 @@
     father:function(){
       this.dadoccupation = false;
       this.motheroccupation = true;
-      fatherworkdet = "yes";
-      motherworkdet = "no";
+      fatherworkdet = "Yes";
+      motherworkdet = "No";
+      whoworking="father";
       professionanyoneselected = true;
     },
     mother:function(){
       this.dadoccupation = true;
-      fatherworkdet = "no";
-      motherworkdet = "yes";
+      fatherworkdet = "No";
+      motherworkdet = "Yes";
       this.motheroccupation = false;
       professionanyoneselected = true;
+      whoworking="mother";
     },
     maleHandler:function(){
       gender = "boy";
@@ -1017,7 +1020,8 @@
       gender = "girl";
     },
     mothertongue:function(e){
-      mothertonguelanguage = e.target.selectedItem.value
+      mothertonguelanguage = e.target.selectedItem.value;
+      // alert(mothertonguelanguage);
     },
     dadoccupationselector:function(e){
       dadoccupationinfo = (e.target.selectedItem.textContent).trim();
@@ -1026,28 +1030,33 @@
       motheroccupationinfo = (e.target.selectedItem.textContent).trim();
     },
     getenquirynumber:function(){
+      if(localStorage.getItem("curr_sess_enquiryupdateflag")=="1"){
+        this.getvalues();
+      }
+      else{
       this.$.preapps.getenquiryno();
-      if(guardianwork == "yes"){
+      if(guardianwork == "Yes"){
           parent_or_guardian_work = "guardian";
       } else {
-        if(bothparentswork == "yes"){
+        if(bothparentswork == "Yes"){
           parent_or_guardian_work = "parents";
         } else {
-          if(fatherworkdet == "yes"){
+          if(fatherworkdet == "Yes"){
             parent_or_guardian_work = "father";
           } else {
             parent_or_guardian_work = "mother";
           }
         }
       }
+      }
     },
     guardianworkyes:function(){
       this.guardianoccupation = false;
-      guardianwork = "yes";
+      guardianwork = "Yes";
     },
     guardianworkno:function(){
       this.guardianoccupation = true;
-      guardianwork = "no";
+      guardianwork = "No";
     },
     guardianoccupationselector:function(e){
       guardianoccupationinfo = (e.target.selectedItem.textContent).trim();
@@ -1069,10 +1078,10 @@
       this.totalProvisionallyAdmittedFromThisLocation = provisionally_admitted;
       this.$.totalstudentnonzero.open();
     },
-    getsiblingdetails(siblingid){
+    getsiblingdetails:function(siblingid){
       this.$.preapps.siblingdetails(siblingid);
     },
-    getreferraldetails(referralstudentid){
+    getreferraldetails:function(referralstudentid){
       this.$.preapps.referraldetails(referralstudentid);
     },
     complete:function(){
@@ -1176,7 +1185,7 @@
             alert('Please check the Mother mobile number properly');
           }
         }else{
-          if(bothparentswork == "yes"){
+          if(bothparentswork == "Yes"){
             if( dadoccupationinfo ==null && motheroccupationinfo == null){
               alert("Select Parent's Profession");
             } else {
@@ -1213,7 +1222,7 @@
             if(professionanyoneselected == false){
               alert("Select any one of the parent");
             } else {
-              if(fatherworkdet == "yes"){
+              if(fatherworkdet == "Yes"){
                 if(dadoccupationinfo == null){
                   alert("Select Father's Profession");
                 } else {
@@ -1243,7 +1252,7 @@
                   }
                 }
               }
-              if(motherworkdet == "yes"){
+              if(motherworkdet == "Yes"){
                 if(motheroccupationinfo == null){
                   alert("Select Mother's Profession");
                 } else {
@@ -1281,9 +1290,14 @@
       }
     },
     getvalues:function(){
-      this.$.preapps.submitenqdetails(enquiry_date,enrolltype,this.academicyear,grade,this.firstname,this.middlename,this.lastname,gender,havesibling,this.ageofyr,dobdate,mothertonguelanguage,this.fathername,this.mothername,this.mob,this.mothermob,this.email,this.motheremail,this.guardianname,this.guardianmobile,this.guardianemail,dadoccupationinfo,motheroccupationinfo,this.textvalue,enquiysource,this.attenedcounsellorname,this.enquiry_number,guardianoccupationinfo,parent_or_guardian_work, referralvalue, this.schoolname, this.schoolarea,this.siblingremark,paga);
+      // alert(localStorage.getItem("curr_sess_enquiryupdateflag"));
+    if(localStorage.getItem("curr_sess_enquiryupdateflag")=="0")
+      this.$.preapps.submitenqdetails(enquiry_date,enrolltype,this.academicyear,grade,this.firstname,this.middlename,this.lastname,gender,havesibling,this.ageofyr,dobdate,mothertonguelanguage,this.fathername,this.mothername,this.mob,this.mothermob,this.email,this.motheremail,this.guardianname,this.guardianmobile,this.guardianemail,dadoccupationinfo,motheroccupationinfo,this.textvalue,enquiysource,this.attenedcounsellorname,this.enquiry_number,guardianoccupationinfo,parent_or_guardian_work, referralvalue, this.schoolname, this.schoolarea,this.siblingremark,paga,bothparentswork,guardianwork,whoworking);
+    if(localStorage.getItem("curr_sess_enquiryupdateflag")=="1")
+      this.$.preapps.updateenqdetails(enquiry_date,enrolltype,this.academicyear,grade,this.firstname,this.middlename,this.lastname,gender,havesibling,this.ageofyr,dobdate,mothertonguelanguage,this.fathername,this.mothername,this.mob,this.mothermob,this.email,this.motheremail,this.guardianname,this.guardianmobile,this.guardianemail,dadoccupationinfo,motheroccupationinfo,this.textvalue,enquiysource,this.attenedcounsellorname,this.enquiry_number,guardianoccupationinfo,parent_or_guardian_work, referralvalue, this.schoolname, this.schoolarea,this.siblingremark,paga,bothparentswork,guardianwork,whoworking);
     },
     FnClear:function(){
+      whoworking="";
       this.callnextyearhandler();
       professionanyoneselected = "";
       paga="parent";
@@ -1297,7 +1311,7 @@
       document.querySelector('#mothertongue').selected=-1;
       document.querySelector('#iddadoccupation').selected=-1;
       document.querySelector('#idmotheroccupation').selected=-1;
-      this.textvalue = "";
+      this.textvalue="Pick your Location";
       document.querySelector('#enquiry-source').selected=-1;
       document.querySelector('#referral').selected=-1;
       document.getElementById("nextacademicyear").checked=false;
@@ -1456,7 +1470,39 @@
         this.textvalue = "Location: "+place;
         this.closeWindow();
         // this.getstudentsinlocation(place);
+      },
+      FnSetParentorguardian:function(porg){
+        if(porg=="parent"){
+        document.querySelector('#idparenthandler').checked=true;
+        document.querySelector('#idguardianhandler').checked=false;
+        }
+        else{
+        document.querySelector('#idparenthandler').checked=false;
+        document.querySelector('#idguardianhandler').checked=true; 
+        }
+      },
+      FnShowRemark:function(){
+        this.$.siblingremark.hidden=false;
+      },  
+      FnSetPreappInfo:function(yrtype,classs,gen,dob,locality,enqsource,mothertongue,enquirydate,guardwork,porg,fname,ayear,age,faname,moname,famob,momob,famail,momail,bothwork,faoccup,mooccup,whoworks,havingsibling){
+        enrolltype=yrtype;
+        grade=classs;
+        gender=gen;
+        dobdate=dob;
+        this.textvalue=locality;
+        enquiysource=enqsource;
+        mothertonguelanguage=mothertongue;
+        enquiry_date=enquirydate;
+        guardianwork=guardwork;
+        paga=porg;
+        bothparentswork=bothwork;
+        fathermobileno=famob;
+        mothermobileno=momob;
+        havesibling=havingsibling;
+        // dadoccupationinfo=faoccup;
+        // motheroccupationinfo=mooccup;
       }
+    
     });
   })();
   </script>

@@ -4883,8 +4883,12 @@ app.post('/submitenqdetails',  urlencodedParser,function (req, res){
       sibling_remark:req.query.sibling_remark,
       parent_or_guard:req.query.parentorguard,
       refferal_type:refferaltype,
-      age:req.query.ageofyr
+      age:req.query.ageofyr,
+      both_working:req.query.bothworking,
+      guard_working:req.query.guardworking,
+      who_works:req.query.whoworking
     };
+
     connection.query('INSERT INTO student_enquiry_details SET ?',[response],function(err, rows){
       if(!err){
       if(req.query.discountreferraltype=="1"||req.query.discountreferraltype=="9")
@@ -4906,8 +4910,90 @@ app.post('/submitenqdetails',  urlencodedParser,function (req, res){
       res.status(200).json({'returnval': 'not inserted'});
     }
     });
-
 });
+
+app.post('/updateenqdetails',  urlencodedParser,function (req, res){
+    // if(req.query.discountreferraltype=='1'||req.query.discountreferraltype=='9')
+    // var refferaltype=''
+    // else
+    // var refferaltype=req.query.discountreferraltype
+    console.log('have sibling........'+req.query.havesibling+" "+req.query.havesibling.length);
+    var response={
+      school_id:req.query.schol,
+      // created_on:req.query.createdon,
+      academic_year:req.query.academicyear,
+      class:req.query.grade,
+      first_name:req.query.firstname,
+      middle_name:req.query.middlename,
+      last_name:req.query.lastname,
+      gender:req.query.gender,
+      dob:req.query.dobdate,
+      father_mob:req.query.mob,
+      mother_mob:req.query.mothermob,
+      enquiry_source:req.query.enquiysource,
+      locality:req.query.location,
+      have_sibling:req.query.havesibling,
+      father_name:req.query.fathername,
+      mother_name:req.query.mothername,
+      father_occupation:req.query.dadoccupationinfo,
+      mother_occupation:req.query.motheroccupationinfo,
+      father_email:req.query.email,
+      mother_email:req.query.motheremail,
+      mother_tongue:req.query.mothertonguelanguage,
+      enquiry_name:req.query.enquiryname,
+      // status:req.query.status,
+      guardian_mail:req.query.guardianemail,
+      guardian_mobile:req.query.guardianmobile,
+      guardian_name:req.query.guardianname,
+      // year_type:req.query.enrolltype,
+      // enquiry_no:req.query.enquiry_no,
+      // orginated_by:req.query.attenedcounsellorname,
+      // followed_by:req.query.attenedcounsellorname,
+      guardian_occup:req.query.guardianoccupationinfo,
+      parent_or_guardian_work:req.query.parent_or_guardian_work,
+      referral:req.query.referralvalue,
+      school_name:req.query.school_name,
+      school_area:req.query.school_area,
+      sibling_remark:req.query.sibling_remark,
+      parent_or_guard:req.query.parentorguard,
+      // refferal_type:refferaltype,
+      age:req.query.ageofyr,
+      both_working:req.query.bothworking,
+      guard_working:req.query.guardworking,
+      who_works:req.query.whoworking
+    };
+    
+    var enquiryno={enquiry_no:req.query.enquiryno};
+    var schoolid={school_id:req.query.schol};
+
+    connection.query('UPDATE student_enquiry_details SET ? WHERE ? and ?',[response,enquiryno,schoolid],function(err, rows){
+      if(!err){
+      res.status(200).json({'returnval': 'Updated!!'});
+      // if(req.query.discountreferraltype=="1"||req.query.discountreferraltype=="9")
+      // {
+      //   console.log('---------------------------');
+      //   console.log(req.query.discountreferraltype+" "+req.query.referrerid);
+      //   console.log('---------------------------');
+      //   connection.query("UPDATE md_admission SET referral_type='"+req.query.discountreferraltype+"' WHERE admission_no='"+req.query.referrerid+"'",function(err, rows){
+      //   if(!err)
+      //   res.status(200).json({'returnval': 'inserted'});
+      //   });
+
+      // }
+      // else
+      //   res.status(200).json({'returnval': 'inserted'});
+      // }
+      // else{
+      // console.log(err);
+      // res.status(200).json({'returnval': 'not inserted'});
+      }
+      else{
+      console.log(err);
+      res.status(200).json({'returnval': 'Unable to update!!'});
+      }
+    });
+});
+
 app.post('/getprofession',  urlencodedParser,function (req, res){
   connection.query("SELECT * FROM `md_profession`",
     function(err, rows){
@@ -7219,8 +7305,6 @@ app.post('/dailycollectionthirdpartydashboard-service',  urlencodedParser,functi
 
  });
 
-
-
 app.post('/updatedefaulter-service',  urlencodedParser,function (req, res){
   // console.log('fetchstudinstallmentsplitup');
   var qur="update md_admission set active_status='Admitted' WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"'";
@@ -7241,7 +7325,24 @@ app.post('/updatedefaulter-service',  urlencodedParser,function (req, res){
 });
 
 
-
+app.post('/fetchpreappinfo-service',  urlencodedParser,function (req, res){
+  // console.log('fetchstudinstallmentsplitup');
+  var qur="SELECT * FROM student_enquiry_details WHERE enquiry_no='"+req.query.enquiryno+"' and school_id='"+req.query.schoolid+"'";
+  console.log(qur);
+  connection.query(qur,
+    function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
 
 function setvalue(){
   console.log("calling setvalue.....");

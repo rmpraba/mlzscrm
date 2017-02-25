@@ -936,13 +936,15 @@
       },
 
       Fnpreapp:function(){
+        localStorage.setItem("curr_sess_enquiryupdateflag",0);
         document.querySelector('app-list').setPage("pre-apps","Enquiry Form");
         document.querySelector('pre-apps').ready();
         document.querySelector('pre-apps').callnextyearhandler();
-          // document.querySelector('newenquiry-card').Fnclear();
+          document.querySelector('pre-apps').FnClear();
           // document.querySelector('special-discount-card').ready();          
       },
       Fnpreappupdate:function(){
+
         document.querySelector('app-list').setPage("update-preapps","Pre Application");
         document.querySelector('update-preapps').ready();
         document.querySelector('update-preapps').callnextyearhandler();

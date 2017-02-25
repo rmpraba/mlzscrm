@@ -1,0 +1,30 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="enquirylink-card">
+  <template>
+    <style>
+    </style>
+    <div>
+      <a href="" on-click="FnFetchEnquiry" data-dismiss="modal">{{enquiryno}}</a>
+    </div>
+    <pre-apps-service id="preappservice"></pre-apps-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'enquirylink-card',
+      FnFetchEnquiry:function(){
+        localStorage.setItem("curr_sess_enquiryupdateflag",1);
+        localStorage.setItem("curr_sess_enquiryno",this.enquiryno);
+        this.$.preappservice.FnFetchPreappinfoService(this.enquiryno);
+        document.querySelector('app-list').setPage("pre-apps","Pre Application");
+        document.querySelector('pre-apps').ready();
+        document.querySelector('pre-apps').callnextyearhandler();
+      }
+    });
+  })();
+  </script>
+</dom-module>
