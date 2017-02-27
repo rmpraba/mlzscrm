@@ -6965,7 +6965,7 @@ app.post('/updateadhocdiscount-service',  urlencodedParser,function (req, res){
 
 app.post('/updatelatefee-service',  urlencodedParser,function (req, res){
   // console.log('fetchstudinstallmentsplitup');
-  var qur="update md_student_paidfee set latefee_amount='"+req.query.amount+"',latefee_date='"+req.query.latefeedate+"',latefee_reason='"+req.query.reason+"' WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"'";
+  var qur="update md_student_paidfee set latefee_amount='"+req.query.amount+"',latefee_date='"+req.query.latefeedate+"',latefee_reason='"+req.query.reason+"' WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"' and installment_type='"+req.query.installment+"'";
   console.log(qur);
   connection.query(qur,
     function(err, result){

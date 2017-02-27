@@ -4,7 +4,7 @@
 <dom-module id="latefee-itemcard">
   <template>
   <style>
-  paper-input,paper-button{
+  paper-input,paper-button,paper-dropdown-menu{
     width: 30%;
   }
   </style>
@@ -15,6 +15,17 @@
       <h4>{{studentname}}&nbsp;&nbsp;{{admissionno}}&nbsp;&nbsp;{{grade}}</h4>
       <paper-input label="Enter amount" value="{{amount}}"></paper-input>
       <paper-input label="Reason" value="{{reason}}"></paper-input>
+      <paper-dropdown-menu label="Select Installment" attr-for-selected="value">
+            <paper-menu id="latefeeinstallment" class="dropdown-content" required on-iron-select="FnSelectInstallment" valueattr="value" >
+              
+              <paper-item value="Commitment Fee">Commitment Fee</paper-item>
+              <paper-item value="Installment1">Installment1</paper-item>
+              <paper-item value="Installment2">Installment2</paper-item>
+              <paper-item value="Installment3">Installment3</paper-item>
+              <!-- <paper-item value="Lumpsum">Lumpsum</paper-item> -->
+              
+            </paper-menu>
+      </paper-dropdown-menu>
       <paper-button style="margin-top: 3%;" class="btn btn-primary left" 
       on-click="FnAdd">Add</paper-button>
       <processing-service id="service"></processing-service>
@@ -23,16 +34,22 @@
   <script>
   (function() {
     'use strict';
+    var installment="";
     Polymer({
       is: 'latefee-itemcard',
       FnAdd:function(){
-        this.$.service.updatelatefeeService(this.admissionno,this.amount,this.reason);
+        this.$.service.updatelatefeeService(this.admissionno,this.amount,this.reason,installment);
       },
       FnRefresh:function(){
         this.studentname="";
         this.admissionno="";
         this.amount="";
         this.reason="";
+        installment="";
+        document.querySelector('#latefeeinstallment').selected=-1;
+      },
+      FnSelectInstallment:function(e){
+        installment=(e.target.selectedItem.textContent).trim();
       }
     });
   })();
