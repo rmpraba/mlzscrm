@@ -36,6 +36,7 @@
   <div class="layout">
    <paper-checkbox style="margin-top: 2.5%;margin-left: -10%;" id="{{installment}}"  value="{{studname}}" class="checkbox" disabled$="{{paidflag}}" checked on-change="payinstall"></paper-checkbox>
    <paper-item hidden>{{installment}}</paper-item>
+   <paper-item hidden>{{fineamount}}</paper-item>
    <paper-item hidden>{{actualamount}}</paper-item>
    <paper-item hidden>{{discountamount}}</paper-item>
    <paper-item id="ins">{{installmenttype}}</paper-item>
@@ -116,7 +117,8 @@
             obj.discountamount=this.discountamount;
             obj.installment=this.installment;
             obj.installmenttype=this.installmenttype;
-            obj.amount=this.amount;
+            obj.amount=parseFloat(this.amount)+parseFloat(this.fineamount);
+            obj.fineamount=this.fineamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
             obj.installmentdate=localStorage.getItem("curr_sess_date");            
@@ -157,7 +159,8 @@
             obj.discountamount=this.discountamount;
             obj.installment=this.installment;
             obj.installmenttype=this.installmenttype;
-            obj.amount=this.amount;
+            obj.amount=parseFloat(this.amount)+parseFloat(this.fineamount);
+            obj.fineamount=this.fineamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
             obj.installmentdate=localStorage.getItem("curr_sess_date");
@@ -200,7 +203,8 @@
             obj.discountamount=this.discountamount;
             obj.installment=this.installment;
             obj.installmenttype=this.installmenttype;
-            obj.amount=this.amount;
+            obj.amount=parseFloat(this.amount)+parseFloat(this.fineamount);
+            obj.fineamount=this.fineamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
             obj.installmentdate=localStorage.getItem("curr_sess_date");

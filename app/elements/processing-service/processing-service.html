@@ -478,6 +478,7 @@
       },
       fetchmasterpaidfeeResponse:function(e){
         var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr.length));
         if(arr!='no rows'){
             var flag=arr[0].paymenttype_flag;
             if(flag=='0')

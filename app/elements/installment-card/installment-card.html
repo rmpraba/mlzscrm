@@ -76,6 +76,8 @@
   <div class="layout">
    <paper-checkbox style="margin-top: 2%;margin-left: -13%;" id="{{installmentid}}"  value="{{studname}}" class="checkbox" disabled$="{{paidflag}}" checked on-change="payinstall"></paper-checkbox>
    <paper-item hidden>{{installment}}</paper-item>
+   <paper-item hidden>{{bounceflag}}</paper-item>
+   <paper-item hidden>{{fineamount}}</paper-item>
    <paper-item id="ins">{{installmenttype}}</paper-item>
    <paper-item id="actamt">{{actualamount}}</paper-item>
    <paper-item id="disamt">{{discountamount}}</paper-item>
@@ -203,11 +205,15 @@
             obj.installmenttype=this.installmenttype;
             obj.actualamount=this.actualamount;
             obj.discountamount=this.discountamount;
-            obj.amount=this.amount;
+            // alert(this.fineamount);
+            obj.amount=parseFloat(this.amount)-parseFloat(this.fineamount);
+            obj.fineamount=this.fineamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
             obj.installmentdate=this.installmentdate;            
             obj.paiddate=current_date;
+            
+
             // alert(localStorage.getItem("curr_sess_receiptdate"));
             obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
             obj.paidstatus="paid";
@@ -233,7 +239,9 @@
             obj.installmenttype=this.installmenttype;
             obj.actualamount=this.actualamount;
             obj.discountamount=this.discountamount;
-            obj.amount=this.amount;
+            // obj.amount=this.amount;
+            obj.amount=parseFloat(this.amount)-parseFloat(this.fineamount);
+            obj.fineamount=this.fineamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
             obj.installmentdate=this.installmentdate;            
@@ -292,7 +300,9 @@
             // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
             obj.installment=this.installment;
             obj.installmenttype=this.installmenttype;
-            obj.amount=this.amount;
+            // obj.amount=this.amount;
+            obj.amount=parseFloat(this.amount)-parseFloat(this.fineamount);
+            obj.fineamount=this.fineamount;
             obj.actualamount=this.actualamount;
             obj.discountamount=this.discountamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
@@ -349,7 +359,9 @@
             // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
             obj.installment=this.installment;
             obj.installmenttype=this.installmenttype;
-            obj.amount=this.amount;
+            // obj.amount=this.amount;
+            obj.amount=parseFloat(this.amount)-parseFloat(this.fineamount);
+            obj.fineamount=this.fineamount;
             obj.actualamount=this.actualamount;
             obj.discountamount=this.discountamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
@@ -450,7 +462,9 @@
             obj.installmenttype=this.installmenttype;
             obj.actualamount=this.actualamount;
             obj.discountamount=this.discountamount;
-            obj.amount=this.amount;
+            // obj.amount=this.amount;
+            obj.amount=parseFloat(this.amount)-parseFloat(this.fineamount);
+            obj.fineamount=this.fineamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
             obj.installmentdate=this.installmentdate;            
@@ -481,7 +495,9 @@
             obj.installmenttype=this.installmenttype;
             obj.actualamount=this.actualamount;
             obj.discountamount=this.discountamount;
-            obj.amount=this.amount;
+            // obj.amount=this.amount;
+            obj.amount=parseFloat(this.amount)-parseFloat(this.fineamount);
+            obj.fineamount=this.fineamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
             obj.installmentdate=this.installmentdate;            
@@ -523,7 +539,9 @@
             // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
             obj.installment=this.installment;
             obj.installmenttype=this.installmenttype;
-            obj.amount=this.amount;
+            // obj.amount=this.amount;
+            obj.amount=parseFloat(this.amount)-parseFloat(this.fineamount);
+            obj.fineamount=this.fineamount;
             obj.actualamount=this.actualamount;
             obj.discountamount=this.discountamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
@@ -570,7 +588,9 @@
             // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
             obj.installment=this.installment;
             obj.installmenttype=this.installmenttype;
-            obj.amount=this.amount;
+            // obj.amount=this.amount;
+            obj.amount=parseFloat(this.amount)-parseFloat(this.fineamount);
+            obj.fineamount=this.fineamount;
             obj.actualamount=this.actualamount;
             obj.discountamount=this.discountamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");

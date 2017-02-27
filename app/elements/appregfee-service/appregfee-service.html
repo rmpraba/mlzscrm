@@ -180,6 +180,7 @@
         obj.actualamount='500';
         obj.discountamount='0';
         obj.payableamount='500';
+        obj.fineamount=0;
         var d=new Date();        
         obj.installment_date=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
         obj.installment_type=localStorage.getItem("curr_sess_feetypepayment");
@@ -192,6 +193,7 @@
                 for(var j=0;j<paidfeearr.length;j++){
                     if(arr[i].installment==paidfeearr[j].installment){
                         f=1;
+                        arr[i].fineamount=0;
                         arr[i].paidflag=true;
                         arr[i].hiddenflag=false;
                         arr[i].readonlyflag=true;
@@ -203,6 +205,7 @@
                 }
                 if(f==0)
                 {
+                   arr[i].fineamount=0;
                    arr[i].paidflag=false;
                    arr[i].hiddenflag=true;
                    arr[i].readonlyflag=false;
@@ -216,6 +219,7 @@
         else{
         document.querySelector('prospectousfee-card').hiddentitleflag=true;
         for(var i=0;i<arr.length;i++){
+                   arr[i].fineamount=0;
                    arr[i].paidflag=false;
                    arr[i].hiddenflag=true;
                    arr[i].readonlyflag=false;
@@ -408,6 +412,7 @@
                 for(var j=0;j<paidfeearr.length;j++){
                     if(arr[i].installment==paidfeearr[j].installment){
                         f=1;
+                        arr[i].fineamount=0;
                         arr[i].paidflag=true;
                         arr[i].hiddenflag=false;
                         arr[i].readonlyflag=true;
@@ -419,6 +424,7 @@
                 }
                 if(f==0)
                 {
+                   arr[i].fineamount=0;
                    arr[i].paidflag=false;
                    arr[i].hiddenflag=true;
                    arr[i].readonlyflag=false;
@@ -432,6 +438,7 @@
         else{
         document.querySelector('registerationfee-card').hiddentitleflag=true;
         for(var i=0;i<arr.length;i++){
+                   arr[i].fineamount=0;
                    arr[i].paidflag=false;
                    arr[i].hiddenflag=true;
                    arr[i].readonlyflag=false;
@@ -478,7 +485,8 @@
         obj.installmentamount=0;
         obj.actualamount=cash[i].actualamount;
         obj.discountamount=cash[i].discountamount; 
-        obj.waiveoffamount=cash[i].payableamount; 
+        obj.waiveoffamount=cash[i].payableamount;
+        obj.fineamount=cash[i].fineamount; 
         obj.modeofpayment="waiveoff"; 
         // obj.receiptdate==(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();; 
         obj.receiptdate=localStorage.getItem("curr_sess_date");

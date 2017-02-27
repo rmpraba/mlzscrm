@@ -1877,6 +1877,8 @@ insertstudenthistoryResponse:function(e){
                 for(var j=0;j<paidfeearr.length;j++){
                     if(arr[i].installment==paidfeearr[j].installment&&paidfeearr[j].cheque_status!='bounced'){
                         f=1;
+                        arr[i].bounceflag=0;
+                        arr[i].fineamount=0;
                         arr[i].hiddencommitinput=true;
                         arr[i].hiddencommititem=false;
                         arr[i].paidflag=true;
@@ -1893,8 +1895,10 @@ insertstudenthistoryResponse:function(e){
                         arr[i].modeofpayment=paidfeearr[j].mode_of_payment;
                     }
                     if(arr[i].installment==paidfeearr[j].installment&&paidfeearr[j].cheque_status=='bounced'){
-
+                       // localStorage.setItem('curr_sess_bounceflag',1);
                         f=1;
+                        arr[i].bounceflag=1;
+                        arr[i].fineamount=parseFloat(paidfeearr[j].fine_amount);
                        arr[i].installmentamount=parseFloat(arr[i].installmentamount)+parseFloat(paidfeearr[j].fine_amount);
                        arr[i].hiddencommitinput=true;
                        arr[i].hiddencommititem=false;
@@ -1926,6 +1930,7 @@ insertstudenthistoryResponse:function(e){
         // document.querySelector('fees-card').Fnhidecommitinstallment(false);
         document.querySelector('fees-card').hiddentitleflag=true;
         for(var i=0;i<arr.length;i++){
+            arr[i].fineamount=0;
             arr[i].hiddencommitinput=true;
             arr[i].hiddencommititem=false;
                    arr[i].paidflag=false;
