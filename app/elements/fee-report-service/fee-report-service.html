@@ -211,6 +211,16 @@
         >
         <iron-ajax
         method="post"
+        id="processreportajax"
+        url="{{processreporturl}}"
+        params="{{processreportparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="processreportResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
         id="fetchallstudentstructureajax"
         url="{{fetchallstudentstructureurl}}"
         params="{{fetchallstudentstructureparam}}"
@@ -1255,8 +1265,181 @@
           }
           this.structarr.push(obj);
         }
-        // alert(this.structarr.length);
-        // alert(JSON.stringify(this.structarr));
+      },
+      FnProcessReportService:function(academicyear,grade,type){
+        this.processreporturl=sessionStorage.getItem("addrinfo")+"/processreport-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        obj.type=type;
+        this.processreportparam=obj;
+        this.$.processreportajax.generateRequest();
+      },
+      processreportResponse:function(e){
+        var totalarr=e.detail.response.totalarr;
+        var paidarr=e.detail.response.paidarr;
+        var inssplit=e.detail.response.inssplit;
+        var feesplit=e.detail.response.feesplit;
+        var feesplit1=e.detail.response.feesplit;
+        // alert(JSON.stringify(feesplit));
+        var bindarr=[];
+        for(var i=0;i<totalarr.length;i++){
+          for(var j=0;j<this.structarr.length;j++){
+            var obj={};
+            var flag=0;
+          if(totalarr[i].academic_year==this.structarr[j].academicyear&&totalarr[i].admission_year==this.structarr[j].admissionyear&&totalarr[i].class_for_admission==this.structarr[j].grade){
+              flag=1;
+              obj.admission_no=totalarr[i].admission_no;
+              obj.student_name=totalarr[i].student_name;
+              obj.grade=totalarr[i].class_for_admission;
+              obj.father_name=totalarr[i].father_name;
+              obj.admission_status=totalarr[i].admission_status;
+              obj.Kitfee=this.structarr[j].Kitfee;
+              obj.Annualfee=this.structarr[j].Annualfee;
+              obj.Tutionfee=this.structarr[j].Tutionfee;
+              obj.total=this.structarr[j].total;        
+            }
+            if(flag==1)
+            bindarr.push(obj);
+          }
+        }
+
+        alert(JSON.stringify(bindarr));
+        
+        // var arr1=[];
+        // var arr2=[];
+        // var arr3=[];
+        // var arr4=[];
+        // var arr5=[];
+        // for(var i=0;i<paidarr.length;i++){
+        //  if(paidarr[i].installment_pattern=="1"&&paidarr[i].paymenttype_flag=="0"){
+        //   arr1.push(paidarr[i]);
+        //  }
+        //  if(paidarr[i].installment_pattern=="3"&&paidarr[i].paymenttype_flag=="0"){
+        //   arr2.push(paidarr[i]);
+        //  }
+        //  if(paidarr[i].installment_pattern=="4"&&paidarr[i].paymenttype_flag=="0"){
+        //   arr3.push(paidarr[i]);
+        //  }
+        //  if(paidarr[i].installment_pattern=="1"&&paidarr[i].paymenttype_flag=="1"){
+        //   arr4.push(paidarr[i]);
+        //  }
+        //  if(paidarr[i].installment_pattern=="3"&&paidarr[i].paymenttype_flag=="1"){
+        //   arr5.push(paidarr[i]);
+        //  }
+        // }
+ 
+        // var discountsplit=[];
+        // for(var i=0;i<arr1.length;i++){        
+        // for(var j=0;j<feesplit.length;j++)
+        // {       
+        // if(arr1[i].admission_no==feesplit[j].admission_no){
+        // var a=[];
+        // var discount=[];
+        // var nameobj={"installment":""};
+        // nameobj.admissionno=feesplit[j].admission_no;
+        // nameobj.studentname=feesplit[j].student_name;
+        // nameobj.installment=feesplit[j].installment; 
+        // var o={};
+        // if(feesplit[j].feetype="Annual fee"&&feesplit[j].discount_amount>0){
+        // o.kitdiscount=0;
+        // o.annualdiscount=feesplit[j].discount_amount;
+        // o.tutiondiscount=0;
+        // discount.push(o);
+        // nameobj.discount=discount;
+        // }
+        // else if(feesplit[j].feetype="Kit fee"&&feesplit[j].discount_amount>0){
+        // o.kitdiscount=feesplit[j].discount_amount;
+        // o.annualdiscount=0;
+        // o.tutiondiscount=0;
+        // discount.push(o);
+        // nameobj.discount=discount;
+        // }
+        // else{
+        // o.kitdiscount=0;
+        // o.annualdiscount=0;
+        // o.tutiondiscount=0;
+        // discount.push(o);
+        // nameobj.discount=discount; 
+        // }
+        // discountsplit.push(nameobj);    
+        // }
+        // }
+        // }
+        // // alert(JSON.stringify(discountsplit));
+        // for(var i=0;i<bindarr.length;i++){
+        //   for(var j=0;j<discountsplit.length;j++){
+        //     if(bindarr[i].admission_no==discountsplit[j].admissionno){
+        //       bindarr[i].discount=discountsplit[j].discount;
+        //     }
+        //   }
+        // }
+
+        // alert(JSON.stringify(feesplit));
+        // var split=[];
+        // var splittemp=[];
+        // for(var i=0;i<arr1.length;i++){        
+        // for(var j=0;j<feesplit.length;j++)
+        // {       
+        // if(arr1[i].admission_no==feesplit[j].admission_no){
+        // var a=[];
+        // var discount=[];
+        // var nameobj={"installment":""};
+        // nameobj.admissionno=feesplit[j].admission_no;
+        // nameobj.studentname=feesplit[j].student_name;
+        // nameobj.installment=feesplit[j].installment; 
+        // var amt=0;
+        // var actamt=0;
+        // var obj={"feetype":"","feetypeamount":""};
+        // obj.feetype=feesplit[j].feetype;
+        // obj.feetypeamount=feesplit[j].feetype_amount;
+        // a.push(obj);
+        // amt=feesplit[j].feetype_amount;
+        // for(var k=j+1;k<feesplit.length;k++)
+        // {
+        //    if(feesplit[j].installment==feesplit[k].installment&&feesplit[j].admission_no==feesplit[k].admission_no)
+        //    {
+        //      var obj1={"feetype":"","feetypeamount":""}
+        //      obj1.feetype=feesplit[k].feetype;
+        //      obj1.feetypeamount=feesplit[k].feetype_amount;
+        //      if(feesplit[k].feetype_amount>0)
+        //      a.push(obj1);
+        //      amt=parseFloat(amt)+parseFloat(feesplit[j].feetype_amount);
+        //      feesplit1.splice(k,1)
+        //      // splittemp.push();
+        //      k--;
+        //    }
+        // }
+        // nameobj.amount=amt;
+        // nameobj.fees=a;
+        // split.push(nameobj);
+        // a=[];        
+        // }
+        // }
+        // }
+
+        // alert(JSON.stringify(split));
+
+        // for(var i=0;i<bindarr.length;i++){
+        //   for(var j=0;j<split.length;j++){
+        //     if(bindarr[i].admission_no==split[j].admissionno){
+        //       if(split[j].installment=="Commitment Fee"){
+        //         bindarr[i].actualcommit=split[j].fees;
+        //       }
+        //       if(split[j].installment=="Installment1"){
+        //         bindarr[i].actualins1=split[j].fees;
+        //       }
+        //       if(split[j].installment=="Installment2"){
+        //         bindarr[i].actualins2=split[j].fees;
+        //       }
+        //       if(split[j].installment=="Installment3"){
+        //         bindarr[i].actualins3=split[j].fees;
+        //       }
+        //     }
+        //   }
+        // }
+        // alert(JSON.stringify(bindarr));
       },
       FnFetchDueReportService:function(academicyear,grade,type){
         this.duereporturl=sessionStorage.getItem("addrinfo")+"/duereport-service";
@@ -1274,10 +1457,9 @@
         var inssplit=e.detail.response.inssplit;
         var feesplit=e.detail.response.feesplit;
         var bindarr=[];
-
+        // alert(JSON.stringify(feesplit));
         // alert(JSON.stringify(totalarr));
         // alert(JSON.stringify(this.structarr));
-
         for(var i=0;i<totalarr.length;i++){
           for(var j=0;j<this.structarr.length;j++){
             var obj={};
@@ -1332,12 +1514,58 @@
         // alert(JSON.stringify(arr3));
         // alert(JSON.stringify(arr4));
         // alert(JSON.stringify(arr5));
+        var discountsplit=[];
+        for(var i=0;i<arr1.length;i++){        
+        for(var j=0;j<feesplit.length;j++)
+        {       
+        if(arr1[i].admission_no==feesplit[j].admission_no){
+        var a=[];
+        var discount=[];
+        var nameobj={"installment":""};
+        nameobj.admissionno=feesplit[j].admission_no;
+        nameobj.studentname=feesplit[j].student_name;
+        nameobj.installment=feesplit[j].installment; 
+        var o={};
+        // alert(feesplit[j].feetype+"  "+feesplit[j].discount_amount);
+        if(arr1[i].installment_pattern=="1")
+        if((feesplit[j].feetype="Annual fee"&&feesplit[j].discount_amount>0)||(feesplit[j].feetype="Kit fee"&&feesplit[j].discount_amount>0)){
+        o.feetype=feesplit[j].feetype;
+        o.discountamount=feesplit[j].discount_amount;
+        discount.push(o);
+        nameobj.discount=discount;
+        }
+        discountsplit.push(nameobj);        
+        }
+        }
+        }
+        // alert(JSON.stringify(discountsplit));
+
+        for(var i=0;i<bindarr.length;i++){
+          for(var j=0;j<discountsplit.length;j++){
+            if(bindarr[i].admission_no==discountsplit[j].admissionno){
+              var arr=[];
+              for(var k=0;k<discountsplit[j].discount;k++){
+                var obj={};
+                if(discountsplit[j].discount[k].feetype="Kit fee")
+                  obj.kitdiscount=discountsplit[j].discount[k].discountamount;
+                if(discountsplit[j].discount[k].feetype="Annual fee")
+                  obj.annualdiscount=discountsplit[j].discount[k].discountamount;
+                if(discountsplit[j].discount[k].feetype="Tution fee")
+                  obj.tutiondiscount=discountsplit[j].discount[k].discountamount;
+              }
+              arr.push(obj);
+              bindarr[i].discount=arr;
+            }
+          }
+        }
+
         var split=[];
         for(var i=0;i<arr1.length;i++){        
         for(var j=0;j<feesplit.length;j++)
         {       
         if(arr1[i].admission_no==feesplit[j].admission_no){
         var a=[];
+        var discount=[];
         var nameobj={"installment":""};
         nameobj.admissionno=feesplit[j].admission_no;
         nameobj.studentname=feesplit[j].student_name;
@@ -1348,6 +1576,13 @@
         obj.feetype=feesplit[j].feetype;
         obj.feetypeamount=feesplit[j].feetype_amount;
         a.push(obj);
+        var o={};
+        if(feesplit[j].feetype="Annual fee"&&feesplit[j].discount_amount>0){
+        o.feetype=feesplit[j].feetype;
+        o.discountamount=feesplit[j].discount_amount;
+        discount.push(o);
+        nameobj.discount=discount;
+        }
         for(var k=j+1;k<feesplit.length;k++)
         {
            // alert(termarr[i].insno+" "+termarr[j].insno);
@@ -1390,67 +1625,10 @@
             }
           }
         }
-
         // alert(JSON.stringify(bindarr));
-
-
-
-        // for(var i=0;i<paidarr.length;i++){
-        // var flag=paidarr[i].paymenttype_flag;
-        // if(flag=='0'){
-        // for(var j=0;j<feesplit.length;j++)
-        // { 
-        // if(paidarr[i].admission_no==feesplit[j].admission_no){      
-        // var nameobj={"installment":"","installmentamount":""};
-        // nameobj.installment=feesplit[j].installment; 
-        // var amt=0;
-        // var actamt=0;
-        // var obj={"feetype":"","amount":""};
-        // obj.feetype=feesplit[j].feetype;
-        // obj.feetypeamount=feesplit[j].feetype_amount;
-        // a.push(obj);
-        // for(var k=i+1;k<feesplit.length;k++)
-        // {
-        //    if(feesplit[j].installment==feesplit[k].installment)
-        //    {
-        //      var obj1={"feetype":"","amount":""}
-        //      obj1.feetype=feesplit[k].feetype;
-        //      obj1.feetypeamount=feesplit[k].feetype_amount;
-        //      if(feesplit[k].feetype_amount>0)
-        //      a.push(obj1);
-        //      feesplit.splice(k,1);
-        //      k--;
-        //    }
-        // }
-        // nameobj.fees=a;
-        // split.push(nameobj);
-        // a=[];        
-        // }
-        // }
-        // }
-        // }
-
-
-
-        // if(paidarr!='no rows'){
-        //   for(var i=0;i<paidarr.length;i++){
-        //     if(paidarr[i].installment_pattern=="1"){
-        //       var p=[];
-        //       p.push(paidarr[i]);
-        //       this.standardpattern(p,inssplit,feesplit);
-        //     }
-        //     else if(paidarr[i].installment_pattern=="3"){
-        //       var p=[];
-        //       p.push(paidarr[i]);
-        //       this.lumpsumpattern(p,inssplit,feesplit); 
-        //     }
-        //     else if(paidarr[i].installment_pattern=="4"){
-        //       var p=[];
-        //       p.push(paidarr[i]);
-        //       this.commitlumpsumpattern(p,inssplit,feesplit);
-        //     }
-        //   }
-        // }
+        for(var i=0;i<bindarr.length;i++){
+          
+        }        
       },
       standardpattern:function(paidarr,inssplit,feesplit){
 

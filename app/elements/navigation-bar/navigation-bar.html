@@ -407,12 +407,15 @@
             </li> -->
            </ul>
             </li>
-            <li id="detailduereport">
-            <!-- <a href="" aria-hidden="true" on-click="FnDetailduereport">Due report<span class="fa arrow"></span></a> -->
-            </li>
+            <!-- <li id="detailduereport">
+            <a href="" aria-hidden="true" on-click="FnDetailduereport">Due report<span class="fa arrow"></span></a>
+            </li> -->
             <li id="dailycollectiondashboard">
             <a href="" aria-hidden="true" on-click="FnDailycollectionDashboard">Daily Collection Dashboard<span class="fa arrow"></span></a>
             </li>
+            <!-- <li id="reportprocessing">
+            <a href="" aria-hidden="true" on-click="FnProcessreport">Process Report<span class="fa arrow"></span></a>
+            </li> -->
             </ul>
           </li>         
 
@@ -1092,6 +1095,14 @@
         document.querySelector('detailed-feedue-report').ready();
         document.querySelector('detailed-feedue-report').FnRefresh();
         document.querySelector('detailed-feedue-report').FnCallService();
+      },
+      FnProcessreport:function(){
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchgradeforreportService();
+        document.querySelector('app-list').setPage("process-report","Due Report");
+        document.querySelector('process-report').ready();
+        document.querySelector('process-report').FnRefresh();
+        document.querySelector('process-report').FnCallService();
       },
       FnDailycollectionDashboard:function(){
         this.$.scheduleservice.fetchacademicyearService();

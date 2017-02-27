@@ -194,6 +194,7 @@
             e.detail.response.info.hideack=true;
             e.detail.response.info.chequeview=true;
             e.detail.response.info.transferview=true;
+            // alert(JSON.stringify(paymentarr));
             paymentarr.push(e.detail.response.info);
             paymentcount++;            
             if(paymentlength==paymentcount)
@@ -761,8 +762,6 @@
                 arr.splice(i,1);
         }
 
-        
-
         var cashparticular=[];
         var chequeparticular=[];
         var currchequeparticular=[];
@@ -785,29 +784,45 @@
         var tpcnt=0;
         for(var i=0;i<paymentarr.length;i++){
             if(paymentarr[i].mode_of_payment=="Cash"){
-                cashtotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(cashtotal)).toFixed(2);
+                if(paymentarr[i].fine_amount==""||paymentarr[i].fine_amount==null)
+            paymentarr[i].fine_amount=0;
+            if(paymentarr[i].latefee_amount==""||paymentarr[i].latefee_amount==null)
+            paymentarr[i].latefee_amount=0;
+                cashtotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(cashtotal)+parseFloat(paymentarr[i].fine_amount)+parseFloat(paymentarr[i].latefee_amount)).toFixed(2);
                 cashparticular.push({"slno":cashno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fees,"installmentamount":paymentarr[i].installment_amount});
                 cashno++;
             }
             else if(paymentarr[i].mode_of_payment=="Cheque"){
+                if(paymentarr[i].fine_amount==""||paymentarr[i].fine_amount==null)
+            paymentarr[i].fine_amount=0;
+            if(paymentarr[i].latefee_amount==""||paymentarr[i].latefee_amount==null)
+            paymentarr[i].latefee_amount=0;
                 if(paymentarr[i].cheque_date<=paymentarr[i].received_date){
-                currchequetotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(currchequetotal)).toFixed(2);
+                currchequetotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(currchequetotal)+parseFloat(paymentarr[i].fine_amount)+parseFloat(paymentarr[i].latefee_amount)).toFixed(2);
                 currchequeparticular.push({"slno":chequeno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fees,"bankname":paymentarr[i].bank_name,"chequeno":paymentarr[i].cheque_no,"chequedate":paymentarr[i].cheque_date,"installmentamount":paymentarr[i].installment_amount});
                 currchequeno++;
                 }
                 else{
-                chequetotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(chequetotal)).toFixed(2);
+                chequetotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(chequetotal)+parseFloat(paymentarr[i].fine_amount)+parseFloat(paymentarr[i].latefee_amount)).toFixed(2);
                 chequeparticular.push({"slno":chequeno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fees,"bankname":paymentarr[i].bank_name,"chequeno":paymentarr[i].cheque_no,"chequedate":paymentarr[i].cheque_date,"installmentamount":paymentarr[i].installment_amount});
                 chequeno++;
                 }
             }
             else if(paymentarr[i].mode_of_payment=="Transfer"||paymentarr[i].mode_of_payment=="Card Swipe"){
-                transfertotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(transfertotal)).toFixed(2);
+                if(paymentarr[i].fine_amount==""||paymentarr[i].fine_amount==null)
+            paymentarr[i].fine_amount=0;
+            if(paymentarr[i].latefee_amount==""||paymentarr[i].latefee_amount==null)
+            paymentarr[i].latefee_amount=0;
+                transfertotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(transfertotal)+parseFloat(paymentarr[i].fine_amount)+parseFloat(paymentarr[i].latefee_amount)).toFixed(2);
                 transferparticular.push({"slno":transferno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fees,"bankname":paymentarr[i].bank_name,"referenceno":paymentarr[i].reference_no,"receiveddate":paymentarr[i].received_date,"installmentamount":paymentarr[i].installment_amount});
                 transferno++;
             }
             else if(paymentarr[i].mode_of_payment=="Third Party"){
-                tptotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(tptotal)).toFixed(2);
+                if(paymentarr[i].fine_amount==""||paymentarr[i].fine_amount==null)
+            paymentarr[i].fine_amount=0;
+            if(paymentarr[i].latefee_amount==""||paymentarr[i].latefee_amount==null)
+            paymentarr[i].latefee_amount=0;
+                tptotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(tptotal)+parseFloat(paymentarr[i].fine_amount)+parseFloat(paymentarr[i].latefee_amount)).toFixed(2);
                 tpparticular.push({"slno":tpno,"installment":paymentarr[i].installment_type,"feetype":paymentarr[i].fees,"installmentamount":paymentarr[i].installment_amount});
                 tpno++;
             }
@@ -821,6 +836,13 @@
                 obj.admissionno=paymentarr[i].admission_no;
                 obj.studentname=paymentarr[i].student_name;
                 obj.grade=paymentarr[i].grade;
+                if(paymentarr[i].fine_amount==""||paymentarr[i].fine_amount==null)
+            paymentarr[i].fine_amount=0;
+            if(paymentarr[i].latefee_amount==""||paymentarr[i].latefee_amount==null)
+            paymentarr[i].latefee_amount=0;
+
+                obj.fineamount=paymentarr[i].fine_amount;
+                obj.latefeeamount=paymentarr[i].latefee_amount;
                 obj.installment=paymentarr[i].installment;
                 obj.installmentamount=paymentarr[i].installment_amount;
                 obj.actualamount=paymentarr[i].installment_amount;
@@ -852,6 +874,12 @@
                 obj.admissionno=paymentarr[i].admission_no;
                 obj.studentname=paymentarr[i].student_name;
                 obj.grade=paymentarr[i].grade;
+                if(paymentarr[i].fine_amount==""||paymentarr[i].fine_amount==null)
+            paymentarr[i].fine_amount=0;
+            if(paymentarr[i].latefee_amount==""||paymentarr[i].latefee_amount==null)
+            paymentarr[i].latefee_amount=0;
+                obj.fineamount=paymentarr[i].fine_amount;
+                obj.latefeeamount=paymentarr[i].latefee_amount;
                 obj.installment=paymentarr[i].installment;
                 obj.installmentamount=paymentarr[i].installment_amount;
                 obj.actualamount=paymentarr[i].installment_amount;
@@ -885,6 +913,12 @@
                 obj.admissionno=paymentarr[i].admission_no;
                 obj.studentname=paymentarr[i].student_name;
                 obj.grade=paymentarr[i].grade;
+                if(paymentarr[i].fine_amount==""||paymentarr[i].fine_amount==null)
+            paymentarr[i].fine_amount=0;
+            if(paymentarr[i].latefee_amount==""||paymentarr[i].latefee_amount==null)
+            paymentarr[i].latefee_amount=0;
+                obj.fineamount=paymentarr[i].fine_amount;
+                obj.latefeeamount=paymentarr[i].latefee_amount;
                 obj.installment=paymentarr[i].installment;
                 obj.installmentamount=paymentarr[i].installment_amount;
                 obj.receiveddate=paymentarr[i].received_date;
@@ -914,6 +948,12 @@
                 obj.admissionno=paymentarr[i].admission_no;
                 obj.studentname=paymentarr[i].student_name;
                 obj.grade=paymentarr[i].grade;
+                if(paymentarr[i].fine_amount==""||paymentarr[i].fine_amount==null)
+            paymentarr[i].fine_amount=0;
+            if(paymentarr[i].latefee_amount==""||paymentarr[i].latefee_amount==null)
+            paymentarr[i].latefee_amount=0;
+                obj.fineamount=paymentarr[i].fine_amount;
+                obj.latefeeamount=paymentarr[i].latefee_amount;
                 obj.installment=paymentarr[i].installment;
                 obj.installmentamount=paymentarr[i].installment_amount;
                 obj.receiveddate=paymentarr[i].received_date;
@@ -945,6 +985,12 @@
                 obj.admissionno=paymentarr[i].admission_no;
                 obj.studentname=paymentarr[i].student_name;
                 obj.grade=paymentarr[i].grade;
+                if(paymentarr[i].fine_amount==""||paymentarr[i].fine_amount==null)
+            paymentarr[i].fine_amount=0;
+            if(paymentarr[i].latefee_amount==""||paymentarr[i].latefee_amount==null)
+            paymentarr[i].latefee_amount=0;
+                obj.fineamount=paymentarr[i].fine_amount;
+                obj.latefeeamount=paymentarr[i].latefee_amount;
                 obj.installment=paymentarr[i].installment;
                 obj.installmentamount=paymentarr[i].installment_amount;
                 obj.paiddate=paymentarr[i].paid_date;

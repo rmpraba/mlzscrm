@@ -104,19 +104,25 @@
       </table>
       <hr hidden$="{{chequeview}}"></hr> -->
       <table id="table" hidden$="{{hidecashparticular}}">
-        <tr style="text-align: left;"><td colspan="5" width="260px">
+        <tr style="text-align: left;">
+        <td>Fine Amount:{{fineamount}}</td><td>Latefee Amount:{{latefeeamount}}</td>
+        <td colspan="2" width="120px">
          Payment Mode: {{modeofpayment}} 
-        </td><td>Total Fee: </td><td style="margin-left: 25px;">{{totalfees}}</td></tr>
+        </td><td>Total Fee: &nbsp;&nbsp;&nbsp;{{totalfees}}</td></tr>
       </table>
       <table id="table" hidden$="{{hidechequeparticular}}">
-        <tr style="text-align: left;"><td colspan="5" width="450px">
+        <tr style="text-align: left;">
+        <td>Fine Amount:{{fineamount}}</td><td>Latefee Amount:{{latefeeamount}}</td>
+        <td colspan="2" width="150px">
         Payment Mode: {{modeofpayment}} 
-        </td><td>Total Fee: </td><td style="margin-left: 25px;">{{totalfees}}</td></tr>
+        </td><td>Total Fee: </td><td>{{totalfees}}</td></tr>
       </table>
       <table id="table" hidden$="{{hidetransferparticular}}">
-        <tr style="text-align: left;"><td colspan="5" width="450px">
+        <tr style="text-align: left;">
+        <td>Fine Amount:{{fineamount}}</td><td>Latefee Amount:{{latefeeamount}}</td>
+        <td colspan="2" width="150px">
         Payment Mode: {{modeofpayment}} 
-        </td><td>Total Fee: </td><td style="margin-left: 25px;">{{totalfees}}</td></tr>
+        </td><td>Total Fee: </td><td>{{totalfees}}</td></tr>
       </table>
       <hr></hr>
       <!-- <table hidden$="{{chequeview}}">
@@ -128,7 +134,6 @@
       </table>
       <hr hidden$="{{transferview}}"></hr> -->
     </div>
-   
    
   </template>
   <script>

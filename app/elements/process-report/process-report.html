@@ -1,0 +1,147 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="process-report">
+  <template>
+    <style>
+      .datecard {
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                 <div class="col-md-3" style="margin-top: 0%;">
+                 <paper-dropdown-menu id="processreportacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="processreportacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                 </div>
+                 <div class="col-sm-2" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Grade" attr-for-selected="value">
+                  <paper-menu id="processreportgrade" class="dropdown-content" required on-iron-select="FnSelectGrade" valueattr="value" >
+                    <template  is="dom-repeat" items="{{gradearr}}" as="item">
+                    <paper-item value="{{item.grade_id}}">{{item.grade_name}}</paper-item>
+                    </template>
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div>  
+                <div class="col-sm-2" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Select Type" attr-for-selected="value">
+                  <paper-menu id="processreporttype" class="dropdown-content" required on-iron-select="FnSelectType" valueattr="value" >
+                    <!-- <template  is="dom-repeat" items="{{}}" as="item"> -->
+                    <paper-item value="all">All</paper-item>
+                    <paper-item value="new">New</paper-item>
+                    <paper-item value="promoted">Promoted</paper-item>
+                    <!-- </template> -->
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div>  
+                <div class="col-md-1" style="margin-top: 1%;margin-left: 20%;">
+                <paper-button on-click="FnProcess">Process</paper-button>
+                <!-- <p>Download
+                <a href="#">
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('processreportt', 'Process report')"></span>
+                </a>
+                </p> -->
+                </div> 
+            </div>
+          </div>
+        </div>
+    </div>
+   
+    <div>
+    <table>
+      <template  is="dom-repeat" items="{{duearr}}" as="item">
+      <tr>
+        
+      </tr>
+      </template>
+    </table>
+    </div>
+
+    </div>
+    <duereport-service id="feereportservice"></duereport-service>
+  </template>
+  <script type="text/javascript">
+      var tableToExcel = (function() {
+      var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+     return function(table, name) {
+     if (!table.nodeType) table = document.getElementById(table)
+     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+     window.location.href = uri + base64(format(template, ctx))
+     }
+     })()
+  </script>
+  <script>
+  (function() {
+    'use strict';
+    var academicyear;
+    var grade='All Grades';
+    var type='All';
+    Polymer({
+      is: 'process-report',
+      ready:function(){
+        this.flag=0;
+        this.hidecount=true;       
+      },
+      FnHideView:function(){
+        this.hidecount=false;
+      },
+      FnCallService:function(){
+        var d=new Date(); 
+        var cy=d.getFullYear(); 
+        var ny='';
+        var m=d.getMonth()+1;
+        if(m>4){
+          cy=parseInt(cy)+1;
+          ny=parseInt(cy)+1;
+        }
+        else{
+          cy=parseInt(cy)-1;
+          ny=parseInt(cy)+1;
+        }
+        academicyear="AY-"+cy+"-"+ny;
+      },
+      FnSelectType:function(e){
+        this.flag=1;
+        type=(e.target.selectedItem.textContent).trim();
+        this.$.feereportservice.FnFetchAllStudentStructureService(academicyear,grade);
+        this.$.feereportservice.FnProcessReportService(academicyear,grade,type);
+      },
+      FnProcess:function(){
+        this.$.feereportservice.FnFetchAllStudentStructureService(academicyear,grade);
+        this.$.feereportservice.FnProcessReportService(academicyear,grade,type);
+      },
+      FnRefresh:function(){
+        document.querySelector('#processdueacademicyear').selected=-1;
+        document.querySelector('#processduegrade').selected=-1;
+        document.querySelector('#processduetype').selected=-1;
+        this.hidecount=true;
+      },
+      FnSelectGrade:function(e){
+        grade=(e.target.selectedItem.textContent).trim();
+        if(this.flag==1){
+        this.$.feereportservice.FnFetchAllStudentStructureService(academicyear,grade);
+        this.$.feereportservice.FnProcessReportService(academicyear,grade,type);
+        }
+      },
+      FnSelectAcademicYear:function(e){
+        academicyear=(e.target.selectedItem.textContent).trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+        if(this.flag==1){
+        this.$.feereportservice.FnFetchAllStudentStructureService(academicyear,grade);
+        this.$.feereportservice.FnProcessReportService(academicyear,grade,type);
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>
