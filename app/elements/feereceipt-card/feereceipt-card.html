@@ -105,26 +105,44 @@
       <hr hidden$="{{chequeview}}"></hr> -->
       <table id="table" hidden$="{{hidecashparticular}}">
         <tr style="text-align: left;">
-        <td>Fine Amount:{{fineamount}}</td><td>Latefee Amount:{{latefeeamount}}</td>
+        <td colspan="2" width="150px">Fine Amount:{{fineamount}}</td>
+        <!-- <td>Latefee Amount:{{latefeeamount}}</td> -->
         <td colspan="2" width="120px">
          Payment Mode: {{modeofpayment}} 
         </td><td>Total Fee: &nbsp;&nbsp;&nbsp;{{totalfees}}</td></tr>
       </table>
+      <hr hidden$="{{hidelatefeecashparticular}}">
+      <table id="table" hidden$="{{hidelatefeecashparticular}}">
+        <tr><td>Latefee Particular </td><td colspan="2">Paymentmode: {{latefeepaymentmode}}</td><td colspan="2">Amount: {{latefeeamount}}</td></tr>
+      </table>
+      <!-- <hr> -->
+      
       <table id="table" hidden$="{{hidechequeparticular}}">
         <tr style="text-align: left;">
-        <td>Fine Amount:{{fineamount}}</td><td>Latefee Amount:{{latefeeamount}}</td>
-        <td colspan="2" width="150px">
+        <td colspan="2" width="150px">Fine Amount:{{fineamount}}</td>
+        <!-- <td>Latefee Amount:{{latefeeamount}}</td> -->
+        <td colspan="2" width="170px">
         Payment Mode: {{modeofpayment}} 
         </td><td>Total Fee: </td><td>{{totalfees}}</td></tr>
       </table>
+      <hr hidden$="{{hidetransferparticular}}">
       <table id="table" hidden$="{{hidetransferparticular}}">
         <tr style="text-align: left;">
-        <td>Fine Amount:{{fineamount}}</td><td>Latefee Amount:{{latefeeamount}}</td>
-        <td colspan="2" width="150px">
+        <td colspan="2" width="150px">Fine Amount:{{fineamount}}</td>
+        <!-- <td>Latefee Amount:{{latefeeamount}}</td> -->
+        <td colspan="2" width="170px">
         Payment Mode: {{modeofpayment}} 
         </td><td>Total Fee: </td><td>{{totalfees}}</td></tr>
       </table>
+      
+      
       <hr></hr>
+      <table id="table" hidden$="{{hidelatefeechequeparticular}}">
+        <tr><td>Latefee Particular </td><td>Paymentmode: {{latefeepaymentmode}}</td><td>Cheque No: {{latefeerefno}}</td>
+        <td>Bank Name: {{latefeebankname}}</td><td>Amount: {{latefeeamount}}</td></tr>
+      </table>
+      <hr hidden$="{{hidelatefeechequeparticular}}">
+
       <!-- <table hidden$="{{chequeview}}">
         <tr hidden$="{{chequeview}}" style="text-align: center;"><td>Mode Of Payment: {{modeofpayment}}</td><td>Cheque No: {{chequeno}}</td><td>Cheque Date: {{chequedate}}</td><td>Bank Name: {{bankname}}</td></tr>
       </table>

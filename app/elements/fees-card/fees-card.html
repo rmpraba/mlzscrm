@@ -152,14 +152,14 @@
             <div class="col-sm-2 enquiry-input" hidden$="{{hidecommitinstallment}}" style="margin-top: 2%;">
             <span><paper-checkbox class="col-sm-2" id="insrequirement" class="checkbox" on-change="insrequirementHandler">Yes</paper-checkbox></span>
             </div>
-            <div class="col-sm-2 enquiry-input" style="margin-top: 2%;">
+            <div hidden class="col-sm-2 enquiry-input" style="margin-top: 2%;">
             <label>If any Latefee amount?</label>
             </div>
-            <div class="col-sm-2 enquiry-input" hidden$="{{hidelatefeecheckbox}}" style="margin-top: 2%;">
-            <span><paper-checkbox class="col-sm-1" id="collectlatefee" class="checkbox" on-change="latefeeHandler">Yes</paper-checkbox></span>
+            <div hidden class="col-sm-2 enquiry-input" hidden$="{{hidelatefeecheckbox}}" style="margin-top: 2%;">
+            <span hidden><paper-checkbox hidden class="col-sm-1" id="collectlatefee" class="checkbox" on-change="latefeeHandler">Yes</paper-checkbox></span>
             </div>
-            <div style="margin-left: -5%;"  class="col-sm-2 enquiry-input" hidden$="{{hidelatefeeinput}}">
-            <span><paper-input label="Enter amount" required value="{{latefeeamount}}" id='latefeeinput' on-change="latefeeamountHandler"></paper-input></span>
+            <div style="margin-left: -5%;" hidden class="col-sm-2 enquiry-input" hidden$="{{hidelatefeeinput}}">
+            <span hidden><paper-input hidden label="Enter amount" required value="{{latefeeamount}}" id='latefeeinput' on-change="latefeeamountHandler"></paper-input></span>
             </div>
       </div>
 
