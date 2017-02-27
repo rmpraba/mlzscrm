@@ -1306,7 +1306,7 @@
         document.querySelector('adhoc-discount').FnRefresh();
         document.querySelector('adhoc-discount-itemcard').FnRefresh();
       },
-      updatelatefeeService:function(admissionno,amount,reason,installment){
+      updatelatefeeService:function(admissionno,amount,reason,installment,paymentmode,refno,bankname){
         this.updatelatefeeurl=sessionStorage.getItem("addrinfo")+"/updatelatefee-service";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
@@ -1314,6 +1314,9 @@
         obj.amount=amount;
         obj.reason=reason;
         obj.installment=installment;
+        obj.paymentmode=paymentmode;
+        obj.refno=refno;
+        obj.bankname=bankname;
         var d=new Date();
         var currdate=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
         obj.latefeedate=currdate;

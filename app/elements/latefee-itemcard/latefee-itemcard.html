@@ -27,6 +27,21 @@
             </paper-menu>
       </paper-dropdown-menu>
       <br>
+
+      <paper-dropdown-menu label="Select Mode Of Payment" attr-for-selected="value">
+            <paper-menu id="latefeepaymentmode" class="dropdown-content" required on-iron-select="FnSelectPaymentMode" valueattr="value" >
+              
+              <paper-item value="Cash">Cash</paper-item>
+              <paper-item value="Cheque">Cheque</paper-item>
+              <paper-item value="Transfer">Transfer</paper-item>
+              <paper-item value="Card Swipe">Card Swipe</paper-item>
+              <!-- <paper-item value="Lumpsum">Lumpsum</paper-item> -->
+              
+            </paper-menu>
+      </paper-dropdown-menu>
+      <br>
+      <paper-input hidden$="{{hiderefdetail}}" label="Cheque/Reference No" value="{{refno}}"></paper-input>
+      <paper-input hidden$="{{hiderefdetail}}" label="Bank Name" value="{{bankname}}"></paper-input>
       <paper-button style="margin-top: 3%;" class="btn btn-primary left" 
       on-click="FnAdd">Add</paper-button>
       <processing-service id="service"></processing-service>
@@ -36,10 +51,14 @@
   (function() {
     'use strict';
     var installment="";
+    var paymentmode="";
     Polymer({
       is: 'latefee-itemcard',
+      ready:function(){
+        this.hiderefdetail=true;
+      },
       FnAdd:function(){
-        this.$.service.updatelatefeeService(this.admissionno,this.amount,this.reason,installment);
+        this.$.service.updatelatefeeService(this.admissionno,this.amount,this.reason,installment,paymentmode,this.refno,this.bankname);
       },
       FnRefresh:function(){
         this.studentname="";
@@ -47,10 +66,22 @@
         this.amount="";
         this.reason="";
         installment="";
+        paymentmode="";
+        this.refno="";
+        this.bankname="";
         document.querySelector('#latefeeinstallment').selected=-1;
+        document.querySelector('#latefeepaymentmode').selected=-1;
+        this.hiderefdetail=true;
       },
       FnSelectInstallment:function(e){
         installment=(e.target.selectedItem.textContent).trim();
+      },
+      FnSelectPaymentMode:function(e){
+        paymentmode=(e.target.selectedItem.textContent).trim();
+        if(paymentmode=='Cash')
+          this.hiderefdetail=true;
+        else
+          this.hiderefdetail=false;
       }
     });
   })();

@@ -319,9 +319,13 @@
           // alert(JSON.stringify(arr[i].cheque_no));
           if(daycollection[i].adhoc_discount==""||daycollection[i].adhoc_discount==null)
             daycollection[i].adhoc_discount=0;
-        var total=parseFloat(parseFloat(daycollection[i].installment_amount)+parseFloat(daycollection[i].fine_amount)+parseFloat(daycollection[i].adhoc_discount)).toFixed(2);
+          if(daycollection[i].latefee_amount==""||daycollection[i].latefee_amount==null)
+            daycollection[i].latefee_amount=0;
+          if(daycollection[i].fine_amount==""||daycollection[i].fine_amount==null)
+            daycollection[i].fine_amount=0;
+        var total=parseFloat(parseFloat(daycollection[i].installment_amount)+parseFloat(daycollection[i].fine_amount)+parseFloat(daycollection[i].adhoc_discount)+parseFloat(daycollection[i].latefee_amount)).toFixed(2);
         daycollection[i].total=total;
-        totalamount=parseFloat(parseFloat(totalamount)+parseFloat(daycollection[i].installment_amount)+parseFloat(daycollection[i].fine_amount)+parseFloat(daycollection[i].adhoc_discount)).toFixed(2);
+        totalamount=parseFloat(parseFloat(totalamount)+parseFloat(daycollection[i].installment_amount)+parseFloat(daycollection[i].fine_amount)+parseFloat(daycollection[i].adhoc_discount)+parseFloat(daycollection[i].latefee_amount)).toFixed(2);
         }
         }
         else{
@@ -330,6 +334,7 @@
         var cashtotal=0;
         var chequetotal=0;
         var transfertotal=0;
+        var swipetotal=0;
         for(var i=0;i<daycollection.length;i++){
           if(daycollection[i].mode_of_payment=="Cash")
             cashtotal=parseFloat(daycollection[i].total)+parseFloat(cashtotal);
@@ -337,6 +342,8 @@
             chequetotal=parseFloat(daycollection[i].total)+parseFloat(chequetotal);
           if(daycollection[i].mode_of_payment=="Transfer")
             transfertotal=parseFloat(daycollection[i].total)+parseFloat(transfertotal);
+          if(daycollection[i].mode_of_payment=="Card Swipe")
+            swipetotal=parseFloat(daycollection[i].total)+parseFloat(swipetotal);
         }
         // document.querySelector('daycollection-report').cashamount=cashtotal;
         // document.querySelector('daycollection-report').chequeamount=chequetotal;
@@ -379,6 +386,7 @@
           daycollection[i].splitarr[0].installment_amount=daycollection[i].installment_amount;
           daycollection[i].splitarr[0].adhoc_amount=daycollection[i].adhoc_discount;
           daycollection[i].splitarr[0].fine_amount=daycollection[i].fine_amount;
+          daycollection[i].splitarr[0].latefee_amount=daycollection[i].latefee_amount;
           daycollection[i].splitarr[0].waiveoff_amount=daycollection[i].waiveoff_amount;
           daycollection[i].splitarr[0].total=daycollection[i].total;
           }
@@ -399,6 +407,7 @@
           daycollection[i].splitarr[0].installment_amount=daycollection[i].installment_amount;
           daycollection[i].splitarr[0].adhoc_amount=daycollection[i].adhoc_discount;
           daycollection[i].splitarr[0].fine_amount=daycollection[i].fine_amount;
+          daycollection[i].splitarr[0].latefee_amount=daycollection[i].latefee_amount;
           daycollection[i].splitarr[0].waiveoff_amount=daycollection[i].waiveoff_amount;
           daycollection[i].splitarr[0].total=daycollection[i].total;
           }
@@ -407,6 +416,7 @@
         document.querySelector('detaildaycollection-report').cashamount=cashtotal;
         document.querySelector('detaildaycollection-report').chequeamount=chequetotal;
         document.querySelector('detaildaycollection-report').transferamount=transfertotal;
+        document.querySelector('detaildaycollection-report').swipeamount=swipetotal;
         document.querySelector('detaildaycollection-report').totalamount=totalamount;
         document.querySelector('detaildaycollection-report').detaildaycollectionarr=daycollection;
 
@@ -470,9 +480,9 @@
           // alert(JSON.stringify(arr[i].cheque_no));
           if(arr[i].adhoc_discount==""||arr[i].adhoc_discount==null)
             arr[i].adhoc_discount=0;
-        var total=parseFloat(parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount)+parseFloat(arr[i].adhoc_discount)).toFixed(2);
+        var total=parseFloat(parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount)+parseFloat(arr[i].adhoc_discount)+parseFloat(arr[i].latefee_amount)).toFixed(2);
         arr[i].total=total;
-        totalamount=parseFloat(parseFloat(totalamount)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount)+parseFloat(arr[i].adhoc_discount)).toFixed(2);
+        totalamount=parseFloat(parseFloat(totalamount)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount)+parseFloat(arr[i].adhoc_discount)+parseFloat(arr[i].latefee_amount)).toFixed(2);
         }
         }
         else{
@@ -481,6 +491,7 @@
         var cashtotal=0;
         var chequetotal=0;
         var transfertotal=0;
+        var swipetotal=0;
         for(var i=0;i<arr.length;i++){
           if(arr[i].mode_of_payment=="Cash")
             cashtotal=parseFloat(arr[i].total)+parseFloat(cashtotal);
@@ -488,11 +499,14 @@
             chequetotal=parseFloat(arr[i].total)+parseFloat(chequetotal);
           if(arr[i].mode_of_payment=="Transfer")
             transfertotal=parseFloat(arr[i].total)+parseFloat(transfertotal);
+          if(arr[i].mode_of_payment=="Card Swipe")
+            swipetotal=parseFloat(arr[i].total)+parseFloat(swipetotal);
         }
         document.querySelector('daycollection-report').cashamount=cashtotal;
         document.querySelector('daycollection-report').chequeamount=chequetotal;
         document.querySelector('daycollection-report').transferamount=transfertotal;
         document.querySelector('daycollection-report').totalamount=totalamount;
+        document.querySelector('daycollection-report').swipeamount=swipetotal;
         document.querySelector('daycollection-report').daycollectionarr=arr;
         document.querySelector('daycollection-report').FnHideView();
       },

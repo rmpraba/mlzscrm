@@ -13,8 +13,8 @@
           <div class="row">
             <div class="col-md-12">
                  <div class="col-md-3" style="margin-top: 0%;">
-                 <paper-dropdown-menu id="pendingacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
-                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="pendingacademicyear" attr-for-selected="value">
+                 <paper-dropdown-menu id="pendingacyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="pendingacyear" attr-for-selected="value">
                   <template  is="dom-repeat" items="{{academicarr}}" as="item">
                   <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
                   </template>
@@ -130,7 +130,7 @@
       },
       FnRefresh:function(){
         this.pendingfeearr=[];
-        document.querySelector('#pendingacademicyear').selected=-1;
+        document.querySelector('#pendingacyear').selected=-1;
         document.querySelector('#pendinggrade').selected=-1;
         document.querySelector('#pendingtype').selected=-1;
         this.hidecount=true;
