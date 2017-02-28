@@ -73,7 +73,9 @@
         <th>Type</th><th>Installment Type</th>
         <th>Application fee</th><th>Kit fee</th>
         <th>Annual fee</th><th>Tution fee</th>
-        <th>Mode Of Payment</th><th>Cheque No</th><th>Bank Name</th><th>Cheque Date</th><th>Received Date</th><th>Receipt/Ack No</th><th>Actual Amount</th><th>Fine Amount</th><th>Latefee Amount</th><th>Adhoc Amount</th><th>Total Amount</th>
+        <th>Mode Of Payment</th><th>Cheque No</th><th>Bank Name</th><th>Cheque Date</th><th>Received Date</th><th>Receipt/Ack No</th><th>Actual Amount</th><th>Fine Amount</th>
+        <!-- <th>Latefee Amount</th> -->
+        <th>Adhoc Amount</th><th>Total Amount</th>
       </tr>
       </thead>
       <tbody>
@@ -88,7 +90,7 @@
         <td>{{item.bank_name}}</td><td>{{item.cheque_date}}</td>
         <td>{{item.received_date}}</td><td>{{item.receipt_no}}</td>
         <td>{{item.installment_amount}}</td><td>{{item.fine_amount}}</td>
-        <td>{{item.latefee_amount}}</td>
+        <!-- <td>{{item.latefee_amount}}</td> -->
         <td>{{item.adhoc_amount}}</td><td>{{item.total}}</td></tr>
         </template>
       </template>
@@ -99,7 +101,7 @@
       <tr><th colspan="8" style="text-align: right;">Total amount from CASH: &nbsp;&nbsp;</th><th>{{cashamount}}</th></tr>
       <tr><th colspan="8" style="text-align: right;">Total amount from CHEQUE: &nbsp;&nbsp;</th><th>{{chequeamount}}</th></tr>
       <tr><th colspan="8" style="text-align: right;">Total amount from NEFT/RTGS: &nbsp;&nbsp;</th><th>{{transferamount}}</th></tr>
-      <tr><th colspan="8" style="text-align: right;">Total amount from Cardswipe: &nbsp;&nbsp;</th><th>{{swipeamount}}</th></tr>
+      <tr><th colspan="8" style="text-align: right;">Total amount from CARD SWIPE: &nbsp;&nbsp;</th><th>{{swipeamount}}</th></tr>
       <tr><th colspan="8" style="text-align: right;">Grand Total: &nbsp;&nbsp;</th><th>{{totalamount}}</th></tr>
     </table>  
     </div>
