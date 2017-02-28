@@ -5549,14 +5549,14 @@ app.post('/fetchnotpaidreport-service',  urlencodedParser,function (req, res){
  if(req.query.grade=="All Grades")
 var qur2 = "SELECT admission_no FROM md_admission WHERE admission_no NOT IN "+
 " (SELECT s.admission_no FROM  md_student_paidfee f JOIN md_admission s "+
-" ON ( f.admission_no = s.admission_no ) where f.admission_status='Promoted' "+ 
-" and s.admission_status='Promoted' and f.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"') "+
+" ON ( f.admission_no = s.admission_no ) where  f.admission_status='Promoted' "+ 
+" and s.admission_status='Promoted' and f.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and cheque_status!='cancelled') "+
 " and admission_status='Promoted' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";
  else
 var qur2 = "SELECT admission_no FROM md_admission WHERE admission_no NOT IN "+
 " (SELECT s.admission_no FROM  md_student_paidfee f JOIN md_admission s "+
-" ON ( f.admission_no = s.admission_no ) where f.admission_status='Promoted' "+ 
-" and s.admission_status='Promoted' and f.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"') "+
+" ON ( f.admission_no = s.admission_no ) where  f.admission_status='Promoted' "+ 
+" and s.admission_status='Promoted' and f.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and cheque_status!='cancelled' ) "+
 " and admission_status='Promoted' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and class_for_admission='"+req.query.grade+"'";
 
  console.log('----------------------- fee not paid report --------------------------');
@@ -7287,34 +7287,34 @@ app.post('/duereport-service',  urlencodedParser,function (req, res){
   if(req.query.type=="All"&&req.query.grade=="All Grades"){
     console.log('1');
     var admncount="SELECT count(*) as totaladmissioncount FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";
-    var totalpaid="SELECT count(distinct(admission_no)) as totalpaidcount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and installment!='Application fee'";
-    var totalpaidamount="SELECT sum(installment_amount) as totalpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and installment!='Application fee'";
-    var patternpaid="SELECT installment_pattern,count(distinct(admission_no)) as patternadmncount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and installment!='Application fee' group by installment_pattern";
-    var patternpaidamount="SELECT installment_pattern,sum(installment_amount) as patternpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and installment!='Application fee' group by installment_pattern";
+    var totalpaid="SELECT count(distinct(admission_no)) as totalpaidcount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled')";
+    var totalpaidamount="SELECT sum(installment_amount) as totalpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled')";
+    var patternpaid="SELECT installment_pattern,count(distinct(admission_no)) as patternadmncount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled') group by installment_pattern";
+    var patternpaidamount="SELECT installment_pattern,sum(installment_amount) as patternpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled') group by installment_pattern";
   }
   if(req.query.type=="All"&&req.query.grade!="All Grades"){
     console.log('2');
     var admncount="SELECT count(*) as totaladmissioncount  FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"'";
-    var totalpaid="SELECT count(distinct(admission_no)) as totalpaidcount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment!='Application fee'";
-    var totalpaidamount="SELECT sum(installment_amount) as totalpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment!='Application fee'";
-    var patternpaid="SELECT installment_pattern,count(distinct(admission_no))  as patternadmncount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment!='Application fee' group by installment_pattern";
-    var patternpaidamount="SELECT installment_pattern,sum(installment_amount) as patternpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment!='Application fee' group by installment_pattern";
+    var totalpaid="SELECT count(distinct(admission_no)) as totalpaidcount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled')";
+    var totalpaidamount="SELECT sum(installment_amount) as totalpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled')";
+    var patternpaid="SELECT installment_pattern,count(distinct(admission_no))  as patternadmncount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled') group by installment_pattern";
+    var patternpaidamount="SELECT installment_pattern,sum(installment_amount) as patternpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled') group by installment_pattern";
   }
   if(req.query.type!="All"&&req.query.grade=="All Grades"){
     console.log('3');
     var admncount="SELECT count(*) as totaladmissioncount FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"'";    
-    var totalpaid="SELECT count(distinct(admission_no)) as totalpaidcount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"' and installment!='Application fee'";
-    var totalpaidamount="SELECT sum(installment_amount) as totalpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"' and installment!='Application fee'";
-    var patternpaid="SELECT installment_pattern,count(distinct(admission_no)) as patternadmncount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"' and installment!='Application fee' group by installment_pattern";
-    var patternpaidamount="SELECT installment_pattern,sum(installment_amount) as patternpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"' and installment!='Application fee' group by installment_pattern";
+    var totalpaid="SELECT count(distinct(admission_no)) as totalpaidcount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled')";
+    var totalpaidamount="SELECT sum(installment_amount) as totalpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled')";
+    var patternpaid="SELECT installment_pattern,count(distinct(admission_no)) as patternadmncount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled') group by installment_pattern";
+    var patternpaidamount="SELECT installment_pattern,sum(installment_amount) as patternpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled') group by installment_pattern";
   }
   if(req.query.type!="All"&&req.query.grade!="All Grades"){
     console.log('4');
     var admncount="SELECT count(*) as totaladmissioncount FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"' and grade='"+req.query.grade+"'";    
-    var totalpaid="SELECT count(distinct(admission_no)) as totalpaidcount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"'  and grade='"+req.query.grade+"' and installment!='Application fee'";
-    var totalpaidamount="SELECT sum(installment_amount) as totalpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"'  and grade='"+req.query.grade+"' and installment!='Application fee'";
-    var patternpaid="SELECT installment_pattern,count(distinct(admission_no))  as patternadmncount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"'  and grade='"+req.query.grade+"' and installment!='Application fee' group by installment_pattern";
-    var patternpaidamount="SELECT installment_pattern,sum(installment_amount) as patternpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"'  and grade='"+req.query.grade+"' and installment!='Application fee' group by installment_pattern";
+    var totalpaid="SELECT count(distinct(admission_no)) as totalpaidcount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"'  and grade='"+req.query.grade+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled')";
+    var totalpaidamount="SELECT sum(installment_amount) as totalpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"'  and grade='"+req.query.grade+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled')";
+    var patternpaid="SELECT installment_pattern,count(distinct(admission_no))  as patternadmncount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"'  and grade='"+req.query.grade+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled') group by installment_pattern";
+    var patternpaidamount="SELECT installment_pattern,sum(installment_amount) as patternpaidamount FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='"+req.query.type+"'  and grade='"+req.query.grade+"' and installment!='Application fee' and cheque_status not in('bounced','cancelled') group by installment_pattern";
   }
   console.log('.................total....................');
   console.log(admncount);
