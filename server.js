@@ -6051,7 +6051,7 @@ app.post('/counsellorreport',  urlencodedParser,function (req, res){
 
 
 app.post('/fetchallstudentforsearch-service',  urlencodedParser,function (req, res){
-  var qur="SELECT distinct(admission_no),student_name FROM md_student_paidfee where school_id='"+req.query.schoolid+"' and installment!='Application fee'";
+  var qur="SELECT distinct(admission_no),student_name FROM md_student_paidfee where school_id='"+req.query.schoolid+"'";
   connection.query(qur,
     function(err, rows){
       if(!err){

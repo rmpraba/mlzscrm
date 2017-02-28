@@ -866,6 +866,8 @@
                 obj.hidecurrreceipt=true;
                 obj.hidelatefeecashparticular=true;
                 obj.hidelatefeechequeparticular=true;
+                if(obj.installment="Application fee")
+                    obj.hidesplit=true;
                 if(cashcnt==0)
                     feereceiptarr.push(obj);
                 cashcnt++;
