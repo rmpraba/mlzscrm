@@ -3,7 +3,7 @@
 <link rel="import" href="..\..\bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="fees-service">
-  <template>
+  <template
     <!-- It would insert the cash fee -->
      <iron-ajax
         method="post"
@@ -452,7 +452,7 @@
       },
       fetchstudinstallmentsplitupResponse:function(e){
         this.studinssplit=e.detail.response.returnval;
-
+        // alert(localStorage.getItem("curr_sess_installmentpattern"));
         var a=[];
         var split=[];
         var temp=[];
@@ -1122,7 +1122,6 @@
         }
         // alert(JSON.stringify(studsplitarr));
         // if(localStorage.getItem("curr_sess_installmentpattern")=="1"){
-        
         // }
       },
       insertinstallmentsplitofstudService:function(){

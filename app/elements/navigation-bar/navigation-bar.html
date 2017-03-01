@@ -425,15 +425,18 @@
             <li id="currdailycollectionreport">
             <a href="" aria-hidden="true" on-click="FnDayCollectionReport">Current Date Collection</a>
             </li>
+            <li id="detaildaycollection">
+            <a href="" aria-hidden="true" on-click="FnDetaildaycollection">Day Collection</a>
+            </li>
+            <li id="dailyincomereport">
+            <a href="" aria-hidden="true" on-click="FnDailyincomeReport">Daily Income</a>
+            </li>
             <li id="tpcollectionreport">
             <a href="" aria-hidden="true" on-click="FnTPCollectionReport">Thirdparty Collection</a>
             </li>
             <li id="pdccheques">
             <a href="" aria-hidden="true" on-click="FnPdcCheques">PDC Cheques</a>
-            </li>
-            <li id="detaildaycollection">
-            <a href="" aria-hidden="true" on-click="FnDetaildaycollection">Day Collection</a>
-            </li>
+            </li>            
             <li id="dailycollectionreport">
             <a href="" aria-hidden="true" on-click="FnDailyCollectionReport">Daily Fee Collection Report</a>
             </li>            
@@ -998,6 +1001,12 @@
           document.querySelector('app-list').setPage("detaildaycollection-report","Daily Collection");
           document.querySelector('detaildaycollection-report').FnRefresh();
           document.querySelector('detaildaycollection-report').FnCallService();
+      },
+      FnDailyincomeReport:function(){
+          this.$.scheduleservice.fetchgradeforreportService();
+          document.querySelector('app-list').setPage("dailyincome-report","Daily Income");
+          document.querySelector('dailyincome-report').FnRefresh();
+          document.querySelector('dailyincome-report').FnCallService();
       },
       FnTPCollectionReport:function(){
           this.$.scheduleservice.fetchgradeforreportService();

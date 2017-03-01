@@ -145,7 +145,7 @@
             </div>
       </div>
 
-      <div class="list-group col-sm-12 panel-body form-category" >
+      <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hidecommitinstallment}}">
             <div class="col-sm-4 enquiry-input" hidden$="{{hidecommitinstallment}}" style="margin-top: 2%;">
             <label>Installment required in commitment fee?</label>
             </div>
@@ -627,6 +627,7 @@
         this.hidelatefeeinput=true;
         localStorage.setItem("curr_sess_latefeecollection","no");
         this.hidedefaulterlabel=true;
+        this.hidecommitinstallment=false;
       },
       FnRefresh1:function(){
         document.querySelector('#structureselfmode').checked=true;
@@ -673,6 +674,7 @@
         this.hidelatefeeinput=true;
         localStorage.setItem("curr_sess_latefeecollection","no");
         this.hidedefaulterlabel=true;
+        this.hidecommitinstallment=false;
       },
       generalHandler:function(e){
         if(document.querySelector("#structuregeneral1").checked==true)

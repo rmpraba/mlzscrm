@@ -1,4 +1,3 @@
-
 <link rel="import" href="..\..\bower_components/polymer/polymer.html">
 
 <dom-module id="admission-service">
@@ -1135,7 +1134,8 @@ insertstudenthistoryResponse:function(e){
             // alert(localStorage.getItem("curr_sess_installmentpatternchange"));
             if(localStorage.getItem("curr_sess_installmentpatternchange")!='true')
             {
-                // alert('coming');
+            // alert('coming'+paidfeearr[0].installment_pattern);
+
             var mode=paidfeearr[0].payment_through;
             localStorage.setItem("curr_sess_installmentpattern",paidfeearr[0].installment_pattern);
             var pattern=paidfeearr[0].installment_pattern;
@@ -1386,6 +1386,7 @@ insertstudenthistoryResponse:function(e){
             }
         }
 
+        // alert(JSON.stringify(feearr));
         // alert(JSON.stringify(disarr));
 
         var basetype=[];
@@ -1914,6 +1915,7 @@ insertstudenthistoryResponse:function(e){
                 }
                 if(f==0)
                 {
+                   arr[i].fineamount=0;
                    arr[i].hiddencommitinput=true;
                    arr[i].hiddencommititem=false;
                    arr[i].paidflag=false;
