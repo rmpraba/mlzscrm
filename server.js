@@ -4249,11 +4249,11 @@ app.post('/duecheques-service',  urlencodedParser,function (req, res){
 
 app.post('/tpcollection-service',  urlencodedParser,function (req, res){
    if(req.query.grade=="All Grades"){
-   var qur = "SELECT * FROM tp_realization_details where (installment_date='"+req.query.fromdate+"') and school_id='"+req.query.schoolid+"'";          
+   var qur = "SELECT * FROM tp_realization_details where (STR_TO_DATE(installment_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(installment_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and school_id='"+req.query.schoolid+"'";          
    }
    else
    {
-   var qur = "SELECT * FROM tp_realization_details where (installment_date='"+req.query.fromdate+"') and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' ";
+   var qur = "SELECT * FROM tp_realization_details where (STR_TO_DATE(installment_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(installment_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and grade='"+req.query.grade+"' and school_id='"+req.query.schoolid+"' ";
    }
  console.log('-----------------------tpcollection report--------------------------');
  console.log(qur);
