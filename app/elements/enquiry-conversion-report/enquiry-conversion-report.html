@@ -1,0 +1,84 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="enquiry-conversion-report">
+  <template>
+    <style>
+      .datecard {
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">                
+                <div class="col-md-3" style="margin-top: 0%;">
+                 <paper-dropdown-menu id="conversionreportacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="conversionreportacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                 </div>
+                <div class="col-md-1" style="margin-top: 1%;margin-left: 45%;">
+                <p>Download
+                <a href="#">
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('enquiryconversionreport', 'Enquiry Conversion Report')"></span>
+                </a>
+                </p>
+                </div>  
+            </div>
+          </div>
+        </div>
+    </div>
+    <div>
+    <table class="table table-hover" id="enquiryconversionreport">
+      <thead>
+      <tr>
+
+      </tr>
+      </thead>
+      <tbody>
+      <template  is="dom-repeat" items="{{conversionarr}}" as="item">
+        <tr><td></td></tr>
+      </template>
+      </tbody>
+    </table>
+    </div>
+    <foreports-service id="foreportsservice"></foreports-service>
+  </template>
+  <script type="text/javascript">
+      var tableToExcel = (function() {
+      var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+     return function(table, name) {
+     if (!table.nodeType) table = document.getElementById(table)
+     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+     window.location.href = uri + base64(format(template, ctx))
+     }
+     })()
+  </script>
+  <script>
+  (function() {
+    'use strict';
+    var academicyear="";
+    Polymer({
+      is: 'enquiry-conversion-report',
+      callService:function(){ 
+      },
+      FnSelectAcademicYear:function(e){
+        academicyear=(e.target.selectedItem.textContent).trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+        this.$.foreportsservice.FnFetchEnquiryconversionService(academicyear);
+      },
+      FnRefresh:function(){
+        this.conversionarr=[];
+        academicyear="";
+      }
+    });
+  })();
+  </script>
+</dom-module>

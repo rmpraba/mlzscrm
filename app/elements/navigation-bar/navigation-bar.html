@@ -342,8 +342,10 @@
             <a href="" aria-hidden="true">Enquiry Analysis Report<span class="fa arrow"></span></a>
             <ul class="nav nav-third-level">
               <li>
+                <a href="" on-click="FnEnquiryconversion" aria-hidden="true">Enquiry Conversion Analysis</a>
+              </li>
+              <li>
                 <a href="" on-click="walkin_analysis" aria-hidden="true">Walkin Analysis</a>
-                <!-- <a href="flot.html"></a> -->
               </li>
               <li>
                 <a href="" on-click="walkin_analysis_filter" aria-hidden="true">Walkin Analysis With Filter</a>
@@ -803,26 +805,10 @@
         this.hidemasterreportmenu=true;
         this.hidereportmenu=true;
       },
-      Fncheck:function(){
-        // if(localStorage.getItem("enquiry")=='true'){
-        //   this.$.enquiry.hidden=true;
-        // }
-        // if(localStorage.getItem("dashboard")=='true'){
-        //   this.$.dashboard.hidden=true;
-        // }
-        // if(localStorage.getItem("followup")=='true'){
-        //   this.$.followup.hidden=true;
-        // }
-        // if(localStorage.getItem("admissionform")=='true'){
-        //   this.$.admform.hidden=true;
-        // }
-        // if(localStorage.getItem("collectionentry")=='true'){
-        //   this.$.collcnentry.hidden=true;
-        // }
-        // if(localStorage.getItem("admapproval")=='true'){
-        //   this.$.admapp.hidden=true;
-        // }
-
+      FnEnquiryconversion:function(){
+        this.$.scheduleservice.fetchacademicyearService();
+        document.querySelector('app-list').setPage("enquiry-conversion-report","Enquiry Conversion Report");
+        document.querySelector('enquiry-conversion-report').FnRefresh();
       },
       FnFeetypeschedule:function(e){
         document.querySelector('feetype-schedule-card').FnRefresh();
