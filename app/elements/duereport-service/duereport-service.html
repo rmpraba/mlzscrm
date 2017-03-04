@@ -217,7 +217,7 @@
         
         var arr1=[];
         this.arr2=[];
-        var arr3=[];
+        this.arr3=[];
         var arr4=[];
         var arr5=[];
         for(var i=0;i<this.paidarr.length;i++){
@@ -228,7 +228,7 @@
           this.arr2.push(this.paidarr[i]);
          }
          if(this.paidarr[i].installment_pattern=="4"&&this.paidarr[i].paymenttype_flag=="0"){
-          arr3.push(this.paidarr[i]);
+          this.arr3.push(this.paidarr[i]);
          }
          if(this.paidarr[i].installment_pattern=="1"&&this.paidarr[i].paymenttype_flag=="1"){
           arr4.push(this.paidarr[i]);
@@ -265,7 +265,8 @@
         }
         }
         }
-    this.FnLumpsumduehandler();
+       this.FnCommitLumpsumHandler();
+    // this.FnLumpsumduehandler();
     // this.FnUpdateactualfeeService(commonsplit); 
         // alert(JSON.stringify(arr1));
         // alert(JSON.stringify(commonsplit));  
@@ -522,6 +523,114 @@
     },
     duereportdiscountlumpsumupdateResponse:function(e){
         alert('first routine over...'+e.detail.response.returnval);
+    },
+    FnCommitLumpsumHandler:function(){
+        var lumpsumm=this.arr3;
+        var inssplit=this.inssplit;
+        var split=[];
+        var commonsplit=[];
+        var lumpsum=[];
+        for(var i=0;i<lumpsumm.length;i++){
+            if(lumpsumm[i].installment=="Commitment Fee"){
+                lumpsum.push(lumpsumm[i]);
+            }
+        }
+
+        for(var i=0;i<lumpsum.length;i++){        
+        for(var j=0;j<inssplit.length;j++)
+        {           
+        if(lumpsum[i].admission_no==inssplit[j].admission_no){
+
+        var commonobj={};
+        commonobj.admissionno=inssplit[j].admission_no;
+        commonobj.studentname=inssplit[j].student_name;
+        var amt=0;
+        if(inssplit[j].feetype_amount>0){
+        commonobj[((inssplit[j].installment).replace(' ',''))+((inssplit[j].feetype).replace(' ',''))]=inssplit[j].feetype_amount;
+        amt=inssplit[j].feetype_amount;
+        }
+        for(var k=j+1;k<inssplit.length;k++)
+        {
+          if(inssplit[j].admission_no==inssplit[k].admission_no){
+           if(inssplit[j].feetype_amount>0){
+           commonobj[((inssplit[k].installment).replace(' ',''))+((inssplit[k].feetype).replace(' ',''))]=inssplit[k].feetype_amount;
+           amt=parseFloat(amt)+parseFloat(inssplit[k].feetype_amount);
+           }
+           inssplit.splice(k,1);
+           k--;
+          }
+        }
+        commonobj.amount=amt;
+        commonsplit.push(commonobj);     
+        }
+        }
+        }
+        // alert(JSON.stringify(commonsplit));
+        this.FnUpdateactualfeeService(commonsplit);
+        // alert(JSON.stringify(this.arr3));
+    var paidfeesarr=[];
+    for(var i=0;i<lumpsumm.length;i++){
+        for(var j=0;j<commonsplit.length;j++){
+            var tempdiscount=0;
+            if(lumpsumm[i].admission_no==commonsplit[j].admissionno){
+                if(lumpsumm[i].installment=="Commitment Fee"){
+                    // alert(commonsplit[j].CommitmentFeeAnnualfee+" "+lumpsumm[i].discountamount);
+                  if(commonsplit[j].CommitmentFeeAnnualfee>lumpsumm[i].discountamount){
+                  commonsplit[j].CommitmentFeeAnnualfee=parseFloat(commonsplit[j].CommitmentFeeAnnualfee)-parseFloat(lumpsumm[i].discountamount);
+                  lumpsumm[i].discountamount=0;
+                  }
+                  else{
+                  lumpsumm[i].discountamount=parseFloat(lumpsumm[i].discountamount)-parseFloat(commonsplit[j].CommitmentFeeAnnualfee);
+                  commonsplit[j].CommitmentFeeAnnualfee=0;
+                  }
+                  paidfeesarr.push(commonsplit[j]);
+                  lumpsumm.splice(i,1);
+                }
+                                              
+            }
+            
+        }
+    }    
+    // alert(JSON.stringify(paidfeesarr));
+    for(var i=0;i<lumpsumm.length;i++){
+        for(var j=0;j<paidfeesarr.length;j++){
+            if(lumpsumm[i].admission_no==paidfeesarr[j].admissionno){
+            if(lumpsumm[i].installment=="Installment1"){ 
+                  // if(tempdiscount>0){
+                  if(paidfeesarr[j].Installment1Annualfee>lumpsumm[i].discountamount){
+                  paidfeesarr[j].Installment1Annualfee=parseFloat(paidfeesarr[j].Installment1Annualfee)-parseFloat(lumpsumm[i].discountamount);
+                  lumpsumm[i].discountamount=0;
+                  }
+                  else{
+                  lumpsumm[i].discountamount=parseFloat(lumpsumm[i].discountamount)-parseFloat(paidfeesarr[j].Installment1Annualfee);
+                  paidfeesarr[j].Installment1Annualfee=0;                  
+                  }                  
+                  // }
+                  // if(tempdiscount>0){
+                  if(paidfeesarr[j].Installment2Annualfee>lumpsumm[i].discountamount){
+                  paidfeesarr[j].Installment2Annualfee=parseFloat(paidfeesarr[j].Installment2Annualfee)-parseFloat(lumpsumm[i].discountamount);
+                  lumpsumm[i].discountamount=0
+                  }
+                  else{
+                  lumpsumm[i].discountamount=parseFloat(lumpsumm[i].discountamount)-parseFloat(paidfeesarr[j].Installment2Annualfee);
+                  paidfeesarr[j].Installment2Annualfee=0;                  
+                  }                  
+                  // }
+                  // if(tempdiscount>0){
+                  if(paidfeesarr[j].Installment3Annualfee>lumpsumm[i].discountamount){
+                  paidfeesarr[j].Installment3Annualfee=parseFloat(paidfeesarr[j].Installment3Annualfee)-parseFloat(lumpsumm[i].discountamount);
+                  lumpsumm[i].discountamount=0
+                  }
+                  else{
+                  lumpsumm[i].discountamount=parseFloat(lumpsumm[i].discountamount)-parseFloat(paidfeesarr[j].Installment3Annualfee);
+                  paidfeesarr[j].Installment3Annualfee=0;                  
+                  }                  
+                  }
+              }
+        }
+    }
+    // alert(JSON.stringify(paidfeesarr)); 
+    this.FnUpdateLumpsumpaidfee(paidfeesarr);
     }
     });
   })();
