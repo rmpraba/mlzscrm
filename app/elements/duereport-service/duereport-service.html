@@ -34,12 +34,56 @@
         on-response="insertduereportstructureResponse"
         debounce-duration="300"
         >
+        <iron-ajax
+        method="post"
+        id="duereportupdatepaidfeeajax"
+        url="{{duereportupdatepaidfeeurl}}"
+        params="{{duereportupdatepaidfeeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportupdatepaidfeeResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="duereportactualfeeupdateajax"
+        url="{{duereportactualfeeupdateurl}}"
+        params="{{duereportactualfeeupdateparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportactualfeeupdateResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="duereportdueupdateajax"
+        url="{{duereportdueupdateurl}}"
+        params="{{duereportdueupdateparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportdueupdateResponse"
+        debounce-duration="300"
+        >  
+        <iron-ajax
+        method="post"
+        id="duereportdiscountupdateajax"
+        url="{{duereportdiscountupdateurl}}"
+        params="{{duereportdiscountupdateparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportdiscountupdateResponse"
+        debounce-duration="300"
+        >    
   </template>
   <script>
   (function() {
     'use strict';
      var count1=0;
      var count2=0;
+     var cnt1=0;
+     var cnt2=0;
+     var c1=0;
+     var c2=0;
     Polymer({
       is: 'duereport-service',
 
@@ -117,9 +161,9 @@
           }
         }
 
-        alert(JSON.stringify(bindarr));
+        // alert(JSON.stringify(bindarr));
         this.insertduereportstructureService(bindarr);
-        this.FnFormpaidStructure();
+        // this.FnFormpaidStructure();
         // var arr1=[];
         // var arr2=[];
         // var arr3=[];
@@ -310,94 +354,155 @@
         }
 
         var split=[];
+        var commonsplit=[];
         for(var i=0;i<arr1.length;i++){        
         for(var j=0;j<this.feesplit.length;j++)
-        {       
+        {           
         if(arr1[i].admission_no==this.feesplit[j].admission_no){
-        var a=[];
-        var discount=[];
-        var nameobj={"installment":""};
-        nameobj.admissionno=this.feesplit[j].admission_no;
-        nameobj.studentname=this.feesplit[j].student_name;
-        nameobj.installment=this.feesplit[j].installment; 
+
+        var commonobj={};
+        commonobj.admissionno=this.feesplit[j].admission_no;
+        commonobj.studentname=this.feesplit[j].student_name;
         var amt=0;
-        var actamt=0;
-        var obj={"feetype":"","feetypeamount":""};
-        obj.feetype=this.feesplit[j].feetype;
-        obj.feetypeamount=this.feesplit[j].feetype_amount;
-        a.push(obj);
+        commonobj[((this.feesplit[j].installment).replace(' ',''))+((this.feesplit[j].feetype).replace(' ',''))]=this.feesplit[j].feetype_amount;
         amt=this.feesplit[j].feetype_amount;
         for(var k=j+1;k<this.feesplit.length;k++)
         {
-           if(this.feesplit[j].installment==this.feesplit[k].installment&&this.feesplit[j].admission_no==this.feesplit[k].admission_no)
-           {
-             var obj1={"feetype":"","feetypeamount":""}
-             obj1.feetype=this.feesplit[k].feetype;
-             obj1.feetypeamount=this.feesplit[k].feetype_amount;
-             if(this.feesplit[k].feetype_amount>0)
-             a.push(obj1);
-             amt=parseFloat(amt)+parseFloat(this.feesplit[k].feetype_amount);
-             this.feesplit.splice(k,1);
-             k--;
-           }
-        }
-        nameobj.amount=amt;
-        nameobj.fees=a;
-        split.push(nameobj);
-        a=[];        
-        }
-        }
-        }
-
-        alert(JSON.stringify(split));   
-
-        var bindarr=[];
-
-        if(bindarr.length>0)
-        {
-          for(var j=0;j<split.length;j++){
-              if(split[j].installment=="Commitment Fee"){
-                bindarr[i].actualcommit=split[j].fees;
-              }
-              if(split[j].installment=="Installment1"){
-                bindarr[i].actualins1=split[j].fees;
-              }
-              if(split[j].installment=="Installment2"){
-                bindarr[i].actualins2=split[j].fees;
-              }
-              if(split[j].installment=="Installment3"){
-                bindarr[i].actualins3=split[j].fees;
-              }
+          if(this.feesplit[j].admission_no==this.feesplit[k].admission_no){
+           commonobj[((this.feesplit[k].installment).replace(' ',''))+((this.feesplit[k].feetype).replace(' ',''))]=this.feesplit[k].feetype_amount;
+           amt=parseFloat(amt)+parseFloat(this.feesplit[k].feetype_amount);
+           this.feesplit.splice(k,1);
+           k--;
           }
         }
-        else
-        {
-        for(var i=0;i<bindarr.length;i++){
-
+        commonobj.amount=amt;
+        commonsplit.push(commonobj);     
         }
         }
-
-
-        // for(var i=0;i<bindarr.length;i++){
-          // for(var j=0;j<split.length;j++){
-          //   // if(bindarr[i].admission_no==split[j].admissionno){
-          //     if(split[j].installment=="Commitment Fee"){
-          //       bindarr[i].actualcommit=split[j].fees;
-          //     }
-          //     if(split[j].installment=="Installment1"){
-          //       bindarr[i].actualins1=split[j].fees;
-          //     }
-          //     if(split[j].installment=="Installment2"){
-          //       bindarr[i].actualins2=split[j].fees;
-          //     }
-          //     if(split[j].installment=="Installment3"){
-          //       bindarr[i].actualins3=split[j].fees;
-          //     }
-          //   // }
-          // }
-        // }
-        // alert(JSON.stringify(bindarr));
+        }
+    this.FnUpdateactualfeeService(commonsplit); 
+        // alert(JSON.stringify(arr1));
+        // alert(JSON.stringify(commonsplit));  
+    var paidfeesarr=[];
+    if(commonsplit.length>0){
+    // this.FnUpdatepaidfee(commonsplit);
+    for(var j=0;j<commonsplit.length;j++){    
+    var paidfeesobj={};
+    paidfeesobj.admissionno=commonsplit[j].admissionno;
+    var flag=0;
+    for(var i=0;i<arr1.length;i++){
+    if(arr1[i].admission_no==commonsplit[j].admissionno){
+    flag=1;
+    // alert('coming');
+    if(arr1[i].installment=="Commitment Fee"){
+    paidfeesobj.CommitmentFeeKitfee=commonsplit[j].CommitmentFeeKitfee;
+    paidfeesobj.CommitmentFeeAnnualfee=commonsplit[j].CommitmentFeeAnnualfee;
+    }
+    if(arr1[i].installment=="Installment1"){
+    paidfeesobj.Installment1Annualfee=commonsplit[j].Installment1Annualfee;
+    paidfeesobj.Installment1Tutionfee=commonsplit[j].Installment1Tutionfee;
+    }
+    if(arr1[i].installment=="Installment2"){
+    paidfeesobj.Installment2Annualfee=commonsplit[j].Installment2Annualfee;
+    paidfeesobj.Installment2Tutionfee=commonsplit[j].Installment2Tutionfee;
+    }
+    if(arr1[i].installment=="Installment3"){
+    paidfeesobj.Installment3Annualfee=commonsplit[j].Installment3Annualfee;
+    paidfeesobj.Installment3Tutionfee=commonsplit[j].Installment3Tutionfee;
+    }
+    arr1.splice(i,1);
+    i--;
+    }
+    }
+    if(flag==1)
+    paidfeesarr.push(paidfeesobj);
+    }
+    }
+    // alert(JSON.stringify(paidfeesarr)); 
+    this.FnUpdatepaidfee(paidfeesarr);       
+    },
+    FnUpdateactualfeeService:function(arr){
+        for(var i=0;i<arr.length;i++){
+        count1=arr.length;  
+        this.duereportactualfeeupdateurl=sessionStorage.getItem("addrinfo")+"/duereportactualfeeupdate-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionno=arr[i].admissionno;
+        // obj.studentname=arr[i].studentname;        
+        obj.CommitmentFeeKitfee=arr[i].CommitmentFeeKitfee;
+        obj.CommitmentFeeAnnualfee=arr[i].CommitmentFeeAnnualfee;
+        obj.Installment1Annualfee=arr[i].Installment1Annualfee;
+        obj.Installment1Tutionfee=arr[i].Installment1Tutionfee;
+        obj.Installment2Annualfee=arr[i].Installment2Annualfee;
+        obj.Installment2Tutionfee=arr[i].Installment2Tutionfee;
+        obj.Installment3Annualfee=arr[i].Installment3Annualfee;
+        obj.Installment3Tutionfee=arr[i].Installment3Tutionfee;
+       
+        this.duereportactualfeeupdateparam=obj;
+        this.$.duereportactualfeeupdateajax.generateRequest();
+        }
+    },
+    duereportactualfeeupdateResponse:function(e){
+      count2++;
+      if(count1==count2){
+        alert('Updated!');
+        count1=0;
+        count2=0;
       }
+    },
+    FnUpdatepaidfee:function(arr){
+        // this.admnarr=arr;
+        for(var i=0;i<arr.length;i++){
+        cnt1=arr.length;  
+        this.duereportupdatepaidfeeurl=sessionStorage.getItem("addrinfo")+"/duereportupdatepaidfee-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionno=arr[i].admissionno;
+        // obj.studentname=arr[i].studentname;        
+        obj.CommitmentFeeKitfee=arr[i].CommitmentFeeKitfee;
+        obj.CommitmentFeeAnnualfee=arr[i].CommitmentFeeAnnualfee;
+        obj.Installment1Annualfee=arr[i].Installment1Annualfee;
+        obj.Installment1Tutionfee=arr[i].Installment1Tutionfee;
+        obj.Installment2Annualfee=arr[i].Installment2Annualfee;
+        obj.Installment2Tutionfee=arr[i].Installment2Tutionfee;
+        obj.Installment3Annualfee=arr[i].Installment3Annualfee;
+        obj.Installment3Tutionfee=arr[i].Installment3Tutionfee;
+       
+        this.duereportupdatepaidfeeparam=obj;
+        this.$.duereportupdatepaidfeeajax.generateRequest();
+        }
+    },
+    duereportupdatepaidfeeResponse:function(e){
+      cnt2++;
+      if(cnt1==cnt2){
+        alert('Updated!');
+        cnt1=0;
+        cnt2=0;
+        this.FnduereportdueupdateService();
+      }
+    },
+    FnduereportdueupdateService:function(){
+        this.duereportdueupdateurl=sessionStorage.getItem("addrinfo")+"/duereportdueupdate-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");   
+        this.duereportdueupdateparam=obj;
+        this.$.duereportdueupdateajax.generateRequest();
+    },
+    duereportdueupdateResponse:function(e){
+      alert(e.detail.response.returnval);
+      if(e.detail.response.returnval=="Updated!")
+      this.FnDuereportdiscountupdateService();
+    },
+    FnDuereportdiscountupdateService:function(){
+        this.duereportdiscountupdateurl=sessionStorage.getItem("addrinfo")+"/duereportdiscountupdate-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");   
+        this.duereportdiscountupdateparam=obj;
+        this.$.duereportdiscountupdateajax.generateRequest();
+    },
+    duereportdiscountupdateResponse:function(e){
+        alert(e.detail.response.returnval);
+    }
     });
   })();
   </script>

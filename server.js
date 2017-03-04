@@ -7133,9 +7133,9 @@ app.post('/processreport-service',  urlencodedParser,function (req, res){
     console.log('all grades...................');
 
    if(req.query.type=='All'){
-   var paidqur = "select installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount from "+
+   var paidqur = "select installment,installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag";
+   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag,installment";
    var totalqur = "select * from md_admission pf join fee_master m "+
     "on(pf.admission_year=m.admission_year) where pf.academic_year='"+req.query.academicyear+"' "+
     " and pf.academic_year='"+req.query.academicyear+"' and pf.school_id='"+req.query.schoolid+"' "+
@@ -7144,9 +7144,9 @@ app.post('/processreport-service',  urlencodedParser,function (req, res){
     " group by pf.admission_no";
    }
    if(req.query.type=='New'){
-    var paidqur = "select installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount   from "+
+    var paidqur = "select installment,installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount   from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='New' group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag";
+   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='New' group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag,installment";
    var totalqur = "select * from md_admission pf join fee_master m "+
     "on(pf.admission_year=m.admission_year) where pf.academic_year='"+req.query.academicyear+"' "+
     " and pf.academic_year='"+req.query.academicyear+"' and pf.school_id='"+req.query.schoolid+"' "+
@@ -7155,9 +7155,9 @@ app.post('/processreport-service',  urlencodedParser,function (req, res){
     " group by pf.admission_no";
    }
    if(req.query.type=='Promoted'){
-    var paidqur = "select installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount  from "+
+    var paidqur = "select installment,installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount  from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='Promoted' group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag";
+   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='Promoted' group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag,installment";
    var totalqur = "select * from md_admission pf join fee_master m "+
     "on(pf.admission_year=m.admission_year) where pf.academic_year='"+req.query.academicyear+"' "+
     " and pf.academic_year='"+req.query.academicyear+"' and pf.school_id='"+req.query.schoolid+"' "+
@@ -7174,9 +7174,9 @@ app.post('/processreport-service',  urlencodedParser,function (req, res){
    // var totalqur = "select admission_no,student_name,grade,sum(actual_amount) as actualamount,sum(discount_amount) as discountamount,sum(installment_amount) as payableamount from "+
    // "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and cheque_status not in('bounced') group by school_id,admission_no,student_name,grade";
    if(req.query.type=='All'){
-   var paidqur = "select installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount ,sum(difference_amount) as diffamount from "+
+   var paidqur = "select installment,installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount ,sum(difference_amount) as diffamount from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') group by school_id,admission_no,student_name,grade,,installment_pattern,paymenttype_flag";
+   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') group by school_id,admission_no,student_name,grade,,installment_pattern,paymenttype_flag,installment";
    var totalqur = "select * from md_admission pf join fee_master m "+
     "on(pf.admission_year=m.admission_year) where pf.academic_year='"+req.query.academicyear+"' "+
     " and pf.academic_year='"+req.query.academicyear+"' and pf.school_id='"+req.query.schoolid+"' "+
@@ -7185,9 +7185,9 @@ app.post('/processreport-service',  urlencodedParser,function (req, res){
     " and pf.class_for_admission='"+req.query.grade+"' group by pf.admission_no" ;
    }
    if(req.query.type=='New'){
-   var paidqur = "select installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount  from "+
+   var paidqur = "select installment,installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount  from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='New' group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag";
+   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='New' group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag,installment";
    var totalqur = "select * from md_admission pf join fee_master m "+
     "on(pf.admission_year=m.admission_year) where pf.academic_year='"+req.query.academicyear+"' "+
     " and pf.academic_year='"+req.query.academicyear+"' and pf.school_id='"+req.query.schoolid+"' "+
@@ -7196,9 +7196,9 @@ app.post('/processreport-service',  urlencodedParser,function (req, res){
     " and pf.class_for_admission='"+req.query.grade+"' and admission_status='New' group by pf.admission_no" ;
    }
    if(req.query.type=='Promoted'){
-   var paidqur = "select installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount  from "+
+   var paidqur = "select installment,installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount  from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='Promoted' group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag";
+   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='Promoted' group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag,installment";
    var totalqur = "select * from md_admission pf join fee_master m "+
     "on(pf.admission_year=m.admission_year) where pf.academic_year='"+req.query.academicyear+"' "+
     " and pf.academic_year='"+req.query.academicyear+"' and pf.school_id='"+req.query.schoolid+"' "+
@@ -7253,132 +7253,26 @@ app.post('/processreport-service',  urlencodedParser,function (req, res){
  });
 
 app.post('/duereport-service',  urlencodedParser,function (req, res){
-   console.log('-------------------');
-   console.log(req.query.grade+"   "+req.query.type);
-   if(req.query.grade=='All Grades'){
-    console.log('all grades...................');
-   // var totalqur = "select admission_no,student_name,grade,sum(actual_amount) as actualamount,sum(discount_amount) as discountamount,sum(installment_amount) as payableamount from "+
-   // "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and cheque_status not in('bounced') group by school_id,admission_no,student_name,grade";
-   
-   if(req.query.type=='All'){
-   var paidqur = "select installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount from "+
-   "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag";
-   var totalqur = "select * from md_admission pf join fee_master m "+
-    "on(pf.admission_year=m.admission_year) where pf.academic_year='"+req.query.academicyear+"' "+
-    " and pf.academic_year='"+req.query.academicyear+"' and pf.school_id='"+req.query.schoolid+"' "+
-    " and m.school_id='"+req.query.schoolid+"' and pf.class_for_admission= "+
-    " (select grade_name from grade_master where grade_id=m.grade_id)"+
-    " group by pf.admission_no";
-   }
-   if(req.query.type=='New'){
-    var paidqur = "select installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount   from "+
-   "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='New' group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag";
-   var totalqur = "select * from md_admission pf join fee_master m "+
-    "on(pf.admission_year=m.admission_year) where pf.academic_year='"+req.query.academicyear+"' "+
-    " and pf.academic_year='"+req.query.academicyear+"' and pf.school_id='"+req.query.schoolid+"' "+
-    " and m.school_id='"+req.query.schoolid+"' and pf.class_for_admission= "+
-    " (select grade_name from grade_master where grade_id=m.grade_id) and admission_status='New'"+
-    " group by pf.admission_no";
-   }
-   if(req.query.type=='Promoted'){
-    var paidqur = "select installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount  from "+
-   "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='Promoted' group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag";
-   var totalqur = "select * from md_admission pf join fee_master m "+
-    "on(pf.admission_year=m.admission_year) where pf.academic_year='"+req.query.academicyear+"' "+
-    " and pf.academic_year='"+req.query.academicyear+"' and pf.school_id='"+req.query.schoolid+"' "+
-    " and m.school_id='"+req.query.schoolid+"' and pf.class_for_admission= "+
-    " (select grade_name from grade_master where grade_id=m.grade_id) and admission_status='Promoted'"+
-    " group by pf.admission_no";
-   }
-   var pendingqur = "select admission_no,student_name,grade,sum(installment_amount) as pendingamount from "+
-   "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and paid_status not in "+
-   "('paid','cleared','inprogress') and cheque_status in('bounced','cancelled') group by school_id,admission_no,student_name,grade";
+if(req.query.grade=="All Grades"&&req.query.type=="All")
+  var duequery="SELECT * FROM due_report WHERE school_id='"+req.query.schoolid+"'";
+if(req.query.grade=="All Grades"&&req.query.type!="All")
+  var duequery="SELECT * FROM due_report WHERE school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"'";
+if(req.query.grade!="All Grades"&&req.query.type=="All")
+  var duequery="SELECT * FROM due_report WHERE school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"'";
+if(req.query.grade!="All Grades"&&req.query.type!="All")
+  var duequery="SELECT * FROM due_report WHERE school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and grade='"+req.query.grade+"'";
+
+console.log(duequery);
+  connection.query(duequery,function(err, rows){
+  if(!err){
+    res.status(200).json({'returnval':rows});  
   }
   else{
-    console.log('spec grades...................');
-   // var totalqur = "select admission_no,student_name,grade,sum(actual_amount) as actualamount,sum(discount_amount) as discountamount,sum(installment_amount) as payableamount from "+
-   // "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and cheque_status not in('bounced') group by school_id,admission_no,student_name,grade";
-   if(req.query.type=='All'){
-   var paidqur = "select installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount ,sum(difference_amount) as diffamount from "+
-   "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') group by school_id,admission_no,student_name,grade,,installment_pattern,paymenttype_flag";
-   var totalqur = "select * from md_admission pf join fee_master m "+
-    "on(pf.admission_year=m.admission_year) where pf.academic_year='"+req.query.academicyear+"' "+
-    " and pf.academic_year='"+req.query.academicyear+"' and pf.school_id='"+req.query.schoolid+"' "+
-    " and m.school_id='"+req.query.schoolid+"' and pf.class_for_admission= "+
-    " (select grade_name from grade_master where grade_id=m.grade_id) "+
-    " and pf.class_for_admission='"+req.query.grade+"' group by pf.admission_no" ;
-   }
-   if(req.query.type=='New'){
-   var paidqur = "select installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount  from "+
-   "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='New' group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag";
-   var totalqur = "select * from md_admission pf join fee_master m "+
-    "on(pf.admission_year=m.admission_year) where pf.academic_year='"+req.query.academicyear+"' "+
-    " and pf.academic_year='"+req.query.academicyear+"' and pf.school_id='"+req.query.schoolid+"' "+
-    " and m.school_id='"+req.query.schoolid+"' and pf.class_for_admission= "+
-    " (select grade_name from grade_master where grade_id=m.grade_id) "+
-    " and pf.class_for_admission='"+req.query.grade+"' and admission_status='New' group by pf.admission_no" ;
-   }
-   if(req.query.type=='Promoted'){
-   var paidqur = "select installment_pattern,paymenttype_flag,admission_no,student_name,grade,sum(installment_amount) as paidamount,sum(discount_amount) as discountamount,sum(difference_amount) as diffamount  from "+
-   "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and paid_status in "+
-   "('paid','cleared','inprogress') and cheque_status not in('bounced','cancelled') and admission_status='Promoted' group by school_id,admission_no,student_name,grade,installment_pattern,paymenttype_flag";
-   var totalqur = "select * from md_admission pf join fee_master m "+
-    "on(pf.admission_year=m.admission_year) where pf.academic_year='"+req.query.academicyear+"' "+
-    " and pf.academic_year='"+req.query.academicyear+"' and pf.school_id='"+req.query.schoolid+"' "+
-    " and m.school_id='"+req.query.schoolid+"' and pf.class_for_admission= "+
-    " (select grade_name from grade_master where grade_id=m.grade_id) "+
-    " and pf.class_for_admission='"+req.query.grade+"' and admission_status='Promoted' group by pf.admission_no" ;
-   }
-   var pendingqur = "select admission_no,student_name,grade,sum(installment_amount) as pendingamount from "+
-   "md_student_paidfee where academic_year='"+req.query.academicyear+"' AND school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and  paid_status not in "+
-   "('paid','cleared','inprogress') and cheque_status in('bounced','cancelled') group by school_id,admission_no,student_name,grade";
-   }
-   var feesplitqur="SELECT * FROM md_studwise_fee_splitup WHERE school_id='"+req.query.schoolid+"'";
-   var inssplitqur="SELECT * FROM md_studentwise_installment_splitup WHERE school_id='"+req.query.schoolid+"'";
-   console.log('-----------------------pending fee report--------------------------');
- console.log(totalqur);
- console.log('-------------------------------------------------');
-  console.log(paidqur);
- console.log('-------------------------------------------------');
-  console.log(pendingqur);
- console.log('-------------------------------------------------');
- var totalarr=[];
- var paidarr=[];
- // var pendingarr=[];
- var feesplit=[];
- var inssplit=[];
- var structure=[];
- var gr=[];
-   connection.query(totalqur,function(err, rows){
-       if(!err){         
-          totalarr=rows;
-          connection.query(paidqur,function(err, rows){
-            if(!err){
-              paidarr=rows;
-              connection.query(inssplitqur,function(err, rows){
-              if(!err){
-              inssplit=rows;
-              connection.query(feesplitqur,function(err, rows){
-              if(!err){
-              feesplit=rows;
-              res.status(200).json({'totalarr':totalarr,'paidarr':paidarr,'inssplit':inssplit,'feesplit':feesplit});            
-              }
-              });
-              }
-              });
-              }
-              });
-              }
-              else{
-              console.log(err);
-              }
-              });
- });
+    console.log(err);
+    res.status(200).json({'returnval':'no rows'});
+  }
+  });
+});
 
  
  app.post('/fetchdailycollectiondashboard-service',  urlencodedParser,function (req, res){
@@ -7600,6 +7494,131 @@ app.post('/insertduereportstructure-service',  urlencodedParser,function (req, r
       }
     });
 });
+
+
+app.post('/duereportactualfeeupdate-service',  urlencodedParser,function (req, res){
+  
+        if(req.query.CommitmentFeeKitfee=="undefined")
+        req.query.CommitmentFeeKitfee=0;
+        if(req.query.CommitmentFeeAnnualfee=="undefined")
+        req.query.CommitmentFeeAnnualfee=0;
+        if(req.query.Installment1Annualfee=="undefined")
+        req.query.Installment1Annualfee=0;
+        if(req.query.Installment1Tutionfee=="undefined")
+        req.query.Installment1Tutionfee=0;
+        if(req.query.Installment2Annualfee=="undefined")
+        req.query.Installment2Annualfee=0;
+        if(req.query.Installment2Tutionfee=="undefined")
+        req.query.Installment2Tutionfee=0;
+        if(req.query.Installment3Annualfee=="undefined")
+        req.query.Installment3Annualfee=0;
+        if(req.query.Installment3Tutionfee=="undefined")
+        req.query.Installment3Tutionfee=0;
+        req.query.totalpaidfee=parseFloat(req.query.CommitmentFeeKitfee)+parseFloat(req.query.CommitmentFeeAnnualfee)+parseFloat(req.query.Installment1Annualfee)+parseFloat(req.query.Installment1Tutionfee)+parseFloat(req.query.Installment2Annualfee)+parseFloat(req.query.Installment2Tutionfee)+parseFloat(req.query.Installment3Annualfee)+parseFloat(req.query.Installment3Tutionfee);
+  var response={
+    actcommitkitfee:req.query.CommitmentFeeKitfee,
+    actcommitannualfee:req.query.CommitmentFeeAnnualfee,
+    actins1annualfee:req.query.Installment1Annualfee,
+    actins1tutionfee:req.query.Installment1Tutionfee,
+    actins2annualfee:req.query.Installment2Annualfee,
+    actins2tutionfee:req.query.Installment2Tutionfee,
+    actins3annualfee:req.query.Installment3Annualfee,
+    actins3tutionfee:req.query.Installment3Tutionfee,
+    acttotalpaidfee:req.query.totalpaidfee
+  };
+
+  var schoolid={school_id:req.query.schoolid};
+  var admissionno={admission_no:req.query.admissionno};
+  connection.query("UPDATE due_report set ? WHERE ? and ?",[response,schoolid,admissionno],
+    function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/duereportupdatepaidfee-service',  urlencodedParser,function (req, res){
+  
+        if(req.query.CommitmentFeeKitfee=="undefined")
+        req.query.CommitmentFeeKitfee=0;
+        if(req.query.CommitmentFeeAnnualfee=="undefined")
+        req.query.CommitmentFeeAnnualfee=0;
+        if(req.query.Installment1Annualfee=="undefined")
+        req.query.Installment1Annualfee=0;
+        if(req.query.Installment1Tutionfee=="undefined")
+        req.query.Installment1Tutionfee=0;
+        if(req.query.Installment2Annualfee=="undefined")
+        req.query.Installment2Annualfee=0;
+        if(req.query.Installment2Tutionfee=="undefined")
+        req.query.Installment2Tutionfee=0;
+        if(req.query.Installment3Annualfee=="undefined")
+        req.query.Installment3Annualfee=0;
+        if(req.query.Installment3Tutionfee=="undefined")
+        req.query.Installment3Tutionfee=0;
+        req.query.totalpaidfee=parseFloat(req.query.CommitmentFeeKitfee)+parseFloat(req.query.CommitmentFeeAnnualfee)+parseFloat(req.query.Installment1Annualfee)+parseFloat(req.query.Installment1Tutionfee)+parseFloat(req.query.Installment2Annualfee)+parseFloat(req.query.Installment2Tutionfee)+parseFloat(req.query.Installment3Annualfee)+parseFloat(req.query.Installment3Tutionfee);
+  var response={
+    commitkitfee:req.query.CommitmentFeeKitfee,
+    commitannualfee:req.query.CommitmentFeeAnnualfee,
+    ins1annualfee:req.query.Installment1Annualfee,
+    ins1tutionfee:req.query.Installment1Tutionfee,
+    ins2annualfee:req.query.Installment2Annualfee,
+    ins2tutionfee:req.query.Installment2Tutionfee,
+    ins3annualfee:req.query.Installment3Annualfee,
+    ins3tutionfee:req.query.Installment3Tutionfee,
+    totalpaidfee:req.query.totalpaidfee
+  };
+
+  var schoolid={school_id:req.query.schoolid};
+  var admissionno={admission_no:req.query.admissionno};
+  connection.query("UPDATE due_report set ? WHERE ? and ?",[response,schoolid,admissionno],
+    function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/duereportdueupdate-service',  urlencodedParser,function (req, res){
+
+  var schoolid={school_id:req.query.schoolid};
+
+  var updatequery="UPDATE due_report SET duecommitkitfee=(actcommitkitfee-commitkitfee),duecommitannualfee=(actcommitannualfee-commitannualfee),dueins1annualfee=(actins1annualfee-ins1annualfee),dueins1tutionfee=(actins1tutionfee-ins1tutionfee), "+
+  " dueins2annualfee=(actins2annualfee-ins2annualfee),dueins2tutionfee=(actins2tutionfee-ins2tutionfee),dueins3annualfee=(actins3annualfee-ins3annualfee),dueins3tutionfee=(actins3tutionfee-ins3tutionfee),duetotalpaidfee=(acttotalpaidfee-totalpaidfee) WHERE school_id='"+req.query.schoolid+"'"; 
+
+  connection.query(updatequery,function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+  });
+
+});
+
+app.post('/duereportdiscountupdate-service',  urlencodedParser,function (req, res){
+
+  var schoolid={school_id:req.query.schoolid};
+
+  var updatequery="update mlzscrm.due_report set discountkitfee=(kitfee-(actcommitkitfee)), "+
+  "discountannualfee=(annualfee-(actcommitannualfee+actins1annualfee+actins2annualfee+actins3annualfee)), "+
+  "discounttutionfee=(tutionfee-(actins1tutionfee+actins2tutionfee+actins3tutionfee)),discounttotal=(discountkitfee+discountannualfee+discounttutionfee) WHERE school_id='"+req.query.schoolid+"'";
+  console.log('-----------discount update-------------');
+  console.log(updatequery); 
+  connection.query(updatequery,function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+  });
+
+});
+
+
 
 function setvalue(){
   console.log("calling setvalue.....");

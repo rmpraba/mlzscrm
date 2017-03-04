@@ -46,16 +46,16 @@
     Polymer({
       is: 'lumpsum-fee-component-card',
       ready:function(){
-        this.fetchdiscountpercentageurl=sessionStorage.getItem("addrinfo")+"/fetchdiscountpercentageinfo";
-        var obj={"schoolid":""};
-        obj.schoolid=localStorage.getItem("schoolid");
-        this.fetchdiscountpercentageparam=obj;
-        this.$.fetchdiscountpercentageajax.generateRequest();
+        // this.fetchdiscountpercentageurl=sessionStorage.getItem("addrinfo")+"/fetchdiscountpercentageinfo";
+        // var obj={"schoolid":""};
+        // obj.schoolid=localStorage.getItem("schoolid");
+        // this.fetchdiscountpercentageparam=obj;
+        // this.$.fetchdiscountpercentageajax.generateRequest();
       },
       fetchdiscountpercentageResponse:function(e){
-        var arr=e.detail.response.returnval;
-        if(arr!='0')
-        localStorage.setItem("curr_sess_discountpercentage",arr[0].percentage);
+        // var arr=e.detail.response.returnval;
+        // if(arr!='0')
+        // localStorage.setItem("curr_sess_discountpercentage",arr[0].percentage);
       },
       FnSetTotalFeeInstallment:function(totalfees,totalfeearr,totaldiscountarr){
         var fees="";
