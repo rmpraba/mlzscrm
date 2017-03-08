@@ -1,5 +1,6 @@
 
 <link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\foreports-service\foreports-service.html">
 
 <dom-module id="enquiry-conversion-report">
   <template>
@@ -34,14 +35,19 @@
     </div>
     <div>
     <table class="table table-hover" id="enquiryconversionreport">
-      <thead>
-      <tr>
-
-      </tr>
-      </thead>
       <tbody>
       <template  is="dom-repeat" items="{{conversionarr}}" as="item">
-        <tr><td></td></tr>
+        <tr>
+        <td>{{item.grade}}</td>
+        <td colspan="12">
+          <table width="850px"><tr>
+          <template  is="dom-repeat" items="{{item.count}}" as="i">
+          <td width="70px">{{i.range}}</td>
+          </template>
+          </tr>
+          </table>
+        </td>
+        </tr>
       </template>
       </tbody>
     </table>

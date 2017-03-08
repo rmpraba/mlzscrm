@@ -56,12 +56,42 @@
         >
         <iron-ajax
         method="post"
+        id="duereportupdatelumpsumpaidfeeajax1"
+        url="{{duereportupdatelumpsumpaidfeeurl1}}"
+        params="{{duereportupdatelumpsumpaidfeeparam1}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportupdatelumpsumpaidfeeResponse1"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="duereportupdatelumpsumpaidfeeajax2"
+        url="{{duereportupdatelumpsumpaidfeeurl2}}"
+        params="{{duereportupdatelumpsumpaidfeeparam2}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportupdatelumpsumpaidfeeResponse2"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
         id="duereportactualfeeupdateajax"
         url="{{duereportactualfeeupdateurl}}"
         params="{{duereportactualfeeupdateparam}}"
         handle-as="json"
         content-type="application/json"
         on-response="duereportactualfeeupdateResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="duereportactualfeeupdateajax1"
+        url="{{duereportactualfeeupdateurl1}}"
+        params="{{duereportactualfeeupdateparam1}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportactualfeeupdateResponse1"
         debounce-duration="300"
         >
         <iron-ajax
@@ -93,7 +123,97 @@
         content-type="application/json"
         on-response="duereportdiscountlumpsumupdateResponse"
         debounce-duration="300"
-        >   
+        >  
+        <iron-ajax
+        method="post"
+        id="duereportdiscountlumpsumupdateajax1"
+        url="{{duereportdiscountlumpsumupdateurl1}}"
+        params="{{duereportdiscountlumpsumupdateparam1}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportdiscountlumpsumupdateResponse1"
+        debounce-duration="300"
+        > 
+        <iron-ajax
+        method="post"
+        id="duereportdiscountlumpsumupdateajax2"
+        url="{{duereportdiscountlumpsumupdateurl2}}"
+        params="{{duereportdiscountlumpsumupdateparam2}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportdiscountlumpsumupdateResponse2"
+        debounce-duration="300"
+        >        
+        <iron-ajax
+        method="post"
+        id="fetchfeestructureforcustompatternajax"
+        url="{{fetchfeestructureforcustompatternurl}}"
+        params="{{fetchfeestructureforcustompatternparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeestructureforcustompatternResponse"
+        debounce-duration="300"
+        >  
+        <iron-ajax
+        method="post"
+        id="fetchfeestructureforcustompatternajax1"
+        url="{{fetchfeestructureforcustompatternurl1}}"
+        params="{{fetchfeestructureforcustompatternparam1}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeestructureforcustompatternResponse1"
+        debounce-duration="300"
+        > 
+        <iron-ajax
+        method="post"
+        id="duereportupdatecustomstandardpaidfeeajax"
+        url="{{duereportupdatecustomstandardpaidfeeurl}}"
+        params="{{duereportupdatecustomstandardpaidfeeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportupdatecustomstandardpaidfeeResponse"
+        debounce-duration="300"
+        > 
+        <iron-ajax
+        method="post"
+        id="duereportdueupdatecustomstandardaidfeeajax"
+        url="{{duereportdueupdatecustomstandardaidfeeurl}}"
+        params="{{duereportdueupdatecustomstandardaidfeeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportdueupdatecustomstandardaidfeeResponse"
+        debounce-duration="300"
+        >       
+        <iron-ajax
+        method="post"
+        id="duereportdiscountcustomstandardupdateajax"
+        url="{{duereportdiscountcustomstandardupdateurl}}"
+        params="{{duereportdiscountcustomstandardupdateparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="duereportdiscountcustomstandardupdateResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="updatenonpaidfeeajax"
+        url="{{updatenonpaidfeeurl}}"
+        params="{{updatenonpaidfeeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updatenonpaidfeeResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="updatenonpaidduefeeajax"
+        url="{{updatenonpaidduefeeurl}}"
+        params="{{updatenonpaidduefeeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updatenonpaidduefeeResponse"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
@@ -102,8 +222,13 @@
      var count2=0;
      var cnt1=0;
      var cnt2=0;
+     var cscnt1=0;
+     var cscnt2=0;
      var c1=0;
      var c2=0;
+     var customc1=0;
+     var customc2=0;
+     var localstructure=[];
     Polymer({
       is: 'duereport-service',
 
@@ -180,8 +305,9 @@
             bindarr.push(obj);
           }
         }
+        // this.FnFormpaidStructure();
         // alert(JSON.stringify(bindarr));
-        this.insertduereportstructureService(bindarr);
+                  this.insertduereportstructureService(bindarr);
       },
       insertduereportstructureService:function(structurearr){
         count1=structurearr.length;
@@ -218,8 +344,8 @@
         var arr1=[];
         this.arr2=[];
         this.arr3=[];
-        var arr4=[];
-        var arr5=[];
+        this.arr4=[];
+        this.arr5=[];
         for(var i=0;i<this.paidarr.length;i++){
          if(this.paidarr[i].installment_pattern=="1"&&this.paidarr[i].paymenttype_flag=="0"){
           arr1.push(this.paidarr[i]);
@@ -231,10 +357,10 @@
           this.arr3.push(this.paidarr[i]);
          }
          if(this.paidarr[i].installment_pattern=="1"&&this.paidarr[i].paymenttype_flag=="1"){
-          arr4.push(this.paidarr[i]);
+          this.arr4.push(this.paidarr[i]);
          }
          if(this.paidarr[i].installment_pattern=="3"&&this.paidarr[i].paymenttype_flag=="1"){
-          arr5.push(this.paidarr[i]);
+          this.arr5.push(this.paidarr[i]);
          }
         }
 
@@ -265,9 +391,13 @@
         }
         }
         }
-       this.FnCommitLumpsumHandler();
-    // this.FnLumpsumduehandler();
-    // this.FnUpdateactualfeeService(commonsplit); 
+
+        // this.FnCustomLumpsumHandler();
+        // this.FnCommitLumpsumHandler();
+        // this.FnLumpsumduehandler();
+        // this.FnCustomInstallmentHandler();
+                        localStorage.setItem('installmenttype_flag',1);
+                        this.FnUpdateactualfeeService(commonsplit); 
         // alert(JSON.stringify(arr1));
         // alert(JSON.stringify(commonsplit));  
     var paidfeesarr=[];
@@ -306,6 +436,7 @@
     }
     }
     // alert(JSON.stringify(paidfeesarr)); 
+    this.paidfees=paidfeesarr;
     // this.FnUpdatepaidfee(paidfeesarr);       
     },
     FnUpdateactualfeeService:function(arr){
@@ -324,7 +455,8 @@
         obj.Installment2Tutionfee=arr[i].Installment2Tutionfee;
         obj.Installment3Annualfee=arr[i].Installment3Annualfee;
         obj.Installment3Tutionfee=arr[i].Installment3Tutionfee;
-       
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');
+
         this.duereportactualfeeupdateparam=obj;
         this.$.duereportactualfeeupdateajax.generateRequest();
         }
@@ -332,7 +464,38 @@
     duereportactualfeeupdateResponse:function(e){
       count2++;
       if(count1==count2){
-        alert('Updated!');
+        // alert('Updated!');
+        this.FnUpdatepaidfee(this.paidfees);
+        count1=0;
+        count2=0;
+      }
+    },
+    FnUpdateactualfeeService1:function(arr){
+        for(var i=0;i<arr.length;i++){
+        count1=arr.length;  
+        this.duereportactualfeeupdateurl1=sessionStorage.getItem("addrinfo")+"/duereportactualfeeupdate-service1";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionno=arr[i].admissionno;
+        // obj.studentname=arr[i].studentname;        
+        obj.CommitmentFeeKitfee=arr[i].CommitmentFeeKitfee;
+        obj.CommitmentFeeAnnualfee=arr[i].CommitmentFeeAnnualfee;
+        obj.Installment1Annualfee=arr[i].Installment1Annualfee;
+        obj.Installment1Tutionfee=arr[i].Installment1Tutionfee;
+        obj.Installment2Annualfee=arr[i].Installment2Annualfee;
+        obj.Installment2Tutionfee=arr[i].Installment2Tutionfee;
+        obj.Installment3Annualfee=arr[i].Installment3Annualfee;
+        obj.Installment3Tutionfee=arr[i].Installment3Tutionfee;
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');
+        this.duereportactualfeeupdateparam1=obj;
+        // alert(JSON.stringify(obj));
+        this.$.duereportactualfeeupdateajax1.generateRequest();
+        }
+    },
+    duereportactualfeeupdateResponse1:function(e){
+      count2++;
+      if(count1==count2){
+        // alert('Updated!');
         count1=0;
         count2=0;
       }
@@ -362,7 +525,7 @@
     duereportupdatepaidfeeResponse:function(e){
       cnt2++;
       if(cnt1==cnt2){
-        alert('Updated!');
+        // alert('Updated!');
         cnt1=0;
         cnt2=0;
         this.FnduereportdueupdateService();
@@ -371,24 +534,28 @@
     FnduereportdueupdateService:function(){
         this.duereportdueupdateurl=sessionStorage.getItem("addrinfo")+"/duereportdueupdate-service";
         var obj={"schoolid":""};
-        obj.schoolid=localStorage.getItem("schoolid");   
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');   
         this.duereportdueupdateparam=obj;
         this.$.duereportdueupdateajax.generateRequest();
     },
     duereportdueupdateResponse:function(e){
-      alert(e.detail.response.returnval);
+      // alert(e.detail.response.returnval);
       if(e.detail.response.returnval=="Updated!")
       this.FnDuereportdiscountupdateService();
     },
     FnDuereportdiscountupdateService:function(){
         this.duereportdiscountupdateurl=sessionStorage.getItem("addrinfo")+"/duereportdiscountupdate-service";
         var obj={"schoolid":""};
-        obj.schoolid=localStorage.getItem("schoolid");   
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');  
         this.duereportdiscountupdateparam=obj;
         this.$.duereportdiscountupdateajax.generateRequest();
     },
     duereportdiscountupdateResponse:function(e){
-        alert('first routine over...'+e.detail.response.returnval);
+        alert('routine over...'+e.detail.response.returnval);
+        if(e.detail.response.returnval=='Updated!')
+          this.FnLumpsumduehandler();
     },
     FnLumpsumduehandler:function(){
         var lumpsum=this.arr2;
@@ -425,7 +592,8 @@
         }
         }
         // alert(JSON.stringify(commonsplit));
-        this.FnUpdateactualfeeService(commonsplit);
+        localStorage.setItem('installmenttype_flag',2)
+        this.FnUpdateactualfeeService1(commonsplit);
     var paidfeesarr=[];
     for(var i=0;i<lumpsum.length;i++){
         for(var j=0;j<commonsplit.length;j++){
@@ -499,7 +667,7 @@
         obj.Installment2Tutionfee=arr[i].Installment2Tutionfee;
         obj.Installment3Annualfee=arr[i].Installment3Annualfee;
         obj.Installment3Tutionfee=arr[i].Installment3Tutionfee;
-       
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');
         this.duereportupdatelumpsumpaidfeeparam=obj;
         this.$.duereportupdatelumpsumpaidfeeajax.generateRequest();
         }
@@ -507,7 +675,7 @@
     duereportupdatelumpsumpaidfeeResponse:function(e){
       cnt2++;
       if(cnt1==cnt2){
-        alert('Updated!');
+        // alert('Updated!');
         cnt1=0;
         cnt2=0;
         // this.FnduereportdueupdateService();
@@ -517,12 +685,20 @@
     FnDuereportdiscountlumpsumupdateService:function(){
         this.duereportdiscountlumpsumupdateurl=sessionStorage.getItem("addrinfo")+"/duereportdiscountlumpsumupdate-service";
         var obj={"schoolid":""};
-        obj.schoolid=localStorage.getItem("schoolid");   
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');   
         this.duereportdiscountlumpsumupdateparam=obj;
         this.$.duereportdiscountlumpsumupdateajax.generateRequest();
     },
     duereportdiscountlumpsumupdateResponse:function(e){
-        alert('first routine over...'+e.detail.response.returnval);
+        alert('routine over...'+e.detail.response.returnval);
+        if(e.detail.response.returnval){
+          // if(localStorage.getItem('installmenttype_flag')=='2')
+          this.FnCommitLumpsumHandler();
+          // if(localStorage.getItem('installmenttype_flag')=='3')
+          // this.FnCustomLumpsumHandler();
+          // this.FnCustomInstallmentduehandler();
+        }
     },
     FnCommitLumpsumHandler:function(){
         var lumpsumm=this.arr3;
@@ -535,7 +711,6 @@
                 lumpsum.push(lumpsumm[i]);
             }
         }
-
         for(var i=0;i<lumpsum.length;i++){        
         for(var j=0;j<inssplit.length;j++)
         {           
@@ -566,7 +741,8 @@
         }
         }
         // alert(JSON.stringify(commonsplit));
-        this.FnUpdateactualfeeService(commonsplit);
+        localStorage.setItem('installmenttype_flag',3)
+        this.FnUpdateactualfeeService1(commonsplit);
         // alert(JSON.stringify(this.arr3));
     var paidfeesarr=[];
     for(var i=0;i<lumpsumm.length;i++){
@@ -630,7 +806,431 @@
         }
     }
     // alert(JSON.stringify(paidfeesarr)); 
-    this.FnUpdateLumpsumpaidfee(paidfeesarr);
+    this.FnUpdateLumpsumpaidfee1(paidfeesarr);
+    },
+    FnUpdateLumpsumpaidfee1:function(arr){
+        // this.admnarr=arr;
+        for(var i=0;i<arr.length;i++){
+        cnt1=arr.length;  
+        this.duereportupdatelumpsumpaidfeeurl1=sessionStorage.getItem("addrinfo")+"/duereportupdatelumpsumpaidfee-service1";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionno=arr[i].admissionno;
+        // obj.studentname=arr[i].studentname;        
+        obj.CommitmentFeeKitfee=arr[i].CommitmentFeeKitfee;
+        obj.CommitmentFeeAnnualfee=arr[i].CommitmentFeeAnnualfee;
+        obj.Installment1Annualfee=arr[i].Installment1Annualfee;
+        obj.Installment1Tutionfee=arr[i].Installment1Tutionfee;
+        obj.Installment2Annualfee=arr[i].Installment2Annualfee;
+        obj.Installment2Tutionfee=arr[i].Installment2Tutionfee;
+        obj.Installment3Annualfee=arr[i].Installment3Annualfee;
+        obj.Installment3Tutionfee=arr[i].Installment3Tutionfee;
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');
+        this.duereportupdatelumpsumpaidfeeparam1=obj;
+        this.$.duereportupdatelumpsumpaidfeeajax1.generateRequest();
+        }
+    },
+    duereportupdatelumpsumpaidfeeResponse1:function(e){
+      cnt2++;
+      if(cnt1==cnt2){
+        // alert('Updated!');
+        cnt1=0;
+        cnt2=0;
+        // this.FnduereportdueupdateService();
+        this.FnDuereportdiscountlumpsumupdateService1();
+      }
+    },
+    FnDuereportdiscountlumpsumupdateService1:function(){
+        this.duereportdiscountlumpsumupdateurl1=sessionStorage.getItem("addrinfo")+"/duereportdiscountlumpsumupdate-service1";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');   
+        this.duereportdiscountlumpsumupdateparam1=obj;
+        this.$.duereportdiscountlumpsumupdateajax1.generateRequest();
+    },
+    duereportdiscountlumpsumupdateResponse1:function(e){
+        alert('routine over...'+e.detail.response.returnval);
+        if(e.detail.response.returnval){
+          // if(localStorage.getItem('installmenttype_flag')=='2')
+          // this.FnCommitLumpsumHandler();
+          // if(localStorage.getItem('installmenttype_flag')=='3')
+          this.FnCustomLumpsumHandler();
+          // this.FnCustomInstallmentHandler();
+        }
+    },
+    FnCustomLumpsumHandler:function(){
+      var lumpsum=this.arr5;
+      // alert(JSON.stringify(lumpsum));
+
+      for(var i=0;i<lumpsum.length;i++){
+        var amount=0;
+        amount=amount+parseFloat(lumpsum[i].paidamount);
+        for(var j=i+1;j<lumpsum.length;j++){
+          if(lumpsum[i].admission_no==lumpsum[j].admission_no){
+            amount=amount+parseFloat(lumpsum[j].paidamount);
+            lumpsum.splice(j,1);
+            j--;
+          }
+        }
+        lumpsum[i].paidamount=amount;
+      }
+      this.FnFetchFeeStructureforcustompattern(lumpsum);
+    },
+    FnFetchFeeStructureforcustompattern:function(lumpsum){
+        this.fetchfeestructureforcustompatternurl=sessionStorage.getItem("addrinfo")+"/fetchfeestructureforcustompattern-service";
+        customc1=lumpsum.length;
+        for(var i=0;i<lumpsum.length;i++){
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.admissionno=lumpsum[i].admission_no;   
+        this.fetchfeestructureforcustompatternparam=obj;
+        this.$.fetchfeestructureforcustompatternajax.generateRequest();
+        }
+    },
+    fetchfeestructureforcustompatternResponse:function(e){
+      var admnarr=e.detail.response.admnarr;
+      var splitarr=e.detail.response.splitarr;
+      
+      for(var i=0;i<admnarr.length;i++){
+        var obj={};
+        obj.admissionno=admnarr[i].admission_no;
+        for(var j=0;j<splitarr.length;j++){
+          if(admnarr[i].academic_year==splitarr[j].academic_year&&admnarr[i].admission_year==splitarr[j].admission_year&&admnarr[i].class_for_admission==splitarr[j].gradename){
+            var type=(splitarr[j].base_fee_type).replace(' ','')+(splitarr[j].fee_type).replace(' ','');
+            obj[type]=splitarr[j].amount;
+          }
+        }
+        localstructure.push(obj);
+      }
+      customc2++;
+      // alert(customc1+" "+customc2);
+      if(customc1==customc2){
+        this.FnCustomLumpsumduehandler(localstructure);
+        customc1=0;
+        customc2=0;
+        localstructure=[];
+      }
+      // alert(JSON.stringify(localstructure));
+    },
+    FnCustomLumpsumduehandler:function(localstructure){
+        var lumpsum=this.arr5;
+        
+        var split=[];
+        var commonsplit=localstructure;
+        
+        // alert(JSON.stringify(commonsplit));
+        localStorage.setItem('installmenttype_flag',5)
+        this.FnUpdateactualfeeService1(commonsplit);
+    var paidfeesarr=[];
+    for(var i=0;i<lumpsum.length;i++){
+        for(var j=0;j<commonsplit.length;j++){
+            var tempdiscount=0;
+            if(lumpsum[i].admission_no==commonsplit[j].admissionno){
+                  if(commonsplit[j].CommitmentFeeAnnualfee>lumpsum[i].discountamount){
+                  // alert('in');
+                  commonsplit[j].CommitmentFeeAnnualfee=parseFloat(commonsplit[j].CommitmentFeeAnnualfee)-parseFloat(lumpsum[i].discountamount);
+                  lumpsum[i].discountamount=0;
+                  }
+                  else{
+                  // alert('out'+parseFloat(lumpsum[i].discountamount)+" "+parseFloat(commonsplit[j].CommitmentFeeAnnualfee));
+                  lumpsum[i].discountamount=parseFloat(lumpsum[i].discountamount)-parseFloat(commonsplit[j].CommitmentFeeAnnualfee);
+                  commonsplit[j].CommitmentFeeAnnualfee=0;
+                  // alert(lumpsum[i].discountamount);
+                  // tempdiscount=parseFloat(lumpsum[i].discount_amount)-parseFloat(commonsplit[j].CommitmentFeeAnnualfee);
+                  }
+                  
+                  // if(tempdiscount>0){
+                  if(commonsplit[j].Installment1Annualfee>lumpsum[i].discountamount){
+                  commonsplit[j].Installment1Annualfee=parseFloat(commonsplit[j].Installment1Annualfee)-parseFloat(lumpsum[i].discountamount);
+                  lumpsum[i].discountamount=0
+                  }
+                  else{
+                  lumpsum[i].discountamount=parseFloat(lumpsum[i].discountamount)-parseFloat(commonsplit[j].Installment1Annualfee);
+                  commonsplit[j].Installment1Annualfee=0;                  
+                  }                  
+                  // }
+                  // if(tempdiscount>0){
+                  if(commonsplit[j].Installment2Annualfee>lumpsum[i].discountamount){
+                  commonsplit[j].Installment2Annualfee=parseFloat(commonsplit[j].Installment2Annualfee)-parseFloat(lumpsum[i].discountamount);
+                  lumpsum[i].discountamount=0
+                  }
+                  else{
+                  lumpsum[i].discountamount=parseFloat(lumpsum[i].discountamount)-parseFloat(commonsplit[j].Installment2Annualfee);
+                  commonsplit[j].Installment2Annualfee=0;                  
+                  }                  
+                  // }
+                  // if(tempdiscount>0){
+                  if(commonsplit[j].Installment3Annualfee>lumpsum[i].discountamount){
+                  commonsplit[j].Installment3Annualfee=parseFloat(commonsplit[j].Installment3Annualfee)-parseFloat(lumpsum[i].discountamount);
+                  lumpsum[i].discountamount=0
+                  }
+                  else{
+                  lumpsum[i].discountamount=parseFloat(lumpsum[i].discountamount)-parseFloat(commonsplit[j].Installment3Annualfee);
+                  commonsplit[j].Installment3Annualfee=0;                  
+                  }                  
+                  // }  
+                  paidfeesarr.push(commonsplit[j]);                            
+            }
+            
+        }
+    }    
+    // alert(JSON.stringify(paidfeesarr)); 
+    this.FnUpdateLumpsumpaidfee2(paidfeesarr); 
+    },
+    FnUpdateLumpsumpaidfee2:function(arr){
+        // this.admnarr=arr;
+        for(var i=0;i<arr.length;i++){
+        cnt1=arr.length;  
+        this.duereportupdatelumpsumpaidfeeurl2=sessionStorage.getItem("addrinfo")+"/duereportupdatelumpsumpaidfee-service2";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionno=arr[i].admissionno;
+        // obj.studentname=arr[i].studentname;        
+        obj.CommitmentFeeKitfee=arr[i].CommitmentFeeKitfee;
+        obj.CommitmentFeeAnnualfee=arr[i].CommitmentFeeAnnualfee;
+        obj.Installment1Annualfee=arr[i].Installment1Annualfee;
+        obj.Installment1Tutionfee=arr[i].Installment1Tutionfee;
+        obj.Installment2Annualfee=arr[i].Installment2Annualfee;
+        obj.Installment2Tutionfee=arr[i].Installment2Tutionfee;
+        obj.Installment3Annualfee=arr[i].Installment3Annualfee;
+        obj.Installment3Tutionfee=arr[i].Installment3Tutionfee;
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');
+        this.duereportupdatelumpsumpaidfeeparam2=obj;
+        this.$.duereportupdatelumpsumpaidfeeajax2.generateRequest();
+        }
+    },
+    duereportupdatelumpsumpaidfeeResponse2:function(e){
+      cnt2++;
+      if(cnt1==cnt2){
+        // alert('Updated!');
+        cnt1=0;
+        cnt2=0;
+        // this.FnduereportdueupdateService();
+        this.FnDuereportdiscountlumpsumupdateService2();
+      }
+    },
+    FnDuereportdiscountlumpsumupdateService2:function(){
+        this.duereportdiscountlumpsumupdateurl2=sessionStorage.getItem("addrinfo")+"/duereportdiscountlumpsumupdate-service2";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');   
+        this.duereportdiscountlumpsumupdateparam2=obj;
+        this.$.duereportdiscountlumpsumupdateajax2.generateRequest();
+    },
+    duereportdiscountlumpsumupdateResponse2:function(e){
+        alert('routine over...'+e.detail.response.returnval);
+        if(e.detail.response.returnval){
+          // if(localStorage.getItem('installmenttype_flag')=='2')
+          this.FnCustomInstallmentHandler();
+          // if(localStorage.getItem('installmenttype_flag')=='3')
+          // this.FnCustomLumpsumHandler();
+          // this.FnCustomInstallmentduehandler();
+        }
+    },
+    FnCustomInstallmentHandler:function(){
+      var lumpsum=this.arr4;
+      // alert(JSON.stringify(this.arr4));
+
+      for(var i=0;i<lumpsum.length;i++){
+        var amount=0;
+        amount=amount+parseFloat(lumpsum[i].paidamount);
+        for(var j=i+1;j<lumpsum.length;j++){
+          if(lumpsum[i].admission_no==lumpsum[j].admission_no){
+            amount=amount+parseFloat(lumpsum[j].paidamount);
+            lumpsum.splice(j,1);
+            j--;
+          }
+        }
+        lumpsum[i].paidamount=amount;
+      }
+      this.FnFetchFeeStructureforcustompattern1(lumpsum);
+    },
+    FnFetchFeeStructureforcustompattern1:function(lumpsum){
+        this.fetchfeestructureforcustompatternurl1=sessionStorage.getItem("addrinfo")+"/fetchfeestructureforcustompattern-service1";
+        customc1=lumpsum.length;
+        for(var i=0;i<lumpsum.length;i++){
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.admissionno=lumpsum[i].admission_no;   
+        this.fetchfeestructureforcustompatternparam1=obj;
+        this.$.fetchfeestructureforcustompatternajax1.generateRequest();
+        }
+    },
+    fetchfeestructureforcustompatternResponse1:function(e){
+      var admnarr=e.detail.response.admnarr;
+      var splitarr=e.detail.response.splitarr;
+
+      // alert(JSON.stringify(admnarr));
+      
+      for(var i=0;i<admnarr.length;i++){
+        var obj={};
+        obj.admissionno=admnarr[i].admission_no;
+        for(var j=0;j<splitarr.length;j++){
+          if(admnarr[i].academic_year==splitarr[j].academic_year&&admnarr[i].admission_year==splitarr[j].admission_year&&admnarr[i].class_for_admission==splitarr[j].gradename){
+            var type=(splitarr[j].base_fee_type).replace(' ','')+(splitarr[j].fee_type).replace(' ','');
+            obj[type]=splitarr[j].amount;
+          }
+        }
+        localstructure.push(obj);
+      }
+      customc2++;
+      // alert(customc1+" "+customc2);
+      if(customc1==customc2){
+        // alert(JSON.stringify(localstructure))
+        this.FnCustomInstallmentduehandler(localstructure);
+        customc1=0;
+        customc2=0;
+        localstructure=[];
+      }
+      // alert(JSON.stringify(localstructure));
+    },
+    FnCustomInstallmentduehandler:function(localstructure){
+        var lumpsum=this.arr4;
+        
+        var split=[];
+        var commonsplit=localstructure;
+        
+        // alert(JSON.stringify(commonsplit));
+        localStorage.setItem('installmenttype_flag',4)
+        this.FnUpdateactualfeeService1(commonsplit);
+    var paidfeesarr=[];
+    for(var i=0;i<lumpsum.length;i++){
+        for(var j=0;j<commonsplit.length;j++){
+            var tempdiscount=0;
+            if(lumpsum[i].admission_no==commonsplit[j].admissionno){
+                  if(commonsplit[j].CommitmentFeeAnnualfee>lumpsum[i].discountamount){
+                  // alert('in');
+                  commonsplit[j].CommitmentFeeAnnualfee=parseFloat(commonsplit[j].CommitmentFeeAnnualfee)-parseFloat(lumpsum[i].discountamount);
+                  lumpsum[i].discountamount=0;
+                  }
+                  else{
+                  // alert('out'+parseFloat(lumpsum[i].discountamount)+" "+parseFloat(commonsplit[j].CommitmentFeeAnnualfee));
+                  lumpsum[i].discountamount=parseFloat(lumpsum[i].discountamount)-parseFloat(commonsplit[j].CommitmentFeeAnnualfee);
+                  commonsplit[j].CommitmentFeeAnnualfee=0;
+                  // alert(lumpsum[i].discountamount);
+                  // tempdiscount=parseFloat(lumpsum[i].discount_amount)-parseFloat(commonsplit[j].CommitmentFeeAnnualfee);
+                  }
+                  
+                  // if(tempdiscount>0){
+                  if(commonsplit[j].Installment1Annualfee>lumpsum[i].discountamount){
+                  commonsplit[j].Installment1Annualfee=parseFloat(commonsplit[j].Installment1Annualfee)-parseFloat(lumpsum[i].discountamount);
+                  lumpsum[i].discountamount=0
+                  }
+                  else{
+                  lumpsum[i].discountamount=parseFloat(lumpsum[i].discountamount)-parseFloat(commonsplit[j].Installment1Annualfee);
+                  commonsplit[j].Installment1Annualfee=0;                  
+                  }                  
+                  // }
+                  // if(tempdiscount>0){
+                  if(commonsplit[j].Installment2Annualfee>lumpsum[i].discountamount){
+                  commonsplit[j].Installment2Annualfee=parseFloat(commonsplit[j].Installment2Annualfee)-parseFloat(lumpsum[i].discountamount);
+                  lumpsum[i].discountamount=0
+                  }
+                  else{
+                  lumpsum[i].discountamount=parseFloat(lumpsum[i].discountamount)-parseFloat(commonsplit[j].Installment2Annualfee);
+                  commonsplit[j].Installment2Annualfee=0;                  
+                  }                  
+                  // }
+                  // if(tempdiscount>0){
+                  if(commonsplit[j].Installment3Annualfee>lumpsum[i].discountamount){
+                  commonsplit[j].Installment3Annualfee=parseFloat(commonsplit[j].Installment3Annualfee)-parseFloat(lumpsum[i].discountamount);
+                  lumpsum[i].discountamount=0
+                  }
+                  else{
+                  lumpsum[i].discountamount=parseFloat(lumpsum[i].discountamount)-parseFloat(commonsplit[j].Installment3Annualfee);
+                  commonsplit[j].Installment3Annualfee=0;                  
+                  }                  
+                  // }  
+                  paidfeesarr.push(commonsplit[j]);                            
+            }
+            
+        }
+    }    
+    // alert(JSON.stringify(paidfeesarr)); 
+    this.FnUpdateCustomstandardpaidfee(paidfeesarr); 
+    },
+    FnUpdateCustomstandardpaidfee:function(arr){
+        // this.admnarr=arr;
+        for(var i=0;i<arr.length;i++){
+        cscnt1=arr.length;  
+        this.duereportupdatecustomstandardpaidfeeurl=sessionStorage.getItem("addrinfo")+"/duereportupdatecustomstandardpaidfee-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionno=arr[i].admissionno;
+        // obj.studentname=arr[i].studentname;        
+        obj.CommitmentFeeKitfee=arr[i].CommitmentFeeKitfee;
+        obj.CommitmentFeeAnnualfee=arr[i].CommitmentFeeAnnualfee;
+        obj.Installment1Annualfee=arr[i].Installment1Annualfee;
+        obj.Installment1Tutionfee=arr[i].Installment1Tutionfee;
+        obj.Installment2Annualfee=arr[i].Installment2Annualfee;
+        obj.Installment2Tutionfee=arr[i].Installment2Tutionfee;
+        obj.Installment3Annualfee=arr[i].Installment3Annualfee;
+        obj.Installment3Tutionfee=arr[i].Installment3Tutionfee;
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');
+        this.duereportupdatecustomstandardpaidfeeparam=obj;
+        this.$.duereportupdatecustomstandardpaidfeeajax.generateRequest();
+        }
+    },
+    duereportupdatecustomstandardpaidfeeResponse:function(e){
+      cscnt2++;
+      if(cscnt1==cscnt2){
+        // alert('Updated!');
+        cscnt1=0;
+        cscnt2=0;
+        // this.FnduereportdueupdateService();
+        this.FnDuereportdueupdatecustomstandardaidfeeService();
+        // this.FnDuereportdiscountcustomstandardupdateService();
+      }
+    },
+    FnDuereportdueupdatecustomstandardaidfeeService:function(){
+        this.duereportdueupdatecustomstandardaidfeeurl=sessionStorage.getItem("addrinfo")+"/duereportdueupdatecustomstandardaidfee-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');   
+        this.duereportdueupdatecustomstandardaidfeeparam=obj;
+        this.$.duereportdueupdatecustomstandardaidfeeajax.generateRequest();
+    },
+    duereportdueupdatecustomstandardaidfeeResponse:function(e){
+        alert('routine over...'+e.detail.response.returnval); 
+        if(e.detail.response.returnval=="Updated!")
+          this.FnDuereportdiscountcustomstandardupdateService();
+    },
+    FnDuereportdiscountcustomstandardupdateService:function(){
+        this.duereportdiscountcustomstandardupdateurl=sessionStorage.getItem("addrinfo")+"/duereportdiscountcustomstandardupdate-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');   
+        this.duereportdiscountcustomstandarddateparam=obj;
+        this.$.duereportdiscountcustomstandardupdateajax.generateRequest();
+    },
+    duereportdiscountcustomstandardupdateResponse:function(e){
+        alert('custom discount routine over...'+e.detail.response.returnval);
+        if(e.detail.response.returnval=="Updated!"){
+          // this.FnCustomLumpsumHandler();
+        }
+    },
+    FnUpdatenonpaidfeeService:function(){
+      this.updatenonpaidfeeurl=sessionStorage.getItem("addrinfo")+"/updatenonpaidfee-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");   
+        this.updatenonpaidfeeparam=obj;
+        this.$.updatenonpaidfeeajax.generateRequest();
+    },
+    updatenonpaidfeeResponse:function(e){
+      if(e.detail.response.returnval=='Updated!')
+        this.FnUpdatenonpaidduefeeService();
+    },
+    FnUpdatenonpaidduefeeService:function(){
+      this.updatenonpaidduefeeurl=sessionStorage.getItem("addrinfo")+"/updatenonpaidduefee-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");   
+        this.updatenonpaidduefeeparam=obj;
+        this.$.updatenonpaidduefeeajax.generateRequest();
+    },
+    updatenonpaidduefeeResponse:function(e){
+      alert('Done...'+e.detail.response.returnval);
     }
     });
   })();

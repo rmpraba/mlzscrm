@@ -14,6 +14,16 @@
         on-response="enquiryconversionreportResponse"
         debounce-duration="300"
         > 
+      <iron-ajax
+        method="post"
+        id="enquiryconversionreportajax1"
+        url="{{enquiryconversionreporturl1}}"
+        params="{{enquiryconversionreportparam1}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="enquiryconversionreportResponse1"
+        debounce-duration="300"
+        > 
     </div>
   </template>
   <script>
@@ -21,7 +31,7 @@
     'use strict';
     Polymer({
       is: 'foreports-service',
-      FnFetchEnquiryconversionService:function(){
+      FnFetchEnquiryconversionService:function(academicyear){
         this.enquiryconversionreporturl=sessionStorage.getItem("addrinfo")+"/enquiryconversionreport-service";
         var obj={};
         obj.schoolid=localStorage.getItem("schoolid"); 
@@ -33,82 +43,236 @@
       enquiryconversionreportResponse:function(e){
         var arr=e.detail.response.returnval;
         var gradearr=e.detail.response.gradearr;
-        // alert(JSON.stringify(arr));
-        // alert(JSON.stringify(gradearr));
+
+        var split=[];
         var final=[];
-        if(arr!='no rows'){
-          var split=[];
-          for(var i=0;i<gradearr.length;i++){
+        for(var i=0;i<gradearr.length;i++){
           for(var j=0;j<arr.length;j++){
-            if(arr[j].class==gradearr[i].grade_name)
-            {
-              var flag=0;
-              if(split.length==0){
-              flag=1;
-              var obj={"month":"","grade":"","enquired":"","admitted":""};
+            var commonobj={};
+            var a=[];
+            if(arr[j].class==gradearr[i].grade_name){
+              commonobj.grade=arr[j].class;
+              var obj={};
               obj.month=arr[j].month;
-              obj.grade=arr[j].class;
-              if(arr[j].status=="Enquired")
-              obj.enquired=arr[j].enqcount;
-              if(arr[j].status=="Admitted")
-              obj.admitted=arr[j].enqcount;
-              }
-              else{
-                for(var n=0;n<split.length;n++){
-                  if(arr[j].month==split[n].month&&arr[j].class==split[n].grade){
-                  if(arr[j].status=="Enquired")
-                  split[n].enquired=arr[j].enqcount;
-                  if(arr[j].status=="Admitted"){
-                  if(split[n].enquired=="")
-                  split[n].enquired=0;
-                  split[n].enquired=parseFloat(split[n].enquired)+parseFloat(arr[j].enqcount);                  
-                  split[n].admitted=arr[j].enqcount;
-                  }
-                  }
-                  else if(arr[j].month==split[n].month&&arr[j].class!=split[n].grade){
-                  var obj={"month":"","grade":"","enquired":"","admitted":""};
-                  obj.month=arr[j].month;
-                  obj.grade=arr[j].class;
-                  if(arr[j].status=="Enquired")
-                  obj.enquired=arr[j].enqcount;
-                  if(arr[j].status=="Admitted"){
-                  if(split[n].enquired=="")
-                  split[n].enquired=0;
-                  split[n].enquired=parseFloat(split[n].enquired)+parseFloat(arr[j].enqcount);
-                  obj.admitted=arr[j].enqcount;
-                  }
-                  split.push(obj);     
-                  }
-                  else if(arr[j].month!=split[n].month&&arr[j].class!=split[n].grade){
-                  var obj={"month":"","grade":"","enquired":"","admitted":""};
-                  obj.month=arr[j].month;
-                  obj.grade=arr[j].class;
-                  if(arr[j].status=="Enquired")
-                  obj.enquired=arr[j].enqcount;
-                  if(arr[j].status=="Admitted"){
-                  if(split[n].enquired=="")
-                  split[n].enquired=0;
-                  split[n].enquired=parseFloat(split[n].enquired)+parseFloat(arr[j].enqcount);
-                  obj.admitted=arr[j].enqcount;
-                  }
-                  split.push(obj);     
-                  }
-                }
+              obj.year=arr[j].year;
+              obj.enqcount=arr[j].enqcount;
+              obj.status=arr[j].status;
+              a.push(obj);
+            for(var k=j+1;k<arr.length;k++){
+              if(gradearr[i].grade_name==arr[k].class){
+              var obj1={};
+              obj1.month=arr[k].month;
+              obj1.year=arr[k].year;
+              obj1.enqcount=arr[k].enqcount;
+              obj1.status=arr[k].status;
+              a.push(obj1);
+              arr.splice(k,1);
+              k--;
               }
             }
-            if(flag==1)
-            {
-              split.push(obj);
+            commonobj.gradesplit=a;
+            final.push(commonobj); 
+            }                  
             }
           }
-          // alert(JSON.stringify(split));
-        }
-        alert(JSON.stringify(split));
-        document.querySelector('enquiry-conversion-report').conversionarr=arr;
-        }
-        else{
-        document.querySelector('enquiry-conversion-report').conversionarr=arr;
-        }
+          // alert(JSON.stringify(final));
+         this.overall1=[];
+         for(var i=0;i<final.length;i++){
+          var a=[];
+          for(var j=0;j<final[i].gradesplit.length;j++){
+            var commonobj={};
+            commonobj.grade=final[i].grade;
+            var obj={};
+            obj.month=final[i].gradesplit[j].month;
+            obj.monthyear=final[i].gradesplit[j].month+"/"+final[i].gradesplit[j].year;
+            obj[final[i].gradesplit[j].status]=final[i].gradesplit[j].enqcount;
+            a.push(obj);
+            for(var k=j+1;k<final[i].gradesplit.length;k++){
+              if(final[i].gradesplit[j].grade==final[i].gradesplit[k].grade){
+                var obj1={};
+                obj1.month=final[i].gradesplit[k].month;
+                obj1.monthyear=final[i].gradesplit[k].month+"/"+final[i].gradesplit[k].year;
+                obj1[final[i].gradesplit[k].status]=final[i].gradesplit[k].enqcount;
+                a.push(obj1);
+                final[i].gradesplit.splice(k,1);
+                k--;
+              }
+            }
+            commonobj.count=a;
+            this.overall1.push(commonobj);
+            a=[];
+          }
+         }
+         // alert(JSON.stringify(this.overall1));
+         this.FnFetchEnquiryconversionService1();
+      },
+      FnFetchEnquiryconversionService1:function(){
+        this.enquiryconversionreporturl1=sessionStorage.getItem("addrinfo")+"/enquiryconversionreport-service1";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        // obj.admissionno=localStorage.getItem("curr_sess_enquiryno");
+        this.enquiryconversionreportparam1=obj;              
+        this.$.enquiryconversionreportajax1.generateRequest();
+      },
+      enquiryconversionreportResponse1:function(e){
+        var arr=e.detail.response.returnval;
+        var gradearr=e.detail.response.gradearr;
+
+        var split=[];
+        var final=[];
+        for(var i=0;i<gradearr.length;i++){
+          for(var j=0;j<arr.length;j++){
+            var commonobj={};
+            var a=[];
+            if(arr[j].class==gradearr[i].grade_name){
+              commonobj.grade=arr[j].class;
+              var obj={};
+              obj.month=arr[j].month;
+              obj.year=arr[j].year;
+              obj.enqcount=arr[j].enqcount;
+              obj.status=arr[j].status;
+              a.push(obj);
+            for(var k=j+1;k<arr.length;k++){
+              if(gradearr[i].grade_name==arr[k].class){
+              var obj1={};
+              obj1.month=arr[k].month;
+              obj1.year=arr[k].year;
+              obj1.enqcount=arr[k].enqcount;
+              obj1.status=arr[k].status;
+              a.push(obj1);
+              arr.splice(k,1);
+              k--;
+              }
+            }
+            commonobj.gradesplit=a;
+            final.push(commonobj); 
+            }                  
+            }
+          }
+          // alert(JSON.stringify(final));
+         this.overall2=[];
+         for(var i=0;i<final.length;i++){
+          var a=[];
+          for(var j=0;j<final[i].gradesplit.length;j++){
+            var commonobj={};
+            commonobj.grade=final[i].grade;
+            var obj={};
+            obj.month=final[i].gradesplit[j].month;
+            obj.monthyear=final[i].gradesplit[j].month+"/"+final[i].gradesplit[j].year;
+            obj[final[i].gradesplit[j].status]=final[i].gradesplit[j].enqcount;
+            a.push(obj);
+            for(var k=j+1;k<final[i].gradesplit.length;k++){
+              if(final[i].gradesplit[j].grade==final[i].gradesplit[k].grade){
+                var obj1={};
+                obj1.month=final[i].gradesplit[k].month
+                obj1.monthyear=final[i].gradesplit[k].month+"/"+final[i].gradesplit[k].year;
+                obj1[final[i].gradesplit[k].status]=final[i].gradesplit[k].enqcount;
+                a.push(obj1);
+                final[i].gradesplit.splice(k,1);
+                k--;
+              }
+            }
+            commonobj.count=a;
+            this.overall2.push(commonobj);
+            a=[];
+          }
+         }
+         // alert(JSON.stringify(this.overall2));
+         var month=[{"month":'January',"flag":'1'},{"month":'February',"flag":'2'},{"month":'March',"flag":'3'},{"month":'April',"flag":'4'},{"month":'May',"flag":'5'},{"month":'June',"flag":'6'},{"month":'July',"flag":'7'},{"month":'August',"flag":'8'},{"month":'September',"flag":'9'},{"month":'October',"flag":'10'},{"month":'November',"flag":'11'},{"month":'December',"flag":'12'}]
+         
+         for(var i=0;i<this.overall1.length;i++){
+          for(var k=0;k<month.length;k++){
+            var f=0;
+          for(var j=0;j<this.overall1[i].count.length;j++){
+                        
+              if(this.overall1[i].count[j].month==month[k].month){
+                // alert('coming'+month[k]);
+                 this.overall1[i].count[j].monthflag=month[k].flag;
+                 this.overall1[i].count[j].grade=this.overall1[i].grade;
+                 f=1;            
+              }              
+            }
+            if(f==0){
+                var obj={};
+                obj.monthflag=month[k].flag;
+                obj.grade=this.overall1[i].grade;
+                obj.month=month[k].month;
+                obj.Enquired=0;
+                this.overall1[i].count.push(obj);
+              
+            }
+          }
+         }
+         // alert(JSON.stringify(this.overall1));
+
+
+         for(var i=0;i<this.overall2.length;i++){
+          for(var k=0;k<month.length;k++){
+            var f=0;          
+          for(var j=0;j<this.overall2[i].count.length;j++){
+              
+              if(this.overall2[i].count[j].month==month[k].month){
+                this.overall2[i].count[j].monthflag=month[k].flag;
+                this.overall2[i].count[j].grade=this.overall2[i].grade;
+                 f=1;            
+              }              
+            }
+            if(f==0){
+                var obj={};
+                obj.monthflag=month[k].flag;
+                obj.grade=this.overall2[i].grade;
+                obj.month=month[k].month;
+                obj.Admitted=0;
+                this.overall2[i].count.push(obj);              
+            }
+          }
+         }
+         // alert(JSON.stringify(this.overall2));
+         // for(var i=0;i<this.overall1.length;i++){
+         //  for(var j=0;j<this.overall2.length;j++){
+
+         //  }
+         // }
+
+         // alert(JSON.stringify(this.overall1));
+         // alert(JSON.stringify(this.overall2));
+
+         for(var i=0;i<this.overall1.length;i++){
+          
+          for(var j=0;j<this.overall2.length;j++){
+            for(var x=0;x<this.overall1[i].count.length;x++){
+            for(var y=0;y<this.overall2[j].count.length;y++){
+              if(this.overall1[i].count[x].month==this.overall2[j].count[y].month&&this.overall1[i].count[x].grade==this.overall2[j].count[y].grade){
+              this.overall1[i].count[x].range=parseFloat(this.overall1[i].count[x].Enquired)+parseFloat(this.overall2[j].count[y].Admitted)+" / "+parseFloat(this.overall2[j].count[y].Admitted);
+              this.overall1[i].count[x].Admitted=this.overall2[j].count[y].Admitted;
+              }
+
+            }
+            }
+          }
+          }
+         
+         for(var i=0;i<this.overall1.length;i++){
+           // for(var j=0;j<this.overall1[i].count.length;j++){
+            // var arr=this.overall1[i].count;
+            this.overall1[i].count.sort(function (a, b) {
+            return a.monthflag - b.monthflag;
+            });
+          // }
+         }
+
+         obj={"grade":"Grade","count":[{"range":"January"},{"range":"February"},{"range":"March"},{"range":"April"},{"range":"May"},{"range":"June"},{"range":"July"},{"range":"August"},{"range":"September"},{"range":"October"},{"range":"November"},{"range":"December"}]};
+
+         var finalarr=[];
+         finalarr.push(obj);
+         obj={"grade":"","count":[{"range":"E/A"},{"range":"E/A"},{"range":"E/A"},{"range":"E/A"},{"range":"E/A"},{"range":"E/A"},{"range":"E/A"},{"range":"E/A"},{"range":"E/A"},{"range":"E/A"},{"range":"E/A"},{"range":"E/A"}]};
+         finalarr.push(obj);
+         for(var i=0;i<this.overall1.length;i++){
+          finalarr.push(this.overall1[i]);
+         }
+         // alert(JSON.stringify(this.overall1));
+         document.querySelector('enquiry-conversion-report').conversionarr=finalarr;
       }
     });
   })();

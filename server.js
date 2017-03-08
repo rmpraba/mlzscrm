@@ -7485,6 +7485,8 @@ app.post('/insertduereportstructure-service',  urlencodedParser,function (req, r
     totalfee:req.query.total
   };
 
+  // connection.query("DELETE FROM due_report",function(err, result){
+  // if(!err){
   connection.query("INSERT INTO due_report SET ?",[response],
     function(err, result){
       if(!err){   
@@ -7493,6 +7495,8 @@ app.post('/insertduereportstructure-service',  urlencodedParser,function (req, r
         console.log(err);
       }
     });
+  // }
+  // });
 });
 
 
@@ -7524,7 +7528,8 @@ app.post('/duereportactualfeeupdate-service',  urlencodedParser,function (req, r
     actins2tutionfee:req.query.Installment2Tutionfee,
     actins3annualfee:req.query.Installment3Annualfee,
     actins3tutionfee:req.query.Installment3Tutionfee,
-    acttotalpaidfee:req.query.totalpaidfee
+    acttotalpaidfee:req.query.totalpaidfee,
+    pattern_flag:req.query.installmenttypeflag
   };
 
   var schoolid={school_id:req.query.schoolid};
@@ -7582,6 +7587,52 @@ app.post('/duereportupdatepaidfee-service',  urlencodedParser,function (req, res
     });
 });
 
+
+app.post('/duereportactualfeeupdate-service1',  urlencodedParser,function (req, res){
+  
+        if(req.query.CommitmentFeeKitfee=="undefined")
+        req.query.CommitmentFeeKitfee=0;
+        if(req.query.CommitmentFeeAnnualfee=="undefined")
+        req.query.CommitmentFeeAnnualfee=0;
+        if(req.query.Installment1Annualfee=="undefined")
+        req.query.Installment1Annualfee=0;
+        if(req.query.Installment1Tutionfee=="undefined")
+        req.query.Installment1Tutionfee=0;
+        if(req.query.Installment2Annualfee=="undefined")
+        req.query.Installment2Annualfee=0;
+        if(req.query.Installment2Tutionfee=="undefined")
+        req.query.Installment2Tutionfee=0;
+        if(req.query.Installment3Annualfee=="undefined")
+        req.query.Installment3Annualfee=0;
+        if(req.query.Installment3Tutionfee=="undefined")
+        req.query.Installment3Tutionfee=0;
+        req.query.totalpaidfee=parseFloat(req.query.CommitmentFeeKitfee)+parseFloat(req.query.CommitmentFeeAnnualfee)+parseFloat(req.query.Installment1Annualfee)+parseFloat(req.query.Installment1Tutionfee)+parseFloat(req.query.Installment2Annualfee)+parseFloat(req.query.Installment2Tutionfee)+parseFloat(req.query.Installment3Annualfee)+parseFloat(req.query.Installment3Tutionfee);
+  var response={
+    actcommitkitfee:req.query.CommitmentFeeKitfee,
+    actcommitannualfee:req.query.CommitmentFeeAnnualfee,
+    actins1annualfee:req.query.Installment1Annualfee,
+    actins1tutionfee:req.query.Installment1Tutionfee,
+    actins2annualfee:req.query.Installment2Annualfee,
+    actins2tutionfee:req.query.Installment2Tutionfee,
+    actins3annualfee:req.query.Installment3Annualfee,
+    actins3tutionfee:req.query.Installment3Tutionfee,
+    acttotalpaidfee:req.query.totalpaidfee,
+    pattern_flag:req.query.installmenttypeflag
+  };
+
+  var schoolid={school_id:req.query.schoolid};
+  var admissionno={admission_no:req.query.admissionno};
+  connection.query("UPDATE due_report set ? WHERE ? and ?",[response,schoolid,admissionno],
+    function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
 app.post('/duereportupdatelumpsumpaidfee-service',  urlencodedParser,function (req, res){
   
         if(req.query.CommitmentFeeKitfee=="undefined")
@@ -7634,13 +7685,198 @@ app.post('/duereportupdatelumpsumpaidfee-service',  urlencodedParser,function (r
     });
 });
 
+app.post('/duereportupdatelumpsumpaidfee-service1',  urlencodedParser,function (req, res){
+  
+        if(req.query.CommitmentFeeKitfee=="undefined")
+        req.query.CommitmentFeeKitfee=0;
+        if(req.query.CommitmentFeeAnnualfee=="undefined")
+        req.query.CommitmentFeeAnnualfee=0;
+        if(req.query.Installment1Annualfee=="undefined")
+        req.query.Installment1Annualfee=0;
+        if(req.query.Installment1Tutionfee=="undefined")
+        req.query.Installment1Tutionfee=0;
+        if(req.query.Installment2Annualfee=="undefined")
+        req.query.Installment2Annualfee=0;
+        if(req.query.Installment2Tutionfee=="undefined")
+        req.query.Installment2Tutionfee=0;
+        if(req.query.Installment3Annualfee=="undefined")
+        req.query.Installment3Annualfee=0;
+        if(req.query.Installment3Tutionfee=="undefined")
+        req.query.Installment3Tutionfee=0;
+        req.query.totalpaidfee=parseFloat(req.query.CommitmentFeeKitfee)+parseFloat(req.query.CommitmentFeeAnnualfee)+parseFloat(req.query.Installment1Annualfee)+parseFloat(req.query.Installment1Tutionfee)+parseFloat(req.query.Installment2Annualfee)+parseFloat(req.query.Installment2Tutionfee)+parseFloat(req.query.Installment3Annualfee)+parseFloat(req.query.Installment3Tutionfee);
+  var response={
+    commitkitfee:req.query.CommitmentFeeKitfee,
+    commitannualfee:req.query.CommitmentFeeAnnualfee,
+    ins1annualfee:req.query.Installment1Annualfee,
+    ins1tutionfee:req.query.Installment1Tutionfee,
+    ins2annualfee:req.query.Installment2Annualfee,
+    ins2tutionfee:req.query.Installment2Tutionfee,
+    ins3annualfee:req.query.Installment3Annualfee,
+    ins3tutionfee:req.query.Installment3Tutionfee,
+    totalpaidfee:req.query.totalpaidfee,
+    duecommitkitfee:0,
+    duecommitannualfee:0,
+    dueins1annualfee:0,
+    dueins1tutionfee:0,
+    dueins2annualfee:0,
+    dueins2tutionfee:0,
+    dueins3annualfee:0,
+    dueins3tutionfee:0,
+    duetotalpaidfee:0
+  };
+
+  var schoolid={school_id:req.query.schoolid};
+  var admissionno={admission_no:req.query.admissionno};
+  connection.query("UPDATE due_report set ? WHERE ? and ?",[response,schoolid,admissionno],
+    function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/duereportupdatelumpsumpaidfee-service2',  urlencodedParser,function (req, res){
+  
+        if(req.query.CommitmentFeeKitfee=="undefined")
+        req.query.CommitmentFeeKitfee=0;
+        if(req.query.CommitmentFeeAnnualfee=="undefined")
+        req.query.CommitmentFeeAnnualfee=0;
+        if(req.query.Installment1Annualfee=="undefined")
+        req.query.Installment1Annualfee=0;
+        if(req.query.Installment1Tutionfee=="undefined")
+        req.query.Installment1Tutionfee=0;
+        if(req.query.Installment2Annualfee=="undefined")
+        req.query.Installment2Annualfee=0;
+        if(req.query.Installment2Tutionfee=="undefined")
+        req.query.Installment2Tutionfee=0;
+        if(req.query.Installment3Annualfee=="undefined")
+        req.query.Installment3Annualfee=0;
+        if(req.query.Installment3Tutionfee=="undefined")
+        req.query.Installment3Tutionfee=0;
+        req.query.totalpaidfee=parseFloat(req.query.CommitmentFeeKitfee)+parseFloat(req.query.CommitmentFeeAnnualfee)+parseFloat(req.query.Installment1Annualfee)+parseFloat(req.query.Installment1Tutionfee)+parseFloat(req.query.Installment2Annualfee)+parseFloat(req.query.Installment2Tutionfee)+parseFloat(req.query.Installment3Annualfee)+parseFloat(req.query.Installment3Tutionfee);
+  var response={
+    commitkitfee:req.query.CommitmentFeeKitfee,
+    commitannualfee:req.query.CommitmentFeeAnnualfee,
+    ins1annualfee:req.query.Installment1Annualfee,
+    ins1tutionfee:req.query.Installment1Tutionfee,
+    ins2annualfee:req.query.Installment2Annualfee,
+    ins2tutionfee:req.query.Installment2Tutionfee,
+    ins3annualfee:req.query.Installment3Annualfee,
+    ins3tutionfee:req.query.Installment3Tutionfee,
+    totalpaidfee:req.query.totalpaidfee,
+    duecommitkitfee:0,
+    duecommitannualfee:0,
+    dueins1annualfee:0,
+    dueins1tutionfee:0,
+    dueins2annualfee:0,
+    dueins2tutionfee:0,
+    dueins3annualfee:0,
+    dueins3tutionfee:0,
+    duetotalpaidfee:0
+  };
+
+  var schoolid={school_id:req.query.schoolid};
+  var admissionno={admission_no:req.query.admissionno};
+  connection.query("UPDATE due_report set ? WHERE ? and ?",[response,schoolid,admissionno],
+    function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/duereportupdatecustomstandardpaidfee-service',  urlencodedParser,function (req, res){
+  
+        if(req.query.CommitmentFeeKitfee=="undefined")
+        req.query.CommitmentFeeKitfee=0;
+        if(req.query.CommitmentFeeAnnualfee=="undefined")
+        req.query.CommitmentFeeAnnualfee=0;
+        if(req.query.Installment1Annualfee=="undefined")
+        req.query.Installment1Annualfee=0;
+        if(req.query.Installment1Tutionfee=="undefined")
+        req.query.Installment1Tutionfee=0;
+        if(req.query.Installment2Annualfee=="undefined")
+        req.query.Installment2Annualfee=0;
+        if(req.query.Installment2Tutionfee=="undefined")
+        req.query.Installment2Tutionfee=0;
+        if(req.query.Installment3Annualfee=="undefined")
+        req.query.Installment3Annualfee=0;
+        if(req.query.Installment3Tutionfee=="undefined")
+        req.query.Installment3Tutionfee=0;
+        req.query.totalpaidfee=parseFloat(req.query.CommitmentFeeKitfee)+parseFloat(req.query.CommitmentFeeAnnualfee)+parseFloat(req.query.Installment1Annualfee)+parseFloat(req.query.Installment1Tutionfee)+parseFloat(req.query.Installment2Annualfee)+parseFloat(req.query.Installment2Tutionfee)+parseFloat(req.query.Installment3Annualfee)+parseFloat(req.query.Installment3Tutionfee);
+  var response={
+    commitkitfee:req.query.CommitmentFeeKitfee,
+    commitannualfee:req.query.CommitmentFeeAnnualfee,
+    ins1annualfee:req.query.Installment1Annualfee,
+    ins1tutionfee:req.query.Installment1Tutionfee,
+    ins2annualfee:req.query.Installment2Annualfee,
+    ins2tutionfee:req.query.Installment2Tutionfee,
+    ins3annualfee:req.query.Installment3Annualfee,
+    ins3tutionfee:req.query.Installment3Tutionfee,
+    totalpaidfee:req.query.totalpaidfee
+  };
+
+  var schoolid={school_id:req.query.schoolid};
+  var admissionno={admission_no:req.query.admissionno};
+  connection.query("UPDATE due_report set ? WHERE ? and ?",[response,schoolid,admissionno],
+    function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/duereportdueupdatecustomstandardaidfee-service',  urlencodedParser,function (req, res){
+
+  var schoolid={school_id:req.query.schoolid};
+
+  var updatequery="UPDATE due_report SET duecommitkitfee=(actcommitkitfee-commitkitfee),duecommitannualfee=(actcommitannualfee-commitannualfee),dueins1annualfee=(actins1annualfee-ins1annualfee),dueins1tutionfee=(actins1tutionfee-ins1tutionfee), "+
+  " dueins2annualfee=(actins2annualfee-ins2annualfee),dueins2tutionfee=(actins2tutionfee-ins2tutionfee),dueins3annualfee=(actins3annualfee-ins3annualfee),dueins3tutionfee=(actins3tutionfee-ins3tutionfee),duetotalpaidfee=(acttotalpaidfee-totalpaidfee) WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"'"; 
+
+  connection.query(updatequery,function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+  });
+
+});
+
+
+app.post('/duereportdiscountcustomstandardupdate-service',  urlencodedParser,function (req, res){
+
+  var schoolid={school_id:req.query.schoolid};
+
+  var updatequery="update due_report set discountkitfee=(kitfee-(actcommitkitfee)), "+
+  "discountannualfee=(annualfee-(actcommitannualfee+actins1annualfee+actins2annualfee+actins3annualfee)), "+
+  "discounttutionfee=(tutionfee-(actins1tutionfee+actins2tutionfee+actins3tutionfee)),discounttotal=(discountkitfee+discountannualfee+discounttutionfee) WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"'";
+  console.log('-----------discount update-------------');
+  console.log(updatequery); 
+  connection.query(updatequery,function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+  });
+
+});
+
 
 app.post('/duereportdueupdate-service',  urlencodedParser,function (req, res){
 
   var schoolid={school_id:req.query.schoolid};
 
   var updatequery="UPDATE due_report SET duecommitkitfee=(actcommitkitfee-commitkitfee),duecommitannualfee=(actcommitannualfee-commitannualfee),dueins1annualfee=(actins1annualfee-ins1annualfee),dueins1tutionfee=(actins1tutionfee-ins1tutionfee), "+
-  " dueins2annualfee=(actins2annualfee-ins2annualfee),dueins2tutionfee=(actins2tutionfee-ins2tutionfee),dueins3annualfee=(actins3annualfee-ins3annualfee),dueins3tutionfee=(actins3tutionfee-ins3tutionfee),duetotalpaidfee=(acttotalpaidfee-totalpaidfee) WHERE school_id='"+req.query.schoolid+"'"; 
+  " dueins2annualfee=(actins2annualfee-ins2annualfee),dueins2tutionfee=(actins2tutionfee-ins2tutionfee),dueins3annualfee=(actins3annualfee-ins3annualfee),dueins3tutionfee=(actins3tutionfee-ins3tutionfee),duetotalpaidfee=(acttotalpaidfee-totalpaidfee) WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"'"; 
 
   connection.query(updatequery,function(err, result){
       if(!err){   
@@ -7656,9 +7892,9 @@ app.post('/duereportdiscountupdate-service',  urlencodedParser,function (req, re
 
   var schoolid={school_id:req.query.schoolid};
 
-  var updatequery="update mlzscrm.due_report set discountkitfee=(kitfee-(actcommitkitfee)), "+
+  var updatequery="update due_report set discountkitfee=(kitfee-(actcommitkitfee)), "+
   "discountannualfee=(annualfee-(actcommitannualfee+actins1annualfee+actins2annualfee+actins3annualfee)), "+
-  "discounttutionfee=(tutionfee-(actins1tutionfee+actins2tutionfee+actins3tutionfee)),discounttotal=(discountkitfee+discountannualfee+discounttutionfee) WHERE school_id='"+req.query.schoolid+"'";
+  "discounttutionfee=(tutionfee-(actins1tutionfee+actins2tutionfee+actins3tutionfee)),discounttotal=(discountkitfee+discountannualfee+discounttutionfee) WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"'";
   console.log('-----------discount update-------------');
   console.log(updatequery); 
   connection.query(updatequery,function(err, result){
@@ -7677,12 +7913,130 @@ app.post('/duereportdiscountlumpsumupdate-service',  urlencodedParser,function (
 
   var updatequery="update mlzscrm.due_report set discountkitfee=(kitfee-(commitkitfee)), "+
   "discountannualfee=(annualfee-(commitannualfee+ins1annualfee+ins2annualfee+ins3annualfee)), "+
-  "discounttutionfee=(tutionfee-(ins1tutionfee+ins2tutionfee+ins3tutionfee)),discounttotal=(discountkitfee+discountannualfee+discounttutionfee) WHERE school_id='"+req.query.schoolid+"'";
+  "discounttutionfee=(tutionfee-(ins1tutionfee+ins2tutionfee+ins3tutionfee)),discounttotal=(discountkitfee+discountannualfee+discounttutionfee) WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"'";
   console.log('-----------discount update-------------');
   console.log(updatequery); 
   connection.query(updatequery,function(err, result){
       if(!err){   
         res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+  });
+
+});
+
+app.post('/duereportdiscountlumpsumupdate-service1',  urlencodedParser,function (req, res){
+
+  var schoolid={school_id:req.query.schoolid};
+
+  var updatequery="update mlzscrm.due_report set discountkitfee=(kitfee-(commitkitfee)), "+
+  "discountannualfee=(annualfee-(commitannualfee+ins1annualfee+ins2annualfee+ins3annualfee)), "+
+  "discounttutionfee=(tutionfee-(ins1tutionfee+ins2tutionfee+ins3tutionfee)),discounttotal=(discountkitfee+discountannualfee+discounttutionfee) WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"'";
+  console.log('-----------discount update-------------');
+  console.log(updatequery); 
+  connection.query(updatequery,function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+  });
+
+});
+
+app.post('/duereportdiscountlumpsumupdate-service2',  urlencodedParser,function (req, res){
+
+  var schoolid={school_id:req.query.schoolid};
+
+  var updatequery="update mlzscrm.due_report set discountkitfee=(kitfee-(commitkitfee)), "+
+  "discountannualfee=(annualfee-(commitannualfee+ins1annualfee+ins2annualfee+ins3annualfee)), "+
+  "discounttutionfee=(tutionfee-(ins1tutionfee+ins2tutionfee+ins3tutionfee)),discounttotal=(discountkitfee+discountannualfee+discounttutionfee) WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"'";
+  console.log('-----------discount update-------------');
+  console.log(updatequery); 
+  connection.query(updatequery,function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+  });
+
+});
+
+
+app.post('/updatenonpaidfee-service',  urlencodedParser,function (req, res){
+
+  var schoolid={school_id:req.query.schoolid};
+
+  var updatequery="update mlzscrm.due_report set discountkitfee='0',discountannualfee='0',discounttutionfee='0',discounttotal='0', "+
+  " commitkitfee='0',commitannualfee='0',ins1annualfee='0',ins1tutionfee='0', "+
+  " ins2annualfee='0',ins2tutionfee='0',ins3annualfee='0',ins3tutionfee='0', "+
+  " WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"'";
+  console.log('-----------discount update-------------');
+  console.log(updatequery); 
+  connection.query(updatequery,function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+  });
+
+});
+
+
+app.post('/fetchfeestructureforcustompattern-service',  urlencodedParser,function (req, res){
+
+  var schoolid={school_id:req.query.schoolid};
+
+  var qur1="SELECT * FROM md_admission WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";
+
+  var qur2="SELECT *,(select grade_name from grade_master where grade_id=grade) as gradename FROM mlzscrm.md_fee_splitup_master where school_id='"+req.query.schoolid+"'";
+
+ console.log('-----------custom pattern-------------');
+  console.log(qur1);
+  console.log(qur2);
+  var admnarr=[];
+  var splitarr=[]; 
+  connection.query(qur1,function(err, rows){
+      if(!err){ 
+        admnarr=rows;
+      connection.query(qur2,function(err, rows){
+      if(!err){   
+        splitarr=rows;
+        res.status(200).json({'admnarr': admnarr,'splitarr': splitarr});
+      }
+      });
+      } else {
+        console.log(err);
+      }
+  });
+
+});
+
+app.post('/fetchfeestructureforcustompattern-service1',  urlencodedParser,function (req, res){
+
+  var schoolid={school_id:req.query.schoolid};
+
+  var qur1="SELECT * FROM md_admission WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";
+
+  var qur2="SELECT *,(select grade_name from grade_master where grade_id=grade) as gradename FROM mlzscrm.md_fee_splitup_master where school_id='"+req.query.schoolid+"'";
+
+ console.log('-----------custom pattern-------------');
+  console.log(qur1);
+  console.log(qur2);
+  var admnarr=[];
+  var splitarr=[]; 
+  connection.query(qur1,function(err, rows){
+      if(!err){ 
+        admnarr=rows;
+      connection.query(qur2,function(err, rows){
+      if(!err){   
+        splitarr=rows;
+        res.status(200).json({'admnarr': admnarr,'splitarr': splitarr});
+      }
+      });
       } else {
         console.log(err);
       }
@@ -7698,7 +8052,37 @@ app.post('/enquiryconversionreport-service',  urlencodedParser,function (req, re
   var queryy="SELECT class,MONTHNAME(STR_TO_DATE(enquired_date,'%m/%d/%Y')) as month, "+
   "EXTRACT(YEAR FROM STR_TO_DATE(enquired_date,'%m/%d/%Y')) as year, "+
   "count(enquiry_no) as enqcount,status "+
-  "from mlzscrm.student_enquiry_details where school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' "+
+  "from mlzscrm.student_enquiry_details where status='Enquired' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and enquired_date is not null "+
+  "group by MONTHNAME(STR_TO_DATE(enquired_date,'%m/%d/%Y')),status,class";
+  console.log('-----------enquiry conversion report-------------');
+  console.log(queryy); 
+  var gradearr=[];
+  connection.query(gradequery,function(err, rows){
+  if(!err){
+  gradearr=rows;
+  connection.query(queryy,function(err, rows){
+      if(!err){   
+        res.status(200).json({'gradearr':gradearr,'returnval': rows});
+      } else {
+        console.log(err);
+        res.status(200).json({'returnval': 'no rows'});
+      }
+  });
+  }
+  else{
+    res.status(200).json({'returnval': 'no rows'});
+  }
+  });
+});
+
+app.post('/enquiryconversionreport-service1',  urlencodedParser,function (req, res){
+
+  var schoolid={school_id:req.query.schoolid};
+  var gradequery="SELECT * FROM grade_master";
+  var queryy="SELECT class,MONTHNAME(STR_TO_DATE(enquired_date,'%m/%d/%Y')) as month, "+
+  "EXTRACT(YEAR FROM STR_TO_DATE(enquired_date,'%m/%d/%Y')) as year, "+
+  "count(enquiry_no) as enqcount,status "+
+  "from mlzscrm.student_enquiry_details where status='Admitted' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and enquired_date is not null "+
   "group by MONTHNAME(STR_TO_DATE(enquired_date,'%m/%d/%Y')),status,class";
   console.log('-----------enquiry conversion report-------------');
   console.log(queryy); 
