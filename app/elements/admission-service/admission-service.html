@@ -1344,6 +1344,7 @@ insertstudenthistoryResponse:function(e){
         document.querySelector('fees-card').discountpercent=discountpercent+"%";
         document.querySelector('fees-card').payableamount=payableamount;
         var totaldiscount=parseFloat(discountamt)+(parseFloat(discountpercentamt));
+        // alert(totaldiscount);
         localStorage.setItem("curr_sess_discountpercent",discountpercent);
         localStorage.setItem("curr_sess_payablediscount",totaldiscount);
         localStorage.setItem("curr_sess_payableamount",payableamount);
@@ -1598,6 +1599,7 @@ insertstudenthistoryResponse:function(e){
             for(var j=0;j<discountarr.length;j++){
                 // alert(arr[i].base_fee_type+"  "+arr[i].fee_type+"  "+discountarr[j].fee_type);
                 if(arr[i].base_fee_type=="Commitment Fee"){ 
+                    // alert(arr[i].fee_type+" "+discountarr[j].fee_type);
                     if(arr[i].fee_type==discountarr[j].fee_type){  
                       if(arr[i].amount>0&&discountarr[j].amount>0) {
                       flag=1;                    
@@ -1615,10 +1617,12 @@ insertstudenthistoryResponse:function(e){
 
                       arr[i].actualamount=parseFloat(arr[i].amount);
                       if(localStorage.getItem("curr_sess_alreadypaidflag")==0){
+                      // alert('actual amt display'+arr[i].amount+"  "+discountarr[j].amount);
                       if(arr[i].amount>=discountarr[j].amount){
                         var discountamt=parseFloat(arr[i].amount)-parseFloat(discountarr[j].amount);
                         arr[i].amount=parseFloat(parseFloat(arr[i].amount)-parseFloat(discountarr[j].amount)).toFixed(2);
-                        discountarr[j].amount=discountamt;
+                        discountarr[j].amount=0;
+                        // alert(discountarr[j].amount);
                       }
                       else{
                       if(noofinstallment>1){
@@ -1639,7 +1643,9 @@ insertstudenthistoryResponse:function(e){
                     }
                 }
                 else{
+                    // alert(arr[i].fee_type+"  "+discountarr[j].amount);
                     if(arr[i].fee_type==discountarr[j].fee_type&&discountarr[j].amount>0){
+                        // alert('if...'+discountarr[j].amount);
 
                       for(var n=0;n<inscount.length;n++){
                         if(inscount[n].fee_type==arr[i].fee_type){
