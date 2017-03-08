@@ -472,8 +472,8 @@
         obj.bothworking=bothparentswork;
         obj.guardianwork=guardianwork;
         obj.whoworking=whoworking;
-        var d=new Date();
-        obj.enquirydate=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+        var d=new Date(todate);
+        obj.enquirydate=localStorage.getItem("localsess_enqdate");
        
         // obj.age=ageofyr;
         // alert(localStorage.getItem("curr_sess_referralid"));
