@@ -1019,6 +1019,8 @@
         obj.admissionhistory=admissionhistory;
         obj.age=age;
         obj.referraltype=localStorage.getItem("curr_sess_referralid");
+        var d=new Date();
+        obj.admissiondate=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
         this.insertadmissionparam=obj;
         this.$.insertadmissionajax.generateRequest();
 

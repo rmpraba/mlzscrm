@@ -472,7 +472,9 @@
         obj.bothworking=bothparentswork;
         obj.guardianwork=guardianwork;
         obj.whoworking=whoworking;
-
+        var d=new Date();
+        obj.enquirydate=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+       
         // obj.age=ageofyr;
         // alert(localStorage.getItem("curr_sess_referralid"));
         // if(localStorage.getItem("curr_sess_referralid")=='1'||localStorage.getItem("curr_sess_referralid")=='9'){

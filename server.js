@@ -1694,7 +1694,7 @@ app.post('/insertadmission',  urlencodedParser,function (req, res){
        if(!err){
         connection.query("UPDATE auto_admission_no SET Admission_No='"+new_admission_no+"'",function(err, result){
           if(result.affectedRows>0){
-            connection.query("UPDATE student_enquiry_details SET status='"+status+"' where enquiry_no='"+req.query.enquiryno+"'",function(err, result){
+            connection.query("UPDATE student_enquiry_details SET admitted_date='"+req.query.admissiondate+"',status='"+status+"' where enquiry_no='"+req.query.enquiryno+"'",function(err, result){
               if(result.affectedRows>0){
               connection.query("UPDATE md_student SET admission_no='"+response.admission_no+"' where enquiry_no='"+req.query.enquiryno+"'",function(err, result){
               if(result.affectedRows>0){
@@ -4992,7 +4992,8 @@ app.post('/submitenqdetails',  urlencodedParser,function (req, res){
       age:req.query.ageofyr,
       both_working:req.query.bothworking,
       guard_working:req.query.guardworking,
-      who_works:req.query.whoworking
+      who_works:req.query.whoworking,
+      enquired_date:req.query.enquirydate
     };
 
     connection.query('INSERT INTO student_enquiry_details SET ?',[response],function(err, rows){
