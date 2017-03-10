@@ -181,6 +181,16 @@
         > 
         <iron-ajax
         method="post"
+        id="rtecollectionajax"
+        url="{{rtecollectionurl}}"
+        params="{{rtecollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="rtecollectionResponse"
+        debounce-duration="300"
+        > 
+        <iron-ajax
+        method="post"
         id="fetchnotpaidreportajax"
         url="{{fetchnotpaidreporturl}}"
         params="{{fetchnotpaidreportparam}}"
@@ -1011,6 +1021,49 @@
           arr=[];
           document.querySelector('neevcollection-report').tpcollectionarr=arr;
           document.querySelector('neevcollection-report').totalamount=total;
+        }
+      },
+      FnFetchRTECollectionService:function(grade){
+        this.rtecollectionurl=sessionStorage.getItem("addrinfo")+"/rtecollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        obj.grade=grade;
+        this.rtecollectionparam=obj;
+        this.$.rtecollectionajax.generateRequest();
+      },
+      rtecollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var total=0;
+        var n=0;
+        if(arr!='no rows'){   
+          for(var i=0;i<arr.length;i++){       
+          var dd=new Date(arr[i].installment_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].installment_date=dd2;
+          }
+          for(var i=0;i<arr.length;i++){
+            n=i+1;
+            arr[i].sno=n;
+            total=parseFloat(total)+parseFloat(arr[i].installment_amount);
+          }
+          document.querySelector('rtecollection-report').rtecollectionarr=arr;
+          document.querySelector('rtecollection-report').totalamount=total;
+        }
+        else
+        {
+          arr=[];
+          document.querySelector('rtecollection-report').rtecollectionarr=arr;
+          document.querySelector('rtecollection-report').totalamount=total;
         }
       },
       FnFetchFeeReportService:function(grade){

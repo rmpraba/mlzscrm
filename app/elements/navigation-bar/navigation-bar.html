@@ -448,6 +448,9 @@
             <li id="tpcollectionreport">
             <a href="" aria-hidden="true" on-click="FnTPCollectionReport">Thirdparty Collection</a>
             </li>
+            <li id="rtecollectionreport">
+            <a href="" aria-hidden="true" on-click="FnRTECollectionReport">RTE Collection</a>
+            </li>
             <li id="duechequesreport">
             <a href="" aria-hidden="true" on-click="FnDuechequesReport">Due Cheques</a>
             </li>
@@ -1072,6 +1075,12 @@
           document.querySelector('app-list').setPage("neevcollection-report","Thirdparty Collection");
           document.querySelector('neevcollection-report').FnRefresh();
           document.querySelector('neevcollection-report').FnCallService();
+      },
+      FnRTECollectionReport:function(){
+          this.$.scheduleservice.fetchgradeforreportService();
+          document.querySelector('app-list').setPage("rtecollection-report","RTE Collection");
+          document.querySelector('rtecollection-report').FnRefresh();
+          document.querySelector('rtecollection-report').FnCallService();
       },
       FnFeeCollectionReport:function(){
           this.$.scheduleservice.fetchgradeforreportService();
