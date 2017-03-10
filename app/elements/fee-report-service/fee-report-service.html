@@ -1054,7 +1054,8 @@
           for(var i=0;i<arr.length;i++){
             n=i+1;
             arr[i].sno=n;
-            total=parseFloat(total)+parseFloat(arr[i].installment_amount);
+            arr[i].totalamount=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount)+parseFloat(arr[i].adhoc_discount);
+            total=parseFloat(total)+parseFloat(arr[i].totalamount);
           }
           document.querySelector('rtecollection-report').rtecollectionarr=arr;
           document.querySelector('rtecollection-report').totalamount=total;
