@@ -69,6 +69,16 @@
         on-response="generatefeecodeResponse"
         debounce-duration="300"
         >
+     <iron-ajax
+        method="post"
+        id="generatertefeecodeajax"
+        url="{{generatertefeecodeurl}}"
+        params="{{generatertefeecodeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="generatertefeecodeResponse"
+        debounce-duration="300"
+        >
          <!-- Generate Fee code -->
      <iron-ajax
         method="post"
@@ -78,6 +88,16 @@
         handle-as="json"
         content-type="application/json"
         on-response="createfeecodeResponse"
+        debounce-duration="300"
+        >
+     <iron-ajax
+        method="post"
+        id="creatertefeecodeajax"
+        url="{{creatertefeecodeurl}}"
+        params="{{creatertefeecodeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="creatertefeecodeResponse"
         debounce-duration="300"
         >
      <!-- Generate Fee code splitup-->
@@ -296,6 +316,16 @@
         on-response="fetchfeecodeseqResponse"
         debounce-duration="300"
         >
+    <iron-ajax
+        method="post"
+        id="fetchrtefeecodeseqajax"
+        url="{{fetchrtefeecodesequrl}}"
+        params="{{fetchrtefeecodeseqparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchrtefeecodeseqResponse"
+        debounce-duration="300"
+        >
         <!-- Fetch feecodes-->
      <iron-ajax
         method="post"
@@ -305,6 +335,16 @@
         handle-as="json"
         content-type="application/json"
         on-response="fetchfeecodesResponse"
+        debounce-duration="300"
+        >
+     <iron-ajax
+        method="post"
+        id="fetchrtefeecodesajax"
+        url="{{fetchrtefeecodesurl}}"
+        params="{{fetchrtefeecodesparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchrtefeecodesResponse"
         debounce-duration="300"
         >
            <!-- Fetch discountcode sequence-->
@@ -453,6 +493,7 @@
       },
       fetchgradeResponse:function(e){
         document.querySelector('feetype-schedule-card').gradearr=e.detail.response.returnval;
+        document.querySelector('rtefeetype-schedule-card').gradearr=e.detail.response.returnval;
         document.querySelector('discount-master-card').gradearr=e.detail.response.returnval;
         document.querySelector('fee-structure-schedulecard').gradearr=e.detail.response.returnval;
         document.querySelector('installment-master-card').gradearr=e.detail.response.returnval;
@@ -468,6 +509,7 @@
       },
       fetchacademicyearResponse:function(e){
         document.querySelector('feetype-schedule-card').academicarr=e.detail.response.returnval;
+        document.querySelector('rtefeetype-schedule-card').academicarr=e.detail.response.returnval;
         document.querySelector('discount-master-card').academicarr=e.detail.response.returnval;
         document.querySelector('fee-structure-schedulecard').academicarr=e.detail.response.returnval;
         document.querySelector('installment-master-card').academicarr=e.detail.response.returnval;
@@ -495,6 +537,7 @@
       fetchadmissionyearResponse:function(e){
 
         document.querySelector('feetype-schedule-card').admissionarr=e.detail.response.returnval;
+        document.querySelector('rtefeetype-schedule-card').admissionarr=e.detail.response.returnval;
         document.querySelector('discount-master-card').admissionarr=e.detail.response.returnval;
         document.querySelector('fee-structure-schedulecard').admissionarr=e.detail.response.returnval;
         document.querySelector('installment-master-card').admissionarr=e.detail.response.returnval; 
@@ -516,6 +559,7 @@
       },
       fetchfeetypeResponse:function(e){
         document.querySelector('feetype-schedule-card').feetypearr=e.detail.response.returnval;
+        document.querySelector('rtefeetype-schedule-card').feetypearrr=e.detail.response.returnval;
         document.querySelector('discount-master-card').feetypearr=e.detail.response.returnval;
         document.querySelector('fee-structure-schedulecard').feetypearr=e.detail.response.returnval;
       },
@@ -1364,7 +1408,131 @@
         document.querySelector('fee-structure-schedulecard').FnMakeVisbleInstallmentCard();
         overall=[];
         // alert(JSON.stringify(overall));        
-      }
+      },
+      setRTEFeeTypeInfo:function(schoolname,gradearr,admissionyear,academicyear,feetype,totalfees,feetypeinstallment){   
+        count1=gradearr.length;
+        this.schoolname=schoolname;
+        this.grade=gradearr;
+        this.admissionyear=admissionyear;
+        this.academicyear=academicyear;
+        this.feetype=feetype;
+        this.totalfees=totalfees;
+        this.feetypeinstallment=feetypeinstallment;
+        // this.feename=localStorage.getItem("shortname")+"-Ad"+(admissionyear).substring(3)+"-Ac"+(academicyear).substring(3)+"-"+grade;
+        // this.generatefeecodeService();
+        this.fetchrtefeecodeseqService();
+      },
+      fetchrtefeecodeseqService:function(){
+        this.fetchrtefeecodesequrl=sessionStorage.getItem("addrinfo")+"/fetchrtefeecodeseq-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.prefixid=1;
+        this.fetchrtefeecodeseqparam=obj;
+        this.$.fetchrtefeecodeseqajax.generateRequest();
+      },
+      fetchrtefeecodeseqResponse:function(e){
+        this.sequence=e.detail.response.sequence;
+        this.prefixid=e.detail.response.prefix;
+        // alert(this.sequence+"  "+this.prefixid);
+        this.fetchrtefeecodesService();
+      },
+      fetchrtefeecodesService:function(){
+        this.fetchrtefeecodesurl=sessionStorage.getItem("addrinfo")+"/fetchrtefeecodes-service";
+        var obj={"schoolid":"","admissionyear":"","academicyear":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionyear=this.admissionyear;
+        obj.academicyear=this.academicyear;
+        this.fetchrtefeecodesparam=obj;
+        this.$.fetchrtefeecodesajax.generateRequest();
+      },
+      fetchrtefeecodesResponse:function(e){
+        feecodes=e.detail.response.returnval;
+        // alert(JSON.stringify(feecodes));
+        if(feecodes.length>0){
+        for(var j=0;j<(this.grade).length;j++){
+          var f=0;
+          for(var i=0;i<feecodes.length;i++){          
+          var obj={"grade":"","feecode":"","flag":""};          
+            if(feecodes[i].grade_id==this.grade[j]){
+              f=1;
+              obj.grade=feecodes[i].grade_id;
+              obj.feecode=feecodes[i].fee_code;
+              obj.flag=0;
+              gradearr.push(obj);
+            }
+          }
+          if(f==0)
+          {
+            obj.grade=this.grade[j];
+            obj.feecode=this.prefixid+""+this.sequence;
+            obj.flag=1;
+            this.sequence=parseInt(this.sequence)+1;
+            gradearr.push(obj);
+          }
+        }        
+        }
+        else
+        {
+          for(var j=0;j<(this.grade).length;j++){
+            var obj={"grade":"","feecode":"","flag":""}; 
+            obj.grade=this.grade[j];
+            obj.feecode=this.prefixid+""+this.sequence;
+            obj.flag=1;
+            this.sequence=parseInt(this.sequence)+1;
+            gradearr.push(obj);
+          }
+        }
+        // alert(JSON.stringify(gradearr));
+        if(gradearr.length>0)
+        this.generatertefeecodeService();
+        // else
+        // this.generatertefeecodeService();
+      },
+      generatertefeecodeService:function(){        
+        this.generatertefeecodeurl=sessionStorage.getItem("addrinfo")+"/generatertefeecode-service";
+        var obj={"schoolid":"","prefixid":"","grade":"","admissionyear":"","academicyear":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.newseq=this.sequence;
+        this.generatertefeecodeparam=obj;
+        this.$.generatertefeecodeajax.generateRequest();
+      },
+      generatertefeecodeResponse:function(e){
+        // alert(e.detail.response.returnval);
+        if(e.detail.response.returnval=="done"){
+          this.creatertefeecodeService();
+        }
+      },
+      creatertefeecodeService:function(){
+        this.creatertefeecodeurl=sessionStorage.getItem("addrinfo")+"/creatertefeecode-service";
+        var obj={"schoolid":"","schoolname":"","grade":"","admissionyear":"","academicyear":"","feetype":"","totalfees":"","installment":"","installmentamount":"","installmentdate":"","feecode":"","feename":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.schoolname=this.schoolname;
+        obj.admissionyear=this.admissionyear;
+        obj.academicyear=this.academicyear;
+        // obj.feename=this.feename;
+        obj.feetypeinstallment=this.feetypeinstallment;
+        obj.createdby=localStorage.getItem("employeeid");
+        obj.feetype=this.feetype;
+        obj.totalfees=this.totalfees;
+        count1=gradearr.length;
+        // alert(JSON.stringify(gradearr));
+        for(var i=0;i<gradearr.length;i++){
+          obj.grade=gradearr[i].grade;      
+          obj.feecode=gradearr[i].feecode;                  
+          this.creatertefeecodeparam=obj;
+          this.$.creatertefeecodeajax.generateRequest();
+        }
+      },
+      creatertefeecodeResponse:function(e){
+        count2++;
+        if(count1==count2){
+        alert('Feetype Created!');
+        gradearr=[];
+        document.querySelector('rtefeetype-schedule-card').FnRefresh();
+        count1=0;
+        count2=0;
+        }
+      },
     });
   })();
   </script>

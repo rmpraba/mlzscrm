@@ -1,0 +1,582 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../receiptdatepicker-card/receiptdatepicker-card.html">
+<link rel="import" href="../installment-date-picker/installment-date-picker.html">
+<link rel="import" href="../editreceipt-datepicker/editreceipt-datepicker.html">
+<link rel="import" href="../editcheque-datepicker/editcheque-datepicker.html">
+<dom-module id="rte-installment-card">
+<style type="text/css">
+  .layout{
+    @apply(--layout-horizontal);
+  }
+  receiptdatepicker-card{   margin-top: -2.5%;
+    margin-left: 5%;
+  }
+  #amt{
+    margin-left: 4%;
+    width: 10%;
+  }
+  paper-dropdown-menu{
+    margin-left: 3%;
+    margin-top: -1%;
+    width:15%;
+  }
+  #ins{
+    width: 13%;
+  }
+  #chequeno{
+    margin-left: 4%;
+    width: 7%;
+  }
+  #paymentmode{
+    margin-left: 5%;
+    width: 12%;
+  }
+  #bankname{
+    margin-left: 2%;
+    width:10%;
+  }
+  #paiddate{
+    margin-left: 0%;
+    width: 7%;
+  }
+  #disamt{
+    margin-left: 3%;
+    width: 6%;
+  }
+  #actamt{
+    margin-left: 1%;
+    width: 9%;
+  }
+  #receiptdate{
+    margin-left: 4%;
+    width: 7%;
+  }
+  #inputchequeno{
+    margin-left: 2%;
+    width:8%;
+    text-align: left;
+    margin-top: -1%;
+  }
+  #inputbankname{
+    margin-left: 1.5%;
+    width:10%;
+    margin-top: -1%;
+  }
+  #inputpaiddate{
+    margin-left: 1%;
+    width:6%;
+  }
+  paper-dialog{
+    width: 30%;
+  }
+</style>
+  <template>
+  <div class="layout">
+   <paper-checkbox style="margin-top: 2%;margin-left: -13%;" id="{{installmentid}}"  value="{{studname}}" class="checkbox" disabled$="{{paidflag}}" checked on-change="payinstall"></paper-checkbox>
+   <paper-item hidden>{{installment}}</paper-item>
+   <paper-item id="ins">{{installmenttype}}</paper-item>
+   <paper-input id="actamt" style="margin-top: -1%;" value="{{actualamount}}"></paper-input>
+   <paper-input id="disamt" style="margin-top: -1%;" value="{{discountamount}}"></paper-input>
+   <paper-input id="amt" style="margin-top: -1%;" value="{{amount}}"></paper-input>
+   <!-- <paper-input id="amt" value="{{amount}}" hidden$="{{hiddencommitinput}}" on-change="FnChangeamount"></paper-input> -->
+   <paper-item id="paymentmode" hidden$="{{hiddenflag}}">{{modeofpayment}}</paper-item>
+   <paper-item id="chequeno" hidden$="{{hiddenflag}}">{{chequeno}}</paper-item>
+   <paper-item id="bankname" hidden$="{{hiddenflag}}">{{bankname}}</paper-item>
+   <paper-item id="paiddate" hidden$="{{hiddenflag}}">{{chequedate}}</paper-item>
+   <paper-item id="receiptdate" hidden$="{{hiddenflag}}">{{receiptdate}}</paper-item>
+
+    <paper-dropdown-menu disabled$="{{enable}}" hidden$="{{hiddenpayflag}}" id="{{installmentdate}}"   label="---Select Mode---">
+          <paper-menu class="dropdown-content" id="installmentid" on-iron-select="FnPaymentMode" valueattr="value" >
+            <paper-item value="Cheque" id="{{installment}}">Cheque</paper-item>
+            <paper-item value="Cash" id="{{installment}}">Cash</paper-item>
+            <paper-item value="Card Swipe" id="{{installment}}">Card Swipe</paper-item>
+            <paper-item value="Transfer" id="{{installment}}">Transfer</paper-item>
+            <paper-item value="Third Party" id="{{installment}}">Third Party</paper-item>
+          </paper-menu>
+    </paper-dropdown-menu>  
+
+   <paper-input id="paymentmode" hidden$="{{hiddeninputmodeflag}}">{{modeofpayment}}</paper-input>
+   <paper-input id="inputchequeno" hidden$="{{hiddeninputtflag}}" value="{{chequeno}}"></paper-input>
+   <paper-input id="inputbankname" hidden$="{{hiddeninputtflag}}" value="{{bankname}}"></paper-input>
+   <paper-item id="inputpaiddate" hidden$="{{hiddeninputflag}}" value="{{chequedate}}">{{chequedate}}</paper-item>
+   <editcheque-datepicker showdate="{{chequedate}}" hidden$="{{hiddeninputflag}}"></editcheque-datepicker>
+   <editreceipt-datepicker showdate="{{receiptdate}}" hidden$="{{hiddeninputflag}}" style="width:6%;right:6%;position: absolute;"></editreceipt-datepicker>
+   <paper-input id="paiddate" hidden$="{{hiddeninputflag}}" value="{{chequedate}}"></paper-input>
+   <paper-input id="receiptdate" hidden$="{{hiddeninputflag}}" value="{{receiptdate}}"></paper-input>
+   
+  <span class="panel-icon" style="margin-top: 1.5%;right: 0%;position: absolute;" disabled$="{{paidflag}}" hidden$="{{hiddenflag}}"><a href="" on-click="FnEditPayment" disabled$="{{paidflag}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></span>
+  <span class="panel-icon" style="margin-top: 1.5%;right: 0%;position: absolute;" hidden$="{{hiddeninputflag}}"><a href="" on-click="FnSavePayment"><i class="fa fa-save" aria-hidden="true"></i></a>
+  </span>
+  </div>
+
+    <paper-dialog id="chequeinfo" modal>
+      <h4>ADD CHEQUE DETAILS</h4>
+       <div  class="layout" style='margin-left: 5%;'>
+       <paper-input required allowed-pattern="[0-9a-zA-Z]" error-message="Requires Cheque number!"  id="chequeschoolfeechequeno" label="Enter Cheque Number" value="{{chequeno}}"> 
+       </paper-input></div>
+       <div  class="layout" style='margin-left: 5%;margin-top: -2%;'><paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires bankName!"  id="chequeschoolfeebankname" label="Enter Bank Name" value="{{bankname}}"> </paper-input></div>
+       <div style="width: 68%;margin-top: -2%;margin-left: 3%;"><installment-date-picker editdate="{{editdate}}" showdate="{{installmentdate}}"></installment-date-picker></div>
+       <div style="margin-top: -6%;margin-left: 2%;"><receiptdatepicker-card showdate="{{receiptdate}}"></receiptdatepicker-card></div>
+      <div class="buttons" style="margin-left: -5%;">
+        <paper-button id="{{installment}}" class="btn btn-primary left" on-click="FnAddcheque">Add</paper-button>
+        <paper-button id="{{installment}}"class="btn btn-primary left" on-click="FnCancelcheque">Cancel</paper-button>
+      </div>     
+    </paper-dialog>  
+
+    <paper-dialog id="creditinfo" modal>
+    <h4>ADD CREDIT DETAILS</h4>
+     <div  class="layout" style='margin-left: 5%;'><paper-input required allowed-pattern="[0-9a-zA-Z]" error-message="Requiress Reference number!"  id="creditschoolfeechequeno" label="Enter Reference No:" value="{{chequeno}}"> </paper-input>
+     </div>
+     <div  class="layout" style='margin-left: 5%;margin-top: -2%;'> <paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires BankName!"  id="creditschoolfeebankname" label="Enter the Bank Name" value="{{bankname}}"> </paper-input></div>     
+     <div style="width: 68%;margin-top: -2%;margin-left: 3%;"><installment-date-picker showdate="{{installmentdate}}"></installment-date-picker></div>
+     <div style="margin-top: -6%;margin-left: 2%;"><receiptdatepicker-card showdate="{{receiptdate}}"></receiptdatepicker-card></div>
+    <div class="buttons" style="margin-left: -5%;">
+      <paper-button id="{{installment}}" class="btn btn-primary left" on-click="FnAddcredit">Add</paper-button>
+      <paper-button id="{{installment}}" class="btn btn-primary left" on-click="FnCancelcredit">Cancel</paper-button>
+    </div>     
+    </paper-dialog>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var paymenttype;
+    var installmentarr=[];
+    Polymer({
+      is: 'rte-installment-card',
+      ready:function(){
+        this.flag=0;
+        this.hiddeninputmodeflag=true;
+        this.hiddeninputflag=true;
+        this.hiddeninputtflag=true;
+        this.flag=0;
+        this.chequeno="";
+        localStorage.setItem("curr_sess_waiveoff",0);
+        localStorage.setItem("curr_sess_changeinamountflag",0);
+      },
+      FnPaymentMode:function(e){
+        this.hiddeninputflag=true;
+        if(this.flag==1)
+          this.hiddeninputtflag-true;
+        document.querySelector('#'+this.installmentid).selected=-1;
+        var obj={"installmenttype":"","installment":"","amount":"","waiveoff":"","paymentmode":"","installmentdate":"","receiptdate":"","paiddate":"","paidstatus":""};
+        var f=new Date();
+        var y=f.getFullYear();
+        var m=parseInt(f.getMonth())+1;
+        var d=f.getDate();
+        if(m<10)
+          m="0"+m;
+        if(d<10)
+          d="0"+d;
+        // var current_date=m+"/"+d+"/"+y;
+        var current_date=localStorage.getItem("curr_sess_date");
+        paymenttype = (e.target.selectedItem.textContent).trim();
+        // if(this.installment!='Commitmentfee'||localStorage.getItem("curr_sess_installmentpattern")!='3')
+        document.querySelector('installment-date-picker').FnSetDate(this.installmentdate);
+        // else
+          // alert(current_date);
+        // localStorage.setItem("curr_sess_installmentdate",current_date);
+        // document.querySelector('installment-date-picker').FnSetDate(current_date);        
+
+      
+        if(paymenttype=="Cash"){
+            this.hiddeninputtflag=true; 
+            this.hiddenflag=true;
+          // var installmentarr=[];
+            obj.paymenttype=paymenttype;
+            // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
+            obj.installment=this.installment;
+            obj.installmenttype=this.installmenttype;
+            obj.actualamount=this.actualamount;
+            obj.discountamount=this.discountamount;
+            obj.amount=this.amount;
+            obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
+            obj.paymentmode=paymenttype;
+            obj.installmentdate=this.installmentdate;            
+            obj.paiddate=current_date;
+            // alert(localStorage.getItem("curr_sess_receiptdate"));
+            obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            obj.paidstatus="paid";
+
+            this.modeofpayment=paymenttype;
+            this.bankname="";
+            this.chequeno="";
+            this.chequedate="";
+            this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            this.hiddenflag=false;
+            this.hiddenpayflag=true;
+            this.FnPrepareInstallment(obj);
+            // installmentarr.push(obj);
+            // document.querySelector('fees-card').FnSetfee(installmentarr);      
+        }
+        if(paymenttype=="Third Party"){
+            this.hiddeninputtflag=true; 
+            this.hiddenflag=true;
+          // var installmentarr=[];
+            obj.paymenttype=paymenttype;
+            // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
+            obj.installment=this.installment;
+            obj.installmenttype=this.installmenttype;
+            obj.actualamount=this.actualamount;
+            obj.discountamount=this.discountamount;
+            obj.amount=this.amount;
+            obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
+            obj.paymentmode=paymenttype;
+            obj.installmentdate=this.installmentdate;            
+            obj.paiddate=current_date;
+            // alert(localStorage.getItem("curr_sess_receiptdate"));
+            obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            obj.paidstatus="inprogress";
+
+            this.modeofpayment=paymenttype;
+            this.bankname="";
+            this.chequeno="";
+            this.chequedate="";
+            this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            this.hiddenflag=false;
+            this.hiddenpayflag=true;
+            this.FnPrepareInstallment(obj);
+            // installmentarr.push(obj);
+            // document.querySelector('fees-card').FnSetfee(installmentarr);      
+        }
+        if(paymenttype=="Cheque"){ 
+          this.hiddenflag=true;
+          if(this.flag=1)
+          this.hiddeninputtflag=true;         
+          this.$.chequeinfo.toggle();                               
+        }
+        if(paymenttype=="Transfer"||paymenttype=="Card Swipe"){ 
+          this.hiddenflag=true;
+          if(this.flag=1)
+          this.hiddeninputtflag=true;                  
+          this.$.creditinfo.toggle();                       
+        }
+        document.querySelector('#'+this.installmentid).selected=-1;
+      },
+      FnAddcheque:function(){
+        // var installmentarr=[];
+        // alert(this.chequeno+"  "+(this.chequeno).length);
+        if((this.chequeno).trim()==""||(this.chequeno).trim()==null||this.bankname==""||this.bankname==null){
+          this.$.chequeschoolfeechequeno.validate();
+          this.$.chequeschoolfeebankname.validate();
+        }
+        else{
+        this.$.chequeinfo.toggle();
+        var obj={"installmenttype":"","installment":"","amount":"","waiveoff":"","paymentmode":"","installmentdate":"","receiptdate":"","paiddate":"","paidstatus":""};
+        
+        var f=new Date();
+        var y=f.getFullYear();
+        var m=parseInt(f.getMonth())+1;
+        var d=f.getDate();
+        if(m<10)
+          m="0"+m;
+        if(d<10)
+          d="0"+d;
+        // var current_date=m+"/"+d+"/"+y;
+        var current_date=localStorage.getItem("curr_sess_date"); 
+            obj.paymenttype=paymenttype;
+            // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
+            obj.installment=this.installment;
+            obj.installmenttype=this.installmenttype;
+            obj.amount=this.amount;
+            obj.actualamount=this.actualamount;
+            obj.discountamount=this.discountamount;
+            obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
+            obj.paymentmode=paymenttype;
+            obj.installmentdate=this.installmentdate;
+            obj.chequeno=(this.chequeno).trim();
+            obj.bankname=this.bankname;
+            obj.chequedate=localStorage.getItem("curr_sess_installmentdate");
+            obj.receiveddate=current_date;            
+            obj.chequestatus="inprogress";          
+            obj.paidstatus="paid"; 
+            obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            // alert(localStorage.getItem("curr_sess_receiptdate"));
+
+            this.modeofpayment=paymenttype;
+            this.bankname=this.bankname;
+            this.chequeno=(this.chequeno).trim();
+            this.chequedate=localStorage.getItem("curr_sess_installmentdate");
+            this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            this.hiddenflag=false;
+            this.hiddenpayflag=true;
+            this.FnPrepareInstallment(obj);   
+            // installmentarr.push(obj);
+            // alert(JSON.stringify(installmentarr));
+            // document.querySelector('fees-card').FnSetfee(installmentarr);
+            }  
+      },
+      FnCancelcheque:function(){
+        this.$.chequeinfo.toggle();
+        // document.querySelector('#paymentmodemenu').selected=-1;
+        document.querySelector('#'+this.installmentid).selected=-1;
+      },
+      FnAddcredit:function(){
+        // var installmentarr=[];
+         if((this.chequeno).trim()==""||(this.chequeno).trim()==null||this.bankname==""||this.bankname==null){
+          this.$.creditschoolfeechequeno.validate();
+          this.$.creditschoolfeebankname.validate();
+        }
+        else{
+        this.$.creditinfo.toggle();
+        var obj={"installmenttype":"","installment":"","amount":"","waiveoff":"","paymentmode":"","installmentdate":"","receiptdate":"","paiddate":"","paidstatus":""};
+        
+        var f=new Date();
+        var y=f.getFullYear();
+        var m=parseInt(f.getMonth())+1;
+        var d=f.getDate();
+        if(m<10)
+          m="0"+m;
+        if(d<10)
+          d="0"+d;
+        // var current_date=m+"/"+d+"/"+y; 
+        var current_date=localStorage.getItem("curr_sess_date");
+            obj.paymenttype=paymenttype;       
+            // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
+            obj.installment=this.installment;
+            obj.installmenttype=this.installmenttype;
+            obj.amount=this.amount;
+            obj.actualamount=this.actualamount;
+            obj.discountamount=this.discountamount;
+            obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
+            obj.paymentmode=paymenttype;
+            obj.installmentdate=this.installmentdate;
+            obj.referenceno=this.chequeno;
+            obj.bankname=this.bankname;            
+            obj.receiveddate=localStorage.getItem("curr_sess_installmentdate");   
+            obj.paiddate=localStorage.getItem("curr_sess_chequedate");
+            obj.chequedate=localStorage.getItem("curr_sess_installmentdate");            
+            obj.paidstatus="paid";
+            obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            // alert(localStorage.getItem("curr_sess_receiptdate"));
+            this.modeofpayment=paymenttype;
+            this.bankname=this.bankname;
+            this.chequeno=(this.chequeno).trim();
+            this.chequedate=localStorage.getItem("curr_sess_installmentdate");
+            this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            this.hiddenflag=false;
+            this.hiddenpayflag=true;         
+            this.FnPrepareInstallment(obj);   
+            // installmentarr.push(obj);
+            // alert(JSON.stringify(installmentarr));
+            // document.querySelector('fees-card').FnSetfee(installmentarr);  
+          }
+      },
+      FnCancelcredit:function(){
+        this.$.creditinfo.toggle();
+        // document.querySelector('#paymentmodemenu').selected=-1;
+        document.querySelector('#'+this.installmentid).selected=-1;
+      },
+      
+      FnPrepareInstallment:function(obj){        
+        for(var i=0;i<installmentarr.length;i++){
+          if(installmentarr[i].installment==obj.installment){
+            installmentarr.splice(i,1);
+          }
+        }
+        installmentarr.push(obj);
+        // alert(JSON.stringify(installmentarr));
+        document.querySelector('rtefee-card').FnSetfee(installmentarr); 
+      },
+      FnRefresh:function(){
+        installmentarr=[];
+      },
+      FnEditPayment:function(){
+        this.flag=1;
+        if(this.modeofpayment!='Cash'){
+        this.hiddeninputflag=false;
+        this.hiddeninputtflag=false;
+        this.hiddenpayflag=false;
+        this.hiddenflag=true;
+        }
+        else{
+        this.hiddeninputflag=false;
+        this.hiddeninputtflag=true;
+        this.hiddenpayflag=false;
+        this.hiddenflag=true; 
+        }
+      },
+      FnSavePayment:function(){
+        // alert(this.modeofpayment);
+        this.hiddeninputflag=true;
+        this.hiddenflag=false;
+        this.hiddenpayflag=true;
+        if(this.flag==1)
+          this.hiddeninputtflag=true;
+        document.querySelector('#'+this.installmentid).selected=-1;
+        var obj={"installmenttype":"","installment":"","amount":"","waiveoff":"","paymentmode":"","installmentdate":"","receiptdate":"","paiddate":"","paidstatus":""};
+        // paymenttype = (e.target.selectedItem.textContent).trim();
+        // document.querySelector('receiptdatepicker-card').setinstalldate(this.installmentdate);
+        var f=new Date();
+        var y=f.getFullYear();
+        var m=parseInt(f.getMonth())+1;
+        var d=f.getDate();
+        if(m<10)
+          m="0"+m;
+        if(d<10)
+          d="0"+d;
+        // var current_date=m+"/"+d+"/"+y;
+        var current_date=localStorage.getItem("curr_sess_date");
+      
+        if(paymenttype=="Cash"){
+            this.hiddeninputtflag=true; 
+            this.hiddenflag=false;
+
+            this.modeofpayment=paymenttype;
+            this.bankname="";
+            this.chequeno="";
+            this.chequedate="";
+            this.receiptdate=current_date;
+            this.hiddenflag=false;
+            this.hiddenpayflag=true;
+          // var installmentarr=[];
+            obj.paymenttype=paymenttype;
+            // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
+            obj.installment=this.installment;
+            obj.installmenttype=this.installmenttype;
+            obj.actualamount=this.actualamount;
+            obj.discountamount=this.discountamount;
+            obj.amount=this.amount;
+            obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
+            obj.paymentmode=paymenttype;
+            obj.installmentdate=this.installmentdate;            
+            obj.paiddate=current_date;
+            obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            obj.paidstatus="paid";
+
+            
+            this.FnPrepareInstallment(obj);
+            // installmentarr.push(obj);
+            // document.querySelector('fees-card').FnSetfee(installmentarr);      
+        }
+        if(paymenttype=="Third Party"){
+            this.hiddeninputtflag=true; 
+            this.hiddenflag=false;
+
+            this.modeofpayment=paymenttype;
+            this.bankname="";
+            this.chequeno="";
+            this.chequedate="";
+            this.receiptdate=current_date;
+            this.hiddenflag=false;
+            this.hiddenpayflag=true;
+          // var installmentarr=[];
+            obj.paymenttype=paymenttype;
+            // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
+            obj.installment=this.installment;
+            obj.installmenttype=this.installmenttype;
+            obj.actualamount=this.actualamount;
+            obj.discountamount=this.discountamount;
+            obj.amount=this.amount;
+            obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
+            obj.paymentmode=paymenttype;
+            obj.installmentdate=this.installmentdate;            
+            obj.paiddate=current_date;
+            obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            obj.paidstatus="inprogress";
+
+            
+            this.FnPrepareInstallment(obj);
+            // installmentarr.push(obj);
+            // document.querySelector('fees-card').FnSetfee(installmentarr);      
+        }
+        if(paymenttype=="Cheque"){ 
+          // alert('coming');
+          this.hiddenflag=false;
+          if(this.flag=1)
+          this.hiddeninputtflag=true;         
+          // this.$.chequeinfo.toggle(); 
+          var obj={"installmenttype":"","installment":"","amount":"","waiveoff":"","paymentmode":"","installmentdate":"","receiptdate":"","paiddate":"","paidstatus":""};
+        
+        var f=new Date();
+        var y=f.getFullYear();
+        var m=parseInt(f.getMonth())+1;
+        var d=f.getDate();
+        if(m<10)
+          m="0"+m;
+        if(d<10)
+          d="0"+d;
+        // var current_date=m+"/"+d+"/"+y; 
+        var current_date=localStorage.getItem("curr_sess_date");
+            this.modeofpayment=paymenttype;
+            this.bankname=this.bankname;
+            this.chequeno=(this.chequeno).trim();
+            this.chequedate=localStorage.getItem("curr_sess_installmentdate");
+            this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            this.hiddenflag=false;
+            this.hiddenpayflag=true;
+            obj.paymenttype=paymenttype;
+            // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
+            obj.installment=this.installment;
+            obj.installmenttype=this.installmenttype;
+            obj.amount=this.amount;
+            obj.actualamount=this.actualamount;
+            obj.discountamount=this.discountamount;
+            obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
+            obj.paymentmode=paymenttype;
+            obj.installmentdate=this.installmentdate;
+            obj.chequeno=(this.chequeno).trim();
+            obj.bankname=this.bankname;
+            obj.chequedate=localStorage.getItem("curr_sess_installmentdate");
+            obj.receiveddate=current_date;            
+            obj.chequestatus="inprogress";          
+            obj.paidstatus="paid"; 
+            obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            // alert(localStorage.getItem("curr_sess_receiptdate"));
+
+           
+            this.FnPrepareInstallment(obj);                                 
+        }
+        if(paymenttype=="Transfer"||paymenttype=="Card Swipe"){ 
+          this.hiddenflag=false;
+          if(this.flag=1)
+          this.hiddeninputtflag=true;                  
+          // this.$.creditinfo.toggle(); 
+          // this.$.creditinfo.toggle();
+        var obj={"installmenttype":"","installment":"","amount":"","waiveoff":"","paymentmode":"","installmentdate":"","receiptdate":"","paiddate":"","paidstatus":""};
+        
+        var f=new Date();
+        var y=f.getFullYear();
+        var m=parseInt(f.getMonth())+1;
+        var d=f.getDate();
+        if(m<10)
+          m="0"+m;
+        if(d<10)
+          d="0"+d;
+        // var current_date=m+"/"+d+"/"+y; 
+        var current_date=localStorage.getItem("curr_sess_date");
+            this.modeofpayment=paymenttype;
+            this.bankname=this.bankname;
+            this.chequeno=(this.chequeno).trim();
+            this.chequedate=localStorage.getItem("curr_sess_installmentdate");
+            this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            this.hiddenflag=false;
+            this.hiddenpayflag=true;
+            obj.paymenttype=paymenttype;       
+            // obj.installmenttype=localStorage.getItem("curr_sess_feetype");
+            obj.installment=this.installment;
+            obj.installmenttype=this.installmenttype;
+            obj.amount=this.amount;
+            obj.actualamount=this.actualamount;
+            obj.discountamount=this.discountamount;
+            obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
+            obj.paymentmode=paymenttype;
+            obj.installmentdate=this.installmentdate;
+            obj.referenceno=this.chequeno;
+            obj.bankname=this.bankname;            
+            obj.receiveddate=localStorage.getItem("curr_sess_installmentdate");   
+            obj.paiddate=localStorage.getItem("curr_sess_chequedate");
+            obj.chequedate=localStorage.getItem("curr_sess_installmentdate");            
+            obj.paidstatus="paid";
+            obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            // alert(localStorage.getItem("curr_sess_receiptdate"));
+                     
+            this.FnPrepareInstallment(obj);                         
+        }
+        document.querySelector('#'+this.installmentid).selected=-1;
+      }
+    });
+  })();
+  </script>
+</dom-module>

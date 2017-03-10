@@ -1,0 +1,797 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\..\bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="..\..\bower_components/paper-button/paper-button.html">
+<link rel="import" href="..\admission-service/admission-service.html">
+<link rel="import" href="..\installment-card/installment-card.html">
+<link rel="import" href="..\fees-service/fees-service.html">
+<link rel="import" href="..\appregfee-service/appregfee-service.html">
+<link rel="import" href="..\rte-installment-card/rte-installment-card.html">
+<link rel="import" href="..\rte-fee-service/rte-fee-service.html">
+<dom-module id="rtefee-card">
+<style>
+  .horizontalframe,.inshead{
+     @apply(--layout-horizontal);
+  }
+  .cb{
+    @apply(--layout-horizontal);
+  }
+  .inshead{
+    @apply(--layout-horizontal);
+  }
+  #paybtn{
+    margin-top: 3%;
+  }
+  paper-dropdown-menu{
+    width: 80%;
+  }
+    
+</style>
+  <template>
+    <div class="row enquiry-form">
+     <div class="list-group col-sm-12 panel-body form-category">
+          <div class="col-sm-4" hidden>
+          <paper-input id="searchtext" label="Enter Admission Number/Name" value="{{enquiryno}}">
+          <paper-icon-button suffix icon="search" on-click="FnSearchEnquiry" title="Search"></paper-icon-button>
+          </paper-input>
+          </div>
+          <div class="col-sm-4" style="margin-top: 2%;" hidden>
+          <paper-dropdown-menu label="Select Enquiry/Admission No" on-iron-select="FnSelectEnquiry">
+            <paper-listbox class="dropdown-content" id="rtefeesearch">
+            <template  is="dom-repeat" items="{{enquiryarr}}" as="item">
+              <paper-item value="{{item.enquiry_no}}">{{item.enquiry_no}}-{{item.enquiry_name}}</paper-item>
+            </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+          </div> 
+          
+          <div class="col-md-4" style="margin-top: 2%;">
+                   <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchEnquiryy"></paper-input>
+                   <paper-listbox class="dropdown-content" id="rtefeeinput" on-iron-select="FnSelectEnquiryy">
+                   <template is="dom-repeat" items="{{itemArray}}" as="item">
+                   <paper-item value="{{item.admission_no}}">{{item.itemdes}}</paper-item>
+                   </template>
+                   </paper-listbox>
+          </div>
+          <div class="col-md-5" style="margin-top: 5%;">
+          <paper-checkbox id="rtefeecurrentyear" on-change="FnCurrentHandler" style="margin-left: 5%;">Current Year</paper-checkbox>
+          <paper-checkbox id="rtefeenextyear" on-change="FnNextHandler" checked style="margin-left: 5%;">Next Year</paper-checkbox>
+          </div>
+          <div class="col-md-3" style="margin-top: 4.5%;margin-left: -15%;">
+            <datepicker-icon-card></datepicker-icon-card>
+          </div>
+     </div>
+     <div class="form-group-heading">
+        <h4>Student Detail</h4>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-3 enquiry-input">
+          <paper-input label="Student Name" value="{{studentname}}"></paper-input>
+        </div>
+        <div class="col-sm-3 enquiry-input">
+          <paper-input label="Parent Name" value="{{parentname}}"></paper-input>
+        </div>
+         <div class="col-sm-3 enquiry-input">
+          <paper-input label="Grade" value="{{enquiredclass}}"></paper-input>
+        </div>
+        <div class="col-sm-3 enquiry-input">
+          <paper-input label="Academic Year" value="{{academicyear}}"></paper-input>
+        </div>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-2 enquiry-input">
+          <paper-input  readonly label="Total Fees" value="{{totalfees}}"></paper-input>
+        </div>
+        <div class="col-sm-2 enquiry-input">          
+          <paper-input readonly label="Standard Discount" value="{{totaldiscount}}"></paper-input>
+        </div>
+        <div class="col-sm-2 enquiry-input">          
+          <paper-input readonly label="Total Payable Amount" value="{{totalpayableamount}}"></paper-input>
+        </div>
+        <div class="col-sm-2 enquiry-input">
+          <paper-input  readonly label="Discount Percentage" value="{{discountpercent}}"></paper-input>
+        </div>
+        <div class="col-sm-2 enquiry-input">
+          <paper-input  readonly label="Total discount" value="{{totdiscount}}"></paper-input>
+        </div>
+        <div class="col-sm-2 enquiry-input">          
+          <paper-input readonly label="{{payablepaidflag}}" value="{{payableamount}}"></paper-input>
+        </div>
+      </div>
+
+      <div class="form-group-heading">
+        <h4>Adhoc discount</h4>
+      </div>
+
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-3">
+        <paper-input label="Adhoc discount" value="{{adhocdiscount}}"></paper-input>        
+        </div> 
+        <div class="col-sm-3">
+         <paper-dropdown-menu label="Fee Type" attr-for-selected="value">
+            <paper-menu id="rteadhocfeetype" class="dropdown-content" required on-iron-select="FnSelectAdhocFeetype" valueattr="value" >              
+              <paper-item value="Kit fee">Kit fee</paper-item>
+              <paper-item value="Annual fee">Annual fee</paper-item>
+              <paper-item value="Tution fee">Tution fee</paper-item> 
+            </paper-menu>
+          </paper-dropdown-menu>       
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="Reason" value="{{adhocreason}}"></paper-input>  
+        </div> 
+        <div class="col-sm-3" style="margin-top: 2%;">
+        <paper-icon-button icon="refresh" on-click="FnProcessAdhoc"></paper-icon-button>  
+        </div> 
+      </div>
+
+      <div class="form-group-heading" hidden>
+        <h4>Payment Mode</h4>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category" hidden>
+      <span><paper-checkbox class="col-sm-3" id="structureselfmode" readonly class="checkbox" on-change="selfHandler" style="margin-left: 1%;"  checked disabled="{{disableflag}}">Self</paper-checkbox></span>
+      <span><paper-checkbox class="col-sm-3" id="structurethirdpartymode" readonly class="checkbox" on-change="thirdpartyHandler" disabled="{{disableflag}}">Thirdparty</paper-checkbox></span>
+      </div>
+      <div class="form-group-heading">
+        <h4>Installment Pattern</h4>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+            <div class="col-sm-12 enquiry-input" hidden$="{{hideinstallmentpattern}}">
+            <span hidden$="{{hidestandardpattern}}"><paper-checkbox class="col-sm-3" id="rtegeneral1" readonly class="checkbox" on-change="generalHandler" checked disabled="{{disableflag}}">Installment</paper-checkbox></span>
+            <span><paper-checkbox class="col-sm-3" id="rtelumpsum1" readonly class="checkbox" on-change="lumpsumHandler" disabled="{{disableflag}}">Lumpsum</paper-checkbox></span>
+            <span hidden><paper-checkbox class="col-sm-3" id="rtelumpsumcommit1" readonly class="checkbox" on-change="lumpsumcommitHandler" disabled="{{disableflag}}">Lumpsum With Commitment Fee</paper-checkbox></span>
+            </div>
+            
+      </div>
+
+      <div class="list-group col-sm-12 panel-body form-category" hidden>
+            <div class="col-sm-4 enquiry-input">
+            <label>Installment required in commitment fee?</label>
+            </div>
+            <div class="col-sm-3enquiry-input">
+            <span><paper-checkbox class="col-sm-3" id="insrequirement" class="checkbox" on-change="insrequirementHandler">Yes</paper-checkbox disabled="{{}}"></span>
+            </div>
+      </div>
+
+      
+
+      <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hidenoofinstallment}}">
+        <div class="col-sm-3 enquiry-input">
+            <h4>Choose installment</h4>
+        </div>
+        <div class="col-sm-4" style="margin-top: -1.5%;">
+          <paper-dropdown-menu label="No Of Installment" attr-for-selected="value">
+            <paper-menu id="rteinstallment" class="dropdown-content" required on-iron-select="FnSelectInsatllmentNo" valueattr="value" >
+              <paper-item>1</paper-item>
+              <paper-item>2</paper-item>
+              <paper-item>3</paper-item>
+              <paper-item>4</paper-item>
+              <paper-item>5</paper-item>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>   
+
+      </div>
+    
+      <div class="form-group-heading" hidden$="{{hiddenpayment}}">
+        <h4>Payment</h4>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hiddenpayment}}">
+            <div class="inshead" hidden$="{{hiddeninstallment}}">                        
+                    <div style="width: 13%;margin-left: 2%;">Installment</div>
+                    <div style="width: 9%;margin-left: 1%;">Actual Amount</div>
+                    <div style="width: 6%;margin-left: 2%;">Discount</div>
+                    <div style="width: 10%;margin-left:2%;">Payable Amount</div>                    
+                    <div style="margin-left:2%; width: 12%;">Mode of Payment</div>
+                    <div style="margin-left:2%; width: 7%;" hidden$="{{hiddentitleflag}}">Cheque No</div>
+                    <div style="margin-left:2%; width: 7%;" hidden$="{{hiddentitleflag}}">Bank Name</div>
+                    <div style="width: 9%;margin-left:2%;" hidden$="{{hiddentitleflag}}">Cheque Date</div>
+                    <div style="width: 9%;margin-left:2%;" hidden$="{{hiddentitleflag}}">Receipt Date</div>              
+            </div>
+            <div style="margin-left:12%;" hidden$="{{hiddeninstallment}}"> 
+              <template  is="dom-repeat" items="{{feearr}}" as="view">
+              <rte-installment-card installmentid="{{view.installmentid}}" installment="{{view.installment}}" installmenttype="{{view.installmenttype}}" installmentdate="{{view.installmentdate}}" receiptdate="{{view.receiptdate}}" hiddenpayflag="{{view.hiddenpayflag}}" paidflag="{{view.paidflag}}" readonlyflag="{{view.readonlyflag}}" hiddenflag="{{view.hiddenflag}}" hiddencommitinput="{{view.hiddencommitinput}}" hiddencommititem="{{view.hiddencommititem}}"></rte-installment-card>
+               <!--  <installment-card  installmentid="{{view.installmentid}}" hiddenpayflag="{{view.hiddenpayflag}}" modeofpayment="{{view.modeofpayment}}" paidflag="{{view.paidflag}}" readonlyflag="{{view.readonlyflag}}" hiddenflag="{{view.hiddenflag}}" installment="{{view.installment}}" installmenttype="{{view.installment}}" actualamount="{{view.actualamount}}" amount="{{view.installmentamount}}" discountamount="{{view.discountamount}}" installmentdate="{{view.installmentdate}}" chequeno="{{view.chequeno}}" paiddate="{{view.paiddate}}" bankname="{{view.bankname}}" chequedate="{{view.chequedate}}" receiptdate="{{view.receiptdate}}" hiddencommitinput="{{view.hiddencommitinput}}" hiddencommititem="{{view.hiddencommititem}}" editdate="{{view.editdate}}"></installment-card> -->
+              </template>
+            </div>
+            <div>
+              <paper-button  id="paybtn" on-click="FnPayfee"  style="width: 10%;margin-left:0%;position: absolute; left: 45%;margin-top: 1%;" hidden$="{{hiddenaddbtn}}" data-dismiss="modal" class="btn btn-primary center">PAY
+              </paper-button>
+            </div>
+      </div>     
+    </div>
+    <br><br>
+    <rtepattern-fee-service id="admissionservice"></rtepattern-fee-service>
+    <rte-fee-service id="feeservice"></rte-fee-service>
+    <schedule-service id="schedulefee"></schedule-service>
+    <appregfee-service id="appregfeeservice"></appregfee-service>
+       <!-- Fetch no of installment-->
+     <iron-ajax
+        method="post"
+        id="fetchnoofinstallmentajax"
+        url="{{fetchnoofinstallmenturl}}"
+        params="{{fetchnoofinstallmentparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchnoofinstallmentResponse"
+        debounce-duration="300"
+        >
+  </template>
+  <script>
+  (function() {
+    'use strict';
+      var installment="";
+      var paymentmode="";
+      var feepaytype="";
+      var installmentpattern="1";
+      var noofinstallment="4";
+      var splitarr=[];
+      var installmentarr=[];
+      var installmenttemparr=[];
+      var item=[];
+      var adhocfeetype="";
+    Polymer({
+      is: 'rtefee-card',
+      ready:function(){
+        this.hidenoofinstallment=false;
+        this.payablepaidflag="Payable Amount";
+        this.disableflag=false;
+        this.hidespecifictype=true;
+        this.hiddenpayment=true;
+        this.receiptdate=true;
+        this.hiddeninstallment=true;
+        this.hiddenaddbtn=false;
+        this.hidenoofinstallment=true;
+        localStorage.setItem("curr_sess_waiveoff",0);
+        localStorage.setItem("curr_sess_fees",0); 
+        localStorage.setItem("curr_sess_enquiryno","");
+        localStorage.setItem("curr_sess_paymentthrough","self");
+        this.fetchnoofinstallmenturl=sessionStorage.getItem("addrinfo")+"/fetchnoofinstallment-service";
+        this.$.fetchnoofinstallmentajax.generateRequest();
+        localStorage.setItem("curr_sess_installmentpattern",installmentpattern);
+        localStorage.setItem("curr_sess_insrequirement",'no');
+        this.flag=0;
+          var academicyear=""; 
+          var date=new Date();
+          var y=date.getFullYear();  
+          var m=date.getMonth();
+          var d=date.getDate(); 
+          if(m<4){ 
+          var y1=(y-1)+1;
+          var y2=y+1;  
+          academicyear="AY-"+y1+"-"+y2;
+          } 
+          else{
+          var y1=y+1;
+          var y2=y+1+1;  
+          academicyear="AY-"+y1+"-"+y2;
+          }
+          localStorage.setItem("curr_sess_academicyear",academicyear);
+          localStorage.setItem("curr_sess_adhocdiscount",0); 
+          localStorage.setItem("curr_sess_adhocdiscount",0);
+          localStorage.setItem("curr_sess_adhocfeetype","");
+          localStorage.setItem("curr_sess_adhocreason","");
+          this.querySelector('#rtefeeinput').style.visibility='hidden';
+        // document.querySelector('#structuregeneral1').checked=true;
+      },  
+      FnCurrentHandler:function(e){
+        this.FnRefresh1();
+        if(document.querySelector('#rtefeecurrentyear').checked==true)
+        {  
+          document.querySelector('#rtefeenextyear').checked=false;
+          var academicyear=""; 
+          var date=new Date();
+          var y=date.getFullYear();  
+          var m=date.getMonth();
+          var d=date.getDate(); 
+          if(m<4){ 
+          var y1=y-1;
+          var y2=y;  
+          academicyear="AY-"+y1+"-"+y2;
+          } 
+          else{
+          var y1=y;
+          var y2=y+1;  
+          academicyear="AY-"+y1+"-"+y2;
+          }
+          localStorage.setItem("curr_sess_academicyear",academicyear);
+          // alert(academicyear);
+          this.$.admissionservice.searchfeeadmissionpaidinfoService(localStorage.getItem("curr_sess_enquiryno"));
+          // this.$.admissionservice.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
+        }
+      },
+      FnNextHandler:function(e){
+        this.FnRefresh1();
+        if(document.querySelector('#rtefeenextyear').checked==true)
+        {
+          document.querySelector('#rtefeecurrentyear').checked=false;
+          var academicyear=""; 
+          var date=new Date();
+          var y=date.getFullYear();  
+          var m=date.getMonth();
+          var d=date.getDate(); 
+          if(m<4){ 
+          var y1=(y-1)+1;
+          var y2=y+1;  
+          academicyear="AY-"+y1+"-"+y2;
+          } 
+          else{
+          var y1=y+1;
+          var y2=y+1+1;  
+          academicyear="AY-"+y1+"-"+y2;
+          }
+          localStorage.setItem("curr_sess_academicyear",academicyear);
+          this.$.admissionservice.searchfeeadmissionpaidinfoService(localStorage.getItem("curr_sess_enquiryno"));
+          // this.$.admissionservice.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
+        }
+      },
+      fetchnoofinstallmentResponse:function(e){
+        noofinstallment=e.detail.response.returnval;
+        localStorage.setItem("curr_sess_noofinstallment",noofinstallment);
+        localStorage.setItem("curr_sess_discountpercent",e.detail.response.discount);
+        if(this.flag==1){
+         this.$.admissionservice.searchfeeadmissionpaidinfoService(localStorage.getItem("curr_sess_enquiryno"));
+         // this.$.admissionservice.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
+         }
+      },
+      Fnsetinstallmentarr:function(arr){
+        installmentarr=arr;
+        installmenttemparr=arr;
+      },
+      FnSelectFeeType:function(e){
+        var feetype=(e.target.selectedItem.textContent).trim();
+        localStorage.setItem("curr_sess_feetype",feetype);
+        this.FnSearchEnquiry();
+      },   
+      FnHiddenPayment:function(){
+        this.hiddenpayment=false;
+        this.hiddeninstallment=false;
+      },
+      FnSetInstallmentSplitup:function(arr){
+        splitarr=arr;
+        this.$.feeservice.FnSetSplitarr(splitarr);
+      },
+      FnSetfee:function(installmentarr){
+        this.hiddentitleflag=false;
+        installment=installmentarr;       
+      },
+      FnPayfee:function(){  
+      // this.$.feeservice.insertinstallmentsplitofstudService();    
+      for(var i=0;i<installment.length;i++){ 
+      if(installment[i].paymenttype=="Cash")
+        this.$.feeservice.callInsertCashfeesService(installment[i],installment.length);
+      if(installment[i].paymenttype=="Cheque")
+        this.$.feeservice.callInsertChequefeesService(installment[i],installment.length);
+      if(installment[i].paymenttype=="Transfer"||installment[i].paymenttype=="Card Swipe"){
+        this.$.feeservice.callInsertTransferfeesService(installment[i],installment.length);
+      }
+      if(installment[i].paymenttype=="Third Party")
+        this.$.feeservice.callInsertThirdpartyfeesService(installment[i],installment.length);
+      }
+      installment=[];
+      document.querySelector('rte-installment-card').FnRefresh();
+      },
+     FnRefresh:function(){
+      this.hidenoofinstallment=false;
+      localStorage.setItem("curr_sess_adhocdiscount",0);
+        this.payablepaidflag="Payable Amount";
+        document.querySelector('#structureselfmode').checked=true;
+        document.querySelector('#structurethirdpartymode').checked=false;
+        document.querySelector('#insrequirement').checked=false;
+        this.disableflag=false;
+        this.flag=0;
+        installment=[];
+        paymentmode="";
+        this.enquiryno="";
+        this.academicyear="";
+        this.enquiredclass="";
+        this.studentname="";
+        this.parentname="";
+        this.dob="";
+        this.fees="";
+        this.prosarr=[];
+        this.totalfees="";
+        this.totaldiscount="";
+        this.payableamount="";
+        this.feearr=[];
+        this.enquiryarr=[];
+        this.payableamount="";
+        this.discountamount="";
+        this.hiddenpayment=true;
+        document.querySelector("#rtegeneral1").checked=false;
+        document.querySelector("#rtelumpsumcommit1").checked=false;
+        document.querySelector("#rtelumpsum1").checked=false;
+        document.querySelector('#rtefeesearch').selected=-1;
+        localStorage.setItem("curr_sess_enquiryno","");
+        document.querySelector('#rtegeneral1').checked=true;
+        this.querySelector('#rtefeeinput').style.visibility='hidden';
+        this.value="";
+        this.itemArray=[];
+        this.totalpayableamount="";
+        this.discountpercent="";
+        splitarr=[];
+        document.querySelector('#rteinstallment').selected=-1;
+        document.querySelector('#rtefeenextyear').checked=true;
+        document.querySelector('#rtefeecurrentyear').checked=false;
+        document.querySelector('datepicker-icon-card').ready();
+        document.querySelector('#rteadhocfeetype').selected=-1;
+        this.adhocdiscount="";
+        this.adhocreason="";
+        adhocfeetype="";
+        // localStorage.setItem("curr_sess_adhocdiscount",0);
+        // localStorage.setItem("curr_sess_adhocfeetype","");
+        // localStorage.setItem("curr_sess_adhocreason","");
+      },
+      FnRefresh1:function(){
+        this.hidenoofinstallment=false;
+        localStorage.setItem("curr_sess_adhocdiscount",0);
+        document.querySelector('#structureselfmode').checked=true;
+        document.querySelector('#structurethirdpartymode').checked=false;
+        this.payablepaidflag="Payable Amount";
+        this.totalpayableamount="";
+        this.discountpercent="";
+        document.querySelector('#insrequirement').checked=false;
+        this.disableflag=false;
+        this.value="";
+        this.itemArray=[];
+        this.flag=0;        
+        installment=[];
+        paymentmode="";
+        this.academicyear="";
+        this.enquiredclass="";
+        this.studentname="";
+        this.parentname="";
+        this.dob="";
+        this.fees="";
+        this.prosarr=[];
+        this.totalfees="";
+        this.totaldiscount="";
+        this.payableamount="";
+        this.feearr=[];
+        this.enquiryarr=[];
+        this.payableamount="";
+        this.discountamount="";
+        this.hiddenpayment=true;
+        // document.querySelector("#structuregeneral1").checked=false;
+        document.querySelector("#rtelumpsumcommit1").checked=false;
+        document.querySelector("#rtelumpsum1").checked=false;
+        document.querySelector('#rtefeesearch').selected=-1;
+        // localStorage.setItem("curr_sess_enquiryno","");
+        document.querySelector('#rtegeneral1').checked=true;
+         this.querySelector('#rtefeeinput').style.visibility='hidden';
+        // document.querySelector('#schoolfeenextyear').checked=false;
+        // document.querySelector('#schoolfeecurrentyear').checked=true;
+        document.querySelector('#rteinstallment').selected=-1;
+        document.querySelector('datepicker-icon-card').ready();
+        document.querySelector('#rteadhocfeetype').selected=-1;
+        this.adhocdiscount="";
+        this.adhocreason="";
+        adhocfeetype="";
+        // localStorage.setItem("curr_sess_adhocdiscount",0);
+        // localStorage.setItem("curr_sess_adhocfeetype","");
+        // localStorage.setItem("curr_sess_adhocreason","");
+      },
+      generalHandler:function(e){
+        if(document.querySelector("#rtegeneral1").checked==true)
+        {
+         this.hidenoofinstallment=false;
+         this.hidecommitinstallment=false;
+         this.flag=1;
+         document.querySelector("#rtelumpsumcommit1").checked=false;
+         document.querySelector("#rtelumpsum1").checked=false;
+         this.totalfees="";
+         this.discountamount="";
+         this.payableamount="";
+         this.feearr=[];
+         document.querySelector('#rteinstallment').selected=-1;
+         // this.hidecommitinstallment=false;
+         this.hidenoofinstallment=true;
+         installmentpattern="1";
+         localStorage.setItem("curr_sess_installmentpattern",installmentpattern);
+         this.fetchnoofinstallmenturl=sessionStorage.getItem("addrinfo")+"/fetchnoofinstallment-service";
+         this.$.fetchnoofinstallmentajax.generateRequest();
+        }
+      },
+      lumpsumHandler:function(e){
+        if(document.querySelector("#rtelumpsum1").checked==true)
+        {
+         this.hidenoofinstallment=true;
+         this.hidecommitinstallment=true;
+         document.querySelector("#rtegeneral1").checked=false;
+         document.querySelector("#rtelumpsumcommit1").checked=false;
+         this.feearr=[];
+         this.totalfees="";
+         this.discountamount="";
+         this.payableamount="";
+         document.querySelector('#rteinstallment').selected=-1;
+         this.hidenoofinstallment=true;
+         installmentpattern="3";
+         noofinstallment=1;
+         // this.hidecommitinstallment=true;
+         localStorage.setItem("curr_sess_noofinstallment",1);
+         localStorage.setItem("curr_sess_installmentpattern",installmentpattern);
+         this.$.admissionservice.searchfeeadmissionpaidinfoService(localStorage.getItem("curr_sess_enquiryno"));
+         // this.$.admissionservice.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
+         var insarr=[];
+         for(var i=0;i<parseInt(noofinstallment);i++){
+          var obj={};
+          obj.installmentid="Lumpsum";
+          obj.installmenttype="Lumpsum";
+          obj.installment="Lumpsum";
+          obj.installmentdate=localStorage.getItem("curr_sess_date");
+          obj.receiptdate=localStorage.getItem("curr_sess_date");
+          obj.hiddencommitinput=true;
+          obj.hiddencommititem=false;
+          obj.paidflag=false;
+          obj.hiddenflag=true;
+          obj.readonlyflag=false;
+          obj.hiddenpayflag=false;
+          obj.chequeno='';
+          obj.paiddate=''; 
+          obj.modeofpayment='';
+          insarr.push(obj);
+          }
+          this.feearr=insarr;
+          this.hiddeninstallment=false;
+          this.hiddenpayment=false;
+        }
+      },
+      lumpsumcommitHandler:function(e){
+        if(document.querySelector("#rtelumpsumcommit1").checked==true)
+        {
+         this.hidecommitinstallment=false;
+         document.querySelector("#rtegeneral1").checked=false;
+         // document.querySelector("#structureinstallment1").checked=false;
+         document.querySelector('#rteinstallment').selected=-1;
+         document.querySelector("#rtelumpsum1").checked=false;
+         this.hidenoofinstallment=true;
+         installmentpattern="4";
+         noofinstallment=4;
+         // this.hidecommitinstallment=false;
+         localStorage.setItem("curr_sess_noofinstallment",4);
+         localStorage.setItem("curr_sess_installmentpattern",installmentpattern);
+         this.$.admissionservice.searchfeeadmissionpaidinfoService(localStorage.getItem("curr_sess_enquiryno"));
+         // this.$.admissionservice.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
+        }
+      },
+      FnSelectInsatllmentNo:function(e){
+        noofinstallment=(e.target.selectedItem.textContent).trim();  
+        localStorage.setItem("curr_sess_noofinstallment",noofinstallment);
+        var insarr=[];
+        if(localStorage.getItem("curr_sess_installmentpattern")!="3"){
+        for(var i=0;i<parseInt(noofinstallment);i++){
+          var obj={};
+          // if(i==0){
+          // obj.installmentid="CommitmentFee";
+          // obj.installmenttype="Commitment Fee";
+          // obj.installment="Commitment Fee";
+          // obj.installmentdate=localStorage.getItem("curr_sess_date");
+          // obj.receiptdate=localStorage.getItem("curr_sess_date");
+          //          obj.hiddencommitinput=true;
+          //          obj.hiddencommititem=false;
+          //          obj.paidflag=false;
+          //          obj.hiddenflag=true;
+          //          obj.readonlyflag=false;
+          //          obj.hiddenpayflag=false;
+          //          obj.chequeno='';
+          //          obj.paiddate=''; 
+          //          obj.modeofpayment='';
+          // insarr.push(obj);
+          // }
+          // else{
+          obj.installmentid="Installment"+(i+1);
+          obj.installmenttype="Installment"+(i+1);
+          obj.installment="Installment"+(i+1);
+          obj.installmentdate=localStorage.getItem("curr_sess_date");
+          obj.receiptdate=localStorage.getItem("curr_sess_date");
+          obj.hiddencommitinput=true;
+          obj.hiddencommititem=false;
+          obj.paidflag=false;
+          obj.hiddenflag=true;
+          obj.readonlyflag=false;
+          obj.hiddenpayflag=false;
+          obj.chequeno='';
+          obj.paiddate=''; 
+          obj.modeofpayment='';
+          insarr.push(obj);
+          // }         
+        }
+        this.feearr=insarr;
+        }
+        else{
+          for(var i=0;i<parseInt(noofinstallment);i++){
+          var obj={};
+          obj.installmentid="Lumpsum";
+          obj.installmenttype="Lumpsum";
+          obj.installment="Lumpsum";
+          obj.installmentdate=localStorage.getItem("curr_sess_date");
+          obj.receiptdate=localStorage.getItem("curr_sess_date");
+          obj.hiddencommitinput=true;
+          obj.hiddencommititem=false;
+          obj.paidflag=false;
+          obj.hiddenflag=true;
+          obj.readonlyflag=false;
+          obj.hiddenpayflag=false;
+          obj.chequeno='';
+          obj.paiddate=''; 
+          obj.modeofpayment='';
+          insarr.push(obj);
+          }
+          this.feearr=insarr;
+        }
+        this.hiddeninstallment=false;
+        this.hiddenpayment=false;
+        
+      } ,
+      FnShowTitleFlag:function(){
+        this.hiddentitleflag=false;
+      },
+      callService:function(){
+        this.$.appregfeeservice.fetchrtestudentadmissionsearchService();
+      },
+      autocompletearr:function(autocompletearr)
+      {
+         item=autocompletearr;
+      },
+      FnSearchEnquiryy:function(e){
+      if(e.keyCode==13|| e.keyCode==40)
+      this.querySelector('#rtefeeinput').focus();
+      var arr=[];
+      arr.push({"itemdes":"-----Select-----"});
+      this.querySelector('#rtefeeinput').style.visibility='visible';
+      if(e.keyCode==8){
+        this.itemflag="true";
+        this.itemval="";
+        //alert('yes');
+        var len=(this.value).length;
+        if(len<=1){
+          this.querySelector('#rtefeeinput').style.visibility='hidden';
+          this.itemArray="";
+          this.itemval="";
+        }
+        if(len>1){
+          this.querySelector('#rtefeeinput').style.visibility='visible';
+          var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
+          for(var i=0;i<item.length;i++)
+          {
+            // alert(item[i].student_name);
+            var subval=((item[i].student_name).trim()).substring(0,backsubval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.value).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          this.itemArray=arr;
+        }
+      }
+      if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+        if(this.itemflag=="true") {
+          this.itemval = (this.value).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+          this.itemflag="false";
+        }
+        else
+        this.itemval = this.value +String.fromCharCode((e.keyCode));
+        if(this.itemval.length>0)
+        {
+          for(var i=0;i<item.length;i++)
+          {
+            // alert((item[i].student_name).trim());
+            var subval=((item[i].student_name).trim()).substring(0,this.itemval.length);
+            // alert((item[i].student_name).toUpperCase().indexOf((this.itemval).toUpperCase()));
+            if((item[i].student_name).toUpperCase().indexOf((this.itemval).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          if(arr.length>0)
+            this.itemArray=arr;
+          else
+          {
+            var obj={"itemdes":"","enquiry_no":""};
+            obj.itemdes="No items found";
+            arr.push(obj);
+            this.itemArray=arr;
+          }
+        }
+      }
+      // alert(JSON.stringify(this.itemArray));
+    },
+    FnSelectEnquiryy:function(e){
+    this.querySelector('#rtefeeinput').style.visibility='hidden';
+    var enquiry_name = e.target.selectedItem.textContent.trim();
+    var enquiry_no = e.target.selectedItem.value.trim();
+    localStorage.setItem("curr_sess_enquiryno",enquiry_no);
+    localStorage.setItem("curr_sess_enquiryname",enquiry_name);
+    this.itemArray=[];
+    document.querySelector('#rtefeeinput').selected=-1;
+    this.value=enquiry_name;
+    document.querySelector("#rtegeneral1").checked=true;
+    document.querySelector("#rtelumpsumcommit1").checked=false;
+    document.querySelector("#rtelumpsum1").checked=false;
+    localStorage.setItem("curr_sess_installmentpattern",1);
+    document.querySelector('#rteinstallment').selected=-1;
+    document.querySelector('datepicker-icon-card').ready();
+    this.feearr=[];
+    // this.$.processingservice.fetchchequeforeditordelete(admission_no);
+    // localStorage.setItem("curr_sess_enquiryno",enquiry_no);
+    // localStorage.setItem("curr_sess_enquiryname",enquiry_name);
+    this.$.admissionservice.searchfeeadmissionpaidinfoService(enquiry_no);
+    // this.$.admissionservice.searchfeeadmissioninfoService(enquiry_no);
+    },
+    Fnhidecommitinstallment:function(flag){
+      this.hidecommitinstallment=flag;
+    },
+    Fnhidepattern:function(flag){
+    // alert(flag);
+    if(flag==true){
+      this.hidecommitinstallment=true;
+      document.querySelector('#rtelumpsum1').checked=true;
+      // document.querySelector('#structuregeneral1').checked=false;
+      // document.querySelector('#structurelumpsumcommit1').checked=false;
+    }
+    // else{
+    //   document.querySelector('#structurelumpsum1').checked=false;
+    //   document.querySelector('#structuregeneral1').checked=false;
+    //   document.querySelector('#structurelumpsumcommit1').checked=false;
+    // }
+    if(localStorage.getItem("curr_sess_paymentthrough")=="self")
+    this.hidestandardpattern=flag;
+    },
+    FnSetPaidPattern:function(mode,pattern){
+      if(mode=='self'){
+        document.querySelector('#structureselfmode').checked=true;
+        document.querySelector('#structurethirdpartymode').checked=false;
+      }
+      if(mode=='thirdparty'){
+        document.querySelector('#structurethirdpartymode').checked=true;
+        document.querySelector('#structureselfmode').checked=false;    
+      }
+      if(pattern=="1"){
+        this.hidecommitinstallment=false;
+        document.querySelector("#rtegeneral1").checked=true;
+        document.querySelector("#rtelumpsumcommit1").checked=false;
+        document.querySelector("#rtelumpsum1").checked=false;
+      }
+      if(pattern=="4"){
+      this.hidecommitinstallment=false;
+      document.querySelector("#rtelumpsumcommit1").checked=true;
+      document.querySelector("#rtegeneral1").checked=false;
+      document.querySelector("#rtelumpsum1").checked=false;
+      }
+      if(pattern=="3"){
+      this.hidecommitinstallment=true;
+      document.querySelector("#rtelumpsum1").checked=true;
+      document.querySelector("#rtelumpsumcommit1").checked=false;
+      document.querySelector("#rtegeneral1").checked=false;
+      }
+      // this.$.admissionservice.searchfeeadmissionpaidinfoService(localStorage.getItem("curr_sess_enquiryno"));
+      // this.$.admissionservice.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
+    },
+    FnSetDisableFlag:function(flag){
+      // if(flag==true){
+      //   this.payablepaidflag="Paid Amount";
+      // }
+      // else{
+        this.payablepaidflag="Payable Amount";
+      // }
+      this.disableflag=flag;
+      // this.hiddenaddbtn=flag; 
+    },
+    FnSelectAdhocFeetype:function(e){
+      adhocfeetype=(e.target.selectedItem.textContent).trim();
+    },
+    FnProcessAdhoc:function(){
+      localStorage.setItem("curr_sess_adhocdiscount",this.adhocdiscount);
+      localStorage.setItem("curr_sess_adhocfeetype",adhocfeetype);
+      localStorage.setItem("curr_sess_adhocreason",this.adhocreason);
+      this.$.admissionservice.searchfeeadmissionpaidinfoService(localStorage.getItem("curr_sess_enquiryno"));
+    }
+
+    });
+  })();
+  </script>
+</dom-module>

@@ -363,6 +363,128 @@ app.post('/createfeecode-service',  urlencodedParser,function (req, res){
 });
 
 
+app.post('/fetchrtefeecodeseq-service',  urlencodedParser,function (req, res){
+var response={"prefix":"","feecode":""};
+connection.query("SELECT * FROM prefix_master WHERE prefix_id='"+req.query.prefixid+"'",function(err, rows){
+  if(rows.length>0){
+    response.prefix=rows[0].prefix_name;
+  connection.query("SELECT * FROM fee_code_sequence WHERE school_id='"+req.query.schoolid+"'",function(err, rows){
+    if(!err)
+      res.status(200).json({'prefix': response.prefix,'sequence':rows[0].fee_sequence});
+  });
+  }
+});
+
+});
+
+
+app.post('/fetchrtefeecodes-service',  urlencodedParser,function (req, res){
+    var qur="SELECT * FROM rtefee_master WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' "+
+    " and admission_year='"+req.query.admissionyear+"'";
+    connection.query(qur,function(err, rows){
+    if(!err)
+      res.status(200).json({'returnval':rows});
+  });
+});
+
+app.post('/generatertefeecode-service',  urlencodedParser,function (req, res){
+
+  connection.query("UPDATE fee_code_sequence SET fee_sequence='"+req.query.newseq+"' WHERE school_id='"+req.query.schoolid+"'",function(err, result){
+    if(!err)
+       res.status(200).json({'returnval': 'done'});
+  });
+  
+});
+
+
+app.post('/creatertefeecode-service',  urlencodedParser,function (req, res){
+    var response={
+      school_id:req.query.schoolid,
+      academic_year:req.query.academicyear,
+      admission_year:req.query.admissionyear,
+      grade_id:req.query.grade,
+      fee_code:req.query.feecode,
+      fee_name:req.query.feename,
+      fees:req.query.totalfees,
+      created_by:req.query.createdby
+    };
+
+    var splitup={
+      school_id:req.query.schoolid,
+      fee_code:req.query.feecode,
+      fee_type:req.query.feetype,
+      fee_type_code:req.query.feetype,
+      total_fee:req.query.totalfees,
+      feetype_installment:req.query.feetypeinstallment,
+      created_by:req.query.createdby
+    };
+    var splitcheck="SELECT * FROM rtefee_splitup WHERE school_id='"+req.query.schoolid+"' and fee_code='"+req.query.feecode+"' and fee_type='"+req.query.feetype+"'";
+    var feemastercheck="SELECT * FROM rtefee_master WHERE school_id='"+req.query.schoolid+"' and fee_code='"+req.query.feecode+"'";
+
+    connection.query(splitcheck,function(err, rows){
+    if(rows.length==0){
+    connection.query('INSERT INTO rtefee_splitup SET ?',[splitup],function(err, rows){
+      connection.query(feemastercheck,function(err, rows){
+        if(rows.length==0){
+          connection.query('INSERT INTO rtefee_master SET ?',[response],function(err, rows){
+            res.status(200).json({'returnval': 'created'});
+          });
+        }
+        else{
+            var fees = rows[0].fees;
+            var newfees=parseInt(fees)+parseInt(req.query.totalfees);
+            connection.query("UPDATE rtefee_master SET fees='"+newfees+"' WHERE school_id='"+req.query.schoolid+"' and fee_code='"+req.query.feecode+"'",function(err, result){
+            if(result.affectedRows==1)
+            res.status(200).json({'returnval': 'updated'});
+            else
+            res.status(200).json({'returnval': 'not updated'});
+            });
+        }
+      });
+    });
+    }
+    else{
+      var fee=rows[0].total_fee;
+      // if(parseInt(fee)>=parseInt(req.query.totalfees))
+      // var diff_fee=parseInt(fee)-parseInt(req.query.totalfees);
+      // else
+      var diff_fee=parseInt(req.query.totalfees)-parseInt(fee);
+      connection.query("UPDATE rtefee_splitup SET total_fee='"+req.query.totalfees+"' WHERE school_id='"+req.query.schoolid+"' and fee_code='"+req.query.feecode+"' and fee_type='"+req.query.feetype+"'",function(err, result){
+        if(result.affectedRows==1){
+      connection.query(feemastercheck,function(err, rows){
+        if(rows.length==0){
+          connection.query('INSERT INTO rtefee_master SET ?',[response],function(err, rows){
+            res.status(200).json({'returnval': 'created'});
+          });
+        }
+        else{
+            var fees = rows[0].fees;
+            console.log('.....................................');
+            console.log(fees);
+            console.log('.....................................');
+            console.log(diff_fee);
+            // if(parseInt(diff_fee)>0)
+            var newfees=parseInt(fees)+parseInt(diff_fee);
+            // else
+            // var newfees=parseInt(fees)-parseInt(diff_fee);
+            console.log('.....................................');
+            console.log(newfees);
+            connection.query("UPDATE rtefee_master SET fees='"+newfees+"' WHERE school_id='"+req.query.schoolid+"' and fee_code='"+req.query.feecode+"'",function(err, result){
+            if(result.affectedRows==1)
+            res.status(200).json({'returnval': 'updated'});
+            else
+            res.status(200).json({'returnval': 'not updated'});
+            });
+        }
+      });
+        }
+      });
+    }
+    });
+
+});
+
+
 app.post('/fetchdiscountcodeseq-service',  urlencodedParser,function (req, res){
 var response={"prefix":"","feecode":""};
 connection.query("SELECT * FROM prefix_master WHERE prefix_id='"+req.query.prefixid+"'",function(err, rows){
@@ -2206,6 +2328,59 @@ app.post('/fetchfees',  urlencodedParser,function (req, res){
   }
 });
 });
+
+
+app.post('/fetchrtefees',  urlencodedParser,function (req, res){
+
+    var response={"fee_code":"","total_fees":""};
+    var qur="SELECT * FROM rtefee_master WHERE school_id='"+req.query.schoolid+"' and admission_year = '"+req.query.admissionyear+"' and academic_year='"+req.query.academicyear+"' and grade_id=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"')";
+
+    // var qur1="SELECT total_fee FROM fee_splitup WHERE school_id='"+req.query.schoolid+"' and fee_code='"++"'";
+    console.log(qur);
+    connection.query(qur,function(err, rows){
+    if(!err)
+    {
+    if(rows.length>0)
+    {
+      response.fee_code=rows[0].fee_code;
+      response.total_fees=rows[0].fees;
+      var qur1="SELECT * FROM rtefee_splitup WHERE school_id='"+req.query.schoolid+"' and fee_code='"+response.fee_code+"' ";
+      connection.query(qur1,function(err, rows){
+        var result=[];
+        var obj={"fee_code":"","fees":""};
+        obj.fee_code=response.fee_code;
+        var regfee=0;
+        if(rows.length>0){
+        for(var i=0;i<rows.length;i++)
+        {
+          if(rows[i].fee_type=='Registration fee')
+            regfee=rows[i].total_fee;
+        }  
+        obj.fees=parseFloat(parseFloat(response.total_fees)-parseFloat(regfee)).toFixed(2);
+        console.log('fees..............'+obj.fees);
+        }
+        // else{
+        // obj.fees=parseFloat(response.total_fees).toFixed(2);
+        // console.log('fees..............'+obj.fees);
+        // }
+        result.push(obj);
+        if(result.length>0)
+        res.status(200).json({'returnval': result,'feesplitup':rows});
+      });
+      // res.status(200).json({'returnval': rows});
+    }
+    else
+    {
+      console.log(err);
+      res.status(200).json({'returnval': 'no rows'});
+    }
+  }
+  else{
+     console.log(err);
+  }
+});
+});
+
 
 
 app.post('/fetchdiscount-service',  urlencodedParser,function (req, res){
@@ -6489,6 +6664,25 @@ app.post('/fetchallstudentadmissionsearch-service',  urlencodedParser,function (
       }
     });
 });
+
+app.post('/fetchrtestudentadmissionsearch-service',  urlencodedParser,function (req, res){
+  var qur="SELECT distinct(admission_no),student_name FROM md_admission where school_id='"+req.query.schoolid+"' and discount_type='3'";
+  console.log(qur);
+  connection.query(qur,
+    function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
 
 
 app.post('/fetchstudentforpromotion-service',  urlencodedParser,function (req, res){

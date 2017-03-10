@@ -1,0 +1,157 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../schedule-service/schedule-service.html">
+<link rel="import" href="../schooltype-to-grade-displaycard/schooltype-to-grade-displaycard.html">
+
+<dom-module id="rtefeetype-schedule-card">
+  <template>
+    <div class="row enquiry-form">
+
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6 enquiry-inpt">
+            <paper-input label="School Name" value="{{schoolname}}"></paper-input>
+        </div>
+        <div class="col-sm-2 enquiry-input" style="margin-top:3%;">
+          <paper-checkbox id="rtestformall" class="checkbox" on-change="allHandler" checked>All Grades</paper-checkbox>
+        </div>
+        <div class="col-sm-2 enquiry-input" style="margin-top:3%;">
+          <paper-checkbox id="rtestformspec" class="checkbox" on-change="specHandler">Specific Grades</paper-checkbox>
+        </div>       
+      </div>
+
+      <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hidegradecard}}">
+      <schooltype-to-grade-displaycard hidegradecard="{{hidegradecard}}"></schooltype-to-grade-displaycard>
+      </div>
+
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6 enquiry-input">
+          <paper-dropdown-menu label="Admission Year" attr-for-selected="value">
+            <paper-menu id="rtescheduleadmissionyear" class="dropdown-content" required on-iron-select="FnSelectAdmissionYear" valueattr="value" >
+              <template  is="dom-repeat" items="{{admissionarr}}" as="item">
+              <paper-item>{{item.admission_year}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
+
+        <div class="col-sm-6">
+          <paper-dropdown-menu label="Academic Year" attr-for-selected="value">
+            <paper-menu id="rtescheduleacademicyear" class="dropdown-content" required on-iron-select="FnSelectAcademicYear" valueattr="value" >
+              <template  is="dom-repeat" items="{{academicarr}}" as="item">
+              <paper-item>{{item.academic_year}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
+        </div>
+       
+        <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hidefeecard}}">
+          <div class="col-sm-6 enquiry-input">
+            <paper-dropdown-menu label="Select Fee Type" attr-for-selected="value">
+            <paper-menu id="rteschedulefeetype" class="dropdown-content" required on-iron-select="FnSelectFeeType" valueattr="value" >
+              <template  is="dom-repeat" items="{{feetypearrr}}" as="item">
+              <paper-item>{{item.fee_type}}</paper-item>
+              </template>
+            </paper-menu>
+            </paper-dropdown-menu>
+          </div>
+          <div class="col-sm-4 enquiry-input">
+            <paper-input label="Total Fee" value="{{totalfees}}"></paper-input>
+          </div>     
+        </div>
+
+        <div class="col-md-12 form-button">
+          <paper-button class="btn btn-primary" on-click="FnSubmit">Submit</paper-button>
+          <paper-button class="btn btn-primary" on-click="FnCancel">Cancel</paper-button>
+        </div>
+      </div>
+      <schedule-service id="schedulefee"></schedule-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var grade,admissionyear,academicyear,feetype,feetypeinstallment,gradetype; 
+    var gradearr=[];   
+    Polymer({
+      is: 'rtefeetype-schedule-card',
+      ready:function(){
+        this.schoolname=localStorage.getItem("schoolname");
+        this.gradearr=[];
+        this.hidegradecard=true;
+      },
+      allHandler:function(){
+        if(document.querySelector("#rtestformall").checked==true)
+        {
+          this.hidegradecard=true;
+          document.querySelector("#rtestformspec").checked=false;
+          gradetype="All";
+          document.querySelector('schooltype-to-grade-displaycard').ready();
+          document.querySelector('schooltype-to-grade-displaycard').FnRefresh();
+        }
+      },
+      specHandler:function(){
+        if(document.querySelector("#rtestformspec").checked==true)
+        {
+          this.hidegradecard=false;
+          document.querySelector("#rtestformall").checked=false;
+          gradetype="Specific";
+          // document.querySelector('schooltype-to-grade-displaycard').ready();
+          // document.querySelector('schooltype-to-grade-displaycard').FnRefresh();
+        }
+      },
+      FnSelectGrade:function(e){
+        grade=(e.target.selectedItem.textContent).trim();
+      },
+      FnSelectAdmissionYear:function(e){
+        admissionyear=(e.target.selectedItem.textContent).trim();
+      },
+      FnSelectAcademicYear:function(e){
+        academicyear=(e.target.selectedItem.textContent).trim();
+      },
+      FnSelectFeeType:function(e){
+        feetype=(e.target.selectedItem.textContent).trim();
+        this.totalfees="";
+      },
+      FnSelectFeeTypeInstallment:function(e){
+        feetypeinstallment=(e.target.selectedItem.textContent).trim();
+      },
+      FnRefresh:function(){
+        grade="";
+        admissionyear="";
+        academicyear="";
+        feetype="";
+        this.totalfees="";
+        feetypeinstallment="";
+        document.querySelector('#rtescheduleacademicyear').selected=-1;
+        document.querySelector('#rtescheduleadmissionyear').selected=-1;
+        document.querySelector('#rteschedulefeetype').selected=-1;
+        this.$.rtestformall.checked=true;
+        this.$.rtestformspec.checked=false;
+        this.hidegradecard=true;
+        document.querySelector('schooltype-to-grade-displaycard').ready();
+        document.querySelector('schooltype-to-grade-displaycard').FnRefresh();
+      },
+      FnSetGrades:function(arr){
+        gradearr=arr;
+      },
+      FnSubmit:function()
+      {
+        // alert(JSON.stringify(gradearr));
+        this.$.schedulefee.setRTEFeeTypeInfo(this.schoolname,gradearr,admissionyear,academicyear,feetype,this.totalfees,feetypeinstallment);
+        gradearr=[];
+      },
+      FnCancel:function(){
+        grade="";
+        admissionyear="";
+        academicyear="";
+        feetype="";
+        this.totalfees="";
+        feetypeinstallment="";
+        document.querySelector('#rtescheduleacademicyear').selected=-1;
+        document.querySelector('#rtescheduleadmissionyear').selected=-1;
+        document.querySelector('#rteschedulefeetype').selected=-1;
+      }
+
+    });
+  })();
+  </script>
+</dom-module>

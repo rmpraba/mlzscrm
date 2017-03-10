@@ -257,6 +257,15 @@
               </ul>
            </li>
 
+            <li id="feestructure" hidden$="{{hidefeestructuremenu}}">
+            <a href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>RTE Structure</a>
+            <ul class="nav nav-second-level">
+              <li>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#rtefeetypeschedule" on-click="FnRTEFeetypeschedule">Fee Type Schedule</a>
+              </li>
+            </ul>
+            </li>
+
            <li id="fee-reports" hidden$="{{hidefeestructurereportmenu}}">
            <a href="" aria-hidden="true" on-click="feereports"><i class="fa fa-table fa-fw"></i>Fee Structure Reports</a>
            <ul class="nav nav-second-level">
@@ -314,6 +323,9 @@
               </li>
               <li>
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#customfeepayment"  on-click="FnCustomfee">Custom fee payment</a>
+              </li> 
+              <li>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#rtefee"  on-click="FnRTEfee">RTE fee</a>
               </li>              
               <li>
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#provisionfee"  on-click="FnProvisionfee">Provision fee</a>
@@ -615,6 +627,25 @@
       </div>
     </div>
 
+    <div class="modal fade bd-example-modal-lg" id="rtefee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              RTE Fee 
+            </h4>
+          </div>
+          <div class="modal-body">
+            <rtefee-card></rtefee-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="modal fade bd-example-modal-lg" id="customfeepayment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
         <div class="modal-content" id="fee-content">
@@ -704,6 +735,25 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade bd-example-modal-lg" id="rtefeetypeschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Schedule RTE Fee Type
+            </h4>
+          </div>
+          <div class="modal-body">
+            <rtefeetype-schedule-card></rtefeetype-schedule-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
      <div class="modal fade bd-example-modal-lg" id="feestructureschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
@@ -817,6 +867,13 @@
         this.$.scheduleservice.fetchadmissionyearService();
         this.$.scheduleservice.fetchfeetypeService();
       },
+      FnRTEFeetypeschedule:function(e){
+        document.querySelector('rtefeetype-schedule-card').FnRefresh();
+        this.$.scheduleservice.fetchgradeService();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchadmissionyearService();
+        this.$.scheduleservice.fetchfeetypeService();
+      },
       FnProspect:function(e){
       // alert(e.target.text);
         localStorage.setItem("curr_sess_feetypepayment","Application fee");
@@ -870,6 +927,13 @@
         localStorage.setItem("curr_sess_feetype",e.target.text);
         localStorage.setItem("curr_sess_provisionflag",0);
         this.FnRefresh();
+      },
+      FnRTEfee:function(e){
+        localStorage.setItem("curr_sess_feetypepayment","RTE fee");
+        localStorage.setItem("curr_sess_feetypepaymentflag","2");
+        localStorage.setItem("curr_sess_feetype",e.target.text);
+        document.querySelector('rtefee-card').FnRefresh();
+        document.querySelector('rtefee-card').callService();
       },
       FnCustomfee:function(e){
         localStorage.setItem("curr_sess_feetypepayment","Custom fee");

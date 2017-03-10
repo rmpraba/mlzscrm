@@ -1,0 +1,362 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="rtepattern-fee-service">
+  <template>
+    <iron-ajax
+        method="post"
+        id="searchfeeadmissionpaidinfoajax"
+        url="{{searchfeeadmissionpaidinfourl}}"
+        params="{{searchfeeadmissionpaidinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="searchfeeadmissionpaidinfoResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="searchfeeadmissioninfoajax"
+        url="{{searchfeeadmissioninfourl}}"
+        params="{{searchfeeadmissioninfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="searchfeeadmissioninfoResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="checkdefaulterstatusajax"
+        url="{{checkdefaulterstatusurl}}"
+        params="{{checkdefaulterstatusparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="checkdefaulterstatusResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchinstallmentdateajax"
+        url="{{fetchinstallmentdateurl}}"
+        params="{{fetchinstallmentdateparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchinstallmentdateResponse"
+        debounce-duration="300"
+        >
+
+    <iron-ajax
+        method="post"
+        id="checkregfeepaidstatusajax"
+        url="{{checkregfeepaidstatusurl}}"
+        params="{{checkregfeepaidstatusparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="checkregfeepaidstatusResponse"
+        debounce-duration="300"
+        >
+    <!-- Component will fetch the fee component-->
+    <iron-ajax
+        method="post"
+        id="fetchrtefeesajax"
+        url="{{fetchrtefeesurl}}"
+        params="{{fetchrtefeesparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchrtefeesResponse"
+        debounce-duration="300"
+        >
+    <!-- Component will fetch the fee split up component-->
+    <iron-ajax
+        method="post"
+        id="fetchfeesplitupajax"
+        url="{{fetchfeesplitupurl}}"
+        params="{{fetchfeesplitupparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeesplitupResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchdiscountajax"
+        url="{{fetchdiscounturl}}"
+        params="{{fetchdiscountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchdiscountResponse"
+        debounce-duration="300"
+        >
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var paidfeearr=[];
+    var discountarr=[];
+    var installmentdatearr=[];
+    var installmentarr=[];
+    Polymer({
+      is: 'rtepattern-fee-service',
+      searchfeeadmissionpaidinfoService:function(admissionno){
+        this.searchfeeadmissionpaidinfourl=sessionStorage.getItem("addrinfo")+"/fetchexistingadmissionpaidinfo";
+        var obj={"admissionno":"","schoolid":""};
+        obj.admissionno=admissionno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.searchfeeadmissionpaidinfoparam=obj;
+        this.$.searchfeeadmissionpaidinfoajax.generateRequest();
+     },
+     searchfeeadmissionpaidinfoResponse:function(e){
+        paidfeearr=e.detail.response.returnval;
+        // alert(JSON.stringify(paidfeearr));
+        if(paidfeearr!='no rows'){
+            var mode=paidfeearr[0].payment_through;
+            localStorage.setItem("curr_sess_installmentpattern",paidfeearr[0].installment_pattern);
+            var pattern=paidfeearr[0].installment_pattern;
+            document.querySelector('rtefee-card').FnSetPaidPattern(mode,pattern);
+            document.querySelector('rtefee-card').FnSetDisableFlag(true);
+            this.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
+        }
+        else{
+            document.querySelector('rtefee-card').FnSetDisableFlag();
+            this.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
+        }
+        // alert(JSON.stringify(paidfeearr));
+     },
+     searchfeeadmissioninfoService:function(admissionno){
+        this.searchfeeadmissioninfourl=sessionStorage.getItem("addrinfo")+"/fetchexistingadmissioninfo";
+        var obj={"admissionno":"","schoolid":""};
+        obj.admissionno=admissionno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.searchfeeadmissioninfoparam=obj;
+        this.$.searchfeeadmissioninfoajax.generateRequest();
+     },
+     searchfeeadmissioninfoResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        if(arr!='no rows'){
+        document.querySelector('rtefee-card').acyear=arr[0].academic_year;
+        document.querySelector('rtefee-card').academicyear=arr[0].admission_year;
+        document.querySelector('rtefee-card').enquiredclass=arr[0].class_for_admission;
+        document.querySelector('rtefee-card').studentname=arr[0].student_name;
+        document.querySelector('rtefee-card').parentname=arr[0].father_name;
+        document.querySelector('rtefee-card').dob=arr[0].dob;
+
+        localStorage.setItem("curr_sess_admissionstatus",arr[0].admission_status);
+        localStorage.setItem("curr_sess_admissiontype",arr[0].admission_type);
+        localStorage.setItem("curr_sess_discounttype",arr[0].discount_type);
+        localStorage.setItem("curr_sess_referralid",arr[0].referral_type);
+        localStorage.setItem("curr_sess_parentname",arr[0].father_name);
+        localStorage.setItem("curr_sess_admissionyear",arr[0].admission_year);
+        localStorage.setItem("curr_sess_grade",arr[0].class_for_admission);
+        localStorage.setItem("curr_sess_studentname",arr[0].student_name);
+
+        this.checkdefaulterstatusService(localStorage.getItem("curr_sess_academicyear"),arr[0].admission_year,arr[0].class_for_admission,localStorage.getItem("curr_sess_enquiryno"));
+        
+        // this.fetchinstallmentdateService();
+        // this.callfetchfeesService(arr[0].academic_year,arr[0].admission_year,arr[0].class_for_admission);        
+        // this.callfetchdiscountService(arr[0].academic_year,arr[0].admission_year,arr[0].class_for_admission,arr[0].discount_type);
+        // // this.callfetchfeesinfoService(arr[0].academic_year,arr[0].admission_year,arr[0].class_for_admission,arr[0].admission_type,arr[0].discount_type);
+        // this.fetchfeesplitup(arr[0].academic_year,arr[0].admission_year,arr[0].class_for_admission);
+        }
+     },
+     checkdefaulterstatusService:function(academicyear,admissionyear,grade,admissionno){
+        this.checkdefaulterstatusurl=sessionStorage.getItem("addrinfo")+"/checkdefaulterstatus-service";
+        var obj={"admissionno":"","schoolid":""};
+        obj.admissionno=admissionno;
+        obj.admissionyear=admissionyear; 
+        obj.academicyear=academicyear;
+        // alert(academicyear); 
+        obj.grade=grade; 
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        this.checkdefaulterstatusparam=obj;
+        this.$.checkdefaulterstatusajax.generateRequest();
+     },
+     checkdefaulterstatusResponse:function(e){
+        // alert(e.detail.response.returnval);
+        if(e.detail.response.returnval=='Admitted'){
+            document.querySelector('rtefee-card').Fnhidepattern(false);
+            this.checkregfeepaidstatusService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"),localStorage.getItem("curr_sess_enquiryno"));
+        }
+        if(e.detail.response.returnval=='Default'){           
+            if(localStorage.getItem("curr_sess_installmentpattern")==1)
+            {
+            document.querySelector('rtefee-card').Fnhidepattern(true);
+            localStorage.setItem("curr_sess_noofinstallment",1);
+            localStorage.setItem("curr_sess_installmentpattern",3);
+            }
+            this.checkregfeepaidstatusService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"),localStorage.getItem("curr_sess_enquiryno"));
+        }
+     },
+      checkregfeepaidstatusService:function(academicyear,admissionyear,grade,admissionno){
+         this.checkregfeepaidstatusurl=sessionStorage.getItem("addrinfo")+"/checkregfeepaidstatus-service";
+        var obj={"admissionno":"","schoolid":""};
+        obj.admissionno=admissionno;
+        obj.admissionyear=admissionyear; 
+        obj.academicyear=academicyear;
+        // alert(academicyear); 
+        obj.grade=grade; 
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        this.checkregfeepaidstatusparam=obj;
+        this.$.checkregfeepaidstatusajax.generateRequest();
+      },
+      checkregfeepaidstatusResponse:function(e){
+        // alert(e.detail.response.returnval);
+        if(e.detail.response.returnval=="no feecode"){
+            alert('No feecode found!!');
+        }
+        if(e.detail.response.returnval=="no regfee"){
+            this.fetchinstallmentdateService();
+            this.callfetchfeesService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));        
+            // this.callfetchdiscountService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"),localStorage.getItem("curr_sess_discounttype"));
+            // this.fetchfeesplitup(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));
+        }
+        if(e.detail.response.returnval=="paid"){
+            this.fetchinstallmentdateService();
+            this.callfetchfeesService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));        
+            // this.callfetchdiscountService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"),localStorage.getItem("curr_sess_discounttype"));
+            // this.fetchfeesplitup(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));
+        }
+        if(e.detail.response.returnval=="not paid"){
+            alert('Please pay registeration fee before!!');
+        }
+      },
+      fetchinstallmentdateService:function(){
+        this.fetchinstallmentdateurl=sessionStorage.getItem("addrinfo")+"/fetchinstallmentdate-service";
+        var obj={"schoolid":"","academicyear":""}        
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear"); 
+        obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern");
+        obj.schoolid=localStorage.getItem("schoolid");    
+        this.fetchinstallmentdateparam=obj;   
+        // alert(JSON.stringify(obj));    
+        this.$.fetchinstallmentdateajax.generateRequest();
+      },
+      fetchinstallmentdateResponse:function(e){
+        installmentdatearr=e.detail.response.returnval;
+        // this.FnFormFeestructure(arr);
+        // alert(JSON.stringify(installmentdatearr));
+      },
+      callfetchfeesService:function(academicyear,admissionyear,grade){
+        // alert(localStorage.getItem("curr_sess_installmentpattern"));
+        this.fetchrtefeesurl=sessionStorage.getItem("addrinfo")+"/fetchrtefees";
+        var obj={"schoolid":"","academicyear":"","admissionyear":"","grade":""}        
+        obj.admissionyear=admissionyear; 
+        obj.academicyear=academicyear; 
+        obj.grade=grade; 
+        obj.schoolid=localStorage.getItem("schoolid");     
+        this.fetchrtefeesparam=obj;       
+        this.$.fetchrtefeesajax.generateRequest();
+      },      
+      fetchrtefeesResponse:function(e){        
+        var arr=e.detail.response.returnval; 
+        this.splituparr=[]; 
+        this.splituparr=e.detail.response.feesplitup;
+        // alert(JSON.stringify(this.splituparr));      
+        if(arr.length>0&&(this.splituparr).length>0){
+            localStorage.setItem("curr_sess_feecode",arr[0].fee_code); 
+            localStorage.setItem("curr_sess_totalfees",arr[0].fees); 
+            document.querySelector('rtefee-card').totalfees=arr[0].fees;
+            // this.fetchfeesplitup();
+             this.callfetchdiscountService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"),localStorage.getItem("curr_sess_discounttype"));
+            this.fetchfeesplitup(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));
+        }
+        else
+        {
+            alert('No feecode found for this student!!');
+        }           
+      },
+      callfetchdiscountService:function(academicyear,admissionyear,grade,discounttype){
+        this.fetchdiscounturl=sessionStorage.getItem("addrinfo")+"/fetchdiscount-service";
+        var obj={"schoolid":"","academicyear":"","admissionyear":"","grade":""}        
+        obj.admissionyear=admissionyear; 
+        obj.academicyear=academicyear; 
+        obj.grade=grade; 
+        obj.discounttype=discounttype;
+        obj.installmentpattern=localStorage.getItem("curr_sess_installmentpattern"); 
+        var dt=new Date();
+        var d=dt.getDate();
+        var m=(dt.getMonth()+1);
+        var y=dt.getFullYear();
+        if(d<10)
+          d="0"+d;
+        if(m<10)
+          m="0"+m;
+        // obj.currdate=m+"/"+d+"/"+y;
+        obj.currdate=localStorage.getItem("curr_sess_date");
+        obj.referraltype=localStorage.getItem("curr_sess_referralid");  
+        // obj.noofinstallment=localStorage.getItem("curr_sess_noofinstallment");
+        obj.schoolid=localStorage.getItem("schoolid");     
+        obj.mode=localStorage.getItem("curr_sess_paymentthrough");
+        this.fetchdiscountparam=obj; 
+        // alert(JSON.stringify(obj));      
+        this.$.fetchdiscountajax.generateRequest();
+      },
+      fetchdiscountResponse:function(e){
+        discountarr=e.detail.response.returnval;
+        // alert(JSON.stringify(discountarr));
+        var discountamt=0;
+        var discountpercent=0; 
+        var discountpercentamt=0;
+        var totalwosdfee=0;
+        var totalpayableamount=0;
+
+        if(localStorage.getItem("curr_sess_adhocdiscount")>0)
+            discountamt=parseFloat(discountamt)+parseFloat(localStorage.getItem("curr_sess_adhocdiscount"));
+        if(discountarr.length>0){
+            for(var i=0;i<discountarr.length;i++){   
+            // if(discountarr[i].discount_type_code!='5')
+            discountamt=parseFloat(discountarr[i].amount)+parseFloat(discountamt);
+            }
+
+            
+
+            totalwosdfee=parseFloat(localStorage.getItem("curr_sess_totalfees"))-parseFloat(discountamt);           
+            for(var i=0;i<discountarr.length;i++){   
+            if(discountarr[i].discount_type_code=='5'){
+            // alert(discountarr[i].fee_type);
+            localStorage.setItem("curr_sess_discountfeetype",discountarr[i].fee_type);
+            if(localStorage.getItem("curr_sess_installmentpattern")=='3'&&discountarr[i].discount_percentage!='0'){    
+                discountpercent=discountarr[i].discount_percentage;
+                discountpercentamt=parseFloat(parseFloat(totalwosdfee)*(parseFloat(discountarr[i].discount_percentage)/100)).toFixed(2);
+            }
+            if(localStorage.getItem("curr_sess_installmentpattern")=='4'&&discountarr[i].discount_percentage!='0'){    
+                discountpercent=discountarr[i].discount_percentage;
+                // discountpercentamt=parseFloat(parseFloat(totalwosdfee)*(parseFloat(discountarr[i].discount_percentage)/100)).toFixed(2);
+            }
+            } 
+            }
+        }
+
+        var totalpayableamount=parseFloat(localStorage.getItem("curr_sess_totalfees"))-parseFloat(discountamt);
+        var payableamount=parseFloat(totalpayableamount)-(parseFloat(discountpercentamt));
+        document.querySelector('rtefee-card').totaldiscount=discountamt;
+        localStorage.setItem("curr_sess_totaldiscount",discountamt);
+        document.querySelector('rtefee-card').totalpayableamount=totalpayableamount;
+        localStorage.setItem("curr_sess_payablefees",totalpayableamount);
+        document.querySelector('rtefee-card').discountpercent=discountpercent+"%";
+        document.querySelector('rtefee-card').payableamount=payableamount;
+        var totaldiscount=parseFloat(discountamt)+(parseFloat(discountpercentamt));
+        document.querySelector('rtefee-card').totdiscount=totaldiscount;
+        localStorage.setItem("curr_sess_discountpercent",discountpercent);
+        localStorage.setItem("curr_sess_payablediscount",totaldiscount);
+        localStorage.setItem("curr_sess_payableamount",payableamount);
+        localStorage.setItem("curr_sess_discountpercentamt",discountpercentamt);
+      },      
+      fetchfeesplitup:function(academic_year,admission_year,grade){
+        this.fetchfeesplitupurl=sessionStorage.getItem("addrinfo")+"/fetchfeesplitup";
+        var obj={"schoolid":"","academicyear":"","admissionyear":"","grade":""}        
+        obj.admissionyear=admission_year; 
+        obj.academicyear=academic_year; 
+        obj.grade=grade; 
+        obj.feecode=localStorage.getItem("curr_sess_feecode");
+        obj.noofinstallment=localStorage.getItem("curr_sess_noofinstallment");
+        obj.schoolid=localStorage.getItem("schoolid");    
+        this.fetchfeesplitupparam=obj;       
+        this.$.fetchfeesplitupajax.generateRequest();
+      },
+      fetchfeesplitupResponse:function(e){
+        var arr=e.detail.response.returnval;              
+      }
+    });
+  })();
+  </script>
+</dom-module>
