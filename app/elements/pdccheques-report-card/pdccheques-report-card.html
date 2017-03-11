@@ -19,6 +19,18 @@
                 <div class="col-md-1" style="margin-top: 2%;margin-left: -3%;">
                   <todate-icon-pickercard></todate-icon-pickercard>
                 </div>
+                
+                <div class="col-sm-2" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Select By" attr-for-selected="value">
+                  <paper-menu id="chequetype" class="dropdown-content" required on-iron-select="FnSelectType" valueattr="value" >
+                    <!-- <template  is="dom-repeat" items="{{}}" as="item"> -->
+                    <paper-item value="Cheque Date">Cheque Date</paper-item>
+                    <paper-item value="Received Date">Received Date</paper-item>
+                    <!-- </template> -->
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div>  
+
                 <div class="col-md-1" style="margin-top: 2.5%;margin-left: 10%;">
                   <paper-button style="height:30px;text-transform: none;" on-click="FnView" class="btn btn-primary">View</paper-button>
                 </div>
@@ -80,15 +92,19 @@
   (function() {
     'use strict';
     var flag=0;
+    var filterby="Cheque Date";
     Polymer({
       is: 'pdccheques-report-card',
       callService:function(){ 
         flag=0;       
-        this.$.feereportservice.FnFetchPDCService(flag);
+        this.$.feereportservice.FnFetchPDCService(flag,filterby);
+      },
+      FnSelectType:function(e){
+        filterby=(e.target.selectedItem.textContent).trim();
       },
       FnView:function(){
         flag=1;
-        this.$.feereportservice.FnFetchPDCService(flag);
+        this.$.feereportservice.FnFetchPDCService(flag,filterby);
       },
       FnRefresh:function(){
         this.pdcarr=[];

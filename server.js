@@ -6072,6 +6072,16 @@ app.post('/fetchpdccheques-service',  urlencodedParser,function (req, res){
  // var qur = "SELECT * FROM mlzscrm.md_student_paidfee where STR_TO_DATE(cheque_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(cheque_date,'%m/%d/%Y')>STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y') "+
  //             "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
 
+ if(req.query.filterby=="Cheque Date"){
+ if(req.query.flag==0)
+ var qur = "SELECT * FROM mlzscrm.md_student_paidfee where cheque_date in (select installment_date from md_installment_date where school_id='"+req.query.schoolid+"') and cheque_date='"+req.query.fromdate+"' "+
+           "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
+ else
+ var qur = "SELECT * FROM mlzscrm.md_student_paidfee where cheque_date in (select installment_date from md_installment_date where school_id='"+req.query.schoolid+"') and "+
+           "STR_TO_DATE(cheque_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(cheque_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y') "+
+           "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
+ }
+ if(req.query.filterby=="Received Date"){
  if(req.query.flag==0)
  var qur = "SELECT * FROM mlzscrm.md_student_paidfee where cheque_date in (select installment_date from md_installment_date where school_id='"+req.query.schoolid+"') and received_date='"+req.query.fromdate+"' "+
            "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
@@ -6079,7 +6089,7 @@ app.post('/fetchpdccheques-service',  urlencodedParser,function (req, res){
  var qur = "SELECT * FROM mlzscrm.md_student_paidfee where cheque_date in (select installment_date from md_installment_date where school_id='"+req.query.schoolid+"') and "+
            "STR_TO_DATE(received_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(received_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y') "+
            "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
-
+ }
  console.log('-----------------------fetch pdc cheque--------------------------');
  console.log(qur);
  console.log('-------------------------------------------------');
