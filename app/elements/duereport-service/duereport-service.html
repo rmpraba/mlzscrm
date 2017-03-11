@@ -339,6 +339,21 @@
           this.FnFormpaidStructure();
         }
       },
+      eliminateDuplicates:function(arr) {
+        var i;
+        var len=arr.length;
+        var out=[];
+        var obj={};
+        // out.push("Sno");
+        // out.push("Student Name");
+        for (i=0;i<len;i++) {
+        obj[arr[i].admission_no]=0;
+        }
+        for (i in obj) {
+        out.push(i);
+        }
+        return out;
+        },
       FnFormpaidStructure:function(){
         
         var arr1=[];
@@ -363,10 +378,19 @@
           this.arr5.push(this.paidarr[i]);
          }
         }
+        // alert(arr1.length);
+        // var arr1=this.eliminateDuplicates(arr1);
+        // alert(arr1.length);
 
         var split=[];
         var commonsplit=[];
-        for(var i=0;i<arr1.length;i++){        
+        for(var i=0;i<arr1.length;i++){
+        var f=0;
+        for(var x=0;x<commonsplit.length;x++){
+            if(arr1[i].admission_no==commonsplit[x].admissionno)
+                f=1;
+        }        
+        if(f==0){
         for(var j=0;j<this.feesplit.length;j++)
         {           
         if(arr1[i].admission_no==this.feesplit[j].admission_no){
@@ -375,11 +399,24 @@
         commonobj.admissionno=this.feesplit[j].admission_no;
         commonobj.studentname=this.feesplit[j].student_name;
         var amt=0;
+        if(this.feesplit[j].installment=="Commitment Fee (Ins1)"||this.feesplit[j].installment=="Commitment Fee (Ins2)"){
+            this.feesplit[j].installment="Commitment Fee";
+            commonobj[((this.feesplit[j].installment).replace(' ',''))+((this.feesplit[j].feetype).replace(' ',''))]=this.feesplit[j].feetype_actual_amount;
+            commonobj.commitinsflag=1;
+        }
+        else{
         commonobj[((this.feesplit[j].installment).replace(' ',''))+((this.feesplit[j].feetype).replace(' ',''))]=this.feesplit[j].feetype_amount;
+        commonobj.commitinsflag=0;
+        }
         amt=this.feesplit[j].feetype_amount;
         for(var k=j+1;k<this.feesplit.length;k++)
         {
+          
           if(this.feesplit[j].admission_no==this.feesplit[k].admission_no){
+           if(this.feesplit[k].installment=="Commitment Fee (Ins1)"||this.feesplit[k].installment=="Commitment Fee (Ins2)"){            this.feesplit[k].installment="Commitment Fee";
+               commonobj[((this.feesplit[k].installment).replace(' ',''))+((this.feesplit[k].feetype).replace(' ',''))]=this.feesplit[k].feetype_actual_amount;
+           }
+           else
            commonobj[((this.feesplit[k].installment).replace(' ',''))+((this.feesplit[k].feetype).replace(' ',''))]=this.feesplit[k].feetype_amount;
            amt=parseFloat(amt)+parseFloat(this.feesplit[k].feetype_amount);
            this.feesplit.splice(k,1);
@@ -387,10 +424,13 @@
           }
         }
         commonobj.amount=amt;
-        commonsplit.push(commonobj);     
+        commonsplit.push(commonobj);  
         }
         }
         }
+        }
+
+        // alert(JSON.stringify(commonsplit));
 
         // this.FnCustomLumpsumHandler();
         // this.FnCommitLumpsumHandler();
@@ -406,12 +446,17 @@
     for(var j=0;j<commonsplit.length;j++){    
     var paidfeesobj={};
     paidfeesobj.admissionno=commonsplit[j].admissionno;
+    paidfeesobj.commitinsflag=commonsplit[j].commitinsflag;
     var flag=0;
     for(var i=0;i<arr1.length;i++){
     if(arr1[i].admission_no==commonsplit[j].admissionno){
     flag=1;
     // alert('coming');
     if(arr1[i].installment=="Commitment Fee"){
+    paidfeesobj.CommitmentFeeKitfee=commonsplit[j].CommitmentFeeKitfee;
+    paidfeesobj.CommitmentFeeAnnualfee=commonsplit[j].CommitmentFeeAnnualfee;
+    }
+    if(arr1[i].installment=="Commitment Fee (Ins1)"||arr1[i].installment=="Commitment Fee (Ins2)"){
     paidfeesobj.CommitmentFeeKitfee=commonsplit[j].CommitmentFeeKitfee;
     paidfeesobj.CommitmentFeeAnnualfee=commonsplit[j].CommitmentFeeAnnualfee;
     }
@@ -456,7 +501,7 @@
         obj.Installment3Annualfee=arr[i].Installment3Annualfee;
         obj.Installment3Tutionfee=arr[i].Installment3Tutionfee;
         obj.installmenttypeflag=localStorage.getItem('installmenttype_flag');
-
+        obj.commitinsflag=arr[i].commitinsflag;
         this.duereportactualfeeupdateparam=obj;
         this.$.duereportactualfeeupdateajax.generateRequest();
         }
@@ -565,23 +610,23 @@
         for(var i=0;i<lumpsum.length;i++){        
         for(var j=0;j<inssplit.length;j++)
         {           
-        if(lumpsum[i].admission_no==inssplit[j].admission_no){
+        if((lumpsum[i].admission_no==inssplit[j].admission_no)){
 
         var commonobj={};
         commonobj.admissionno=inssplit[j].admission_no;
         commonobj.studentname=inssplit[j].student_name;
         var amt=0;
-        if(inssplit[j].feetype_amount>0){
+        // if(inssplit[j].feetype_amount>0){
         commonobj[((inssplit[j].installment).replace(' ',''))+((inssplit[j].feetype).replace(' ',''))]=inssplit[j].feetype_amount;
         amt=inssplit[j].feetype_amount;
-        }
+        // }
         for(var k=j+1;k<inssplit.length;k++)
         {
           if(inssplit[j].admission_no==inssplit[k].admission_no){
-           if(inssplit[j].feetype_amount>0){
+           // if(inssplit[j].feetype_amount>0){
            commonobj[((inssplit[k].installment).replace(' ',''))+((inssplit[k].feetype).replace(' ',''))]=inssplit[k].feetype_amount;
            amt=parseFloat(amt)+parseFloat(inssplit[k].feetype_amount);
-           }
+           // }
            inssplit.splice(k,1);
            k--;
           }
@@ -598,48 +643,62 @@
     for(var i=0;i<lumpsum.length;i++){
         for(var j=0;j<commonsplit.length;j++){
             var tempdiscount=0;
-            if(lumpsum[i].admission_no==commonsplit[j].admissionno){
+            if((lumpsum[i].admission_no==commonsplit[j].admissionno)){
+                    // alert(lumpsum[i].discountamount);
+                    // alert(JSON.stringify(commonsplit[j]));
                   if(commonsplit[j].CommitmentFeeAnnualfee>lumpsum[i].discountamount){
-                  // alert('in');
+                  // alert('in commit');
                   commonsplit[j].CommitmentFeeAnnualfee=parseFloat(commonsplit[j].CommitmentFeeAnnualfee)-parseFloat(lumpsum[i].discountamount);
                   lumpsum[i].discountamount=0;
+                  // break;
                   }
                   else{
+                    // alert('out commit');
                   // alert('out'+parseFloat(lumpsum[i].discountamount)+" "+parseFloat(commonsplit[j].CommitmentFeeAnnualfee));
                   lumpsum[i].discountamount=parseFloat(lumpsum[i].discountamount)-parseFloat(commonsplit[j].CommitmentFeeAnnualfee);
+                  // if(lumpsum[i].discountamount>0)
                   commonsplit[j].CommitmentFeeAnnualfee=0;
+                  // break;
                   // alert(lumpsum[i].discountamount);
                   // tempdiscount=parseFloat(lumpsum[i].discount_amount)-parseFloat(commonsplit[j].CommitmentFeeAnnualfee);
                   }
                   
                   // if(tempdiscount>0){
                   if(commonsplit[j].Installment1Annualfee>lumpsum[i].discountamount){
+                    // alert('in ins1');
                   commonsplit[j].Installment1Annualfee=parseFloat(commonsplit[j].Installment1Annualfee)-parseFloat(lumpsum[i].discountamount);
                   lumpsum[i].discountamount=0
+                  // break;
                   }
                   else{
+                    // alert('out ins1');
                   lumpsum[i].discountamount=parseFloat(lumpsum[i].discountamount)-parseFloat(commonsplit[j].Installment1Annualfee);
-                  commonsplit[j].Installment1Annualfee=0;                  
+                  commonsplit[j].Installment1Annualfee=0; 
+                  // break;                 
                   }                  
                   // }
                   // if(tempdiscount>0){
                   if(commonsplit[j].Installment2Annualfee>lumpsum[i].discountamount){
                   commonsplit[j].Installment2Annualfee=parseFloat(commonsplit[j].Installment2Annualfee)-parseFloat(lumpsum[i].discountamount);
                   lumpsum[i].discountamount=0
+                  // break;
                   }
                   else{
                   lumpsum[i].discountamount=parseFloat(lumpsum[i].discountamount)-parseFloat(commonsplit[j].Installment2Annualfee);
                   commonsplit[j].Installment2Annualfee=0;                  
+                  // break;
                   }                  
                   // }
                   // if(tempdiscount>0){
                   if(commonsplit[j].Installment3Annualfee>lumpsum[i].discountamount){
                   commonsplit[j].Installment3Annualfee=parseFloat(commonsplit[j].Installment3Annualfee)-parseFloat(lumpsum[i].discountamount);
                   lumpsum[i].discountamount=0
+                  // break;
                   }
                   else{
                   lumpsum[i].discountamount=parseFloat(lumpsum[i].discountamount)-parseFloat(commonsplit[j].Installment3Annualfee);
-                  commonsplit[j].Installment3Annualfee=0;                  
+                  commonsplit[j].Installment3Annualfee=0; 
+                  // break;                 
                   }                  
                   // }  
                   paidfeesarr.push(commonsplit[j]);                            

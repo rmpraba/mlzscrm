@@ -7756,7 +7756,8 @@ app.post('/duereportactualfeeupdate-service',  urlencodedParser,function (req, r
     actins3annualfee:req.query.Installment3Annualfee,
     actins3tutionfee:req.query.Installment3Tutionfee,
     acttotalpaidfee:req.query.totalpaidfee,
-    pattern_flag:req.query.installmenttypeflag
+    pattern_flag:req.query.installmenttypeflag,
+    commitinsflag:req.query.commitinsflag
   };
 
   var schoolid={school_id:req.query.schoolid};
@@ -8104,7 +8105,8 @@ app.post('/duereportdueupdate-service',  urlencodedParser,function (req, res){
 
   var updatequery="UPDATE due_report SET duecommitkitfee=(actcommitkitfee-commitkitfee),duecommitannualfee=(actcommitannualfee-commitannualfee),dueins1annualfee=(actins1annualfee-ins1annualfee),dueins1tutionfee=(actins1tutionfee-ins1tutionfee), "+
   " dueins2annualfee=(actins2annualfee-ins2annualfee),dueins2tutionfee=(actins2tutionfee-ins2tutionfee),dueins3annualfee=(actins3annualfee-ins3annualfee),dueins3tutionfee=(actins3tutionfee-ins3tutionfee),duetotalpaidfee=(acttotalpaidfee-totalpaidfee) WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"'"; 
-
+  // var updatequery2="UPDATE due_report SET duecommitkitfee=(actcommitkitfee-commitkitfee),duecommitannualfee=(actcommitannualfee-commitannualfee),dueins1annualfee=(actins1annualfee-ins1annualfee),dueins1tutionfee=(actins1tutionfee-ins1tutionfee), "+
+  // " dueins2annualfee=(actins2annualfee-ins2annualfee),dueins2tutionfee=(actins2tutionfee-ins2tutionfee),dueins3annualfee=(actins3annualfee-ins3annualfee),dueins3tutionfee=(actins3tutionfee-ins3tutionfee),duetotalpaidfee=(acttotalpaidfee-totalpaidfee) WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"' and commitinsflag='0'";
   connection.query(updatequery,function(err, result){
       if(!err){   
         res.status(200).json({'returnval': 'Updated!'});
@@ -8122,11 +8124,23 @@ app.post('/duereportdiscountupdate-service',  urlencodedParser,function (req, re
   var updatequery="update due_report set discountkitfee=(kitfee-(actcommitkitfee)), "+
   "discountannualfee=(annualfee-(actcommitannualfee+actins1annualfee+actins2annualfee+actins3annualfee)), "+
   "discounttutionfee=(tutionfee-(actins1tutionfee+actins2tutionfee+actins3tutionfee)),discounttotal=(discountkitfee+discountannualfee+discounttutionfee) WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"'";
+
+  var qur1="UPDATE due_report SET duecommitkitfee=(duecommitkitfee-discountkitfee),duecommitannualfee=(discountannualfee-duecommitannualfee),duetotalpaidfee=(acttotalpaidfee-totalpaidfee+duecommitannualfee+duecommitkitfee) WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"' and commitinsflag='1'"; 
+  var qur2="UPDATE due_report SET discountkitfee=0,discountannualfee=0,discounttutionfee=0,discounttotal=0 WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"' and commitinsflag='1'";
+  
   console.log('-----------discount update-------------');
   console.log(updatequery); 
   connection.query(updatequery,function(err, result){
+      if(!err){ 
+      connection.query(qur1,function(err, result){
+      if(!err){ 
+      connection.query(qur2,function(err, result){
       if(!err){   
         res.status(200).json({'returnval': 'Updated!'});
+      }
+      });
+      }
+      });
       } else {
         console.log(err);
       }
