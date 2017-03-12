@@ -460,8 +460,11 @@
             <li id="dailycollectionreport">
             <a href="" aria-hidden="true" on-click="FnDailyCollectionReport">Daily Fee Collection Report</a>
             </li>            
-            <li id="feecollectionreport">
+            <!-- <li id="feecollectionreport">
             <a href="" aria-hidden="true" on-click="FnFeeCollectionReport">Fee Collection Report</a>
+            </li> -->
+            <li id="chequecollectionreport">
+            <a href="" aria-hidden="true" on-click="FnchequeCollectionReport">Cheque Collection Report</a>
             </li>
           </ul>
           </li>
@@ -1232,6 +1235,10 @@
       FnPdcCheques:function(){
         document.querySelector('app-list').setPage("pdccheques-report-card","PDC Cheques");
         document.querySelector('pdccheques-report-card').callService();
+      },
+      FnchequeCollectionReport:function(){
+        document.querySelector('app-list').setPage("chequecollection-report","Cheque Collection");
+        document.querySelector('chequecollection-report').callService();
       },
       FnPromotion:function(){
           this.$.scheduleservice.fetchgradeService();

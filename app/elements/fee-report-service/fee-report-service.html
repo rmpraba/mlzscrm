@@ -91,6 +91,16 @@
         on-response="fetchpdcchequesResponse"
         debounce-duration="300"
         >
+     <iron-ajax
+        method="post"
+        id="fetchchequecollectionajax"
+        url="{{fetchchequecollectionurl}}"
+        params="{{fetchchequecollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchchequecollectionResponse"
+        debounce-duration="300"
+        >
      <!-- It would fetch discount structure-->
      <iron-ajax
         method="post"
@@ -1531,6 +1541,78 @@
           arr=[];
           document.querySelector('pdccheques-report-card').pdcarr=arr;
           document.querySelector('pdccheques-report-card').FnRefresh();
+        }
+      },
+      FnFetchChequeCollectionService:function(flag){
+        this.fetchchequecollectionurl=sessionStorage.getItem("addrinfo")+"/fetchchequecollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        var d=new Date();
+        var mn=(d.getMonth()+1);
+        var dt=d.getDate();
+        var yr=d.getFullYear();
+        if(mn<10)
+          mn="0"+mn;
+        if(dt<10)
+          dt="0"+dt;
+        var currdate=mn+"/"+dt+"/"+yr;
+        obj.currdate=currdate;
+        obj.flag=flag;
+        // obj.filterby=filterby;
+        this.fetchchequecollectionparam=obj;
+        this.$.fetchchequecollectionajax.generateRequest();
+      },
+      fetchchequecollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var noofstudents=0;
+        var totalamount=0;
+        if(arr!='no rows'){
+        for(var i=0;i<arr.length;i++){
+          if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
+
+          }
+          else{
+          var d=new Date(arr[i].cheque_date);
+          var d1=d.getDate();
+          var m1=(d.getMonth())+1;
+          var y1=d.getFullYear();
+          if(d1<10)
+            d1='0'+d1;
+          if(m1<10)
+            m1='0'+m1;
+          var dd1=d1+'/'+m1+'/'+y1;
+          arr[i].cheque_date=dd1
+          }
+          var dd=new Date(arr[i].received_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].received_date=dd2;
+          
+        }
+        for(var i=0;i<arr.length;i++)
+        {
+        arr[i].sno=i+1;        
+        noofstudents=parseFloat(noofstudents)+1;
+        totalamount=parseFloat(totalamount)+parseFloat(arr[i].installment_amount);
+        }
+        document.querySelector('chequecollection-report').chequecollectionarr=arr;
+        document.querySelector('chequecollection-report').noofstudents=noofstudents;
+        document.querySelector('chequecollection-report').totalcollection=totalamount;
+        }
+        else
+        {
+          arr=[];
+          document.querySelector('chequecollection-report').chequecollectionarr=arr;
+          document.querySelector('chequecollection-report').FnRefresh();
         }
       },
       FnFetchDiscountStructureService:function(admissionyear

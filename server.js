@@ -6109,6 +6109,37 @@ app.post('/fetchpdccheques-service',  urlencodedParser,function (req, res){
  });
 
 
+app.post('/fetchchequecollection-service',  urlencodedParser,function (req, res){
+ 
+
+ if(req.query.flag==0)
+ var qur = "SELECT * FROM mlzscrm.md_student_paidfee where  cheque_date='"+req.query.fromdate+"' "+
+           "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
+ else
+ var qur = "SELECT * FROM mlzscrm.md_student_paidfee where  "+
+           "STR_TO_DATE(cheque_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(cheque_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y') "+
+           "and school_id='"+req.query.schoolid+"' and cheque_status in('inprogress') and cheque_status not in('bounced','cancelled')";
+ 
+ 
+ console.log('-----------------------fetch cheque--------------------------');
+ console.log(qur);
+ console.log('-------------------------------------------------');
+   connection.query(qur,
+     function(err, rows){
+       if(!err){
+         if(rows.length>0){
+           res.status(200).json({'returnval': rows});
+         }else{
+           console.log(err);
+           res.status(200).json({'returnval':'no rows'});
+         }
+       }else{
+         console.log(err);
+       }
+     });
+ });
+
+
 app.post('/fetchdiscountstructure-service',  urlencodedParser,function (req, res){
  if(req.query.admissionyear=="All"&&req.query.grade=="all")
  var qur = "SELECT * FROM mlzscrm.md_discount_master where academic_year='"+req.query.academicyear+"'  and (from_date>='"+req.query.fromdate+"' "+

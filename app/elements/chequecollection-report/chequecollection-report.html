@@ -1,7 +1,7 @@
 
 <link rel="import" href="..\..\bower_components/polymer/polymer.html">
 
-<dom-module id="pdccheques-report-card">
+<dom-module id="chequecollection-report">
   <template>
     <style>
       .datecard {
@@ -18,17 +18,6 @@
                 </div>
                 <div class="col-md-1" style="margin-top: 2%;margin-left: -3%;">
                   <todate-icon-pickercard></todate-icon-pickercard>
-                </div>
-                
-                <div class="col-sm-2" style="margin-left: 5%;">
-                <paper-dropdown-menu label="Select By" attr-for-selected="value">
-                  <paper-menu id="chequetype" class="dropdown-content" required on-iron-select="FnSelectType" valueattr="value" >
-                    <!-- <template  is="dom-repeat" items="{{}}" as="item"> -->
-                    <paper-item value="Cheque Date">Cheque Date</paper-item>
-                    <paper-item value="Received Date">Received Date</paper-item>
-                    <!-- </template> -->
-                  </paper-menu>
-                </paper-dropdown-menu> 
                 </div>  
 
                 <div class="col-md-1" style="margin-top: 2.5%;margin-left: 10%;">
@@ -38,7 +27,7 @@
                 <div class="col-md-1" style="margin-top: 1%;margin-left: 45%;">
                 <p>Download
                 <a href="#">
-                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('pdcreport', 'PDC report')"></span>
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('chequecollectionreport', 'Cheque Collection report')"></span>
                 </a>
                 </p>
                 </div>  
@@ -54,7 +43,7 @@
       </tr>
       </thead>
       <tbody>
-      <template  is="dom-repeat" items="{{pdcarr}}" as="item">
+      <template  is="dom-repeat" items="{{chequecollectionarr}}" as="item">
         <tr><td>{{item.sno}}</td><td>{{item.admission_no}}</td><td>{{item.student_name}}</td><td>{{item.grade}}</td>
         <td>{{item.installment_type}}</td><td>{{item.mode_of_payment}}</td><td>{{item.cheque_no}}</td><td>{{item.bank_name}}</td><td>{{item.cheque_date}}</td><td>{{item.received_date}}</td>
         <td>{{item.receipt_no}}</td><td>{{item.installment_amount}}</td></tr>
@@ -92,26 +81,21 @@
   (function() {
     'use strict';
     var flag=0;
-    var filterby="Received Date";
     Polymer({
-      is: 'pdccheques-report-card',
+      is: 'chequecollection-report',
       callService:function(){ 
         flag=0;       
-        this.$.feereportservice.FnFetchPDCService(flag,filterby);
-      },
-      FnSelectType:function(e){
-        filterby=(e.target.selectedItem.textContent).trim();
+        this.$.feereportservice.FnFetchChequeCollectionService(flag);
       },
       FnView:function(){
         flag=1;
-        this.$.feereportservice.FnFetchPDCService(flag,filterby);
+        this.$.feereportservice.FnFetchChequeCollectionService(flag);
       },
       FnRefresh:function(){
-        this.pdcarr=[];
+        this.chequecollectionarr=[];
         this.totalcollection=0;
         this.noofstudents=0;
         flag=0;
-        document.querySelector('chequetype').selected=-1;
       }
     });
   })();
