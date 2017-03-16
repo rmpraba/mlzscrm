@@ -8411,18 +8411,64 @@ app.post('/fetchschool-service',  urlencodedParser,function (req, res){
 
 app.post('/fetchcollectiondashboardinfo-service',  urlencodedParser,function (req, res){
   // var qur1="SELECT class_for_admission,count(admission_no) FROM md_admission WHERE school_id='"+req.query.schoolid+"' group by class_for_admission";
+  if(req.query.type=="All"&&req.query.grade=="All Grades"){
   var totalqur="SELECT grade,count(*) as cnt,sum(totalfee) as total FROM mlzscrm.due_report where "+
-  "school_id='"+req.query.schoolid+"' group by grade";
-  var commitqur="select grade,count(*) as cnt,sum(commitkitfee+commitannualfee) as total from due_report where school_id='"+req.query.schoolid+"'"+
-  " duecommitkitfee=0 and duecommitannualfee=0 group by grade";
-  var ins1qur="select grade,count(*) as cnt,sum(ins1annualfee+ins1tutionfee) as total from due_report where school_id='"+req.query.schoolid+"'"+
-  " dueins1annualfee=0 and dueins1tutionfee=0 group by grade";
-  var ins2qur="select grade,count(*) as cnt,sum(ins2annualfee+ins2tutionfee) as total from due_report where school_id='"+req.query.schoolid+"'"+
-  " dueins2annualfee=0 and dueins2tutionfee=0 group by grade";
-  var ins3qur="select grade,count(*) as cnt,sum(ins3annualfee+ins3tutionfee) as total from due_report where school_id='"+req.query.schoolid+"'"+
-  " dueins3annualfee=0 and dueins3tutionfee=0 group by grade";
+  "school_id='"+req.query.schoolid+"' and totalpaidfee is not null group by grade order by grade";
+  var commitqur="select grade,count(*) as cnt,sum(commitkitfee+commitannualfee) as total from due_report where school_id='"+req.query.schoolid+"' and "+
+  " duecommitkitfee=0 or duecommitannualfee=0 and totalpaidfee is not null group by grade order by grade";
+  var ins1qur="select grade,count(*) as cnt,sum(ins1annualfee+ins1tutionfee) as total from due_report where school_id='"+req.query.schoolid+"' and "+
+  " dueins1annualfee=0 and dueins1tutionfee=0 and totalpaidfee is not null group by grade order by grade";
+  var ins2qur="select grade,count(*) as cnt,sum(ins2annualfee+ins2tutionfee) as total from due_report where school_id='"+req.query.schoolid+"' and "+
+  " dueins2annualfee=0 and dueins2tutionfee=0 and totalpaidfee is not null group by grade order by grade";
+  var ins3qur="select grade,count(*) as cnt,sum(ins3annualfee+ins3tutionfee) as total from due_report where school_id='"+req.query.schoolid+"' and "+
+  " dueins3annualfee=0 and dueins3tutionfee=0 and totalpaidfee is not null group by grade order by grade";
+  }
+  if(req.query.type!="All"&&req.query.grade=="All Grades"){
+  var totalqur="SELECT grade,count(*) as cnt,sum(totalfee) as total FROM mlzscrm.due_report where "+
+  "school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and totalpaidfee is not null group by grade order by grade";
+  var commitqur="select grade,count(*) as cnt,sum(commitkitfee+commitannualfee) as total from due_report where school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and "+
+  " duecommitkitfee=0 or duecommitannualfee=0 and totalpaidfee is not null group by grade order by grade";
+  var ins1qur="select grade,count(*) as cnt,sum(ins1annualfee+ins1tutionfee) as total from due_report where school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and "+
+  " dueins1annualfee=0 and dueins1tutionfee=0 and totalpaidfee is not null group by grade order by grade";
+  var ins2qur="select grade,count(*) as cnt,sum(ins2annualfee+ins2tutionfee) as total from due_report where school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and "+
+  " dueins2annualfee=0 and dueins2tutionfee=0 and totalpaidfee is not null group by grade order by grade";
+  var ins3qur="select grade,count(*) as cnt,sum(ins3annualfee+ins3tutionfee) as total from due_report where school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and "+
+  " dueins3annualfee=0 and dueins3tutionfee=0 and totalpaidfee is not null group by grade order by grade";
+  }
+  if(req.query.type=="All"&&req.query.grade!="All Grades"){
+  var totalqur="SELECT grade,count(*) as cnt,sum(totalfee) as total FROM mlzscrm.due_report where "+
+  "school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and totalpaidfee is not null group by grade order by grade";
+  var commitqur="select grade,count(*) as cnt,sum(commitkitfee+commitannualfee) as total from due_report where school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and "+
+  " duecommitkitfee=0 or duecommitannualfee=0 and totalpaidfee is not null group by grade order by grade";
+  var ins1qur="select grade,count(*) as cnt,sum(ins1annualfee+ins1tutionfee) as total from due_report where school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and "+
+  " dueins1annualfee=0 and dueins1tutionfee=0 and totalpaidfee is not null group by grade order by grade";
+  var ins2qur="select grade,count(*) as cnt,sum(ins2annualfee+ins2tutionfee) as total from due_report where school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and "+
+  " dueins2annualfee=0 and dueins2tutionfee=0 and totalpaidfee is not null group by grade order by grade";
+  var ins3qur="select grade,count(*) as cnt,sum(ins3annualfee+ins3tutionfee) as total from due_report where school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and "+
+  " dueins3annualfee=0 and dueins3tutionfee=0 and totalpaidfee is not null group by grade order by grade";
+  }
+  if(req.query.type!="All"&&req.query.grade!="All Grades"){
+  var totalqur="SELECT grade,count(*) as cnt,sum(totalfee) as total FROM mlzscrm.due_report where "+
+  "school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and admission_status='"+req.query.type+"' and totalpaidfee is not null group by grade order by grade";
+  var commitqur="select grade,count(*) as cnt,sum(commitkitfee+commitannualfee) as total from due_report where school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and admission_status='"+req.query.type+"' and "+
+  " duecommitkitfee=0 or duecommitannualfee=0 and totalpaidfee is not null group by grade order by grade";
+  var ins1qur="select grade,count(*) as cnt,sum(ins1annualfee+ins1tutionfee) as total from due_report where school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and admission_status='"+req.query.type+"' and "+
+  " dueins1annualfee=0 and dueins1tutionfee=0 and totalpaidfee is not null group by grade order by grade";
+  var ins2qur="select grade,count(*) as cnt,sum(ins2annualfee+ins2tutionfee) as total from due_report where school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and admission_status='"+req.query.type+"' and "+
+  " dueins2annualfee=0 and dueins2tutionfee=0 and totalpaidfee is not null group by grade order by grade";
+  var ins3qur="select grade,count(*) as cnt,sum(ins3annualfee+ins3tutionfee) as total from due_report where school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and admission_status='"+req.query.type+"' and "+
+  " dueins3annualfee=0 and dueins3tutionfee=0 and totalpaidfee is not null group by grade order by grade";
+  }
   console.log('-----------school report-------------');
   console.log(totalqur); 
+  console.log('-------------------------------------');
+  console.log(commitqur); 
+  console.log('-------------------------------------');
+  console.log(ins1qur); 
+  console.log('-------------------------------------');
+  console.log(ins2qur); 
+  console.log('-------------------------------------');
+  console.log(ins3qur); 
   var total=[];
   var commit=[];
   var ins1=[];
@@ -8466,6 +8512,121 @@ app.post('/fetchcollectiondashboardinfo-service',  urlencodedParser,function (re
         res.status(200).json({'returnval': 'no rows'});
       }
   });
+ 
+});
+
+
+app.post('/fetchcollectiondashboarddueinfo-service',  urlencodedParser,function (req, res){
+  // var qur1="SELECT class_for_admission,count(admission_no) FROM md_admission WHERE school_id='"+req.query.schoolid+"' group by class_for_admission";
+  // console.log('-----------school report-------------');
+  // console.log(totalqur); 
+  if(req.query.type=="All"&&req.query.grade=="All Grades"){
+  var commitqur="select grade,count(*) as cnt,sum(duecommitkitfee+duecommitannualfee) as total from due_report "+
+  " where school_id='"+req.query.schoolid+"' and (duecommitkitfee>0) or (duecommitannualfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  var ins1qur="select grade,count(*) as cnt,sum(dueins1annualfee+dueins1tutionfee) as total  from due_report "+
+  " where school_id='"+req.query.schoolid+"' and (dueins1annualfee>0) or (dueins1tutionfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  var ins2qur="select grade,count(*) as cnt,sum(dueins2annualfee+dueins2tutionfee) as total  from due_report "+
+  " where school_id='"+req.query.schoolid+"' and (dueins2annualfee>0) or (dueins2tutionfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  var ins3qur="select grade,count(*) as cnt,sum(dueins3annualfee+dueins3tutionfee) as total  from due_report "+
+  " where school_id='"+req.query.schoolid+"' and (dueins3annualfee>0) or (dueins3tutionfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  }
+  if(req.query.type!="All"&&req.query.grade=="All Grades"){
+  var commitqur="select grade,count(*) as cnt,sum(duecommitkitfee+duecommitannualfee) as total from due_report "+
+  " where school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and (duecommitkitfee>0) or (duecommitannualfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  var ins1qur="select grade,count(*) as cnt,sum(dueins1annualfee+dueins1tutionfee) as total  from due_report "+
+  " where school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and (dueins1annualfee>0) or (dueins1tutionfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  var ins2qur="select grade,count(*) as cnt,sum(dueins2annualfee+dueins2tutionfee) as total  from due_report "+
+  " where school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and (dueins2annualfee>0) or (dueins2tutionfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  var ins3qur="select grade,count(*) as cnt,sum(dueins3annualfee+dueins3tutionfee) as total  from due_report "+
+  " where school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and (dueins3annualfee>0) or (dueins3tutionfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  }
+  if(req.query.type=="All"&&req.query.grade!="All Grades"){
+  var commitqur="select grade,count(*) as cnt,sum(duecommitkitfee+duecommitannualfee) as total from due_report "+
+  " where school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and (duecommitkitfee>0) or (duecommitannualfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  var ins1qur="select grade,count(*) as cnt,sum(dueins1annualfee+dueins1tutionfee) as total  from due_report "+
+  " where school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and (dueins1annualfee>0) or (dueins1tutionfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  var ins2qur="select grade,count(*) as cnt,sum(dueins2annualfee+dueins2tutionfee) as total  from due_report "+
+  " where school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and (dueins2annualfee>0) or (dueins2tutionfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  var ins3qur="select grade,count(*) as cnt,sum(dueins3annualfee+dueins3tutionfee) as total  from due_report "+
+  " where school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and (dueins3annualfee>0) or (dueins3tutionfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  }
+  if(req.query.type!="All"&&req.query.grade!="All Grades"){
+  var commitqur="select grade,count(*) as cnt,sum(duecommitkitfee+duecommitannualfee) as total from due_report "+
+  " where school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and grade='"+req.query.grade+"' and (duecommitkitfee>0) or (duecommitannualfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  var ins1qur="select grade,count(*) as cnt,sum(dueins1annualfee+dueins1tutionfee) as total  from due_report "+
+  " where school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and grade='"+req.query.grade+"' and (dueins1annualfee>0) or (dueins1tutionfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  var ins2qur="select grade,count(*) as cnt,sum(dueins2annualfee+dueins2tutionfee) as total  from due_report "+
+  " where school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and grade='"+req.query.grade+"' and (dueins2annualfee>0) or (dueins2tutionfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  var ins3qur="select grade,count(*) as cnt,sum(dueins3annualfee+dueins3tutionfee) as total  from due_report "+
+  " where school_id='"+req.query.schoolid+"' and admission_status='"+req.query.type+"' and grade='"+req.query.grade+"' and (dueins3annualfee>0) or (dueins3tutionfee>0) and totalpaidfee is not null "+
+  " group by grade order by grade";
+  }
+  console.log('-------------------------------------');
+  console.log(commitqur); 
+  console.log('-------------------------------------');
+  console.log(ins1qur); 
+  console.log('-------------------------------------');
+  console.log(ins2qur); 
+  console.log('-------------------------------------');
+  console.log(ins3qur); 
+  var total=[];
+  var commit=[];
+  var ins1=[];
+  var ins2=[];
+  var ins3=[];
+
+  // connection.query(totalqur,function(err, rows){
+      // if(!err){ 
+      // total=rows; 
+      connection.query(commitqur,function(err, rows){ 
+        if(!err){ 
+        commit=rows; 
+        connection.query(ins1qur,function(err, rows){ 
+        if(!err){  
+        ins1=rows;
+        connection.query(ins2qur,function(err, rows){ 
+        if(!err){  
+        ins2=rows;  
+        connection.query(ins3qur,function(err, rows){
+        if(!err){ 
+        ins3=rows;
+        res.status(200).json({'commit':commit,'ins1':ins1,'ins2':ins2,'ins3':ins3});
+        }
+        else
+          console.log(err);
+        });
+        }
+        else
+          console.log(err);
+        });
+        }
+        else
+          console.log(err);
+        });
+        }
+        else
+          console.log(err);
+      });
+      // } else {
+        // console.log(err);
+        // res.status(200).json({'returnval': 'no rows'});
+      // }
+  // });
  
 });
 

@@ -13,18 +13,35 @@
         on-response="fetchcollectiondashboardinfoResponse"
         debounce-duration="300"
         >
+      <iron-ajax
+        method="post"
+        id="fetchcollectiondashboarddueinfoajax"
+        url="{{fetchcollectiondashboarddueinfourl}}"
+        params="{{fetchcollectiondashboarddueinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectiondashboarddueinfoResponse"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
     'use strict';
-
+    var final=[];
     Polymer({
       is: 'consolidated-dashboardreport-service',
 
       FnFetchCollectionDashboardService:function(schoolid,academicyear,grade,type){
+        this.schoolid=schoolid;
+        this.academicyear=academicyear;
+        this.grade=grade;
+        this.type=type;
         this.fetchcollectiondashboardinfourl=sessionStorage.getItem("addrinfo")+"/fetchcollectiondashboardinfo-service";
         var obj={"schoolid":""};
-        obj.schoolid=schoolid;
+        obj.schoolid=this.schoolid;
+        obj.academicyear=this.academicyear;
+        obj.grade=this.grade;
+        obj.type=this.type;
         this.fetchcollectiondashboardinfoparam=obj;
         this.$.fetchcollectiondashboardinfoajax.generateRequest();
       },
@@ -34,27 +51,204 @@
         var ins1=e.detail.response.ins1;
         var ins2=e.detail.response.ins2;
         var ins3=e.detail.response.ins3;
-        var final=[];
-        alert(JSON.stringify(total));
-        alert(JSON.stringify(commit));
         for(var i=0;i<total.length;i++){
           for(var j=0;j<commit.length;j++){
+            var obj={};
+            var obj1={};
+            var f=0;
             if(total[i].grade==commit[j].grade){
-              var obj={};
+              f=1;
               obj.grade=total[i].grade;
               obj.strength=total[i].cnt;
-              obj.commitpaidcnt=commit[j].cnt;
-              final.push(obj);
-              var obj1={};
+              obj.total=" ";
+              obj.commitpaid=commit[j].cnt;
+              obj.commitdue=" ";
+              obj1.grade=" ";
+              obj1.strength="  ";
               obj1.total=total[i].total;
-              obj1.commitpaidtotal=commit[j].total;
-              final.push(obj1);
+              obj1.commitpaid=commit[j].total;
+              obj1.commitdue=" ";
+            }
+            if(total[i].grade==ins1[j].grade){
+              obj.ins1paid=ins1[j].cnt;
+              obj.ins1due=" ";
+              obj1.ins1paid=ins1[j].total;
+              obj1.ins1due=" ";
+            }
+            if(total[i].grade==ins2[j].grade){
+              obj.ins2paid=ins2[j].cnt;
+              obj.ins2due=" ";
+              obj1.ins2paid=ins2[j].total;
+              obj1.ins2due=" ";
+            }
+            if(total[i].grade==ins3[j].grade){
+              obj.ins3paid=ins3[j].cnt;
+              obj.ins3due=" ";
+              obj1.ins3paid=ins3[j].total;
+              obj1.ins3due=" ";
+            }
+            if(f==1){
+            final.push(obj);
+            final.push(obj1);
             }
           }
         }
-        alert(JSON.stringify(final));
+        if(final.length>0)
+        this.FnFetchCollectionDashboarddueService();
+        else
+        alert('Payment not initiated yet!!');
+        // alert(JSON.stringify(final));
+      // document.querySelector('consolidated-dashboardreport').finalarr=final;
+      // document.querySelector('consolidated-dashboardreport').FnHideView();
+      },
+      FnFetchCollectionDashboarddueService:function(){
+        this.fetchcollectiondashboarddueinfourl=sessionStorage.getItem("addrinfo")+"/fetchcollectiondashboarddueinfo-service";
+        var obj={"schoolid":""};
+        obj.schoolid=this.schoolid;
+        obj.academicyear=this.academicyear;
+        obj.grade=this.grade;
+        obj.type=this.type;
+        this.fetchcollectiondashboarddueinfoparam=obj;
+        this.$.fetchcollectiondashboarddueinfoajax.generateRequest();
+      },
+      fetchcollectiondashboarddueinfoResponse:function(e){
+        var commit=e.detail.response.commit;
+        var ins1=e.detail.response.ins1;
+        var ins2=e.detail.response.ins2;
+        var ins3=e.detail.response.ins3;
+        // alert(final.length);
+        for(var i=0;i<final.length;i+=2){
+          var flag=0;
+          for(var j=0;j<commit.length;j++){
+            if(final[i].grade==commit[j].grade){
+              flag=1;
+              final[i].commitdue=commit[j].cnt;
+              final[i+1].commitdue=commit[j].total;
+            }
+          }
+          if(flag==0){
+            final[i].commitdue=0;
+            final[i+1].commitdue=0; 
+          }
+        }
+        for(var i=0;i<final.length;i+=2){
+          var flag=0;
+          for(var j=0;j<ins1.length;j++){
+            if(final[i].grade==ins1[j].grade){
+              flag=1;
+              final[i].ins1due=ins1[j].cnt;
+              final[i+1].ins1due=ins1[j].total;
+            }
+          }
+          if(flag==0){
+            final[i].ins1due=0;
+            final[i+1].ins1due=0; 
+          }
+        }
+        for(var i=0;i<final.length;i+=2){
+          var flag=0;
+          for(var j=0;j<ins2.length;j++){
+            if(final[i].grade==ins2[j].grade){
+              flag=1;
+              final[i].ins2due=ins2[j].cnt;
+              final[i+1].ins2due=ins2[j].total;
+            }
+          }
+          if(flag==0){
+            final[i].ins2due=0;
+            final[i+1].ins2due=0; 
+          }
+        }
+        for(var i=0;i<final.length;i+=2){
+          var flag=0;
+          for(var j=0;j<ins3.length;j++){
+            if(final[i].grade==ins3[j].grade){
+              flag=1;
+              final[i].ins3due=ins3[j].cnt;
+              final[i+1].ins3due=ins3[j].total;
+            }
+          }
+          if(flag==0){
+            final[i].ins3due=0;
+            final[i+1].ins3due=0; 
+          }
+        }
+      // alert(JSON.stringify(final));
+      var overall=[];
+      var strength=0,total=0,commitpaid=0,commitdue=0,ins1paid=0,ins1due=0,ins2paid=0,ins2due=0,ins3paid=0,ins3due=0;
+      var obj={};
+      for(var i=0;i<final.length;i+=2){
+        strength=strength+final[i].strength;
+        total=total+final[i].total;
+        commitpaid=commitpaid+final[i].commitpaid;
+        commitdue=commitdue+final[i].commitdue;
+        ins1paid=ins1paid+final[i].ins1paid;
+        ins1due=ins1due+final[i].ins1due;
+        ins2paid=ins2paid+final[i].ins2paid;
+        ins2due=ins2due+final[i].ins2due;
+        ins3paid=ins3paid+final[i].ins3paid;
+        ins3due=ins3due+final[i].ins3due;
+        obj.grade="Total";
+        obj.strength=strength;
+        obj.total=" ";
+        obj.commitpaid=commitpaid;
+        obj.commitdue=commitdue;
+        obj.ins1paid=ins1paid;
+        obj.ins1due=ins1due;
+        obj.ins2paid=ins2paid;
+        obj.ins2due=ins2due;
+        obj.ins3paid=ins3paid;
+        obj.ins3due=ins3due;
       }
+      overall.push(obj);
+      var strength=0,total=0,commitpaid=0,commitdue=0,ins1paid=0,ins1due=0,ins2paid=0,ins2due=0,ins3paid=0,ins3due=0;
+      var obj={};
+      for(var i=1;i<final.length;i+=2){
+        strength=strength+final[i].strength;
+        total=total+final[i].total;
+        commitpaid=commitpaid+final[i].commitpaid;
+        commitdue=commitdue+final[i].commitdue;
+        ins1paid=ins1paid+final[i].ins1paid;
+        ins1due=ins1due+final[i].ins1due;
+        ins2paid=ins2paid+final[i].ins2paid;
+        ins2due=ins2due+final[i].ins2due;
+        ins3paid=ins3paid+final[i].ins3paid;
+        ins3due=ins3due+final[i].ins3due;
+        obj.grade=" ";
+        obj.strength=" ";
+        obj.total=total;
+        obj.commitpaid=commitpaid;
+        obj.commitdue=commitdue;
+        obj.ins1paid=ins1paid;
+        obj.ins1due=ins1due;
+        obj.ins2paid=ins2paid;
+        obj.ins2due=ins2due;
+        obj.ins3paid=ins3paid;
+        obj.ins3due=ins3due;
+      }
+      overall.push(obj);
+      var obj1={};
+      for(var i=0;i<overall.length;i+=2){
+        obj1.grade="%";
+        obj1.strength=" ";
+        obj1.total=" ";
+        obj1.commitpaid=parseFloat((parseFloat(overall[i].commitpaid)/parseFloat(overall[i].strength))*100).toFixed(2)+"%";
+        obj1.commitdue=parseFloat((parseFloat(overall[i].commitdue)/parseFloat(overall[i].strength))*100).toFixed(2)+"%";
+        obj1.ins1paid=parseFloat((parseFloat(overall[i].ins1paid)/parseFloat(overall[i].strength))*100).toFixed(2)+"%";
+        obj1.ins1due=parseFloat((parseFloat(overall[i].ins1due)/parseFloat(overall[i].strength))*100).toFixed(2)+"%";
+        obj1.ins2paid=parseFloat((parseFloat(overall[i].ins2paid)/parseFloat(overall[i].strength))*100).toFixed(2)+"%";
+        obj1.ins2due=parseFloat((parseFloat(overall[i].ins2due)/parseFloat(overall[i].strength))*100).toFixed(2)+"%";
+        obj1.ins3paid=parseFloat((parseFloat(overall[i].ins3paid)/parseFloat(overall[i].strength))*100).toFixed(2)+"%";
+        obj1.ins3due=(parseFloat(parseFloat(overall[i].ins3due)/parseFloat(overall[i].strength))*100).toFixed(2)+"%";
+      }
+      overall.push(obj1);
 
+      document.querySelector('consolidated-dashboardreport').overallarr=overall;
+      document.querySelector('consolidated-dashboardreport').finalarr=final;
+      document.querySelector('consolidated-dashboardreport').FnHideView();
+      final=[];
+      overall=[];
+      }
     });
   })();
   </script>

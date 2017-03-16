@@ -14,7 +14,7 @@
             <div class="col-md-12">
                  <div class="col-md-3" style="margin-top: 0%;">
                  <paper-dropdown-menu id="dashboardschool" label="Select School" on-iron-select="FnSelectSchool">
-                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="dashboardschool" attr-for-selected="value">
+                  <paper-listbox class="dropdown-content" selected="{{selectedschooltype}}" id="dashboardschool" attr-for-selected="value">
                   <template  is="dom-repeat" items="{{schoolarr}}" as="item">
                   <paper-item value="{{item.id}}">{{item.name}}</paper-item>
                   </template>
@@ -53,7 +53,7 @@
                 <div class="col-md-1" style="margin-top: 1%;">
                 <p>Download
                 <a href="#">
-                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('collectiondashboard', 'Collection Dashboard')"></span>
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('collectiondashboardd', 'Collection Dashboard')"></span>
                 </a>
                 </p>
                 </div> 
@@ -61,23 +61,30 @@
           </div>
         </div>
     </div>
-    <div id="collectiondashboard" hidden="{{hidetable}}">
-     <table border="1" style="border-collapse: collapse;border: 1px grey;">
-      <thead>
-      <tr>
-        <th>School Name</th><th>Strength</th><th>Commitment Fee Paid by</th><th>Lumpsum Fee Paid by</th><th>Commitment Fee with Lumpsum</th><th>Total Paid</th><th>Commitment Fee</th><th>Lumpsum Fee</th><th>Commitment Fee with Lumpsum</th><th>Total Collection</th><th>Paid through Neev Finance</th><th>Neev Finance-Collection</th><th>Paid Through Paytm</th><th>Paytm Collection</th>
-      </tr>
-      </thead>
+    <div id="collectiondashboardd" hidden="{{hidetable}}">
+     <table border="1" style="border-collapse: collapse;border: 1px grey;width: 100%;">
+      <!-- <thead> -->
+       <tr style="text-align: center;">
+       <th>Grade</th><th>Strength</th><th>Total Fee</th><th colspan="2">Commitment Fee</th><th colspan="2">1st Term</th><th colspan="2">2nd Term</th><th colspan="2">3rd Term</th></tr>
+       <tr style="text-align: center;"><th></th><th></th><th></th><th>Paid</th><th>Due</th><th>Paid</th><th>Due</th><th>Paid</th><th>Due</th><th>Paid</th><th>Due</th></tr>
+      <template  is="dom-repeat" items="{{overallarr}}" as="item">
+      <tr style="text-align: center;">
+      <td>{{item.grade}}</td><td>{{item.strength}}</td><td>{{item.total}}</td><td>{{item.commitpaid}}</td><td>{{item.commitdue}}</td><td>{{item.ins1paid}}</td><td>{{item.ins1due}}</td><td>{{item.ins2paid}}</td><td>{{item.ins2due}}</td><td>{{item.ins3paid}}</td><td>{{item.ins3due}}</td></tr>
+      </template>
+      <tr><br><br></tr>
+      <!-- </thead> -->
+      <!-- <thead> -->
+       <tr style="text-align: center;">
+       <th>Grade</th><th>Strength</th><th>Total Fee</th><th colspan="2">Commitment Fee</th><th colspan="2">1st Term</th><th colspan="2">2nd Term</th><th colspan="2">3rd Term</th></tr>
+       <tr style="text-align: center;"><th></th><th></th><th></th><th>Paid</th><th>Due</th><th>Paid</th><th>Due</th><th>Paid</th><th>Due</th><th>Paid</th><th>Due</th></tr>
+      <!-- </thead> -->
       <tbody>
-      <!-- <template  is="dom-repeat" items="{{dailydashboardarr}}" as="item"> -->
-        <tr style="text-align: center;"><td>{{schoolname}}</td><td>{{strength}}</td><td>{{commitcount}}</td><td>{{lumpsumcount}}</td><td>{{commitlumpsumcount}}</td><td>{{totalpaidcount}}</td><td>{{commitamount}}</td><td>{{lumpsumamount}}</td><td>{{commitlumpsumamount}}</td><td>{{totalamount}}</td><td>{{neevcount}}</td><td>{{neevamount}}</td><td>{{paytmcount}}</td><td>{{paytmamount}}</td></tr>
-
-        <tr style="text-align: center;"><td>%</td><td>{{strengthp}}</td><td>{{commitcountp}}</td><td>{{lumpsumcountp}}</td><td>{{commitlumpsumcountp}}</td><td>{{totalpaidcountp}}</td><td>{{commitamountp}}</td><td>{{lumpsumamountp}}</td><td>{{commitlumpsumamountp}}</td><td>{{totalamountp}}</td><td>{{neevcountp}}</td><td>{{neevamountp}}</td><td>{{paytmcountp}}</td><td>{{paytmamountp}}</td></tr>
-      <!-- </template> -->
-      <!-- <tr><th colspan="11" style="text-align: right;">Total Amount: &nbsp;&nbsp;{{totalamount}}</th></tr> -->
+      <template  is="dom-repeat" items="{{finalarr}}" as="item">
+      <tr style="text-align: center;">
+      <td>{{item.grade}}</td><td>{{item.strength}}</td><td>{{item.total}}</td><td>{{item.commitpaid}}</td><td>{{item.commitdue}}</td><td>{{item.ins1paid}}</td><td>{{item.ins1due}}</td><td>{{item.ins2paid}}</td><td>{{item.ins2due}}</td><td>{{item.ins3paid}}</td><td>{{item.ins3due}}</td></tr>
+      </template>
       </tbody>
     </table>    
-
     </div>
     <consolidated-dashboardreport-service id="service"></consolidated-dashboardreport-service>
   </template>
@@ -110,10 +117,13 @@
         this.hidetable=true;
       },
       FnHideView:function(){
-        this.hidecount=false;
+        this.hidetable=false;
       },
       FnSelectSchool:function(e){
         schoolid=e.target.selectedItem.value;
+        if(this.flag==1){
+        this.$.service.FnFetchCollectionDashboardService(schoolid,academicyear,grade,type);
+        }
       },
       FnCallService:function(){
         var d=new Date(); 
