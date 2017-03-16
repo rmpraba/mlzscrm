@@ -1,0 +1,61 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="consolidated-dashboardreport-service">
+  <template>
+     <iron-ajax
+        method="post"
+        id="fetchcollectiondashboardinfoajax"
+        url="{{fetchcollectiondashboardinfourl}}"
+        params="{{fetchcollectiondashboardinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectiondashboardinfoResponse"
+        debounce-duration="300"
+        >
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'consolidated-dashboardreport-service',
+
+      FnFetchCollectionDashboardService:function(schoolid,academicyear,grade,type){
+        this.fetchcollectiondashboardinfourl=sessionStorage.getItem("addrinfo")+"/fetchcollectiondashboardinfo-service";
+        var obj={"schoolid":""};
+        obj.schoolid=schoolid;
+        this.fetchcollectiondashboardinfoparam=obj;
+        this.$.fetchcollectiondashboardinfoajax.generateRequest();
+      },
+      fetchcollectiondashboardinfoResponse:function(e){
+        var total=e.detail.response.total;
+        var commit=e.detail.response.commit;
+        var ins1=e.detail.response.ins1;
+        var ins2=e.detail.response.ins2;
+        var ins3=e.detail.response.ins3;
+        var final=[];
+        alert(JSON.stringify(total));
+        alert(JSON.stringify(commit));
+        for(var i=0;i<total.length;i++){
+          for(var j=0;j<commit.length;j++){
+            if(total[i].grade==commit[j].grade){
+              var obj={};
+              obj.grade=total[i].grade;
+              obj.strength=total[i].cnt;
+              obj.commitpaidcnt=commit[j].cnt;
+              final.push(obj);
+              var obj1={};
+              obj1.total=total[i].total;
+              obj1.commitpaidtotal=commit[j].total;
+              final.push(obj1);
+            }
+          }
+        }
+        alert(JSON.stringify(final));
+      }
+
+    });
+  })();
+  </script>
+</dom-module>

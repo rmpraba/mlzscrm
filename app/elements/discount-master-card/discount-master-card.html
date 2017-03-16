@@ -59,7 +59,7 @@
         </div>
 
         <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hidefeecard}}">
-          <div class="col-sm-4 enquiry-input">
+          <div class="col-sm-6 enquiry-input">
             <paper-dropdown-menu label="Select Category" attr-for-selected="value">
             <paper-menu id="distype" class="dropdown-content" required on-iron-select="FnSelectDiscountType" valueattr="value" >
               <template  is="dom-repeat" items="{{discountarr}}" as="item">
@@ -68,7 +68,7 @@
             </paper-menu>
             </paper-dropdown-menu>
           </div>
-           <div class="col-sm-4 enquiry-input">
+          <div class="col-sm-6 enquiry-input">
             <paper-dropdown-menu label="Select Fee Type" attr-for-selected="value">
             <paper-menu id="discountfeetype" class="dropdown-content" required on-iron-select="FnSelectFeeType" valueattr="value" >
               <template  is="dom-repeat" items="{{feetypearr}}" as="item">
@@ -77,10 +77,28 @@
             </paper-menu>
             </paper-dropdown-menu>
           </div>
-          <div class="col-sm-4 enquiry-input">
+          
+        </div>
+
+        <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hidefeecard}}">
+          
+          <div class="col-sm-6 enquiry-input">
+            <paper-dropdown-menu label="Select Student Type" attr-for-selected="value">
+            <paper-menu id="discountstudenttype" class="dropdown-content" required on-iron-select="FnSelectStudentType" valueattr="value" >
+              <!-- <template  is="dom-repeat" items="{{feetypearr}}" as="item"> -->
+              <paper-item value="All">All</paper-item>
+              <paper-item value="Promoted">Promoted</paper-item>
+              <paper-item value="New">New</paper-item>
+              <!-- </template> -->
+            </paper-menu>
+            </paper-dropdown-menu>
+          </div>
+          <div class="col-sm-6 enquiry-input" style="margin-top: 5%;">
             <paper-checkbox on-change="generalHandler" id="discountmastergeneral" checked>General</paper-checkbox>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <paper-checkbox on-change="tpHandler" id="discountmastertp">Third Party</paper-checkbox>
           </div>
+
         </div>
        
         <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hidefeecard}}">  
@@ -111,7 +129,7 @@
   <script>
   (function() {
     'use strict';
-    var grade,admissionyear,academicyear,feetype,discounttype,discounttypecode,admissiontype,gradetype,valuetype,mode; 
+    var grade,admissionyear,academicyear,feetype,discounttype,discounttypecode,admissiontype,gradetype,valuetype,mode,studenttype; 
     var gradearr=[];   
     Polymer({
       is: 'discount-master-card',
@@ -197,6 +215,9 @@
       FnSelectFeeType:function(e){
         feetype=(e.target.selectedItem.textContent).trim();
       },
+      FnSelectStudentType:function(e){
+        studenttype=(e.target.selectedItem.textContent).trim();
+      },
       FnRefresh:function(){
         grade="";
         admissionyear="";
@@ -206,8 +227,9 @@
         discounttype="";
         discounttypecode="";
         this.percentage=0;
+        studenttype="";
         gradearr=[];
-        // document.querySelector('#discountgrade').selected=-1;
+        document.querySelector('#discountstudenttype').selected=-1;
         document.querySelector('#discountacademicyear').selected=-1;
         document.querySelector('#discountadmissionyear').selected=-1;
         document.querySelector('#distype').selected=-1;
@@ -224,7 +246,7 @@
       FnSubmit:function(){
         // alert(JSON.stringify(gradearr));
         // alert(this.schoolname+" "+grade+" "+academicyear+" "+admissionyear+" "+feetype+" "+this.totalfees);
-        this.$.schedulefee.setDiscountInfo(this.schoolname,gradearr,admissionyear,academicyear,discounttypecode,discounttype,feetype,this.fromdate,this.todate,this.amount,admissiontype,this.percentage,mode);
+        this.$.schedulefee.setDiscountInfo(this.schoolname,gradearr,admissionyear,academicyear,discounttypecode,discounttype,feetype,this.fromdate,this.todate,this.amount,admissiontype,this.percentage,mode,studenttype);
       },
       FnCancel:function(){
         grade="";
@@ -235,7 +257,8 @@
         discounttype="";
         admissiontype="";
         gradearr=[];
-        // document.querySelector('#discountgrade').selected=-1;
+        studenttype="";
+        document.querySelector('#discountstudenttype').selected=-1;
         document.querySelector('#discountacademicyear').selected=-1;
         document.querySelector('#discountadmissionyear').selected=-1;
         document.querySelector('#distype').selected=-1;

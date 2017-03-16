@@ -1302,6 +1302,7 @@ insertstudenthistoryResponse:function(e){
         // obj.noofinstallment=localStorage.getItem("curr_sess_noofinstallment");
         obj.schoolid=localStorage.getItem("schoolid");     
         obj.mode=localStorage.getItem("curr_sess_paymentthrough");
+        obj.studenttype=localStorage.getItem("curr_sess_admissionstatus");
         this.fetchdiscountparam=obj; 
         // alert(JSON.stringify(obj));      
         this.$.fetchdiscountajax.generateRequest();

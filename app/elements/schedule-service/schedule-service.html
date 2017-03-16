@@ -437,6 +437,16 @@
         on-response="fetchinstallmentsplitResponse"
         debounce-duration="300"
         >
+    <iron-ajax
+        method="post"
+        id="fetchschoolajax"
+        url="{{fetchschoolurl}}"
+        params="{{fetchschoolparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchschoolResponse"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
@@ -458,6 +468,14 @@
     var feemastersplitarr=[];
     Polymer({
       is: 'schedule-service',
+      fetchschoolService:function(){
+        this.fetchschoolurl=sessionStorage.getItem("addrinfo")+"/fetchschool-service"
+        this.$.fetchschoolajax.generateRequest();
+      },
+      fetchschoolResponse:function(e){
+        var arr=e.detail.response.returnval;
+        document.querySelector('consolidated-dashboardreport').schoolarr=arr;
+      },
       fetchgradeforreportService:function(){       
         this.fetchgradeforreporturl=sessionStorage.getItem("addrinfo")+"/fetchgrade-service"
         this.$.fetchgradeforreportajax.generateRequest();
@@ -487,6 +505,7 @@
         document.querySelector('dailyincome-report').gradearr=gradearr;
         document.querySelector('duecheques-report').gradearr=gradearr;
         document.querySelector('rtecollection-report').gradearr=gradearr;
+        document.querySelector('consolidated-dashboardreport').gradearr=gradearr;
       },
       fetchgradeService:function(){       
         this.fetchgradeurl=sessionStorage.getItem("addrinfo")+"/fetchgrade-service"
@@ -530,6 +549,7 @@
         document.querySelector('dailycollection-dashboard').academicarr=e.detail.response.returnval;
         document.querySelector('process-report').academicarr=e.detail.response.returnval;
         document.querySelector('enquiry-conversion-report').academicarr=e.detail.response.returnval;
+        document.querySelector('consolidated-dashboardreport').academicarr=e.detail.response.returnval;
       },
       fetchadmissionyearService:function(){        
         this.fetchadmissionyearurl=sessionStorage.getItem("addrinfo")+"/fetchadmissionyear-service"
@@ -702,7 +722,7 @@
         count2=0;
         }
       },
-      setDiscountInfo:function(schoolname,gradearr,admissionyear,academicyear,discounttypecode,discounttype,feetype,fromdate,todate,amount,admissiontype,percentage,mode){
+      setDiscountInfo:function(schoolname,gradearr,admissionyear,academicyear,discounttypecode,discounttype,feetype,fromdate,todate,amount,admissiontype,percentage,mode,studenttype){
         this.schoolname=schoolname;
         this.grade=gradearr;
         this.admissionyear=admissionyear;
@@ -716,6 +736,7 @@
         this.amount=amount;
         this.percentage=percentage;
         this.mode=mode;
+        this.studenttype=studenttype;
         this.fetchdiscountcodeseqService();
         // this.generatediscountcodeService();
       },
@@ -744,6 +765,7 @@
         obj.feetype=this.feetype;
         obj.discounttypecode=this.discounttypecode;
         obj.mode=this.mode;
+        obj.studenttype=this.studenttype;
         this.fetchdiscountcodesparam=obj;
         this.$.fetchdiscountcodesajax.generateRequest();
       },
@@ -822,7 +844,7 @@
         obj.fromdate=this.fromdate;
         obj.todate=this.todate;
         obj.mode=this.mode;  
-
+        obj.studenttype=this.studenttype;
         obj.createdby=localStorage.getItem("employeeid");
         // alert(JSON.stringify(discountarr));
         count1=discountarr.length;

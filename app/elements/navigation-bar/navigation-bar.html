@@ -424,6 +424,9 @@
             <li id="dailycollectiondashboard">
             <a href="" aria-hidden="true" on-click="FnDailycollectionDashboard">Daily Collection Dashboard<span class="fa arrow"></span></a>
             </li>
+            <!-- <li id="collectiondashboard">
+            <a href="" aria-hidden="true" on-click="FnCollectionDashboard">Collection Dashboard<span class="fa arrow"></span></a>
+            </li> -->
             <li id="detailduereport">
             <a href="" aria-hidden="true" on-click="FnDetailduereport">Due report<span class="fa arrow"></span></a>
             </li>
@@ -445,6 +448,9 @@
             <li id="dailyincomereport">
             <a href="" aria-hidden="true" on-click="FnDailyincomeReport">Daily Income</a>
             </li>
+            <li id="chequecollectionreport">
+            <a href="" aria-hidden="true" on-click="FnchequeCollectionReport">Cheque Collection Report</a>
+            </li>
             <li id="tpcollectionreport">
             <a href="" aria-hidden="true" on-click="FnTPCollectionReport">Thirdparty Collection</a>
             </li>
@@ -463,9 +469,7 @@
             <!-- <li id="feecollectionreport">
             <a href="" aria-hidden="true" on-click="FnFeeCollectionReport">Fee Collection Report</a>
             </li> -->
-            <li id="chequecollectionreport">
-            <a href="" aria-hidden="true" on-click="FnchequeCollectionReport">Cheque Collection Report</a>
-            </li>
+            
           </ul>
           </li>
 
@@ -1191,6 +1195,15 @@
         document.querySelector('dailycollection-dashboard').ready();
         document.querySelector('dailycollection-dashboard').FnRefresh();
         document.querySelector('dailycollection-dashboard').FnCallService();
+      },
+      FnCollectionDashboard:function(){
+        this.$.scheduleservice.fetchschoolService();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchgradeforreportService();
+        document.querySelector('app-list').setPage("consolidated-dashboardreport","Collection Dashboard");
+        document.querySelector('consolidated-dashboardreport').ready();
+        document.querySelector('consolidated-dashboardreport').FnRefresh();
+        document.querySelector('consolidated-dashboardreport').FnCallService();
       },
       FnNotpaidReport:function(){
         this.$.scheduleservice.fetchacademicyearService();

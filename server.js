@@ -499,9 +499,13 @@ connection.query("SELECT * FROM prefix_master WHERE prefix_id='"+req.query.prefi
 
 });
 app.post('/fetchdiscountcodes-service',  urlencodedParser,function (req, res){
-    
+    // if(req.query.studenttype=="All")
+    // var checkqur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' "+
+    // " and admission_year='"+req.query.admissionyear+"' and discount_type_code='"+req.query.discounttypecode+"' and mode='"+req.query.mode+"' and studenttype in('Promoted','New')"+
+    // " and (from_date<='"+req.query.fromdate+"' and to_date>='"+req.query.fromdate+"') and fee_type='"+req.query.feetype+"'";
+    // else
     var checkqur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' "+
-    " and admission_year='"+req.query.admissionyear+"' and discount_type_code='"+req.query.discounttypecode+"' and mode='"+req.query.mode+"'"+
+    " and admission_year='"+req.query.admissionyear+"' and discount_type_code='"+req.query.discounttypecode+"' and mode='"+req.query.mode+"' and type='"+req.query.studenttype+"'"+
     " and (from_date<='"+req.query.fromdate+"' and to_date>='"+req.query.fromdate+"') and fee_type='"+req.query.feetype+"'";
 
     // var qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' "+
@@ -552,7 +556,8 @@ app.post('/creatediscountcode-service',  urlencodedParser,function (req, res){
       created_by:req.query.createdby,
       amount:req.query.amount,
       discount_percentage:req.query.percentage,
-      mode:req.query.mode
+      mode:req.query.mode,
+      type:req.query.studenttype
     };
 
     console.log(response);
@@ -2396,11 +2401,11 @@ app.post('/fetchdiscount-service',  urlencodedParser,function (req, res){
     if((req.query.installmentpattern=='3')||(req.query.installmentpattern=='4')){
     console.log('in');
     if(req.query.referraltype==""||req.query.referraltype==null)
-    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND mode='"+req.query.mode+"' and academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','5') "+
+    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND mode='"+req.query.mode+"' and type in('All','"+req.query.studenttype+"') and academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','5') "+
     " AND grade=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"') "+
-    " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee')";
+    " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee') ";
     else
-    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND mode='"+req.query.mode+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','5','"+req.query.referraltype+"') "+
+    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND mode='"+req.query.mode+"' and type in('All','"+req.query.studenttype+"') AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','5','"+req.query.referraltype+"') "+
     " AND grade=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"') "+
     " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee')";
     
@@ -2408,11 +2413,11 @@ app.post('/fetchdiscount-service',  urlencodedParser,function (req, res){
     else{
     console.log('out');
     if(req.query.referraltype==""||req.query.referraltype==null)
-    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND mode='"+req.query.mode+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code='"+req.query.discounttype+"' "+
+    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND mode='"+req.query.mode+"' and type in('All','"+req.query.studenttype+"') AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code='"+req.query.discounttype+"' "+
     " AND grade=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"') "+
     " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee','Lumpsum')";
     else
-    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND mode='"+req.query.mode+"' AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','"+req.query.referraltype+"')  "+
+    qur="SELECT * FROM md_discount_master WHERE school_id='"+req.query.schoolid+"' AND mode='"+req.query.mode+"' and type in('All','"+req.query.studenttype+"') AND academic_year='"+req.query.academicyear+"' AND admission_year='"+req.query.admissionyear+"' AND discount_type_code in ('"+req.query.discounttype+"','"+req.query.referraltype+"')  "+
     " AND grade=(SELECT grade_id FROM grade_master WHERE grade_name='"+req.query.grade+"') "+
     " and from_date<='"+req.query.currdate+"' and to_date>='"+req.query.currdate+"' and fee_type not in ('Registration fee','Lumpsum')";
     }
@@ -8385,6 +8390,83 @@ app.post('/enquiryconversionreport-service1',  urlencodedParser,function (req, r
     res.status(200).json({'returnval': 'no rows'});
   }
   });
+});
+
+app.post('/fetchschool-service',  urlencodedParser,function (req, res){
+  var queryy="SELECT * FROM md_school";
+  console.log('-----------school report-------------');
+  console.log(queryy); 
+  var gradearr=[];
+
+  connection.query(queryy,function(err, rows){
+      if(!err){   
+        res.status(200).json({'returnval': rows});
+      } else {
+        console.log(err);
+        res.status(200).json({'returnval': 'no rows'});
+      }
+  });
+ 
+});
+
+app.post('/fetchcollectiondashboardinfo-service',  urlencodedParser,function (req, res){
+  // var qur1="SELECT class_for_admission,count(admission_no) FROM md_admission WHERE school_id='"+req.query.schoolid+"' group by class_for_admission";
+  var totalqur="SELECT grade,count(*) as cnt,sum(totalfee) as total FROM mlzscrm.due_report where "+
+  "school_id='"+req.query.schoolid+"' group by grade";
+  var commitqur="select grade,count(*) as cnt,sum(commitkitfee+commitannualfee) as total from due_report where school_id='"+req.query.schoolid+"'"+
+  " duecommitkitfee=0 and duecommitannualfee=0 group by grade";
+  var ins1qur="select grade,count(*) as cnt,sum(ins1annualfee+ins1tutionfee) as total from due_report where school_id='"+req.query.schoolid+"'"+
+  " dueins1annualfee=0 and dueins1tutionfee=0 group by grade";
+  var ins2qur="select grade,count(*) as cnt,sum(ins2annualfee+ins2tutionfee) as total from due_report where school_id='"+req.query.schoolid+"'"+
+  " dueins2annualfee=0 and dueins2tutionfee=0 group by grade";
+  var ins3qur="select grade,count(*) as cnt,sum(ins3annualfee+ins3tutionfee) as total from due_report where school_id='"+req.query.schoolid+"'"+
+  " dueins3annualfee=0 and dueins3tutionfee=0 group by grade";
+  console.log('-----------school report-------------');
+  console.log(totalqur); 
+  var total=[];
+  var commit=[];
+  var ins1=[];
+  var ins2=[];
+  var ins3=[];
+
+  connection.query(totalqur,function(err, rows){
+      if(!err){ 
+      total=rows; 
+      connection.query(commitqur,function(err, rows){ 
+        if(!err){ 
+        commit=rows; 
+        connection.query(ins1qur,function(err, rows){ 
+        if(!err){  
+        ins1=rows;
+        connection.query(ins2qur,function(err, rows){ 
+        if(!err){  
+        ins2=rows;  
+        connection.query(ins3qur,function(err, rows){
+        if(!err){ 
+        ins3=rows;
+        res.status(200).json({'total':total,'commit':commit,'ins1':ins1,'ins2':ins2,'ins3':ins3});
+        }
+        else
+          console.log(err);
+        });
+        }
+        else
+          console.log(err);
+        });
+        }
+        else
+          console.log(err);
+        });
+        }
+        else
+          console.log(err);
+      });
+      } else {
+        console.log(err);
+        res.status(200).json({'returnval': 'no rows'});
+      }
+  });
+ 
 });
 
 function setvalue(){
