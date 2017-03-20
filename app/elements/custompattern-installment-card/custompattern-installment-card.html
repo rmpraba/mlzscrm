@@ -79,7 +79,6 @@
    <paper-input id="actamt" style="margin-top: -1%;" value="{{actualamount}}"></paper-input>
    <paper-input id="disamt" style="margin-top: -1%;" value="{{discountamount}}"></paper-input>
    <paper-input id="amt" style="margin-top: -1%;" value="{{amount}}"></paper-input>
-   <!-- <paper-input id="amt" value="{{amount}}" hidden$="{{hiddencommitinput}}" on-change="FnChangeamount"></paper-input> -->
    <paper-item id="paymentmode" hidden$="{{hiddenflag}}">{{modeofpayment}}</paper-item>
    <paper-item id="chequeno" hidden$="{{hiddenflag}}">{{chequeno}}</paper-item>
    <paper-item id="bankname" hidden$="{{hiddenflag}}">{{bankname}}</paper-item>
@@ -371,7 +370,7 @@
       
       FnPrepareInstallment:function(obj){        
         for(var i=0;i<installmentarr.length;i++){
-          if(installmentarr[i].installment==obj.installment){
+          if(installmentarr[i].installment==obj.installment&&localStorage.getItem("curr_sess_feetypepaymentflag")!='1'){
             installmentarr.splice(i,1);
           }
         }
