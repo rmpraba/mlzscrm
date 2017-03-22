@@ -1586,7 +1586,7 @@ app.post('/fetchenquiryinfo',  urlencodedParser,function (req, res){
 
 // Fetching admission paid info
 app.post('/fetchexistingadmissionpaidinfo',  urlencodedParser,function (req, res){
-    var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no = '"+req.query.admissionno+"' or enquiry_no='"+req.query.admissionno+"') and installment not in ('Registration fee','Application fee')";
+    var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no = '"+req.query.admissionno+"' or enquiry_no='"+req.query.admissionno+"') and installment not in ('Registration fee','Application fee') and cheque_status not in ('cancelled')";
    // console.log(qur);
     connection.query(qur,
     function(err, rows)
