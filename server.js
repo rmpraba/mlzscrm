@@ -4663,9 +4663,9 @@ app.post('/fetchprocessingcheque-service',  urlencodedParser,function (req, res)
 
 app.post('/searchwithdrawcheques-service',  urlencodedParser,function (req, res){
    var qur = "SELECT * FROM md_student_paidfee where school_id='"+req.query.schoolid+"' and (admission_no='"+req.query.admissionno+"' or admission_no='"+req.query.enquiryno+"') and paid_status in ('inprogress','paid') order by paid_date";
-  // console.log('-----------------------fetching cheques--------------------------');
-  // console.log(qur);
-  // console.log('-------------------------------------------------');
+  console.log('-----------------------fetching cheques--------------------------');
+  console.log(qur);
+  console.log('-------------------------------------------------');
    connection.query(qur,
      function(err, rows){
        if(!err){
@@ -4701,7 +4701,7 @@ app.post('/insertreturninfo-service',  urlencodedParser,function (req, res){
     created_by:req.query.createdby,
     ack_no:""
    }
-
+   var admninfo=[];
    connection.query("SELECT * FROM receipt_sequence",function(err, rows){
     response.ack_no="ACK-"+response.academic_year+"-"+rows[0].withdraw_seq;
     var new_ack_no=parseInt(rows[0].withdraw_seq)+1;
@@ -4714,7 +4714,13 @@ app.post('/insertreturninfo-service',  urlencodedParser,function (req, res){
            connection.query("UPDATE receipt_sequence SET withdraw_seq='"+new_ack_no+"'",function(err, result){
             if(result.affectedRows>0){
             console.log(result.affectedRows+new_ack_no);
-            res.status(200).json({'returnval': 'Done!','info':response,'receiptno':response.ack_no});
+            
+            connection.query("SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"'",function(err, rows){
+              admninfo=rows;
+              connection.query("UPDATE student_enquiry_details SET status='Withdrawn' WHERE school_id='"+req.query.schoolid+"' and enquiry_no='"+rows[0].enquiry_no+"'",function(err, result){
+            res.status(200).json({'returnval': 'Done!','info':response,'receiptno':response.ack_no,'admninfo':admninfo});
+            });
+            });
             }
             else
             res.status(200).json({'returnval': 'Seq not updated!'});

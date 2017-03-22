@@ -286,7 +286,7 @@
         this.searchwithdrawchequesurl=sessionStorage.getItem("addrinfo")+"/searchwithdrawcheques-service";
         var obj={"admissionno":"","schoolid":""};
         obj.admissionno=admissionno;
-        obj.enquiryno=localStorage.getItem('curr_sess_enquiredno');
+        obj.enquiryno=localStorage.getItem('curr_sess_enquiryno');
         obj.schoolid=localStorage.getItem("schoolid");
         this.searchwithdrawchequesparam=obj;
         this.$.searchwithdrawchequesajax.generateRequest();
@@ -308,11 +308,11 @@
       FnInsertreturninfo:function(payableamount,paidamount,amounttoreturn,chequeno,bankname,paytype){
         this.insertreturninfourl=sessionStorage.getItem("addrinfo")+"/insertreturninfo-service";
         var obj={"admissionno":"","schoolid":""};
-        obj.admissionno=localStorage.getItem("curr_sess_admissionno");
-        obj.studentname=localStorage.getItem("curr_sess_studentname");
+        obj.admissionno=localStorage.getItem("curr_sess_enquiryno");
+        obj.studentname=localStorage.getItem("curr_sess_enquiryname");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.grade=localStorage.getItem("curr_sess_grade");
-        obj.enquiryno=localStorage.getItem('curr_sess_enquiredno');
+        obj.enquiryno=localStorage.getItem('curr_sess_enquiryno');
         obj.schoolid=localStorage.getItem("schoolid");
         obj.payableamount=payableamount;
         obj.paidamount=paidamount;
@@ -328,9 +328,11 @@
       insertreturninfoResponse:function(e){
         var paymentarr=[]
         paymentarr.push(e.detail.response.info);
+        var admninfo=e.detail.response.admninfo;
+        // alert(JSON.stringify(admninfo));
         var feereceiptarr=[];
         var chequeparticular=[];
-        // alert(JSON.stringify(paymentarr));
+        // alert(JSON.stringify(e.detail.response.returnval));
         if(e.detail.response.returnval=="Done!"){
           var obj={"admissionno":"","schoolid":""};
           obj.enquiryno=localStorage.getItem('curr_sess_enquiredno');
@@ -350,16 +352,25 @@
                 obj.academicyear=paymentarr[0].academic_year;
                 obj.admissionno=paymentarr[0].admission_no;
                 obj.studentname=paymentarr[0].student_name;
-                obj.grade=paymentarr[0].grade;
+                obj.grade=admninfo[0].class_for_admission;
+                obj.parentname=admninfo[0].father_name;
+                localStorage.setItem("curr_sess_parentname",admninfo[0].father_name);
                 obj.installment="Return amount";
                 obj.installmentamount=paymentarr[0].returned_amount;
                 obj.paiddate=paymentarr[0].returned_date;
+                obj.receiptdate=paymentarr[0].returned_date;
+                obj.receiveddate=paymentarr[0].returned_date;
                 obj.receiptno=paymentarr[0].ack_no;
                 obj.receipttype="ACKNOWLEDGEMENT";
                 obj.hidereceipt=false;
+                obj.hidecurrreceipt=true;
                 obj.hideack=true;
                 obj.chequeview=true;
                 obj.transferview=true;
+                obj.hidesplit=true;
+                obj.modeofpayment=paymentarr[0].paytype;
+                obj.hidelatefeecashparticular=true;
+                obj.hidelatefeechequeparticular=true;
                 obj.paymentarr=cashparticular;
                 obj.totalfees=paymentarr[0].returned_amount;
                 obj.hidecashparticular=false;
@@ -370,21 +381,32 @@
             }
             if(paymentarr[0].paytype=="Cheque"){
                 var obj={"schoolid":"","academicyear":"","admissionno":"","studentname":"","grade":"","installment":"","paiddate":"","receiptno":"","receipttype":"","hidereceipt":"","hideack":"","chequeview":"","transferview":"","paymentarr":""};
+                // alert(paymentarr[0].bank_name);
                 chequeparticular.push({"slno":1,"installment":"Return Amount","feetype":"Withdrawal","bankname":paymentarr[0].bank_name,"chequeno":paymentarr[0].cheque_no,"chequedate":paymentarr[0].returned_date,"installmentamount":paymentarr[0].returned_amount});
                 obj.schoolid=paymentarr[0].school_id;
                 obj.academicyear=paymentarr[0].academic_year;
                 obj.admissionno=paymentarr[0].admission_no;
                 obj.studentname=paymentarr[0].student_name;
-                obj.grade=paymentarr[0].grade;
+                obj.grade=admninfo[0].class_for_admission;
+                obj.parentname=admninfo[0].father_name;
+                localStorage.setItem("curr_sess_parentname",admninfo[0].father_name);
                 obj.installment="Return amount";
                 obj.installmentamount=paymentarr[0].returned_amount;
                 obj.receiveddate=paymentarr[0].returned_date;
+                obj.receiptdate=paymentarr[0].returned_date;
+                obj.receiveddate=paymentarr[0].returned_date;
+                obj.chequedate=paymentarr[0].cheque_date;
                 obj.ackno=paymentarr[0].ack_no;
                 obj.receipttype="ACKNOWLEDGEMENT";
                 obj.hidereceipt=true;
+                obj.hidecurrreceipt=true;
                 obj.hideack=false;
                 obj.chequeview=false;
                 obj.transferview=true;
+                obj.hidesplit=true;
+                obj.modeofpayment=paymentarr[0].paytype;
+                obj.hidelatefeecashparticular=true;
+                obj.hidelatefeechequeparticular=true;
                 obj.paymentarr=chequeparticular;
                 obj.totalfees=paymentarr[0].returned_amount;
                 obj.hidecashparticular=true;
@@ -394,6 +416,7 @@
             }
             if(feereceiptarr.length>0){
              document.querySelector('feereceipt-outcard').paymentreceiptarr=feereceiptarr;
+             document.querySelector('feereceipt-outcard').Fnsetinfo();
              document.querySelector('CRM-app').setPage('feereceipt-outcard');
              feereceiptarr=[];
            }
@@ -463,7 +486,7 @@
           // var feecode=arr[0].fee_code;
           // alert(arr[0].fee_code);
           // this.fetchsplitupService(arr[0].fee_code);
-        // this.FnProcessReceipt(arr);
+          // this.FnProcessReceipt(arr);
         }
       },
       fetchmasterpaidfeeService:function(){

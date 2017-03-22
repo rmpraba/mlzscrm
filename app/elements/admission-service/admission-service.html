@@ -1866,6 +1866,7 @@ insertstudenthistoryResponse:function(e){
                     obj.installmentdate="";
                     obj.actualamount=tempinsamount;
                     obj.discountamount=0;
+                    obj.fineamount=0;
                     obj.fees=tempobj;
                     // alert(JSON.stringify(tempobj));
                     arr.push(obj);
@@ -2069,6 +2070,7 @@ insertstudenthistoryResponse:function(e){
         arr[i].installmentamount=ramount;
         arr[i].actualamount=actualamount;
         arr[i].discountamount=0;
+        arr[i].fineamount=0;
         arr[i].fees=feearr;
 
         arr[i].installmentdate=insdate;
