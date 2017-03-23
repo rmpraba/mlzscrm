@@ -43,6 +43,9 @@
               <paper-item value="Discontinue">Discontinue</paper-item>
               <paper-item value="Transfer">Transfer</paper-item>
               <paper-item value="Absconding">Absconding</paper-item>
+              <paper-item value="High Fees">High Fees</paper-item>
+              <paper-item value="Long Distance">Long Distance</paper-item>
+              <paper-item value="Relocation">Relocation</paper-item>
             </paper-listbox>
         </paper-dropdown-menu>
       </td>      
@@ -83,6 +86,9 @@
           else if(document.querySelector('#tc'+this.admissionid).checked==false)
           alert("Can't cancel the enrollment without generating TC!!");;
         }
+      },
+      FnRefresh:function(){
+        document.querySelector('#reasonforcancel').selected=-1;
       }
     });
   })();

@@ -124,12 +124,12 @@
       cancelenrollmentResponse:function(e){
         alert(e.detail.response.returnval);
         if(e.detail.response.returnval=='Cancelled!'){
+          document.querySelector('cancel-enrollment-itemcard').FnRefresh(); 
           this.fetchinfofortcService();
           // this.getadmittedcount();
           // this.getcancelledcount();
           // document.querySelector('cancel-enrollment-card').FnHideview(true,false);  
-          // document.querySelector('cancel-enrollment-card').FnRefresh(); 
-
+          
         }
       },
       fetchinfofortcService:function(){
