@@ -2,7 +2,6 @@
 <link rel="import" href="..\..\bower_components/polymer/polymer.html">
 <link rel="import" href="..\withdrawal-showitem-card/withdrawal-showitem-card.html">
 
-
 <dom-module id="withdrawal-card">
   <template>
     <style>
@@ -93,6 +92,14 @@
     </div>     
     </paper-dialog>
 
+    <paper-dialog id="confirmationdialog">
+      <h5>Do you want money to be returned??</h5>
+      <div class="buttons">
+      <paper-button id="wgenerate" on-click="FnYes">Yes</paper-button>
+      <paper-button id="wcancel" on-click="FnNo">No</paper-button>
+      </div>
+    </paper-dialog>
+
     <processing-service id="processingservice"></processing-service>
   </template>
   <script>
@@ -118,7 +125,18 @@
         this.$.processingservice.searchwithdrawchequesService(enquiry_no);
       },
       FnProcess:function(){
+        this.$.confirmationdialog.toggle();
+        // this.$.withdrawdialog.toggle();
+      },
+      FnYes:function(){
+        localStorage.setItem("curr_sess_withdrawalflag",1);
+        this.$.confirmationdialog.toggle();
         this.$.withdrawdialog.toggle();
+      },
+      FnNo:function(){
+        this.$.confirmationdialog.toggle();
+        localStorage.setItem("curr_sess_withdrawalflag",0);
+        this.$.processingservice.FnInsertreturninfo(this.payableamount,this.paidamount,this.amounttoreturn,this.chequeno,this.bankname,paytype);
       },
       FnSelectPayType:function(e){
         // alert(e.target.selectedItem.textContent);
@@ -138,6 +156,17 @@
       },
       FnCancel:function(){
         this.$.withdrawdialog.toggle();
+      },
+      FnRefresh:function(){
+        this.enquiryno="";
+        this.enquiryarr=[];
+        this.chequearr=[];
+        this.payableamount="";
+        this.paidamount="";
+        this.amounttoreturn="";
+        this.bankname="";
+        this.chequeno="";
+        this.reason="";
       }
     });
   })();

@@ -332,7 +332,8 @@
         // alert(JSON.stringify(admninfo));
         var feereceiptarr=[];
         var chequeparticular=[];
-        // alert(JSON.stringify(e.detail.response.returnval));
+        // alert(JSON.stringify(e.detail.response.returnval)+"  "+localStorage.getItem("curr_sess_withdrawalflag"));
+        alert(e.detail.response.returnval);
         if(e.detail.response.returnval=="Done!"){
           var obj={"admissionno":"","schoolid":""};
           obj.enquiryno=localStorage.getItem('curr_sess_enquiredno');
@@ -342,6 +343,7 @@
           this.updatewithdrawstatusparam=obj;
           this.$.updatewithdrawstatusajax.generateRequest();
         }
+        if(localStorage.getItem("curr_sess_withdrawalflag")=="1"){
         if(paymentarr.length>0){
         // alert("hi..."+JSON.stringify(paymentarr[0].paytype));
          if(paymentarr[0].paytype=="Cash"){
@@ -396,6 +398,7 @@
                 obj.receiptdate=paymentarr[0].returned_date;
                 obj.receiveddate=paymentarr[0].returned_date;
                 obj.chequedate=paymentarr[0].cheque_date;
+                obj.bankname=paymentarr[0].bank_name;
                 obj.ackno=paymentarr[0].ack_no;
                 obj.receipttype="ACKNOWLEDGEMENT";
                 obj.hidereceipt=true;
@@ -420,7 +423,10 @@
              document.querySelector('CRM-app').setPage('feereceipt-outcard');
              feereceiptarr=[];
            }
+           }
         }
+
+           document.querySelector('withdrawal-card').FnRefresh();
       },
       updatewithdrawstatusResponse:function(e){
         alert(e.detail.response.returnval);
