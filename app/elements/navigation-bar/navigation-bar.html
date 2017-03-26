@@ -285,11 +285,14 @@
         <li id="enrollment" hidden$="{{hideenrollmentmenu}}">
             <a href="" aria-hidden="true"><i class="fa fa-phone-square fa-fw"></i> Enrollment<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">         
-          <li id="adtest">
+          <!-- <li id="adtest">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#admissiontest" data-backdrop="static" data-keyboard="false" on-click="FnAdmissionTest">Admission Test</a>
-          </li>
+          </li> -->
           <li id="admission">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#newadmission" data-backdrop="static" data-keyboard="false" on-click="FnAdmission">Admission</a>
+          </li>
+          <li id="adtest">
+            <a href="" aria-hidden="true" on-click="FnUpdateAdmission">Update Admission</a>
           </li>
           <li id="promotion">
             <a href="" aria-hidden="true" on-click="FnPromotion">Promotion</a>
@@ -842,6 +845,7 @@
      
 
     <crm-service id="service"></crm-service>
+    <admission-service id="admissionservice"></admission-service>
     <followup-service id="followupservice"></followup-service>
     <schedule-service id="scheduleservice"></schedule-service>
     <reporting-service id="reportingservice"></reporting-service>
@@ -994,23 +998,25 @@
       },
       FnAdmissionTest:function(){
         document.querySelector('admission-approval-card').FnRefresh();
-
       },
-
       FnAdmission:function(){
-
         this.$.service.getdiscounts();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchproofService();
         document.querySelector('admission-form').FnRefresh();
         document.querySelector('special-discount-card').ready();
       },
-
+      FnUpdateAdmission:function(){
+        document.querySelector('app-list').setPage("update-admission-info","Update Admission Info");
+        document.querySelector('update-admission-info').FnRefresh();
+        document.querySelector('update-admission-info').callService();
+      },
       Fnpreapp:function(){
         localStorage.setItem("curr_sess_enquiryupdateflag",0);
         document.querySelector('app-list').setPage("pre-apps","Enquiry Form");
         document.querySelector('pre-apps').ready();
         document.querySelector('pre-apps').callnextyearhandler();
-          document.querySelector('pre-apps').FnClear();
-          // document.querySelector('special-discount-card').ready();          
+        document.querySelector('pre-apps').FnClear();        
       },
       Fnpreappupdate:function(){
 

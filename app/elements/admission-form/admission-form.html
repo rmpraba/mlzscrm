@@ -20,12 +20,12 @@
 
    <div class="row enquiry-form">
       <div class="list-group col-sm-12 panel-body form-category">
-          <div class="col-sm-5">
+          <div class="col-sm-6">
           <paper-input id="searchtext" label="Enter Enquiry/Admission Number/Name" value="{{enquiryno}}">
             <paper-icon-button suffix icon="search" on-click="FnSearchEnquiry" title="Search"></paper-icon-button>
           </paper-input>
           </div>
-          <div class="col-sm-5" style="margin-top: 2%;">
+          <div class="col-sm-6" style="margin-top: 2%;">
           <paper-dropdown-menu label="Select Enquiry/Admission No" on-iron-select="FnSelectEnquiry">
             <paper-listbox class="dropdown-content" id="enradmnsearch">
             <template  is="dom-repeat" items="{{enquiryarr}}" as="item">
@@ -620,6 +620,17 @@
         </div>
        </div>
       <div class="form-group-heading">
+        <h4>Admission Docket Checklist</h4>
+      </div>
+
+      <div class="list-group col-sm-12 panel-body form-category">
+        <h5 class="p">Please tick the below mentioned documents attached</h5>
+        <template is="dom-repeat" items="{{proofarr}}">
+          <proof-card proofid="{{item.proof_id}}" proofname="{{item.proof_name}}" check="{{item.checked}}"></proof-card>
+        </template>
+      </div>
+
+      <div class="form-group-heading">
         <h4>Acknowledgement</h4>
       </div>
       <div class="list-group col-sm-12 panel-body form-category">
@@ -653,7 +664,7 @@
       </div>       
 
       <div class="col-md-12 form-button">
-        <paper-button class="btn btn-primary" on-click="FnSubmitAdmission">Submit</paper-button>
+        <paper-button class="btn btn-primary" on-click="FnSubmitAdmission" >Submit</paper-button>
       </div>
     
     <!--Calling services-->
@@ -693,10 +704,10 @@
     var discountname="";
     var schoolhistory;
     var sibling;
+    var proofarr=[];
     Polymer({
       is: 'admission-form',
         ready:function(){
-        
         this.hideenqenrno=true;
         this.hidethirdlanguage=true;
         this.$.physicdetailhandler.hidden=true;
@@ -709,6 +720,10 @@
         this.$.scheduleservice.fetchadmissionyearService();
         this.nationality="Indian";
         },
+      FnSetProofarr:function(arr){
+        // alert(JSON.stringify(arr));
+        proofarr=arr;
+      },
       FnSearchEnquiry:function(){
         document.querySelector('#enradmnsearch').selected="-1";
         this.FnRefresh();
@@ -1222,16 +1237,16 @@
       },
       FnSubmitAdmission:function(){     
         // alert(discounttype);
-        if (admissionyear==null||admissionyear==""||this.nationality==""||this.nationality==null||this.relegion==""||this.relegion==null||discounttype==null||discounttype=="") {
+        if (admissionyear==null||admissionyear==""||this.nationality==""||this.nationality==null||discounttype==null||discounttype=="") {
           if (admissionyear==null||admissionyear==""){
           alert('Please select admission year!!');
           // document.querySelector('#admnformadmnyear').validate();
           // document.querySelector('#admnformadmnyear').focus();
           }
-          if (this.relegion==null||this.relegion==""){
-          document.querySelector('#Religion').validate();
-          document.querySelector('#Religion').focus();
-          }
+          // if (this.relegion==null||this.relegion==""){
+          // document.querySelector('#Religion').validate();
+          // document.querySelector('#Religion').focus();
+          // }
           if (this.nationality==null||this.nationality==""){
           document.querySelector('#Nationality').validate();
           document.querySelector('#Nationality').focus();
@@ -1267,14 +1282,15 @@
           if(localStorage.getItem("curr_sess_insertflag")=="1")
 
           this.$.admissionservice.callInsertAdmissionService(localStorage.getItem("curr_sess_enquiryno"),localStorage.getItem("curr_sess_enquiryname"),this.applicationno,this.schoolname,this.enquiredyear,admissionyear,this.firstname,this.middlename,this.lastname,this.gradeselection,secondlanguage,thirdlanguage,this.dob,this.age,gender,this.flatno,
-            this.bulidingname,this.street,this.city,this.town,this.state,this.pincode,this.height,this.weight,FnBlood,relegions,this.relegion,this.nationality,this.mothertongue,this.siblingname,this.siblingclass,this.prevschoolname,fromgrade,tograde,FnBo,this.yearfrom,this.yearto,this.medium,this.lastclassmark,this.reasonforleaving,handler,this.physicdetail,this.physicstatus,this.mentaldetail,this.mentalstatus,this.illnessdetail,this.illnessstatus,this.allergydetail,this.allergystatus,this.chronicdetail,this.chronicstatus,acheivehandler,this.fathername,this.mothername,this.fatherqualification,this.motherqualification,this.fatheroccupation,this.motheroccupation,this.fatherincome,this.motherincome,this.fathertelno,this.mothertelno,this.fathermobile,this.mothermobile,this.fatheremail,this.motheremail,this.fatherdob,this.motherdob,this.pflatno,this.pbuildingname,this.pstreet,this.pdistrict,this.ptown,this.pstate,this.ppincode,this.guardianname1,this.guardianname2,this.relationship1,this.relationship2,this.gflatno,this.gbulidingname,this.gstreet,this.gcity,this.gtown,this.gstate,this.gpincode,this.gresidentialcontact,this.gofficecontact,this.gmobileno,this.gfax,admissiontransport,admissioncanteen,this.field1,this.year1,this.event1,this.prizedetail1,this.field2,this.year2,this.event2,this.prizedetail2,this.field3,this.year3,this.event3,this.prizedetail3,admissiontype,discounttype,admissionsibling,admissionhistory,this.aadharno);
+            this.bulidingname,this.street,this.city,this.town,this.state,this.pincode,this.height,this.weight,FnBlood,relegions,this.relegion,this.nationality,this.mothertongue,this.siblingname,this.siblingclass,this.prevschoolname,fromgrade,tograde,FnBo,this.yearfrom,this.yearto,this.medium,this.lastclassmark,this.reasonforleaving,handler,this.physicdetail,this.physicstatus,this.mentaldetail,this.mentalstatus,this.illnessdetail,this.illnessstatus,this.allergydetail,this.allergystatus,this.chronicdetail,this.chronicstatus,acheivehandler,this.fathername,this.mothername,this.fatherqualification,this.motherqualification,this.fatheroccupation,this.motheroccupation,this.fatherincome,this.motherincome,this.fathertelno,this.mothertelno,this.fathermobile,this.mothermobile,this.fatheremail,this.motheremail,this.fatherdob,this.motherdob,this.pflatno,this.pbuildingname,this.pstreet,this.pdistrict,this.ptown,this.pstate,this.ppincode,this.guardianname1,this.guardianname2,this.relationship1,this.relationship2,this.gflatno,this.gbulidingname,this.gstreet,this.gcity,this.gtown,this.gstate,this.gpincode,this.gresidentialcontact,this.gofficecontact,this.gmobileno,this.gfax,admissiontransport,admissioncanteen,this.field1,this.year1,this.event1,this.prizedetail1,this.field2,this.year2,this.event2,this.prizedetail2,this.field3,this.year3,this.event3,this.prizedetail3,admissiontype,discounttype,admissionsibling,admissionhistory,this.aadharno,proofarr);
           if(localStorage.getItem("curr_sess_insertflag")=="2")
 
           this.$.admissionservice.callInsertAdmissionService(localStorage.getItem("curr_sess_admnenquiryno"),localStorage.getItem("curr_sess_enquiryname"),this.applicationno,this.schoolname,this.enquiredyear,admissionyear,this.firstname,this.middlename,this.lastname,this.gradeselection,secondlanguage,thirdlanguage,this.dob,this.age,gender,this.flatno,
-            this.bulidingname,this.street,this.city,this.town,this.state,this.pincode,this.height,this.weight,FnBlood,relegions,this.relegion,this.nationality,this.mothertongue,this.siblingname,this.siblingclass,this.prevschoolname,fromgrade,tograde,FnBo,this.yearfrom,this.yearto,this.medium,this.lastclassmark,this.reasonforleaving,handler,this.physicdetail,this.physicstatus,this.mentaldetail,this.mentalstatus,this.illnessdetail,this.illnessstatus,this.allergydetail,this.allergystatus,this.chronicdetail,this.chronicstatus,acheivehandler,this.fathername,this.mothername,this.fatherqualification,this.motherqualification,this.fatheroccupation,this.motheroccupation,this.fatherincome,this.motherincome,this.fathertelno,this.mothertelno,this.fathermobile,this.mothermobile,this.fatheremail,this.motheremail,this.fatherdob,this.motherdob,this.pflatno,this.pbuildingname,this.pstreet,this.pdistrict,this.ptown,this.pstate,this.ppincode,this.guardianname1,this.guardianname2,this.relationship1,this.relationship2,this.gflatno,this.gbulidingname,this.gstreet,this.gcity,this.gtown,this.gstate,this.gpincode,this.gresidentialcontact,this.gofficecontact,this.gmobileno,this.gfax,admissiontransport,admissioncanteen,this.field1,this.year1,this.event1,this.prizedetail1,this.field2,this.year2,this.event2,this.prizedetail2,this.field3,this.year3,this.event3,this.prizedetail3,admissiontype,discounttype,admissionsibling,admissionhistory,this.aadharno);
+            this.bulidingname,this.street,this.city,this.town,this.state,this.pincode,this.height,this.weight,FnBlood,relegions,this.relegion,this.nationality,this.mothertongue,this.siblingname,this.siblingclass,this.prevschoolname,fromgrade,tograde,FnBo,this.yearfrom,this.yearto,this.medium,this.lastclassmark,this.reasonforleaving,handler,this.physicdetail,this.physicstatus,this.mentaldetail,this.mentalstatus,this.illnessdetail,this.illnessstatus,this.allergydetail,this.allergystatus,this.chronicdetail,this.chronicstatus,acheivehandler,this.fathername,this.mothername,this.fatherqualification,this.motherqualification,this.fatheroccupation,this.motheroccupation,this.fatherincome,this.motherincome,this.fathertelno,this.mothertelno,this.fathermobile,this.mothermobile,this.fatheremail,this.motheremail,this.fatherdob,this.motherdob,this.pflatno,this.pbuildingname,this.pstreet,this.pdistrict,this.ptown,this.pstate,this.ppincode,this.guardianname1,this.guardianname2,this.relationship1,this.relationship2,this.gflatno,this.gbulidingname,this.gstreet,this.gcity,this.gtown,this.gstate,this.gpincode,this.gresidentialcontact,this.gofficecontact,this.gmobileno,this.gfax,admissiontransport,admissioncanteen,this.field1,this.year1,this.event1,this.prizedetail1,this.field2,this.year2,this.event2,this.prizedetail2,this.field3,this.year3,this.event3,this.prizedetail3,admissiontype,discounttype,admissionsibling,admissionhistory,this.aadharno,proofarr);
         }
         },
        FnRefresh:function(){
+        proofarr=[];
         this.aadharno="";
         this.parentguardhandlerdiv=true;
         admissionyear="";
@@ -1443,7 +1459,8 @@
         // document.querySelector('special-discount-card').setDefaultCheck(discounttype);
       },
       FnRefresh1:function(){
-        // document.querySelector('special-discount-card').setDefaultCheck(discounttype);
+        // document.querySelector('special-discount-card').setDefaultCheck(discounttype);\\
+        proofarr=[];
         this.aadharno="";
         this.guardianoccupation="";
         this.parentguardhandlerdiv=true;

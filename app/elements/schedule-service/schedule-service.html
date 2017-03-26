@@ -447,6 +447,16 @@
         on-response="fetchschoolResponse"
         debounce-duration="300"
         >
+    <iron-ajax
+        method="post"
+        id="fetchproofajax"
+        url="{{fetchproofurl}}"
+        params="{{fetchproofparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchproofResponse"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
@@ -468,6 +478,19 @@
     var feemastersplitarr=[];
     Polymer({
       is: 'schedule-service',
+      fetchproofService:function(){
+        this.fetchproofurl=sessionStorage.getItem("addrinfo")+"/fetchproof-service"
+        this.$.fetchproofajax.generateRequest();
+      },
+      fetchproofResponse:function(e){
+        var arr=e.detail.response.returnval;
+        for(var i=0;i<arr.length;i++){
+            arr[i].checked=true;
+        }
+        document.querySelector('admission-form').proofarr=arr;
+        document.querySelector('update-admission-info').hidediscountmapcard=false;
+        document.querySelector('update-admission-info').proofarr=arr;
+      },
       fetchschoolService:function(){
         this.fetchschoolurl=sessionStorage.getItem("addrinfo")+"/fetchschool-service"
         this.$.fetchschoolajax.generateRequest();
@@ -550,6 +573,7 @@
         document.querySelector('process-report').academicarr=e.detail.response.returnval;
         document.querySelector('enquiry-conversion-report').academicarr=e.detail.response.returnval;
         document.querySelector('consolidated-dashboardreport').academicarr=e.detail.response.returnval;
+        document.querySelector('admission-form').academicarr=e.detail.response.returnval;
       },
       fetchadmissionyearService:function(){        
         this.fetchadmissionyearurl=sessionStorage.getItem("addrinfo")+"/fetchadmissionyear-service"

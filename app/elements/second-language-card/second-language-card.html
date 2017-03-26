@@ -1,0 +1,53 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="second-language-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div>
+      <paper-radio-button id="second{{id}}" value="{{type}}" on-change="FnChange">{{name}}</paper-radio-button>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var selected="";
+    var seclanguage="";
+    var arr=[];
+    Polymer({
+      is: 'second-language-card',
+      FnChange:function(){
+        // alert(selected+" , "+this.id);
+        if(selected==""){
+          if(document.querySelector('#second'+this.id).checked==true){
+            selected=this.id;
+          }
+        }
+        else{
+          if(selected!=this.id){
+            document.querySelector('#second'+selected).checked=false;
+            selected=this.id;
+          }
+          else{
+            selected="";
+          }
+        }
+        if(localStorage.getItem("curr_sess_thirdlanguage")==this.name){
+          alert("Second and third language should not be same...");
+          document.querySelector('#second'+selected).checked=false;
+          selected="";
+        }
+        else{
+        seclanguage=this.name;
+        localStorage.setItem("curr_sess_seclanguage",seclanguage);
+        document.querySelector('update-admission-info').FnSetSecondLanguage(seclanguage);
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>

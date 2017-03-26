@@ -1,0 +1,77 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="language-service">
+  <template>
+    <iron-ajax
+        method="post"
+        id="fetchsecondlanguageajax"
+        url="{{fetchsecondlanguageurl}}"
+        params="{{fetchsecondlanguageparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchsecondlanguageResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchthirdlanguageajax"
+        url="{{fetchthirdlanguageurl}}"
+        params="{{fetchthirdlanguageparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchthirdlanguageResponse"
+        debounce-duration="300"
+        >    
+    <iron-ajax
+        method="post"
+        id="fetchsearchadmissioninfoajax"
+        url="{{fetchsearchadmissioninfourl}}"
+        params="{{fetchsearchadmissioninfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchsearchadmissioninfoResponse"
+        debounce-duration="300"
+        >
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'language-service',
+      fetchsecondlanguageService:function(){
+        this.fetchsecondlanguageurl=sessionStorage.getItem("addrinfo")+"/fetchsecondlanguage";
+        this.$.fetchsecondlanguageajax.generateRequest();
+      },
+      fetchsecondlanguageResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        document.querySelector('update-admission-info').secondlangarr=arr;
+      },
+      fetchthirdlanguageService:function(){
+        this.fetchthirdlanguageurl=sessionStorage.getItem("addrinfo")+"/fetchthirdlanguage";
+        var obj={"admissionno":"","schoolid":""};
+        this.$.fetchthirdlanguageajax.generateRequest();
+      },
+      fetchthirdlanguageResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        document.querySelector('update-admission-info').thirdlangarr=arr;
+      },
+      fetchsearchadmissioninfo:function(enquiryno){
+        this.fetchsearchadmissioninfourl=sessionStorage.getItem("addrinfo")+"/fetchsearchadmissioninfo";
+        var obj={"enquiryno":"","schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.enquiryno=enquiryno;
+        this.fetchsearchadmissioninfoparam=obj;
+        this.$.fetchsearchadmissioninfoajax.generateRequest();
+      },
+      fetchsearchadmissioninfoResponse:function(e){
+        var arr=e.detail.response.returnval;
+        document.querySelector('update-admission-info').FnSetEnquiryInfo(arr[0].class_for_admission,arr[0].admission_year,arr[0].academic_year);
+      }
+    });
+  })();
+  </script>
+</dom-module>

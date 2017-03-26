@@ -1396,7 +1396,7 @@ app.post('/searchenquiry',  urlencodedParser,function (req, res){
     {
     if(rows.length>0)
     {
-      res.status(200).json({'returnval': rows});
+      res.status(200).json({'returnval': 'exist'});
     }
     else
     {
@@ -1760,6 +1760,37 @@ app.post('/fetchexistingadmissionhistoryinfo',  urlencodedParser,function (req, 
   }
 });
 });
+
+// Fetching admission proof info
+app.post('/fetchexistingadmissionproof',  urlencodedParser,function (req, res){
+    var qur="SELECT * FROM mp_student_proof WHERE school_id='"+req.query.schoolid+"' and enquiry_no = '"+req.query.admissionno+"'";
+    var allqur="SELECT * FROM md_proof";
+    console.log('------------------------------');
+   console.log(qur);
+   console.log(allqur);
+  var all=[];
+  connection.query(allqur,function(err, rows)
+    {
+    if(!err)
+    {
+      all=rows;
+    connection.query(qur,function(err, rows)
+    {
+    if(!err)
+    {
+    
+      res.status(200).json({'proof':all,'returnval': rows});
+    }
+    else
+    {
+      console.log(err);
+      res.status(200).json({'returnval': 'no rows'});
+    }
+  });
+  }
+  });
+});
+
 
 // Insert Admission
 app.post('/insertadmission',  urlencodedParser,function (req, res){
@@ -6742,7 +6773,8 @@ app.post('/fetchallstudentenquirysearch-service',  urlencodedParser,function (re
 });
 
 app.post('/fetchallstudentadmissionsearch-service',  urlencodedParser,function (req, res){
-  var qur="SELECT distinct(admission_no),student_name FROM md_admission where school_id='"+req.query.schoolid+"' ";
+  var qur="SELECT distinct(admission_no),enquiry_no,student_name,class_for_admission FROM md_admission where school_id='"+req.query.schoolid+"' ";
+
   console.log(qur);
   connection.query(qur,
     function(err, rows){
@@ -8649,6 +8681,152 @@ app.post('/fetchcollectiondashboarddueinfo-service',  urlencodedParser,function 
   // });
  
 });
+
+app.post('/fetchproof-service',  urlencodedParser,function (req, res){
+  var queryy="SELECT * FROM md_proof";
+  console.log('-----------school Proof-------------');
+  console.log(queryy); 
+  
+  connection.query(queryy,function(err, rows){
+      if(!err){   
+        res.status(200).json({'returnval': rows});
+      } else {
+        console.log(err);
+        res.status(200).json({'returnval': 'no rows'});
+      }
+  });
+ 
+});
+
+app.post('/updateproof-service',  urlencodedParser,function (req, res){
+  var queryy="INSERT INTO mp_student_proof SET ?";
+  var response={
+    school_id:req.query.schoolid,
+    academic_year:req.query.academicyear,
+    admission_year:req.query.admissionyear,
+    enquiry_no:req.query.enquiryno,
+    student_name:req.query.enquiryname,
+    grade:req.query.grade,
+    proof_id:req.query.proofid,
+    proof_name:req.query.proofname
+  };
+  console.log('-----------Insert Proof-------------');
+  console.log(queryy); 
+  
+  connection.query(queryy,[response],function(err, rows){
+      if(!err){   
+        res.status(200).json({'returnval': 'Inserted!'});
+      } else {
+        console.log(err);
+        res.status(200).json({'returnval': 'no rows'});
+      }
+  });
+ 
+});
+
+app.post('/deleteproof',  urlencodedParser,function (req, res){
+  
+  console.log('In delete');
+  connection.query("DELETE FROM mp_student_proof WHERE school_id='"+req.query.schoolid+"' and enquiry_no='"+req.query.enquiryno+"'",function(err, rows){
+      if(!err){   
+        res.status(200).json({'returnval': 'Deleted!'});
+      } else {
+        console.log(err);
+        res.status(200).json({'returnval': 'no rows'});
+      }
+  });
+ 
+});
+
+app.post('/fetchsecondlanguage',  urlencodedParser,function (req, res){
+  
+  console.log('In second lang');
+  connection.query("SELECT * FROM language_master where language_type='II'",function(err, rows){
+      if(!err){   
+        res.status(200).json({'returnval': rows});
+      } else {
+        console.log(err);
+        res.status(200).json({'returnval': 'no rows'});
+      }
+  });
+ 
+});
+
+app.post('/fetchthirdlanguage',  urlencodedParser,function (req, res){
+  
+  console.log('In third lang');
+  connection.query("SELECT * FROM language_master where language_type='III'",function(err, rows){
+      if(!err){   
+        res.status(200).json({'returnval': rows});
+      } else {
+        console.log(err);
+        res.status(200).json({'returnval': 'no rows'});
+      }
+  });
+ 
+});
+
+app.post('/fetchsearchadmissioninfo',  urlencodedParser,function (req, res){
+  
+  console.log('In info');
+  connection.query("SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and enquiry_no='"+req.query.enquiryno+"'",function(err, rows){
+      if(!err){   
+        res.status(200).json({'returnval': rows});
+      } else {
+        console.log(err);
+        res.status(200).json({'returnval': 'no rows'});
+      }
+  });
+ 
+});
+
+
+app.post('/updateadmissionchecklist-service',  urlencodedParser,function (req, res){
+  
+  console.log('In update admission');
+  var response={
+    enquiry_no:req.query.enquiryno,
+    school_id:req.query.schoolid,
+    academic_year:req.query.academicyear,
+    student_name:req.query.enquiryname,
+    class_for_admission:req.query.grade,
+    allergy_detail:req.query.alergy
+  };
+  var qur1="SELECT * FROM md_student WHERE school_id='"+req.query.schoolid+"' and enquiry_no='"+req.query.enquiryno+"'";
+  var qur2="UPDATE md_student SET second_language='"+req.query.seclanguage+"',third_language='"+req.query.thirdlanguage+"' WHERE school_id='"+req.query.schoolid+"' and enquiry_no='"+req.query.enquiryno+"'";
+  var qur3="SELECT * FROM md_disability_student_details WHERE school_id='"+req.query.schoolid+"' and enquiry_no='"+req.query.enquiryno+"'";
+  var qur4="INSERT INTO md_disability_student_details SET ?";
+  var qur5="UPDATE md_disability_student_details allergy_detail='"+req.query.alergy+"' WHERE school_id='"+req.query.schoolid+"' and enquiry_no='"+req.query.enquiryno+"'";
+  console.log('---------------------');
+  console.log(qur2);
+  console.log(qur3);
+  console.log(qur4);
+  console.log(qur5);
+  connection.query(qur1,function(err, rows){
+      if(!err){ 
+      connection.query(qur2,function(err, rows){
+      connection.query(qur3,function(err, rows){
+        console.log('length'+rows.length);
+        if(rows.length==0){
+          connection.query(qur4,[response],function(err, rows){
+            res.status(200).json({'returnval': 'Updated!'});
+          });
+        }
+        else{
+          connection.query(qur5,function(err, rows){
+            res.status(200).json({'returnval': 'Updated!'});
+          });
+        }
+      });
+      });
+      } else {
+        console.log(err);
+        res.status(200).json({'returnval': 'no rows'});
+      }
+  });
+ 
+});
+
 
 function setvalue(){
   console.log("calling setvalue.....");

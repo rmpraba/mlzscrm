@@ -1,0 +1,66 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="proof-card">
+  <template>
+    <style>
+    </style>
+    <div>
+      <paper-checkbox checked="{{check}}" on-change="FnSelectProof" id="proof{{proofid}}">{{proofname}}</paper-checkbox>    
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var selected="";
+    var arr=[];
+    Polymer({
+      is: 'proof-card',
+      FnSetSelectedProof:function(proof){
+        arr=proof;
+      },
+      FnSelectProof:function(){
+        alert(document.querySelector('#proof'+this.proofid).checked);
+        if(selected==""){
+          if(document.querySelector('#proof'+this.proofid).checked==true)
+          {
+          selected=this.proofid;
+          var obj={};
+          obj.proofid=this.proofid;
+          obj.proofname=this.proofname;
+          arr.push(obj);
+          }
+          if(document.querySelector('#proof'+this.proofid).checked==false){
+          for(var i=0;i<arr.length;i++){
+          if(this.proofid==arr[i].proofid){
+            arr.splice(i,1);
+          }
+          }
+          }          
+        }
+        else{
+          var f=0;
+          var obj={};
+          obj.proofid=this.proofid;
+          obj.proofname=this.proofname;
+          for(var i=0;i<arr.length;i++){
+          if(this.proofid==arr[i].proofid){
+            f=1
+            arr.splice(i,1);
+          }
+          }
+          if(f==0)
+            arr.push(obj);
+        }
+        alert(JSON.stringify(arr));
+        document.querySelector('admission-form').FnSetProofarr(arr);
+        document.querySelector('update-admission-info').FnSetProofarr(arr);
+      },
+      FnRefresh:function(){
+        selected="";
+        arr="";
+      }
+    });
+  })();
+  </script>
+</dom-module>
