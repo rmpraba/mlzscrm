@@ -60,7 +60,7 @@
       <div class="list-group col-sm-12 panel-body form-category">
         <h5 class="p">Please tick the below mentioned documents attached</h5>
         <template is="dom-repeat" items="{{proofarr}}">
-          <proof-card proofid="{{item.proof_id}}" proofname="{{item.proof_name}}" check="{{item.checked}}"></proof-card>
+          <proof-update-card proofid="{{item.proof_id}}" proofname="{{item.proof_name}}" check="{{item.checked}}"></proof-update-card>
         </template>
       </div>
 
@@ -192,7 +192,11 @@
         this.grade="";
         this.hidediscountmapcard=true;
         proofarr=[];
-        this.proofarr=[];
+        this.proofarr="";
+        this.secondlangarr=[];
+        this.thirdlanguage=[];
+        seclanguage="";
+        thirdlanguage="";
     },
     Fnhidediscountmapcard:function(){
       this.hidediscountmapcard=false;

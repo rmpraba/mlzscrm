@@ -1228,8 +1228,7 @@ insertstudenthistoryResponse:function(e){
       },
       updateteststatusResponse:function(e){
          alert(e.detail.response.returnval);
-        },
-        
+      },        
       searchfeeadmissionService:function(admissionno){
         this.searchfeeadmissionurl=sessionStorage.getItem("addrinfo")+"/searchfeeadmission";
         // localStorage.setItem("curr_sess_insertflag",2);
@@ -2370,6 +2369,10 @@ insertstudenthistoryResponse:function(e){
       },
       updateadmissionchecklistResponse:function(e){
         alert(e.detail.response.returnval);
+        document.querySelector('update-admission-info').FnRefresh();
+        document.querySelector('proof-update-card').FnRefresh();
+        localStorage.setItem("curr_sess_seclanguage","");
+        localStorage.setItem("curr_sess_thirdlanguage","");
       }   
 
     });

@@ -1,12 +1,12 @@
 
 <link rel="import" href="..\..\bower_components/polymer/polymer.html">
 
-<dom-module id="proof-card">
+<dom-module id="proof-update-card">
   <template>
     <style>
     </style>
     <div>
-      <paper-checkbox checked="{{check}}" on-change="FnSelectProof" id="proof{{proofid}}">{{proofname}}</paper-checkbox>    
+      <paper-checkbox checked="{{check}}" on-change="FnSelectProof" id="prf{{proofid}}">{{proofname}}</paper-checkbox>    
     </div>
   </template>
   <script>
@@ -15,14 +15,14 @@
     var selected="";
     var arr=[];
     Polymer({
-      is: 'proof-card',
+      is: 'proof-update-card',
       FnSetSelectedProof:function(proof){
         arr=proof;
       },
       FnSelectProof:function(){
-        // alert(document.querySelector('#proof'+this.proofid).checked);
+        // alert(document.querySelector('#prf'+this.proofid).checked);
         if(selected==""){
-          if(document.querySelector('#proof'+this.proofid).checked==true)
+          if(document.querySelector('#prf'+this.proofid).checked==true)
           {
           selected=this.proofid;
           var obj={};
@@ -30,7 +30,7 @@
           obj.proofname=this.proofname;
           arr.push(obj);
           }
-          if(document.querySelector('#proof'+this.proofid).checked==false){
+          if(document.querySelector('#prf'+this.proofid).checked==false){
           for(var i=0;i<arr.length;i++){
           if(this.proofid==arr[i].proofid){
             arr.splice(i,1);
@@ -53,12 +53,12 @@
             arr.push(obj);
         }
         // alert(JSON.stringify(arr));
-        document.querySelector('admission-form').FnSetProofarr(arr);
+        // document.querySelector('admission-form').FnSetProofarr(arr);
         document.querySelector('update-admission-info').FnSetProofarr(arr);
       },
       FnRefresh:function(){
         selected="";
-        arr="";
+        arr=[];
       }
     });
   })();

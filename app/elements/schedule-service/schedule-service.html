@@ -484,9 +484,9 @@
       },
       fetchproofResponse:function(e){
         var arr=e.detail.response.returnval;
-        for(var i=0;i<arr.length;i++){
-            arr[i].checked=true;
-        }
+        // for(var i=0;i<arr.length;i++){
+        //     arr[i].checked=true;
+        // }
         document.querySelector('admission-form').proofarr=arr;
         document.querySelector('update-admission-info').hidediscountmapcard=false;
         document.querySelector('update-admission-info').proofarr=arr;
