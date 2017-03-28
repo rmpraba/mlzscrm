@@ -6791,6 +6791,27 @@ app.post('/fetchallstudentadmissionsearch-service',  urlencodedParser,function (
     });
 });
 
+
+app.post('/fetchallstudentadmissionfeesearch-service',  urlencodedParser,function (req, res){
+  var qur="SELECT distinct(admission_no),enquiry_no,student_name,class_for_admission FROM md_admission where school_id='"+req.query.schoolid+"' and discount_type not in('3')";
+
+  console.log(qur);
+  connection.query(qur,
+    function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
 app.post('/fetchrtestudentadmissionsearch-service',  urlencodedParser,function (req, res){
   var qur="SELECT distinct(admission_no),student_name FROM md_admission where school_id='"+req.query.schoolid+"' and discount_type='3'";
   console.log(qur);

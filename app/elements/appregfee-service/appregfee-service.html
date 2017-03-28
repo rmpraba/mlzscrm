@@ -134,6 +134,17 @@
         debounce-duration="300"
         >
 
+     <iron-ajax
+        method="post"
+        id="fetchallstudentadmissionfeesearchajax"
+        url="{{fetchallstudentadmissionfeesearchurl}}"
+        params="{{fetchallstudentadmissionfeesearchparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallstudentadmissionfeesearchResponse"
+        debounce-duration="300"
+        >
+
     <iron-ajax
         method="post"
         id="fetchrtestudentadmissionsearchajax"
@@ -579,6 +590,18 @@
       {
         //alert(JSON.stringify(e.detail.response.returnval));
         document.querySelector('deletediscount-card').autodeletearr(e.detail.response.returnval);
+      },
+      fetchallstudentadmissionfeesearchService:function(){
+        this.fetchallstudentadmissionfeesearchurl=sessionStorage.getItem("addrinfo")+"/fetchallstudentadmissionfeesearch-service";
+        var obj={"schoolid":"","academicyear":"","statusflag":""}  
+        obj.schoolid=localStorage.getItem("schoolid");  
+        this.fetchallstudentadmissionfeesearchparam=obj;     
+        this.$.fetchallstudentadmissionfeesearchajax.generateRequest();
+      },
+      fetchallstudentadmissionfeesearchResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        document.querySelector('registerationfee-card').autocompletearr(e.detail.response.returnval);
+        document.querySelector('fees-card').autocompletearr(e.detail.response.returnval);
       }
     });
   })();
