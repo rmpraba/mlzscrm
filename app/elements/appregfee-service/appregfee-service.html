@@ -144,6 +144,16 @@
         on-response="fetchrtestudentadmissionsearchResponse"
         debounce-duration="300"
         >
+    <iron-ajax
+        method="post"
+        id="fetchstudentadmissionServiceajax"
+        url="{{fetchstudentadmissionServiceurl}}"
+        params="{{fetchstudentadmissionServiceparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentadmissionResponse"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
@@ -556,7 +566,20 @@
       fetchrtestudentadmissionsearchResponse:function(e){
         // alert(JSON.stringify(e.detail.response.returnval));
         document.querySelector('rtefee-card').autocompletearr(e.detail.response.returnval);
-    }
+    },
+    fetchstudentadmissionService:function()
+      {
+        this.fetchstudentadmissionServiceurl=sessionStorage.getItem("addrinfo")+"/fetchastudentadminsearch-service";   
+        var obj={"schoolid":"","academicyear":"","statusflag":""}  
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.fetchstudentadmissionServiceparam=obj;     
+        this.$.fetchstudentadmissionServiceajax.generateRequest();
+      },
+      fetchstudentadmissionResponse:function(e)
+      {
+        //alert(JSON.stringify(e.detail.response.returnval));
+        document.querySelector('deletediscount-card').autodeletearr(e.detail.response.returnval);
+      }
     });
   })();
   </script>

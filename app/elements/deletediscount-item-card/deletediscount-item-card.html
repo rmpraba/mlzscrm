@@ -1,0 +1,54 @@
+   
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="deletediscount-item-card">
+  <template>    
+    <style>
+      :host {
+        display: block;
+      }
+      table{      
+        width:70%;
+      }    
+      </style>
+  <div>
+    <table class="table table-hover">
+      <tr>
+        <td>{{admissionno}}<br>{{studentname}}<br>{{grade}}</td>
+        <td></td>
+        <td><br>{{discounttype}}</td>
+        
+        <td>
+          <paper-button style="margin-top: 4%;" class="btn btn-primary left" on-click="FnDelete">Delete</paper-button>
+        </td>
+      </tr>
+    </table>
+  </div>  
+    <processing-service id="service"></processing-service>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    //var discounttype,discounttypeid;
+    var distype="";
+    Polymer({
+      is: 'deletediscount-item-card',
+           
+     FnSelectDiscount:function(e)
+     {
+        this.$.service.fetchdiscounttype();
+      },
+      FnDelete:function()
+      {
+        // alert(111);
+        this.$.service.deltediscountService(this.admissionno,this.discounttype);
+      },
+      FnRefresh:function()
+      {
+        discounttype="";
+      }
+    });
+  })();
+  </script>
+</dom-module>

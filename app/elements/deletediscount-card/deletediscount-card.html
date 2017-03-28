@@ -1,0 +1,177 @@
+      
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="deletediscount-card">
+  <template>
+    <style>  
+      :host {
+        display: block;  
+      }
+    </style>  
+        <div>
+          <div class="row">
+            <div class="well well-sm">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="col-sm-5">
+                    <paper-input label="Student Name" is="" value="{{value}}" on-keydown="FnSearchEnq"></paper-input>
+                    <paper-listbox class="dropdown-content" id="deletediscount1" on-iron-select="FnSelectEnq">
+                    <template is="dom-repeat" items="{{itemArray}}" as="item">
+                    <paper-item value="{{item.admission_no}}">{{item.itemdes}}</paper-item>
+                    </template>
+                    </paper-listbox>
+                  </div>
+                </div>              
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div hidden$="{{hidedeldiscountcard}}">
+          <!-- <template is="dom-repeat" items="{{deldiscountarr}}" as="d"> -->
+            <deletediscount-item-card studentname="{{studentname}}" admissionno="{{admissionno}}" grade="{{grade}}" discounttype="{{discounttype}}" deldiscountarr="{{deldiscountarr}}"></deletediscount-item-card> 
+          <!-- </template>   -->
+       </div>
+
+        
+
+       <appregfee-service id="appregfeeservice"></appregfee-service>
+       <processing-service id="processingservice"></processing-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var item=[];
+    var arr=[];
+    Polymer({
+      is: 'deletediscount-card',
+
+      ready:function()
+      {
+        //alert("hiiii");
+      this.hidedeldiscountcard=true; 
+      this.querySelector('#deletediscount1').style.visibility='hidden';
+      this.$.appregfeeservice.fetchstudentadmissionService();
+
+      },
+      callService:function()
+      {
+       this.$.appregfeeservice.fetchstudentadmissionService();
+       // this.$.processingservice.fetchdiscounttsService();
+      },
+      autodeletearr:function(autodeletearr)
+      {
+       // alert(JSON.stringify(autodeletearr));
+        item=autodeletearr;
+      },
+      FnSearchEnq:function(e)
+      {
+
+      if(e.keyCode==13|| e.keyCode==40)
+      this.querySelector('#deletediscount1').focus();
+      var arr=[];
+      //alert(arr.push({"itemdes":"-----Select-----"}));
+      arr.push({"itemdes":"-----Select-----"});
+      //alert(arr);
+      this.querySelector('#deletediscount1').style.visibility='visible';
+      if(e.keyCode==8)
+      {
+        this.itemflag="true";
+        this.itemval="";
+        //alert('yes');
+        var len=(this.value).length;
+        if(len<=1){
+          this.querySelector('#deletediscount1').style.visibility='hidden';
+          this.itemArray="";
+          this.itemval="";
+        }
+        if(len>1){
+          this.querySelector('#deletediscount1').style.visibility='visible';
+          var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
+          for(var i=0;i<item.length;i++)
+          {
+            //alert(item[i].student_name);
+            var subval=((item[i].student_name).trim()).substring(0,backsubval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.value).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.enquiry_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          this.itemArray=arr;
+        }
+      }
+      if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+        if(this.itemflag=="true") {
+          this.itemval = (this.value).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+          this.itemflag="false";
+        }
+        else
+        this.itemval = this.value +String.fromCharCode((e.keyCode));
+        if(this.itemval.length>0)
+        {
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,this.itemval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.itemval).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+              //alert(JSON.stringify(obj));
+            }
+          }
+          if(arr.length>0)
+            this.itemArray=arr;
+          else
+          {
+            var obj={"itemdes":"","enquiry_no":""};
+            obj.itemdes="No items found";
+            arr.push(obj);
+            this.itemArray=arr;
+          }
+        }
+      }
+    },
+    FnSelectEnq:function(e)
+    {
+    
+      //alert('test');
+    this.querySelector('#deletediscount1').style.visibility='hidden';
+    var enquiry_name = e.target.selectedItem.textContent.trim();
+    var admission_no = e.target.selectedItem.value;
+    localStorage.setItem("curr_sess_enquiryno",admission_no);
+    localStorage.setItem("curr_sess_enquiryname",enquiry_name);
+    this.itemArray=[];
+    document.querySelector('#deletediscount1').selected=-1;
+    this.value=enquiry_name;
+    //this.hidedeldiscountcard=false;
+    this.$.processingservice.fetchstudentdeldiscountService(admission_no);
+    },
+    FnProcess:function(){
+       this.$.processingservice.deltediscountService(localStorage.getItem("curr_sess_enquiryno"));
+      },
+    FnRefresh:function()
+    {
+        this.querySelector('#deletediscount1').style.visibility='hidden';
+        this.itemArray=[];
+        this.value="";
+        this.admissionno="";
+        this.studentname="";
+        this.grade="";
+        this.hidedeldiscountcard=true;
+    },
+    Fnhidedeldiscountcard:function()
+    {
+      this.hidedeldiscountcard=false;
+    }
+
+     
+    });
+  })();
+  </script>
+</dom-module>
+ 

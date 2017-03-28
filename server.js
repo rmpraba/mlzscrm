@@ -8827,6 +8827,85 @@ app.post('/updateadmissionchecklist-service',  urlencodedParser,function (req, r
  
 });
 
+app.post('/fetchastudentadminsearch-service',  urlencodedParser,function (req, res){
+  var qur="SELECT distinct(admission_no),student_name,discount_type FROM md_admission where school_id='"+req.query.schoolid+"' ";
+  //console.log(qur);
+  connection.query(qur,
+    function(err, rows)
+    {
+      if(!err)
+      {
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+      } 
+      else 
+      {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+      }
+    } 
+    else 
+    {
+        console.log(err);
+    }
+    });
+});
+
+
+
+
+app.post('/fetchstudentdeldiscount-service',  urlencodedParser,function (req, res){
+  // console.log('fetchstudinstallmentsplitup');
+  /*var qur="SELECT * FROM md_admission WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"'";*/
+
+  var qur="SELECT admission_no,student_name,class_for_admission,(select discount_type_name from md_discounts where id=referral_type) as discounttypename,referral_type FROM md_admission where admission_no='"+req.query.admissionno+"'";
+
+
+  console.log(qur);
+  connection.query(qur,
+    function(err, rows)
+    {
+      if(!err)
+      {
+        if(rows.length>0)
+        {
+          // console.log(JSON.stringify(rows));
+          res.status(200).json({'returnval': rows});
+        } 
+        else 
+        {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } 
+      else 
+      {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/deltediscount-service',  urlencodedParser,function (req, res){
+  var qur="UPDATE md_admission SET referral_type='' WHERE admission_no='"+req.query.admissionno+"'";
+
+  /*var qur="DELETE md_admission  WHERE admission_no='"+req.query.admissionno+"'";*/
+  connection.query(qur,
+    function(err, result)
+    {
+      if(!err){
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Done!!'});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Unable to process!!'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
 
 function setvalue(){
   console.log("calling setvalue.....");
