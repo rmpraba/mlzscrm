@@ -240,6 +240,14 @@
           </li>
 
           <li id="feestructure" hidden$="{{hidefeestructuremenu}}">
+          <a href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>User Management</a>
+            <ul class="nav nav-second-level">
+              <li>
+                <a href="" aria-hidden="true" on-click="FnCreateUser">Create User</a>
+              </li>
+            </ul>
+          </li>
+          <li id="feestructure" hidden$="{{hidefeestructuremenu}}">
             <a href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>Fees Structure</a>
             <ul class="nav nav-second-level">
               <li>
@@ -428,10 +436,10 @@
             <a href="" aria-hidden="true" on-click="FnDailycollectionDashboard">Daily Collection Dashboard<span class="fa arrow"></span></a>
             </li>
             <li id="collectiondashboard">
-            <a href="" aria-hidden="true" on-click="FnCollectionDashboard">Collection Dashboard<span class="fa arrow"></span></a>
+            <a href="" aria-hidden="true" on-click="FnCollectionDashboard">Consolidated Collection Dashboard<span class="fa arrow"></span></a>
             </li>
             <li id="detailduereport">
-            <a href="" aria-hidden="true" on-click="FnDetailduereport">Due report<span class="fa arrow"></span></a>
+            <a href="" aria-hidden="true" on-click="FnDetailduereport">Fee Paid & Due report<span class="fa arrow"></span></a>
             </li>
             <li id="reportprocessing">
             <a href="" aria-hidden="true" on-click="FnProcessreport">Process Report<span class="fa arrow"></span></a>
@@ -852,6 +860,7 @@
     <followup-service id="followupservice"></followup-service>
     <schedule-service id="scheduleservice"></schedule-service>
     <reporting-service id="reportingservice"></reporting-service>
+    <user-service id="userservice"></user-service>
   </template>
   <script>
   (function() {
@@ -871,6 +880,11 @@
         this.hidefeepaymentmenu=true;
         this.hidemasterreportmenu=true;
         this.hidereportmenu=true;
+      },
+      FnCreateUser:function(){
+        this.$.userservice.fetchuserroleService();
+        document.querySelector('app-list').setPage("user-creation-card","User Creation");
+        document.querySelector('user-creation-card').FnRefresh();
       },
       FnEnquiryconversion:function(){
         this.$.scheduleservice.fetchacademicyearService();

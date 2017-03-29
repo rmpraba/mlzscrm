@@ -1,0 +1,69 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="user-creation-card">
+  <template>
+    <style>
+    paper-dropdown-menu{
+      width: 100%;
+    }
+    </style>
+    <div>
+       <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-4" style="margin-left: 30%;">
+              <paper-input  label="Employee Name" is="" value="{{employeename}}"></paper-input>            
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4" style="margin-left: 30%;">
+              <paper-input  label="Username" is="" value="{{username}}"></paper-input>            
+            </div>
+          </div>
+          <!-- </div> -->
+          <div class="row">
+            <div class="col-md-4" style="margin-left: 30%;">
+                <paper-dropdown-menu label="Select Role" attr-for-selected="value">
+                  <paper-menu id="usercreationrole" class="dropdown-content" required on-iron-select="FnSelectRole" valueattr="value" >
+                    <template  is="dom-repeat" items="{{rolearr}}" as="item">
+                    <paper-item value="{{item.role_id}}">{{item.role_name}}</paper-item>
+                    </template>
+                  </paper-menu>
+                </paper-dropdown-menu>            
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5" style="margin-left: 52%;">
+            <paper-button class="btn btn-primary" on-click="FnCreate">Create</paper-button>
+            </div>
+          </div>
+          </div>
+        </div>
+    </div>
+   
+   <user-service id="userservice"></user-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var roleid="";
+    Polymer({
+      is: 'user-creation-card',
+      ready:function(){
+      },
+      FnSelectRole:function(e){
+        roleid=e.target.selectedItem.value;
+      },
+      FnCreate:function(){
+        this.$.userservice.usercreationService(this.employeename,this.username,roleid);
+      },
+      FnRefresh:function(){
+        this.employeename="";
+        this.username="";
+        roleid="";
+        document.querySelector('#usercreationrole').selected=-1;
+      }
+    });
+  })();
+  </script>
+</dom-module>

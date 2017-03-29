@@ -1,0 +1,61 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="user-service">
+  <template>
+    <iron-ajax
+        method="post"
+        id="usercreationajax"
+        url="{{usercreationurl}}"
+        params="{{usercreationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="usercreationResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchuserroleajax"
+        url="{{fetchuserroleurl}}"
+        params="{{fetchuserroleparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchuserroleResponse"
+        debounce-duration="300"
+        >
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'user-service',
+      fetchuserroleService:function(){
+        this.fetchuserroleurl=sessionStorage.getItem("addrinfo")+"/fetchuserrole-service";
+        var obj={"schoolid":"","academicyear":""}  
+        obj.schoolid=localStorage.getItem("schoolid");  
+        this.fetchuserroleparam=obj;     
+        this.$.fetchuserroleajax.generateRequest();
+      },
+      fetchuserroleResponse:function(e){
+        var arr=e.detail.response.returnval;
+        document.querySelector('user-creation-card').rolearr=arr;
+      },
+      usercreationService:function(employeename,username,roleid){
+        this.usercreationurl=sessionStorage.getItem("addrinfo")+"/usercreation-service";
+        var obj={"schoolid":"","academicyear":""}  
+        obj.schoolid=localStorage.getItem("schoolid");  
+        obj.empid=username;
+        obj.empname=employeename;
+        obj.roleid=roleid;
+        this.usercreationparam=obj;     
+        this.$.usercreationajax.generateRequest();
+      },
+      usercreationResponse:function(e){
+        alert(e.detail.response.returnval);
+        document.querySelector('user-creation-card').FnRefresh();
+      }
+    });
+  })();
+  </script>
+</dom-module>

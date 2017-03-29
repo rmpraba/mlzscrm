@@ -8926,7 +8926,53 @@ app.post('/deltediscount-service',  urlencodedParser,function (req, res){
     });
 });
 
+app.post('/fetchuserrole-service',  urlencodedParser,function (req, res){
+  var qur="SELECT * FROM md_role";
 
+  /*var qur="DELETE md_admission  WHERE admission_no='"+req.query.admissionno+"'";*/
+  connection.query(qur,
+    function(err, rows)
+    {
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/usercreation-service',  urlencodedParser,function (req, res){
+ 
+ var qur="INSERT INTO md_employee SET ?";
+  
+ var response={
+  school_id:req.query.schoolid,
+  employee_id:req.query.empid,
+  employee_name:req.query.empname,
+  password:'Password',
+  role_id:req.query.roleid
+ };
+
+ connection.query(qur,[response],
+    function(err, result)
+    {
+      if(!err){
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Created!'});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Not Created!'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
 
 function setvalue(){
   console.log("calling setvalue.....");
