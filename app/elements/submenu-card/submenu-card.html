@@ -1,0 +1,48 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="submenu-card">
+  <template>
+    <style>
+      table{
+        width: 50%;
+        margin-top: 3%;
+      }
+      #name{
+        width: 40%;
+      }
+    </style>
+    <div>
+      <div hidden>{{subid}}{{menuid}}{{menuname}}</div>
+      <table class="table table-striped">
+        <tr>
+        <th id="name">{{subname}}</th>
+        <th>
+        <a href="" on-click="FnAdd">
+          <span class="glyphicon glyphicon-ok"></span>
+        </a>
+        </th>
+        <th>
+        <a href="" on-click="FnRemove">
+          <span class="glyphicon glyphicon-remove"></span>
+        </a>
+        </th>
+        </tr>
+      </table>
+    </div>
+    <user-service id="userservice"></user-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'submenu-card',
+      FnAdd:function(){
+        this.$.userservice.insertsubmenuService(this.menuid,this.menuname,this.subid,this.subname,"true");
+      },
+      FnRemove:function(){
+        this.$.userservice.deletesubmenuService(this.menuid,this.menuname,this.subid,this.subname,"false");
+      }
+    });
+  })();
+  </script>
+</dom-module>

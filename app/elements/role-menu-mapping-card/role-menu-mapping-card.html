@@ -1,0 +1,63 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="role-menu-mapping-card">
+  <template>
+    <style>
+    paper-dropdown-menu{
+      width: 100%;
+    }
+    </style>
+    <div>
+       <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-4" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Select Role" attr-for-selected="value">
+                  <paper-menu id="usercreationrole" class="dropdown-content" required on-iron-select="FnSelectRole" valueattr="value" >
+                    <template  is="dom-repeat" items="{{rolearr}}" as="item">
+                    <paper-item value="{{item.role_id}}">{{item.role_name}}</paper-item>
+                    </template>
+                  </paper-menu>
+                </paper-dropdown-menu>            
+            </div>
+            <div class="col-md-4" style="margin-left: 10%;margin-top: 2%;">
+            <paper-button class="btn btn-primary" on-click="FnGenerate">Generate</paper-button>
+          </div>
+          </div>
+        </div>
+    </div>
+    </div>
+    <div>
+    <template is="dom-repeat" items="{{menuarr}}">
+    <mainmenu-card id="{{item.menu_id}}" name="{{item.menu_name}}" subarr="{{item.submenu}}"></mainmenu-card>
+    <br>
+    </template>
+    </div>
+   <user-service id="userservice"></user-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var roleid="";
+    Polymer({
+      is: 'role-menu-mapping-card',
+      ready:function(){
+      },
+      FnSelectRole:function(e){
+        roleid=e.target.selectedItem.value;
+        localStorage.setItem("curr_sess_roleid",roleid);
+      },
+      FnGenerate:function(){
+        this.$.userservice.fetchmenuService();
+        // this.$.userservice.usercreationService(this.employeename,this.username,roleid);
+      },
+      FnRefresh:function(){
+        this.employeename="";
+        this.username="";
+        roleid="";
+        document.querySelector('#usercreationrole').selected=-1;
+      }
+    });
+  })();
+  </script>
+</dom-module>

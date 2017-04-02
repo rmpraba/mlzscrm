@@ -1,0 +1,61 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../submenu-card/submenu-card.html">
+
+<dom-module id="mainmenu-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div>
+      <paper-radio-button id="mainmenu{{id}}" value="{{id}}" on-change="FnChange">{{name}}</paper-radio-button>
+      <iron-collapse id="collapse{{id}}">
+      <div style="margin-left: 5%;">
+      <!-- Content goes here.... -->
+      <template is="dom-repeat" items="{{subarr}}">
+      <submenu-card menuname="{{name}}" menuid="{{item.menuid}}" subid="{{item.submenuid}}" subname="{{item.submenuname}}"></submenu-card>
+      </template>
+      </div>
+      </iron-collapse>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var selected="";
+    var menuid="";
+    var menuname="";
+    var arr=[];
+    Polymer({
+      is: 'mainmenu-card',
+      FnChange:function(){
+        // alert(JSON.stringify(this.subarr));
+        // alert(selected+" , "+this.id);
+        if(selected==""){
+          if(document.querySelector('#mainmenu'+this.id).checked==true){
+            selected=this.id;
+            document.querySelector('#collapse'+this.id).toggle();
+          }
+        }
+        else{
+          if(selected!=this.id){
+            document.querySelector('#mainmenu'+selected).checked=false;
+            document.querySelector('#collapse'+selected).toggle();
+            selected=this.id;
+            document.querySelector('#collapse'+this.id).toggle();
+          }
+          else{
+            document.querySelector('#collapse'+selected).toggle();
+            selected="";
+          }
+        }
+        menuname=this.name;
+        menuid=this.id;
+        // document.querySelector('role-menu-mapping-card').FnSetMenu(menuid,menuname);
+      }
+    });
+  })();
+  </script>
+</dom-module>

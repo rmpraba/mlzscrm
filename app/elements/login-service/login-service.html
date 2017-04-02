@@ -15,8 +15,6 @@
         >
   </iron-ajax>
 
-
-
   <!-- this below function is to do verify the login information from the database -->
   <iron-ajax
         method="post"
@@ -59,11 +57,15 @@
         this.$.loginpageajax.generateRequest();
       },
       loginpageResponse:function(e){
-        var result=e.detail.response.returnval;
-        // alert(JSON.stringify(result));
-        if(result.length<=0){
+        var result=e.detail.response.loginarr;
+        var rolearr=[];
+        rolearr=e.detail.response.rolearr;
+        // alert(JSON.stringify(role));
+          // alert(JSON.stringify(result));
+          if(result.length<=0){
           alert("Username and Password is incorrect..!");
-        } else {
+          } 
+          else {
           var shortname= result[0].shortname;
           var school= result[0].schoolname;
           var role=result[0].role_name;
@@ -72,26 +74,20 @@
           var schoolid=result[0].school_id;
           var employeeid=result[0].employee_id;
           var address=result[0].address;
-
-          var pr_dashboear=result[0].rt_dashboard;
-          var pr_enquiry=result[0].rt_enquiry;
-          var pr_admission_form=result[0].rt_admission_form;
-          var pr_adm_approval=result[0].rt_adm_approval;
-          var pr_followup=result[0].rt_followup;
-          var pr_collectionentry=result[0].rt_collectionentry;
-
-
-          localStorage.setItem("dashboard",pr_dashboear);
-          localStorage.setItem("enquiry",pr_enquiry);
-          localStorage.setItem("admissionform",pr_admission_form);
-          localStorage.setItem("admapproval",pr_adm_approval);
-          localStorage.setItem("followup",pr_followup);
-          localStorage.setItem("collectionentry",pr_collectionentry);
-
-/*document.querySelector('navigation-bar').Fn_access_rights(pr_enquiry,pr_followup,pr_dashboear,pr_admission_form,pr_adm_approval,pr_collectionentry)*/
-            
+          // var pr_dashboear=result[0].rt_dashboard;
+          // var pr_enquiry=result[0].rt_enquiry;
+          // var pr_admission_form=result[0].rt_admission_form;
+          // var pr_adm_approval=result[0].rt_adm_approval;
+          // var pr_followup=result[0].rt_followup;
+          // var pr_collectionentry=result[0].rt_collectionentry;
+          // localStorage.setItem("dashboard",pr_dashboear);
+          // localStorage.setItem("enquiry",pr_enquiry);
+          // localStorage.setItem("admissionform",pr_admission_form);
+          // localStorage.setItem("admapproval",pr_adm_approval);
+          // localStorage.setItem("followup",pr_followup);
+          // localStorage.setItem("collectionentry",pr_collectionentry);
+          /*document.querySelector('navigation-bar').Fn_access_rights(pr_enquiry,pr_followup,pr_dashboear,pr_admission_form,pr_adm_approval,pr_collectionentry)*/          
           // document.querySelector('navigation-bar').Fncheck();
-
           localStorage.setItem("shortname",shortname);
           localStorage.setItem("schoolname",school);
           localStorage.setItem("employeename",employeename);
@@ -100,16 +96,14 @@
           localStorage.setItem("employeeid",employeeid);
           localStorage.setItem("schooladdress",address);
 
-        document.querySelector('navigation-bar').setRoleview();
+        
         //alert(school+'   '+role+'    '+employeename+'    '+roleid);
         document.querySelector('CRM-app').setPage("applist");
         document.querySelector('app-list').setPage("enquiry","Enquiry");
         document.querySelector('followup-service').gettotalfollowupcounttoday();
+        document.querySelector('navigation-bar').FnSetRoleView(rolearr);
         }
-      }
-
-
-     
+      }     
       });
       })();
   </script>

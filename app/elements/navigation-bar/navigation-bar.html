@@ -35,7 +35,6 @@
       </button>
       <a class="navbar-brand" href="index.html">{{schoolname}}</a>
     </div>
-
     <ul class="nav navbar-top-links navbar-right">
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -85,9 +84,7 @@
             </a>
           </li>
         </ul>
-        <!-- /.dropdown-messages -->
       </li>
-      <!-- /.dropdown -->
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
@@ -164,9 +161,7 @@
             </a>
           </li>
         </ul>
-        <!-- /.dropdown-tasks -->
       </li>
-      <!-- /.dropdown -->
       <li class="dropdown">
         <template is="dom-if" if="{{badgeShow}}">
           <paper-badge for="number" label="{{totalfollowupstodaycount}}"></paper-badge>
@@ -175,7 +170,6 @@
           <i class="fa fa-bell fa-fw"></i>
         </a>
       </li>
-      <!-- /.dropdown -->
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
           <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
@@ -190,313 +184,247 @@
           <li><a href="login.html" on-click="FnSignout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
           </li>
         </ul>
-        <!-- /.dropdown-user -->
       </li>
-      <!-- /.dropdown -->
     </ul>
-    <!-- /.navbar-top-links -->
 
     <div class="navbar-default sidebar" role="navigation">
       <div class="sidebar-nav navbar-collapse">
         <ul class="nav" id="side-menu">
-          <li class="sidebar-search">
+        <li class="sidebar-search">
             <div class="input-group custom-search-form">
-              <input type="text" class="form-control" placeholder="Search...">
-                                <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                  <i class="fa fa-search"></i>
-                                </button>
-                            </span>
+            <input type="text" class="form-control" placeholder="Search...">
+                <span class="input-group-btn">
+                <button class="btn btn-default" type="button">
+                <i class="fa fa-search"></i>
+                </button>
+                </span>
             </div>
-            <!-- /input-group -->
-          </li>
-         <!--  <li id="dashboard">
-            <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
-          </li> -->
+        </li>
           
-          <li id="enquiry" hidden$="{{hideenquirymenu}}">
-            <a href="" aria-hidden="true" on-click="enquiry"><i class="fa fa-phone-square fa-fw"></i> Enquiry<span class="fa arrow"></span></a>
+        <li id="enquiry">
+            <a id="enquiry" href="" aria-hidden="true" on-click="enquiry">
+            <i class="fa fa-phone-square fa-fw"></i>Enquiry
+            <span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
-              <li>
+              <li id="enquiryform">
               <a href="" on-click="Fnpreapp">Enquiry Form</a>
-                <!-- <a href="flot.html"></a> -->
               </li>
-              <li>
+              <!-- <li id="updateenquiry">
               <a href="" on-click="Fnpreappupdate">Update Enquiry</a>
-              </li>
-              <!-- <li>
-                <a href="" on-click="Fnenqform" aria-hidden="true" data-toggle="modal" data-target="#addDetailedEnquiry">Enquiry Form</a>
               </li> -->
-            <li id="">
-            <a href="" aria-hidden="true" on-click="followupdashboard" data-toggle="modal"> Follow Up</a>
-            </li>
+              <li id="followup">
+              <a id="followup" href="" aria-hidden="true" on-click="followupdashboard" data-toggle="modal"> Follow Up</a>
+              </li>
             </ul>
-          </li>
-
-          <!-- <li id="admission"> -->
-            <!-- <a href="" aria-hidden="true" on-click="schedule"><i class="fa fa-check fa-fw"></i>Fees Structure</a> -->
-          <li id="exchange-followup" hidden$="{{hidebalancefollowupmenu}}">
+        </li>
+        
+        <!-- <li id="balancefollowup" hidden$="{{hidebalancefollowupmenu}}">
             <a href="" on-click="exchange_followup" ><i class="fa fa-exchange fa-fw"></i>Balance Followup</a>
-          </li>
+        </li> -->
 
-          <li id="feestructure" hidden$="{{hidefeestructuremenu}}">
-          <a href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>User Management</a>
+        <li id="usermanagement">
+          <a id="usermanagement" href="" aria-hidden="true" >
+          <i class="fa fa-check fa-fw"></i>User Management</a>
             <ul class="nav nav-second-level">
-              <li>
+              <li id="createuser">
                 <a href="" aria-hidden="true" on-click="FnCreateUser">Create User</a>
               </li>
+              <li id="accesscontrol">
+                <a href="" aria-hidden="true" on-click="FnAccessControl">Access Control</a>
+              </li>
             </ul>
-          </li>
-          <li id="feestructure" hidden$="{{hidefeestructuremenu}}">
-            <a href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>Fees Structure</a>
+        </li>
+      
+        <li id="feesstructure">
+            <a id="feesstructure" href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>Fees Structure</a>
             <ul class="nav nav-second-level">
-              <li>
+              <li id="feetypeschedule">
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#feetypeschedule" on-click="FnFeetypeschedule">Fee Type Schedule</a>
               </li>
-              <li>
+              <li id="discountschedule">
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#discountschedule" on-click="FnDiscountschedule">Discount Schedule</a>
               </li>
-              <li>
+              <li id="feesplitupschedule">
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#feesplitupschedule" on-click="FnFeesplitupschedule">Fee Splitup Schedule</a>
               </li>
-              <li>
+              <li id="installmentschedule">
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#feestructureschedule" on-click="FnFeestructureschedule">Installment Schedule</a>
               </li>              
               </ul>
-           </li>
+        </li>
 
-            <li id="feestructure" hidden$="{{hidefeestructuremenu}}">
-            <a href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>RTE Structure</a>
+        <li id="rtestructure">
+            <a id="rtestructure" href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>RTE Structure</a>
             <ul class="nav nav-second-level">
-              <li>
+              <li id="rtefeetypeschedule">
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#rtefeetypeschedule" on-click="FnRTEFeetypeschedule">Fee Type Schedule</a>
               </li>
             </ul>
-            </li>
+        </li>
 
-           <li id="fee-reports" hidden$="{{hidefeestructurereportmenu}}">
-           <a href="" aria-hidden="true" on-click="feereports"><i class="fa fa-table fa-fw"></i>Fee Structure Reports</a>
+        <li id="feestructurereports">
+           <a id="feestructurereports" href="" aria-hidden="true" on-click="feereports"><i class="fa fa-table fa-fw"></i>Fee Structure Reports</a>
            <ul class="nav nav-second-level">
-           <li id="discount-report">
+           <li id="discountreport">
             <a href="" aria-hidden="true" data-target="#discountstructurereport" data-backdrop="static" data-keyboard="false" on-click="FnDiscountStructureReport">Discount report</a>
            </li>
-           <li id="fee-structure-report">
+           <li id="feestructurereport">
             <a href="" aria-hidden="true" data-target="#feestructurereport" data-backdrop="static" data-keyboard="false" on-click="FnFeeStructureReport">Fee Structure Report</a>
            </li>
-           <li id="fee-structure-report">
+           <li id="studentwisefeestructure">
             <a href="" aria-hidden="true" data-target="#feestructureforgradereport" data-backdrop="static" data-keyboard="false" on-click="FnFeeStructureForGradeReport">Studentwise Fee Structure</a>
            </li>
            </ul>
-           </li>
+        </li>
 
 
-        <li id="enrollment" hidden$="{{hideenrollmentmenu}}">
-            <a href="" aria-hidden="true"><i class="fa fa-phone-square fa-fw"></i> Enrollment<span class="fa arrow"></span></a>
+        <li id="enrollment">
+            <a id="enrollment" href="" aria-hidden="true"><i class="fa fa-phone-square fa-fw"></i> Enrollment<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">         
-          <!-- <li id="adtest">
-            <a href="" aria-hidden="true" data-toggle="modal" data-target="#admissiontest" data-backdrop="static" data-keyboard="false" on-click="FnAdmissionTest">Admission Test</a>
-          </li> -->
-          <li id="admission">
+            <li id="admission">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#newadmission" data-backdrop="static" data-keyboard="false" on-click="FnAdmission">Admission</a>
-          </li>
-          <li id="adtest">
+            </li>
+            <li id="updateadmission">
             <a href="" aria-hidden="true" on-click="FnUpdateAdmission">Update Admission</a>
-          </li>
-          <li id="promotion">
+            </li>
+            <li id="promotion">
             <a href="" aria-hidden="true" on-click="FnPromotion">Promotion</a>
-           </li>
-           <li id="cancelenrollment">
+            </li>
+            <li id="cancelenrollment">
             <a href="" aria-hidden="true" on-click="FnCancelEnrollment">Cancel Enrollment</a>
-           </li>
-           <li id="withdrawalprocess">
-            <a href="" aria-hidden="true" on-click="FnWithdrawal">Withdrawal Processing</a>
-           </li>
-           <li id="enrollmentreport">
+            </li>
+            <li id="withdrawalprocess">
+            <a href="" aria-hidden="true" on-click="FnWithdrawal">Withdrawal Process</a>
+            </li>
+            <li id="enrollmentreport">
             <a href="" aria-hidden="true" on-click="FnEnrollmentreport">Enrollment Report</a>
-           </li>
-          </ul>
-          </li>
-          <!-- <li id="payment">
-            <a href="" aria-hidden="true" data-toggle="modal" data-target="#feepayment"><i class="fa fa-money fa-fw"></i>Fee Payment</a>
-          </li> -->
+            </li>
+            </ul>
+        </li>
 
-           <li id="payment" hidden$="{{hidefeepaymentmenu}}">
-            <a href="#" aria-hidden="true" data-toggle="modal" on-click="FnFeePayment"><i class="fa fa-money fa-fw"></i> Fee Payment<span class="fa arrow"></span></a>
+        <li id="feepayment">
+            <a id="feepayment" href="#" aria-hidden="true" data-toggle="modal" on-click="FnFeePayment"><i class="fa fa-money fa-fw"></i> Fee Payment<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
-              <li>
-              <a href="" aria-hidden="true" data-toggle="modal" data-target="#prospectousfee" on-click="FnProspect">Application fee</a>
+              <li id="applicationfee">
+              <a href="" aria-hidden="true" data-toggle="modal" data-target="#prospectousfee" on-click="FnProspect">Application Fee</a>
               </li>
-              <li>
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#registerationfee" on-click="FnRegister">Registration fee</a>
+              <li id="registrationfee">
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#registerationfee" on-click="FnRegister">Registration Fee</a>
               </li>
-              <li>
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#feepayment"  on-click="FnKit">School fee</a>
+              <li id="schoolfee">
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#feepayment"  on-click="FnKit">School Fee</a>
               </li>
-              <li>
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#customfeepayment"  on-click="FnCustomfee">Custom fee payment</a>
+              <li id="customfeepayment">
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#customfeepayment"  on-click="FnCustomfee">Custom Fee Payment</a>
               </li> 
-              <li>
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#rtefee"  on-click="FnRTEfee">RTE fee</a>
+              <li id="rtefee">
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#rtefee"  on-click="FnRTEfee">RTE Fee</a>
               </li>              
-              <li>
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#provisionfee"  on-click="FnProvisionfee">Provision fee</a>
+              <li id="provisionfee">
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#provisionfee"  on-click="FnProvisionfee">Provision Fee</a>
               </li> 
             </ul>
-            </nav-second-level>
-          </li>
+        </li>
 
-           <!-- <li id="masterreport" hidden$="{{hidemasterreportmenu}}">
-            <a href="#" aria-hidden="true" data-toggle="modal" on-click="Master"><i class="fa fa-money fa-fw"></i>Master Reports<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level">
-              <li>
-              <a href="" aria-hidden="true" data-toggle="modal" data-target="#discountmaster" on-click="FnDiscount">Discount Type</a>
-              </li>
-              <li>
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#installmentmaster" on-click="FnInstallment">Installment Date</a>
-              </li>             
-            </ul>
-            </nav-second-level>
-          </li> -->
-
-          <li id="reports" hidden$="{{hidereportmenu}}">
-            <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Report<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level">
-            <li id="enquiryreports">
-            <a href="" aria-hidden="true">Enquiry Analysis Report<span class="fa arrow"></span></a>
-            <ul class="nav nav-third-level">
-              <li>
+        <li id="foreports">
+          <a id="foreports" href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>FO Reports<span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">
+              <li id="enquiryconversionanalysis">
                 <a href="" on-click="FnEnquiryconversion" aria-hidden="true">Enquiry Conversion Analysis</a>
               </li>
-              <li>
+              <li id="walkinanalysis">
                 <a href="" on-click="walkin_analysis" aria-hidden="true">Walkin Analysis</a>
               </li>
-              <li>
+              <li id="walkinanalysiswithfilter">
                 <a href="" on-click="walkin_analysis_filter" aria-hidden="true">Walkin Analysis With Filter</a>
-                <!-- <a href="flot.html"></a> -->
               </li>
-              <li>
-                <a href="" on-click="call_analysis" aria-hidden="true">Follow-Up Call Analysis</a>
-                <!-- <a href="flot.html"></a> -->
+              <li id="followupcallanalysis">
+                <a href="" on-click="call_analysis" aria-hidden="true">Follow Up Call Analysis</a>
               </li>
-              <li>
+              <li id="masterenquiryanalysis">
                 <a href="" on-click="Fnmasteranalysis" aria-hidden="true">Master Enquiry Analysis</a>
               </li>
-              <li>
+              <li id="counsellorreport">
                 <a href="" on-click="Fncounsellorreport" aria-hidden="true">Counsellor Report</a>
               </li>
-            </ul>
-            </li>
-            <!-- <li id="collectionreports">
-            <a href="" aria-hidden="true">Fee Collection<span class="fa arrow"></span></a>
-            <ul class="nav nav-third-level"> -->
-            <!-- <li id="dailycollectionreport">
-            <a href="" aria-hidden="true" on-click="FnDailyCollectionReport">Daily Fee Collection Report</a>
-            </li>
-            <li id="dailycollectionreport">
-            <a href="" aria-hidden="true" on-click="FnDayCollectionReport">Daily Collection</a>
-            </li>
-            <li id="feecollectionreport">
-            <a href="" aria-hidden="true" on-click="FnFeeCollectionReport">Fee Collection Report</a>
-            </li> -->
-            <!-- <li id="chequerealization">
-            <a href="" aria-hidden="true" on-click="FnChequerealization">Cheque Realization</a>
-           </li>
-           <li id="tprealisation">
-            <a href="" aria-hidden="true" on-click="FnTprealisation">Third Party Realization</a>
-           </li>
-           <li id="bouncecheques">
-            <a href="" aria-hidden="true" on-click="FnShowBounceCheques">Bounce Cheques</a>
-           </li>
-           <li id="searchreceipt">
-            <a href="" aria-hidden="true" on-click="FnSearchReceipt">Search Receipt</a>
-           </li> 
-            <li id="bounceprocess">
-            <a href="" aria-hidden="true" on-click="FnBounceProcessing">Bounce/Cancel Process</a>
-            </li> 
-            <li id="bounceprocess">
-            <a href="" aria-hidden="true" on-click="FnChequeEditDelete">Edit/Delete Cheques</a>
-            </li>         -->
-            <!-- </ul>
-            </li> -->
-            <li id="pendingreport">
-            <a href="" aria-hidden="true">Pending Collection report<span class="fa arrow"></span></a>
-             <ul class="nav nav-third-level">
-            <li id="pendingcollectionreport">
+          </ul>
+        </li>    
+      
+        <li id="reports">
+            <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Reports<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+            <li id="reports">
+            <a href="" aria-hidden="true">Pending Collection Report<span class="fa arrow"></span></a>
+            <ul class="nav nav-third-level">
+            <li id="feeduereport">
             <a href="" aria-hidden="true" on-click="FnPendingFeeReport">Fee Due Report</a>
             </li>
-            <li id="notpaidreport">
-            <a href="" aria-hidden="true" on-click="FnNotpaidReport">Not paid List</a>
+            <li id="rollovernotpaidlist">
+            <a href="" aria-hidden="true" on-click="FnNotpaidReport">Rollover Not paid List</a>
             </li>
-            <!-- <li id="pendingcheques">
-            <a href="" aria-hidden="true" on-click="FnPendingCheques">Pending Cheques</a>
-            </li> -->
             </ul>
             </li>            
             <li id="dailycollectiondashboard">
             <a href="" aria-hidden="true" on-click="FnDailycollectionDashboard">Daily Collection Dashboard<span class="fa arrow"></span></a>
             </li>
-            <li id="collectiondashboard">
+            <li id="consolidatedcollectiondashboard">
             <a href="" aria-hidden="true" on-click="FnCollectionDashboard">Consolidated Collection Dashboard<span class="fa arrow"></span></a>
             </li>
-            <li id="detailduereport">
+            <li id="feepaidduereport">
             <a href="" aria-hidden="true" on-click="FnDetailduereport">Fee Paid & Due report<span class="fa arrow"></span></a>
             </li>
-            <li id="reportprocessing">
+            <li id="processreport">
             <a href="" aria-hidden="true" on-click="FnProcessreport">Process Report<span class="fa arrow"></span></a>
             </li>
             </ul>
-          </li>         
+        </li>
 
-          <li id="reports" hidden$="{{hidereportmenu}}">
+        <li id="dailycollectionreport">
           <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Daily Collection Report<span class="fa arrow"></span></a>
           <ul class="nav nav-second-level">          
-            <li id="currdailycollectionreport">
+            <li id="currentdatecollection">
             <a href="" aria-hidden="true" on-click="FnDayCollectionReport">Current Date Collection</a>
             </li>
-            <li id="detaildaycollection">
+            <li id="daycollection">
             <a href="" aria-hidden="true" on-click="FnDetaildaycollection">Day Collection</a>
             </li>
-            <li id="dailyincomereport">
+            <li id="dailyincome">
             <a href="" aria-hidden="true" on-click="FnDailyincomeReport">Daily Income</a>
             </li>
             <li id="chequecollectionreport">
             <a href="" aria-hidden="true" on-click="FnchequeCollectionReport">Cheque Collection Report</a>
             </li>
-            <li id="tpcollectionreport">
+            <li id="thirdpartycollection">
             <a href="" aria-hidden="true" on-click="FnTPCollectionReport">Thirdparty Collection</a>
             </li>
-            <li id="rtecollectionreport">
+            <li id="rtecollection">
             <a href="" aria-hidden="true" on-click="FnRTECollectionReport">RTE Collection</a>
             </li>
-            <li id="duechequesreport">
+            <li id="duecheques">
             <a href="" aria-hidden="true" on-click="FnDuechequesReport">Due Cheques</a>
             </li>
             <li id="pdccheques">
             <a href="" aria-hidden="true" on-click="FnPdcCheques">PDC Cheques</a>
             </li>            
-            <li id="dailycollectionreport">
+            <!-- <li id="dailycollectionreport">
             <a href="" aria-hidden="true" on-click="FnDailyCollectionReport">Daily Fee Collection Report</a>
-            </li>            
-            <!-- <li id="feecollectionreport">
-            <a href="" aria-hidden="true" on-click="FnFeeCollectionReport">Fee Collection Report</a>
-            </li> -->
-            
+            </li> -->            
           </ul>
-          </li>
+        </li>
 
-          <li id="reports" hidden$="{{hidereportmenu}}">
+        <li id="process">
           <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Process<span class="fa arrow"></span></a>
           <ul class="nav nav-second-level">
-           <li id="discounts">
+           <li id="attachdiscount">
             <a href="" aria-hidden="true" on-click="FnAddDiscount">Attach Discount</a>
            </li> 
-           <li id="deletediscounts">
+           <li id="deletediscount">
             <a href="" aria-hidden="true" on-click="FnDeleteDiscount">Delete Discount</a>
            </li> 
-           <li id="discounts">
+           <li id="adhocdiscount">
             <a href="" aria-hidden="true" on-click="FnAdhocDiscount">Adhoc Discount</a>
            </li> 
-           <li id="discounts">
+           <li id="latefeecollection">
             <a href="" aria-hidden="true" on-click="FnLatefee">Latefee Collection</a>
            </li>
            <li id="searchreceipt">
@@ -505,13 +433,13 @@
            <li id="defaulterupdate">
             <a href="" aria-hidden="true" on-click="FnDefaulterUpdate">Defaulter Update</a>
            </li> 
-            <li id="bounceprocess">
+            <li id="bouncecancelprocess">
             <a href="" aria-hidden="true" on-click="FnBounceProcessing">Bounce/Cancel Process</a>
             </li> 
-            <li id="bounceprocess">
+            <li id="editdeletecheques">
             <a href="" aria-hidden="true" on-click="FnChequeEditDelete">Edit/Delete Cheques</a>
             </li>
-            <li id="tprealisation">
+            <li id="thirdpartyrealization">
             <a href="" aria-hidden="true" on-click="FnTprealisation">Third Party Realization</a>
            </li>
             <li id="chequerealization">
@@ -520,47 +448,13 @@
            <li id="bouncecheques">
             <a href="" aria-hidden="true" on-click="FnShowBounceCheques">Bounce Cheques</a>
            </li>        
-            </ul>
-            </li>
-          <!-- <li id="admform">
-            <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Admission Form<!-- <span class="fa arrow"></span> -->
-            <!-- </a>
-          </li> --> 
-          <!-- <li id="collcnentry">
-            <a href="#"><i class="fa fa-wrench fa-fw"></i> Collection Entry<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level">
-              <li>
-                <a href="panels-wells.html">Panels and Wells</a>
-              </li>
-              <li>
-                <a href="buttons.html">Buttons</a>
-              </li>
-              <li>
-                <a href="notifications.html">Notifications</a>
-              </li>
-              <li>
-                <a href="typography.html">Typography</a>
-              </li>
-              <li>
-                <a href="icons.html"> Icons</a>
-              </li>
-              <li>
-                <a href="grid.html">Grid</a>
-              </li>
-            </ul>
-            <!-- /.nav-second-level -->
-          <!-- </li> 
-          <li id="admapp">
-            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Admission Approval
-                        <!-- /.nav-second-level -->
-          <!-- </li>  -->
-
+          </ul>
+        </li>
         </ul>
       </div>
-      <!-- /.sidebar-collapse -->
     </div>
-    <!-- /.navbar-static-side -->
   </nav>
+
  <div class="modal fade bd-example-modal-lg" id="addEnquiry" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
@@ -870,6 +764,7 @@
       is: 'navigation-bar',
 
       ready:function(){
+        // alert('In ready...');
         this.schoolname=localStorage.getItem("schoolname");
         this.username=localStorage.getItem("employeename");
         this.hideenquirymenu=true;
@@ -885,6 +780,13 @@
         this.$.userservice.fetchuserroleService();
         document.querySelector('app-list').setPage("user-creation-card","User Creation");
         document.querySelector('user-creation-card').FnRefresh();
+      },
+      FnAccessControl:function(){
+        this.$.userservice.fetchuserroleService();
+        // this.$.userservice.fetchmenuService();
+        // this.$.userservice.fetchsubmenuService();
+        document.querySelector('app-list').setPage("role-menu-mapping-card","Access Control");
+        document.querySelector('role-menu-mapping-card').FnRefresh();
       },
       FnEnquiryconversion:function(){
         this.$.scheduleservice.fetchacademicyearService();
@@ -976,7 +878,6 @@
       FnMiscellaneous:function(e){
         localStorage.setItem("curr_sess_feetype",e.target.text);
         this.FnRefresh();
-
       },
       followupdashboard:function(){
         this.$.followupservice.getfollowupcount();
@@ -993,7 +894,6 @@
         this.$.service.getadmittedcount();
         document.querySelector('detailed-enquiry-form').country();
         document.querySelector('app-list').setPage("enquiry");
-
       },
       Master:function()
       {
@@ -1002,7 +902,6 @@
       schedule:function(){
         this.$.service.getfeecount();
         document.querySelector('app-list').setPage("feestructure-dashboard");
-
       },
       walkin_analysis:function(){
         this.$.service.walkinanalysisyear();
@@ -1323,51 +1222,69 @@
         document.querySelector('enrollment-report').FnRefresh();
         document.querySelector('enrollment-report').callService();
       },
-      setRoleview:function(){
-       if(localStorage.getItem("roleid")=="ROLE101") 
-       {
-        this.hideenquirymenu=false;
-        this.hidebalancefollowupmenu=true;
-        this.hidefeestructurereportmenu=true;
-        this.hidefeestructuremenu=true;
-        this.hideenrollmentmenu=false;
-        this.hidefeepaymentmenu=false;
-        this.hidemasterreportmenu=true;
-        this.hidereportmenu=false;
-       }
-       else if(localStorage.getItem("roleid")=="ROLE102") 
-       {
-        this.hideenquirymenu=false;
-        this.hidebalancefollowupmenu=false;
-        this.hidefeestructurereportmenu=true;
-        this.hidefeestructuremenu=true;
-        this.hideenrollmentmenu=false;
-        this.hidefeepaymentmenu=false;
-        this.hidemasterreportmenu=true;
-        this.hidereportmenu=false;
-       }
-       else if(localStorage.getItem("roleid")=="ROLE103") 
-       {
-        this.hideenquirymenu=false;
-        this.hidebalancefollowupmenu=true;
-        this.hidefeestructurereportmenu=false;
-        this.hidefeestructuremenu=true;
-        this.hideenrollmentmenu=false;
-        this.hidefeepaymentmenu=false;
-        this.hidemasterreportmenu=false;
-        this.hidereportmenu=false;
-       }
-       if(localStorage.getItem("roleid")=="ROLE106") 
-       {
-        this.hideenquirymenu=true;
-        this.hidebalancefollowupmenu=true;
-        this.hidefeestructurereportmenu=false;
-        this.hidefeestructuremenu=false;
-        this.hideenrollmentmenu=true;
-        this.hidefeepaymentmenu=false;
-        this.hidemasterreportmenu=false;
-        this.hidereportmenu=false;
-       }
+      // setRoleview:function(){
+      //  if(localStorage.getItem("roleid")=="ROLE101") 
+      //  {
+      //   this.hideenquirymenu=false;
+      //   this.hidebalancefollowupmenu=true;
+      //   this.hidefeestructurereportmenu=true;
+      //   this.hidefeestructuremenu=true;
+      //   this.hideenrollmentmenu=false;
+      //   this.hidefeepaymentmenu=false;
+      //   this.hidemasterreportmenu=true;
+      //   this.hidereportmenu=false;
+      //  }
+      //  else if(localStorage.getItem("roleid")=="ROLE102") 
+      //  {
+      //   this.hideenquirymenu=false;
+      //   this.hidebalancefollowupmenu=false;
+      //   this.hidefeestructurereportmenu=true;
+      //   this.hidefeestructuremenu=true;
+      //   this.hideenrollmentmenu=false;
+      //   this.hidefeepaymentmenu=false;
+      //   this.hidemasterreportmenu=true;
+      //   this.hidereportmenu=false;
+      //  }
+      //  else if(localStorage.getItem("roleid")=="ROLE103") 
+      //  {
+      //   this.hideenquirymenu=false;
+      //   this.hidebalancefollowupmenu=true;
+      //   this.hidefeestructurereportmenu=false;
+      //   this.hidefeestructuremenu=true;
+      //   this.hideenrollmentmenu=false;
+      //   this.hidefeepaymentmenu=false;
+      //   this.hidemasterreportmenu=false;
+      //   this.hidereportmenu=false;
+      //  }
+      //  if(localStorage.getItem("roleid")=="ROLE106") 
+      //  {
+      //   this.hideenquirymenu=true;
+      //   this.hidebalancefollowupmenu=true;
+      //   this.hidefeestructurereportmenu=false;
+      //   this.hidefeestructuremenu=false;
+      //   this.hideenrollmentmenu=true;
+      //   this.hidefeepaymentmenu=false;
+      //   this.hidemasterreportmenu=false;
+      //   this.hidereportmenu=false;
+      //  }
+      // },
+      FnSetRoleView:function(arr){
+        // alert(JSON.stringify(arr));
+        for(var i=0;i<arr.length;i++){
+          // if(parseInt(arr[i].menu_id)<=10&&parseInt(arr[i].menu_id)>=1)
+          // {
+            // alert(arr[i].menu_name+"  "+arr[i].status);
+          // }
+          // if(arr[i].menu_id=="Fees Structure")
+          // alert(arr[i].menu_id+" "+arr[i].menu_name+"  "+arr[i].status);
+          var id=((arr[i].menu_name).replace(/[^a-zA-Z0-9]/g, '')).toLowerCase();
+          if((arr[i].status).toLowerCase()=="true"){
+          document.getElementById(''+id).style.visibility="visible";
+          }
+          if((arr[i].status).toLowerCase()=="false"){
+          document.getElementById(''+id).style.display="none";
+          }
+        }
       },
       FnSignout:function(){
         window.location.href="../index.html";

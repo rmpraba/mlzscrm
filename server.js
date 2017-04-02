@@ -23,18 +23,26 @@ app.post('/loginpage',  urlencodedParser,function (req, res)
 {
   var user={"employee_id":req.query.username};
   var pass={"password":req.query.password};
-//console.log('hi');
-
+  //console.log('hi');
+  var loginarr=[];
+  var rolearr=[];
   connection.query('SELECT (select short_name from md_school where id=e.school_id) as shortname,(select address from md_school where id=e.school_id) as address,(select name from md_school where id=e.school_id) as schoolname,e.school_id,e.employee_id, e.employee_name,e.role_id, r.role_name, a.rt_dashboard, a.rt_enquiry,a.rt_admission_form,a.rt_adm_approval, a.rt_followup, a.rt_collectionentry FROM md_employee as e JOIN md_role as r JOIN md_access_rights as a on r.role_id=e.role_id and a.role_id=e.role_id where ? and ?',[user,pass],
-
-        function(err, rows)
-        {
+    function(err, rows){
     if(!err)
     {
+    loginarr=rows;
     if(rows.length>0)
     {
-//console.log(rows);
-      res.status(200).json({'returnval': rows});
+      console.log('------------------------');
+      console.log(rows[0].role_id);
+      var rolequr="SELECT * FROM md_role_to_menu_submenu_mapping WHERE school_id='"+rows[0].school_id+"' and role_id='"+rows[0].role_id+"' order by menu_id";
+      console.log(rolequr);
+      connection.query(rolequr,
+      function(err, rows){
+      rolearr=rows;
+      // console.log(JSON.stringify(rolearr));
+      res.status(200).json({'loginarr': loginarr,'rolearr': rolearr});
+      });
     }
     else
     {
@@ -47,7 +55,6 @@ app.post('/loginpage',  urlencodedParser,function (req, res)
   }
 });
 });
-
 
 app.post('/fetchgrade-service',  urlencodedParser,function (req, res){
     var qur={"school_id":req.query.schol};
@@ -8973,6 +8980,128 @@ app.post('/usercreation-service',  urlencodedParser,function (req, res){
       }
     });
 });
+
+app.post('/fetchmenu-service',  urlencodedParser,function (req, res){
+ 
+ var qur="SELECT * FROM md_menu";
+ var qur1="SELECT * FROM md_menu_to_submenu ms join md_submenu sm on(ms.submenu_id=sm.submenu_id)";
+ console.log(qur);
+ console.log(qur1);
+ var menu=[];
+ var submenu=[];
+ connection.query(qur,function(err, rows){
+      if(!err){
+        menu=rows;
+        if(rows.length>0){
+          connection.query(qur1,function(err, rows){
+          submenu=rows;
+          res.status(200).json({'menu': menu,'submenu':submenu});
+          });
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/fetchsubmenu-service',  urlencodedParser,function (req, res){
+ 
+ var qur="SELECT * FROM md_menu_to_submenu ms join md_submenu sm on(ms.submenu_id=sm.submenu_id) WHERE ms.menu_id='"+req.query.menuid+"'";
+ connection.query(qur,
+    function(err, rows)
+    {
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/insertsubmenu-service',  urlencodedParser,function (req, res){
+ 
+ var check="SELECT * FROM md_role_to_menu_submenu_mapping WHERE school_id='"+req.query.schoolid+"' and role_id='"+req.query.roleid+"' and menu_id='"+req.query.menuid+"' and status='true'";
+ console.log('------------------------');
+ console.log(check);
+
+ connection.query(check,function(err, rows)
+    {
+      if(!err){
+        if(rows.length>0){
+          connection.query("UPDATE md_role_to_menu_submenu_mapping SET status='true' WHERE school_id='"+req.query.schoolid+"' and role_id='"+req.query.roleid+"' and menu_id='"+req.query.subid+"'",function(err, result){
+            {
+              if(result.affectedRows>0){
+              res.status(200).json({'returnval': 'Added!'});
+              }
+            }            
+          });
+        } 
+        else {
+          connection.query("UPDATE md_role_to_menu_submenu_mapping SET status='true' WHERE school_id='"+req.query.schoolid+"' and role_id='"+req.query.roleid+"' and menu_id='"+req.query.menuid+"'",function(err, result){
+            {
+            if(result.affectedRows>0){
+            connection.query("UPDATE md_role_to_menu_submenu_mapping SET status='true' WHERE school_id='"+req.query.schoolid+"' and role_id='"+req.query.roleid+"' and menu_id='"+req.query.subid+"'",function(err, result){
+            {
+              if(result.affectedRows>0){
+              res.status(200).json({'returnval': 'Added!'});
+              }
+            }            
+            });
+            }
+            }            
+          });
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/deletesubmenu-service',  urlencodedParser,function (req, res){
+ 
+ var check="SELECT * FROM md_role_to_menu_submenu_mapping WHERE school_id='"+req.query.schoolid+"' and role_id='"+req.query.roleid+"' and root_menu_id='"+req.query.menuid+"' and status='true'";
+ 
+ connection.query(check,function(err, rows)
+    {
+      if(!err){
+        if(rows.length>0){
+          var length=rows.length;
+          connection.query("UPDATE md_role_to_menu_submenu_mapping SET status='false' WHERE school_id='"+req.query.schoolid+"' and role_id='"+req.query.roleid+"' and menu_id='"+req.query.subid+"'",function(err, result){
+            {
+              console.log(result.affectedRows+"  "+length);
+              if(result.affectedRows>0&&length==2){ 
+              connection.query("UPDATE md_role_to_menu_submenu_mapping SET status='false' WHERE school_id='"+req.query.schoolid+"' and role_id='"+req.query.roleid+"' and menu_id='"+req.query.menuid+"'",function(err, result){               
+              res.status(200).json({'returnval': 'Removed!'});
+              });
+              }
+              else{
+              res.status(200).json({'returnval': 'Removed!'});
+              }
+            }            
+          });
+        }
+        else{
+          connection.query("UPDATE md_role_to_menu_submenu_mapping SET status='false' WHERE school_id='"+req.query.schoolid+"' and role_id='"+req.query.roleid+"' and menu_id='"+req.query.menuid+"'",function(err, result){               
+            res.status(200).json({'returnval': 'Removed!'});
+          });     
+        } 
+
+      } else {
+        console.log(err);
+      }
+    });
+});
+
 
 function setvalue(){
   console.log("calling setvalue.....");

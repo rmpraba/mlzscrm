@@ -23,6 +23,46 @@
         on-response="fetchuserroleResponse"
         debounce-duration="300"
         >
+    <iron-ajax
+        method="post"
+        id="fetchmenuajax"
+        url="{{fetchmenuurl}}"
+        params="{{fetchmenuparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchmenuResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchsubmenuajax"
+        url="{{fetchsubmenuurl}}"
+        params="{{fetchsubmenuparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchsubmenuResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="insertsubmenuajax"
+        url="{{insertsubmenuurl}}"
+        params="{{insertsubmenuparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="insertsubmenuResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="deletesubmenuajax"
+        url="{{deletesubmenuurl}}"
+        params="{{deletesubmenuparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="deletesubmenuResponse"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
@@ -40,6 +80,7 @@
       fetchuserroleResponse:function(e){
         var arr=e.detail.response.returnval;
         document.querySelector('user-creation-card').rolearr=arr;
+        document.querySelector('role-menu-mapping-card').rolearr=arr;
       },
       usercreationService:function(employeename,username,roleid){
         this.usercreationurl=sessionStorage.getItem("addrinfo")+"/usercreation-service";
@@ -54,6 +95,102 @@
       usercreationResponse:function(e){
         alert(e.detail.response.returnval);
         document.querySelector('user-creation-card').FnRefresh();
+      },
+      fetchmenuService:function(){
+        this.fetchmenuurl=sessionStorage.getItem("addrinfo")+"/fetchmenu-service";
+        var obj={"schoolid":"","academicyear":""}  
+        obj.schoolid=localStorage.getItem("schoolid");  
+        this.fetchmenuparam=obj;     
+        this.$.fetchmenuajax.generateRequest();
+      },
+      fetchmenuResponse:function(e){
+        var menuarr=e.detail.response.menu;
+        var subarr=e.detail.response.submenu;
+        // alert(JSON.stringify(subarr));
+        var overall=[];
+       for(var i=0;i<subarr.length;i++)
+       {
+        var obj={};
+        var temp=[];
+        obj.menuid=subarr[i].menu_id;
+        obj.submenuid=subarr[i].submenu_id;
+        obj.submenuname=subarr[i].submenu_name;
+        temp.push(obj);
+        for(var j=i+1;j<subarr.length;j++)
+        {
+           if(subarr[i].menu_id==subarr[j].menu_id)
+           {
+            // alert(subarr[i].menu_id+" "+subarr[j].menu_id);
+            var obj1={};
+            obj1.menuid=subarr[j].menu_id;
+            obj1.submenuid=subarr[j].submenu_id;
+            obj1.submenuname=subarr[j].submenu_name;
+            temp.push(obj1);       
+            subarr.splice(j,1);
+            j--;
+           }
+        }
+        overall.push({"menuid":subarr[i].menu_id,"submenu":temp});
+        // subarr=[];
+       }
+       // alert(JSON.stringify(overall));
+       for(var i=0;i<menuarr.length;i++){
+        for(var j=0;j<overall.length;j++){
+          if(menuarr[i].menu_id==overall[j].menuid){
+            // alert(menuarr[i].menu_id+" "+overall[j].menuid);
+            menuarr[i].submenu=overall[j].submenu;
+          }
+        }
+       }
+       // alert(JSON.stringify(menuarr));
+       document.querySelector('role-menu-mapping-card').menuarr=menuarr;
+      },
+      fetchsubmenuService:function(){
+        this.fetchsubmenuurl=sessionStorage.getItem("addrinfo")+"/fetchsubmenu-service";
+        var obj={"schoolid":"","academicyear":""}  
+        obj.schoolid=localStorage.getItem("schoolid");  
+        this.fetchsubmenuparam=obj;     
+        this.$.fetchsubmenuajax.generateRequest();
+      },
+      fetchsubmenuResponse:function(e){
+        var arr=e.detail.response.returnval;
+        document.querySelector('role-menu-mapping-card').submenuarr=arr;
+      },
+      insertsubmenuService:function(menuid,menuname,subid,subname,status){
+        this.insertsubmenuurl=sessionStorage.getItem("addrinfo")+"/insertsubmenu-service";
+        var obj={"schoolid":"","academicyear":""}  
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.roleid=localStorage.getItem("curr_sess_roleid");
+        obj.menuid=menuid;
+        obj.menuname=menuname;  
+        obj.subid=subid;
+        obj.subname=subname;
+        obj.status=status;
+        this.insertsubmenuparam=obj;     
+        this.$.insertsubmenuajax.generateRequest();
+      },
+      insertsubmenuResponse:function(e){
+        alert(e.detail.response.returnval);
+        // var arr=e.detail.response.returnval;
+        // document.querySelector('role-menu-mapping-card').submenuarr=arr;
+      },
+      deletesubmenuService:function(menuid,menuname,subid,subname,status){
+        this.deletesubmenuurl=sessionStorage.getItem("addrinfo")+"/deletesubmenu-service";
+        var obj={"schoolid":"","academicyear":""}  
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.roleid=localStorage.getItem("curr_sess_roleid");
+        obj.menuid=menuid;
+        obj.menuname=menuname;  
+        obj.subid=subid;
+        obj.subname=subname;
+        obj.status=status;
+        this.deletesubmenuparam=obj;     
+        this.$.deletesubmenuajax.generateRequest();
+      },
+      deletesubmenuResponse:function(e){
+        alert(e.detail.response.returnval);
+        // var arr=e.detail.response.returnval;
+        // document.querySelector('role-menu-mapping-card').submenuarr=arr;
       }
     });
   })();
