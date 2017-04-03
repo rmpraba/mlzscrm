@@ -239,16 +239,16 @@
             <a id="feesstructure" href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>Fees Structure</a>
             <ul class="nav nav-second-level">
               <li id="feetypeschedule">
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#feetypeschedule" on-click="FnFeetypeschedule">Fee Type Schedule</a>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglefeetypeschedule" on-click="FnFeetypeschedule">Fee Type Schedule</a>
               </li>
               <li id="discountschedule">
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#discountschedule" on-click="FnDiscountschedule">Discount Schedule</a>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglediscountschedule" on-click="FnDiscountschedule">Discount Schedule</a>
               </li>
               <li id="feesplitupschedule">
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#feesplitupschedule" on-click="FnFeesplitupschedule">Fee Splitup Schedule</a>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglefeesplitupschedule" on-click="FnFeesplitupschedule">Fee Splitup Schedule</a>
               </li>
               <li id="installmentschedule">
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#feestructureschedule" on-click="FnFeestructureschedule">Installment Schedule</a>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglefeestructureschedule" on-click="FnFeestructureschedule">Installment Schedule</a>
               </li>              
               </ul>
         </li>
@@ -257,7 +257,7 @@
             <a id="rtestructure" href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>RTE Structure</a>
             <ul class="nav nav-second-level">
               <li id="rtefeetypeschedule">
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#rtefeetypeschedule" on-click="FnRTEFeetypeschedule">Fee Type Schedule</a>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglertefeetypeschedule" on-click="FnRTEFeetypeschedule">Fee Type Schedule</a>
               </li>
             </ul>
         </li>
@@ -282,7 +282,7 @@
             <a id="enrollment" href="" aria-hidden="true"><i class="fa fa-phone-square fa-fw"></i> Enrollment<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">         
             <li id="admission">
-            <a href="" aria-hidden="true" data-toggle="modal" data-target="#newadmission" data-backdrop="static" data-keyboard="false" on-click="FnAdmission">Admission</a>
+            <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglenewadmission" data-backdrop="static" data-keyboard="false" on-click="FnAdmission">Admission</a>
             </li>
             <li id="updateadmission">
             <a href="" aria-hidden="true" on-click="FnUpdateAdmission">Update Admission</a>
@@ -306,22 +306,22 @@
             <a id="feepayment" href="#" aria-hidden="true" data-toggle="modal" on-click="FnFeePayment"><i class="fa fa-money fa-fw"></i> Fee Payment<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
               <li id="applicationfee">
-              <a href="" aria-hidden="true" data-toggle="modal" data-target="#prospectousfee" on-click="FnProspect">Application Fee</a>
+              <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggleprospectousfee" on-click="FnProspect">Application Fee</a>
               </li>
               <li id="registrationfee">
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#registerationfee" on-click="FnRegister">Registration Fee</a>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggleregisterationfee" on-click="FnRegister">Registration Fee</a>
               </li>
               <li id="schoolfee">
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#feepayment"  on-click="FnKit">School Fee</a>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglefeepayment"  on-click="FnKit">School Fee</a>
               </li>
               <li id="customfeepayment">
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#customfeepayment"  on-click="FnCustomfee">Custom Fee Payment</a>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglecustomfeepayment"  on-click="FnCustomfee">Custom Fee Payment</a>
               </li> 
               <li id="rtefee">
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#rtefee"  on-click="FnRTEfee">RTE Fee</a>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglertefee"  on-click="FnRTEfee">RTE Fee</a>
               </li>              
               <li id="provisionfee">
-                <a href="" aria-hidden="true" data-toggle="modal" data-target="#provisionfee"  on-click="FnProvisionfee">Provision Fee</a>
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggleprovisionfee"  on-click="FnProvisionfee">Provision Fee</a>
               </li> 
             </ul>
         </li>
@@ -508,7 +508,7 @@
       </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="newadmission" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="togglenewadmission" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -527,7 +527,7 @@
     </div>
 
 
-    <div class="modal fade bd-example-modal-lg" id="feepayment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="togglefeepayment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
         <div class="modal-content" id="fee-content">
           <div class="modal-header">
@@ -545,7 +545,7 @@
       </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="rtefee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="togglertefee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
         <div class="modal-content" id="fee-content">
           <div class="modal-header">
@@ -564,7 +564,7 @@
     </div>
 
 
-    <div class="modal fade bd-example-modal-lg" id="customfeepayment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="togglecustomfeepayment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
         <div class="modal-content" id="fee-content">
           <div class="modal-header">
@@ -582,7 +582,7 @@
       </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="registerationfee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="toggleregisterationfee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
         <div class="modal-content" id="fee-content">
           <div class="modal-header">
@@ -600,7 +600,7 @@
       </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="prospectousfee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="toggleprospectousfee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
         <div class="modal-content" id="fee-content">
           <div class="modal-header">
@@ -618,7 +618,7 @@
       </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="provisionfee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="toggleprovisionfee" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
         <div class="modal-content" id="fee-content">
           <div class="modal-header">
@@ -636,7 +636,7 @@
       </div>
     </div>
   
-     <div class="modal fade bd-example-modal-lg" id="feetypeschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+     <div class="modal fade bd-example-modal-lg" id="togglefeetypeschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -654,7 +654,7 @@
       </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="rtefeetypeschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="togglertefeetypeschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -673,7 +673,7 @@
     </div>
 
 
-     <div class="modal fade bd-example-modal-lg" id="feestructureschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+     <div class="modal fade bd-example-modal-lg" id="togglefeestructureschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -692,7 +692,7 @@
     </div>
 
 
-    <div class="modal fade bd-example-modal-lg" id="discountschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="togglediscountschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -710,7 +710,7 @@
       </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="feesplitupschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="togglefeesplitupschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -729,7 +729,7 @@
       </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="installmentschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="toggleinstallmentschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -1288,9 +1288,6 @@
       },
       FnSignout:function(){
         window.location.href="../index.html";
-      },
-      FnCloseAdmissionWindow:function(){
-        this.$.newadmission.toggle();
       }
     });
   })();
