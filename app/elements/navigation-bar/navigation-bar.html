@@ -262,6 +262,15 @@
             </ul>
         </li>
 
+        <li id="transportfeestructure">
+            <a id="transportfeestructure" href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>Transport Fee Structure</a>
+            <ul class="nav nav-second-level">
+              <li id="transportfeeschedule">
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportfeeschedule" on-click="FnTransportfeeschedule">Transport Fee Schedule</a>
+              </li>
+            </ul>
+        </li>
+
         <li id="feestructurereports">
            <a id="feestructurereports" href="" aria-hidden="true" on-click="feereports"><i class="fa fa-table fa-fw"></i>Fee Structure Reports</a>
            <ul class="nav nav-second-level">
@@ -313,6 +322,9 @@
               </li>
               <li id="schoolfee">
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglefeepayment"  on-click="FnKit">School Fee</a>
+              </li>
+              <li id="transportfee">
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportfeepayment"  on-click="FnTransportFee">Transport Fee</a>
               </li>
               <li id="customfeepayment">
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglecustomfeepayment"  on-click="FnCustomfee">Custom Fee Payment</a>
@@ -409,6 +421,21 @@
             <!-- <li id="dailycollectionreport">
             <a href="" aria-hidden="true" on-click="FnDailyCollectionReport">Daily Fee Collection Report</a>
             </li> -->            
+          </ul>
+        </li>
+
+        <li id="process">
+          <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Transport Process<span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">
+           <li id="transportsearchreceipt">
+            <a href="" aria-hidden="true" on-click="FnTransportSearchReceipt">Search Receipt</a>
+           </li> 
+           <li id="transportchequeeditdelete">
+            <a href="" aria-hidden="true" on-click="FnTransportChequeEditDelete">Cheque Edit/Delete</a>
+           </li> 
+           <li id="transportdailycollection">
+            <a href="" aria-hidden="true" on-click="FnTransportDailyCollection">Transport Daily Collection</a>
+           </li>
           </ul>
         </li>
 
@@ -672,6 +699,61 @@
       </div>
     </div>
 
+    <div class="modal fade bd-example-modal-lg" id="toggletransportfeeschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Schedule Transport Fee 
+            </h4>
+          </div>
+          <div class="modal-body">
+            <transportfee-schedule-card></transportfee-schedule-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="toggletransportfeepayment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Transport Fee 
+            </h4>
+          </div>
+          <div class="modal-body">
+            <transportfee-card></transportfee-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- <div class="modal fade bd-example-modal-lg" id="toggletransportfeepayment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Transport Fee 
+            </h4>
+          </div>
+          <div class="modal-body">
+            <transportfee-card></transportfee-card>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
 
      <div class="modal fade bd-example-modal-lg" id="togglefeestructureschedule" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
@@ -745,9 +827,7 @@
           </div>
         </div>
       </div>
-    </div>
-
-     
+    </div>     
 
     <crm-service id="service"></crm-service>
     <admission-service id="admissionservice"></admission-service>
@@ -755,6 +835,7 @@
     <schedule-service id="scheduleservice"></schedule-service>
     <reporting-service id="reportingservice"></reporting-service>
     <user-service id="userservice"></user-service>
+    <transportfee-service id="transportfeeservice"></transportfeetransportfee-service>
   </template>
   <script>
   (function() {
@@ -806,6 +887,15 @@
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchadmissionyearService();
         this.$.scheduleservice.fetchfeetypeService();
+      },
+      FnTransportfeeschedule:function(e){
+        document.querySelector('transportfee-schedule-card').FnRefresh();
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.transportfeeservice.fetchzoneService();
+      },
+      FnTransportFee:function(e){
+        document.querySelector('transportfee-card').FnRefresh();
+        document.querySelector('transportfee-card').callService();
       },
       FnProspect:function(e){
       // alert(e.target.text);
@@ -981,6 +1071,12 @@
           document.querySelector('daycollection-report').FnRefresh();
           document.querySelector('daycollection-report').FnCallService();
       },
+      FnTransportDailyCollection:function(){
+          // this.$.scheduleservice.fetchgradeforreportService();
+          document.querySelector('app-list').setPage("transportdaily-collection-report","Transport Daily Collection");
+          document.querySelector('transportdaily-collection-report').FnRefresh();
+          document.querySelector('transportdaily-collection-report').FnCallService();
+      },
       FnDetaildaycollection:function(){
           this.$.scheduleservice.fetchgradeforreportService();
           document.querySelector('app-list').setPage("detaildaycollection-report","Daily Collection");
@@ -1080,6 +1176,12 @@
         document.querySelector('searchreceipt-card').callService();
         document.querySelector('searchreceipt-card').ready();
       },
+      FnTransportSearchReceipt:function(){
+        this.$.scheduleservice.fetchacademicyearService();        
+        document.querySelector('app-list').setPage("transport-receipt-searchcard","Search Receipt");
+        document.querySelector('transport-receipt-searchcard').callService();
+        document.querySelector('transport-receipt-searchcard').ready();
+      },
       FnDefaulterUpdate:function(){
         document.querySelector('app-list').setPage("defaulter-update","Defaulter Update");
         document.querySelector('defaulter-update').callService();
@@ -1165,7 +1267,13 @@
       },
       FnChequeEditDelete:function(){
         document.querySelector('app-list').setPage("editdelete-cheques-card","Edit/Delete Cheques");
+        document.querySelector('editdelete-cheques-card').FnRefresh();
         document.querySelector('editdelete-cheques-card').callService();
+      },
+      FnTransportChequeEditDelete:function(){
+        document.querySelector('app-list').setPage("transport-editdelete-cheque","Edit/Delete Cheques");
+        document.querySelector('transport-editdelete-cheque').FnRefresh();
+        document.querySelector('transport-editdelete-cheque').callService();
       },
       FnProvisionfee:function(){
         localStorage.setItem("curr_sess_feetypepayment","Commitment Fee (Ins1)");
@@ -1222,61 +1330,10 @@
         document.querySelector('enrollment-report').FnRefresh();
         document.querySelector('enrollment-report').callService();
       },
-      // setRoleview:function(){
-      //  if(localStorage.getItem("roleid")=="ROLE101") 
-      //  {
-      //   this.hideenquirymenu=false;
-      //   this.hidebalancefollowupmenu=true;
-      //   this.hidefeestructurereportmenu=true;
-      //   this.hidefeestructuremenu=true;
-      //   this.hideenrollmentmenu=false;
-      //   this.hidefeepaymentmenu=false;
-      //   this.hidemasterreportmenu=true;
-      //   this.hidereportmenu=false;
-      //  }
-      //  else if(localStorage.getItem("roleid")=="ROLE102") 
-      //  {
-      //   this.hideenquirymenu=false;
-      //   this.hidebalancefollowupmenu=false;
-      //   this.hidefeestructurereportmenu=true;
-      //   this.hidefeestructuremenu=true;
-      //   this.hideenrollmentmenu=false;
-      //   this.hidefeepaymentmenu=false;
-      //   this.hidemasterreportmenu=true;
-      //   this.hidereportmenu=false;
-      //  }
-      //  else if(localStorage.getItem("roleid")=="ROLE103") 
-      //  {
-      //   this.hideenquirymenu=false;
-      //   this.hidebalancefollowupmenu=true;
-      //   this.hidefeestructurereportmenu=false;
-      //   this.hidefeestructuremenu=true;
-      //   this.hideenrollmentmenu=false;
-      //   this.hidefeepaymentmenu=false;
-      //   this.hidemasterreportmenu=false;
-      //   this.hidereportmenu=false;
-      //  }
-      //  if(localStorage.getItem("roleid")=="ROLE106") 
-      //  {
-      //   this.hideenquirymenu=true;
-      //   this.hidebalancefollowupmenu=true;
-      //   this.hidefeestructurereportmenu=false;
-      //   this.hidefeestructuremenu=false;
-      //   this.hideenrollmentmenu=true;
-      //   this.hidefeepaymentmenu=false;
-      //   this.hidemasterreportmenu=false;
-      //   this.hidereportmenu=false;
-      //  }
-      // },
+  
       FnSetRoleView:function(arr){
         // alert(JSON.stringify(arr));
         for(var i=0;i<arr.length;i++){
-          // if(parseInt(arr[i].menu_id)<=10&&parseInt(arr[i].menu_id)>=1)
-          // {
-            // alert(arr[i].menu_name+"  "+arr[i].status);
-          // }
-          // if(arr[i].menu_id=="Fees Structure")
-          // alert(arr[i].menu_id+" "+arr[i].menu_name+"  "+arr[i].status);
           var id=((arr[i].menu_name).replace(/[^a-zA-Z0-9]/g, '')).toLowerCase();
           if((arr[i].status).toLowerCase()=="true"){
           document.getElementById(''+id).style.visibility="visible";

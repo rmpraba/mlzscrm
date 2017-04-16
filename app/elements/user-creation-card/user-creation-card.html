@@ -20,6 +20,11 @@
               <paper-input  label="Username" is="" value="{{username}}"></paper-input>            
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-4" style="margin-left: 30%;">
+              <paper-input  label="Password" is="" value="{{password}}"></paper-input>            
+            </div>
+          </div>
           <!-- </div> -->
           <div class="row">
             <div class="col-md-4" style="margin-left: 30%;">
@@ -55,12 +60,13 @@
         roleid=e.target.selectedItem.value;
       },
       FnCreate:function(){
-        this.$.userservice.usercreationService(this.employeename,this.username,roleid);
+        this.$.userservice.usercreationService(this.employeename,this.username,roleid,this.password);
       },
       FnRefresh:function(){
         this.employeename="";
         this.username="";
         roleid="";
+        this.password="";
         document.querySelector('#usercreationrole').selected=-1;
       }
     });

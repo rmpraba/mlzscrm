@@ -551,6 +551,8 @@
         this.$.fetchacademicyearajax.generateRequest();
       },
       fetchacademicyearResponse:function(e){
+        document.querySelector('transport-receipt-searchcard').academicarr=e.detail.response.returnval;
+        document.querySelector('transportfee-schedule-card').academicarr=e.detail.response.returnval;
         document.querySelector('feetype-schedule-card').academicarr=e.detail.response.returnval;
         document.querySelector('rtefeetype-schedule-card').academicarr=e.detail.response.returnval;
         document.querySelector('discount-master-card').academicarr=e.detail.response.returnval;

@@ -1,0 +1,56 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../processing-service/processing-service.html">
+
+<dom-module id="transport-editdelete-cheque-itemcard">
+  <template>
+    <style>
+    </style>
+    <div>
+      <table>
+      <tr>
+        <td>{{sno}}</td><td>{{studentid}}</td><td>{{studentname}}</td><td>{{installmenttype}}</td><td>{{chequeno}}</td><td>{{bankname}}</td><td>{{chequedate}}</td><td hidden$="{{hidebtn}}"><button class="btn" on-click="FnEditDeleteCheque" data-toggle="modal" data-target="#studentfollowup"><a>Edit/Delete</a></button></td>
+      </tr>
+    </div>
+    <div>
+    <paper-dialog id="transporteditdeletecheque" modal>
+      <h4>EDIT/DELETE Cheques</h4>
+       <div  class="layout" style='margin-left: 5%;'><paper-input required error-message="needs Cheque number!" allowed-pattern="[0-9a-zA-Z ]" id="edchequeno" label="Cheque Number" value="{{chequeno}}"> </paper-input></div>
+       <div  class="layout" style='margin-left: 5%;margin-top: -2%;'> <paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires bankName!"  id="edbankname" label="Bank Name" value="{{bankname}}"> </paper-input></div>
+       <div style="width: 100%;margin-top: -2%;margin-left: 3%;"><cheque-datepicker showdate="{{chequedate}}"></cheque-datepicker></div>
+       <div class="buttons" style="margin-left: -5%;">
+        <paper-button id="{{chequeno}}" class="btn btn-primary left" on-click="FnEditcheque">Edit</paper-button>
+        <paper-button id="{{chequeno}}"class="btn btn-primary left" on-click="FnDeletecheque">Delete</paper-button>
+        <paper-button id="{{chequeno}}" class="btn btn-primary left" on-click="FnCancel">Cancel</paper-button>
+      </div>     
+    </paper-dialog>  
+    </div>
+    <transportfee-service id="transportservice"></transportfee-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var chequestatus="";
+    var checkedbox="";
+    Polymer({
+      is: 'transport-editdelete-cheque-itemcard',
+      FnEditDeleteCheque:function(){
+        this.$.transporteditdeletecheque.toggle();
+      },
+      FnEditcheque:function(e){
+        this.$.transporteditdeletecheque.toggle();
+        this.$.transportservice.editchequeService(this.studentid,this.chequeno,this.bankname,this.chequedate,this.installmenttype);
+      },
+      FnDeletecheque:function(e){
+        this.$.transporteditdeletecheque.toggle();
+        this.$.transportservice.deletechequeService(this.studentid,this.chequeno,this.bankname,this.chequedate,this.installmenttype);
+      },
+      FnCancel:function(){
+        this.$.transporteditdeletecheque.toggle(); 
+      },
+      FnRefresh:function(){
+      }     
+    });
+  })();
+  </script>
+</dom-module>

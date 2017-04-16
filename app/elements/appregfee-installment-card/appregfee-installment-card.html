@@ -24,11 +24,11 @@
   #chequeno{
     margin-left: 12%;
   }
- /* #paiddate{
-    margin-left: 20%;
-  }*/
   #paymentmode{
     margin-left: 15%;
+  }
+  paper-dialog{
+    width: 30%;
   }
 </style>
   <template>
@@ -52,32 +52,32 @@
             <paper-item value="Transfer" id="{{installment}}">Transfer</paper-item>
           </paper-menu>
     </paper-dropdown-menu>    
-  </div>
+   </div>
 
     <paper-dialog id="chequeinfo" modal>
       <h4>ADD CHEQUE DETAILS</h4>
-       <div  class="layout" style='margin-left: -4%;'><paper-input required error-message="needs Cheque number!" allowed-pattern="[0-9a-zA-Z]" id="chequeno" label="Enter the Cheque No:" value="{{chequeno}}"> </paper-input></div>
-       <div  class="layout" style='margin-left: 8%;'> <paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires bankName!"  id="bankname" label="Enter the Bank Name" value="{{bankname}}"> </paper-input></div>
-       <div><installment-date-picker showdate="{{installmentdate}}"></installment-date-picker></div>
-       <div>
-       <receiptdatepicker-card showdate="{{installmentdate}}"></receiptdatepicker-card></div>
-      <div class="buttons">
-        <paper-button id="{{installment}}" on-click="FnAddcheque">Add</paper-button>
-        <paper-button id="{{installment}}" on-click="FnCancelcheque">Cancel</paper-button>
+       <div  class="layout" style='margin-left: 5%;'>
+       <paper-input required allowed-pattern="[0-9a-zA-Z]" error-message="Requires Cheque number!"  id="chequeschoolfeechequeno" label="Enter Cheque Number" value="{{chequeno}}"> 
+       </paper-input></div>
+       <div  class="layout" style='margin-left: 5%;margin-top: -2%;'><paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires bankName!"  id="chequeschoolfeebankname" label="Enter Bank Name" value="{{bankname}}"> </paper-input></div>
+       <div style="width: 68%;margin-top: -2%;margin-left: 3%;"><installment-date-picker editdate="{{editdate}}" showdate="{{installmentdate}}"></installment-date-picker></div>
+       <div style="margin-top: -6%;margin-left: 2%;"><receiptdatepicker-card showdate="{{receiptdate}}"></receiptdatepicker-card></div>
+      <div class="buttons" style="margin-left: -5%;">
+        <paper-button id="{{installment}}" class="btn btn-primary left" on-click="FnAddcheque">Add</paper-button>
+        <paper-button id="{{installment}}"class="btn btn-primary left" on-click="FnCancelcheque">Cancel</paper-button>
       </div>     
     </paper-dialog>  
 
-
     <paper-dialog id="creditinfo" modal>
     <h4>ADD CREDIT DETAILS</h4>
-     <div  class="layout" style='margin-left: -4%;'><paper-input required allowed-pattern="[0-9a-zA-Z]" error-message="Requiress Reference number!"  id="chequeno" label="Enter Reference No:" value="{{referenceno}}"> </paper-input></div>
-     <div  class="layout" style='margin-left: 8%;'> <paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires BankName!"  id="bankname" label="Enter the Bank Name" value="{{refbankname}}"> </paper-input></div>
-     <div><installment-date-picker showdate="{{installmentdate}}"></installment-date-picker></div>
-     <div>
-     <receiptdatepicker-card showdate="{{installmentdate}}"></receiptdatepicker-card></div>
-    <div class="buttons">
-      <paper-button id="{{installment}}" on-click="FnAddcredit">Add</paper-button>
-      <paper-button id="{{installment}}" on-click="FnCancelcredit">Cancel</paper-button>
+     <div  class="layout" style='margin-left: 5%;'><paper-input required allowed-pattern="[0-9a-zA-Z]" error-message="Requiress Reference number!"  id="creditschoolfeechequeno" label="Enter Reference No:" value="{{chequeno}}"> </paper-input>
+     </div>
+     <div  class="layout" style='margin-left: 5%;margin-top: -2%;'> <paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires BankName!"  id="creditschoolfeebankname" label="Enter the Bank Name" value="{{bankname}}"> </paper-input></div>     
+     <div style="width: 68%;margin-top: -2%;margin-left: 3%;"><installment-date-picker showdate="{{installmentdate}}"></installment-date-picker></div>
+     <div style="margin-top: -6%;margin-left: 2%;"><receiptdatepicker-card showdate="{{receiptdate}}"></receiptdatepicker-card></div>
+    <div class="buttons" style="margin-left: -5%;">
+      <paper-button id="{{installment}}" class="btn btn-primary left" on-click="FnAddcredit">Add</paper-button>
+      <paper-button id="{{installment}}" class="btn btn-primary left" on-click="FnCancelcredit">Cancel</paper-button>
     </div>     
     </paper-dialog>
 
@@ -91,6 +91,7 @@
       is: 'appregfee-installment-card',
       ready:function(){
         this.flag=0;
+        this.chequeno="";
       },
       FnSetAmount:function(amount){
         this.amount=amount;
@@ -125,12 +126,7 @@
             obj.paiddate=localStorage.getItem("curr_sess_date");
             obj.receiptdate=localStorage.getItem("curr_sess_date");
             obj.paidstatus="paid";
-            this.FnPrepareInstallment(obj);   
-            // installmentarr.push(obj);
-            // if(localStorage.getItem("curr_sess_feetypepayment")=="Registration fee")
-            // document.querySelector('registerationfee-card').FnSetfee(installmentarr); 
-            // else if(localStorage.getItem("curr_sess_feetypepayment")=="Application fee")
-            // document.querySelector('prospectousfee-card').FnSetfee(installmentarr);     
+            this.FnPrepareInstallment(obj);    
         }
         if(paymenttype=="Cheque"){          
           this.$.chequeinfo.toggle();                               
@@ -172,12 +168,6 @@
             obj.paidstatus="paid";
             obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
             this.FnPrepareInstallment(obj);              
-            // installmentarr.push(obj);
-            // // alert(JSON.stringify(installmentarr));
-            // if(localStorage.getItem("curr_sess_feetypepayment")=="Registration fee")
-            // document.querySelector('registerationfee-card').FnSetfee(installmentarr); 
-            // else if(localStorage.getItem("curr_sess_feetypepayment")=="Application fee")
-            // document.querySelector('prospectousfee-card').FnSetfee(installmentarr); 
       },
       FnCancelcheque:function(){
         this.$.chequeinfo.toggle();
@@ -208,8 +198,8 @@
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
             obj.installmentdate=localStorage.getItem("curr_sess_date");
-            obj.referenceno=this.referenceno;
-            obj.bankname=this.refbankname;            
+            obj.referenceno=this.chequeno;
+            obj.bankname=this.bankname;            
             obj.receiveddate=localStorage.getItem("curr_sess_date");   
             obj.paiddate=localStorage.getItem("curr_sess_chequedate");       
             obj.chequedate=localStorage.getItem("curr_sess_installmentdate");
@@ -220,7 +210,7 @@
             this.FnPrepareInstallment(obj);   
       },
       FnCancelcredit:function(){
-        this.$.chequeinfo.toggle();
+        this.$.creditinfo.toggle();
         document.querySelector('#paymentmodemenu').selected=-1;
       },
       FnRefresh:function(){

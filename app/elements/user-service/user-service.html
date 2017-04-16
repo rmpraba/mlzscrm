@@ -82,13 +82,14 @@
         document.querySelector('user-creation-card').rolearr=arr;
         document.querySelector('role-menu-mapping-card').rolearr=arr;
       },
-      usercreationService:function(employeename,username,roleid){
+      usercreationService:function(employeename,username,roleid,password){
         this.usercreationurl=sessionStorage.getItem("addrinfo")+"/usercreation-service";
         var obj={"schoolid":"","academicyear":""}  
         obj.schoolid=localStorage.getItem("schoolid");  
         obj.empid=username;
         obj.empname=employeename;
         obj.roleid=roleid;
+        obj.password=password;
         this.usercreationparam=obj;     
         this.$.usercreationajax.generateRequest();
       },

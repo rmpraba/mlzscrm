@@ -1,0 +1,237 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\transportfee-schedule-itemcard\transportfee-schedule-itemcard.html">
+
+<dom-module id="transportfee-schedule-card">
+  <template>
+    <div class="row enquiry-form">
+
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6 enquiry-inpt">
+            <paper-input label="School Name" value="{{schoolname}}"></paper-input>
+        </div>  
+        <div class="col-sm-6">
+          <paper-dropdown-menu label="Academic Year" attr-for-selected="value">
+            <paper-menu id="transportfeeschacademicyear" class="dropdown-content" required on-iron-select="FnSelectAcademicYear" valueattr="value" >
+              <template  is="dom-repeat" items="{{academicarr}}" as="item">
+              <paper-item>{{item.academic_year}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>     
+      </div>
+
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6">
+          <paper-dropdown-menu label="Select Zone" attr-for-selected="value">
+            <paper-menu id="transportfeeschzone" class="dropdown-content" required on-iron-select="FnSelectZone" valueattr="value" >
+              <template  is="dom-repeat" items="{{zonearr}}" as="item">
+              <paper-item value="{{item.distance_id}}">{{item.zone_name}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="Fees" value="{{fees}}"></paper-input>
+        </div>
+      </div>
+
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-6">
+          <paper-dropdown-menu label="No of Installment" attr-for-selected="value">
+            <paper-menu id="transportfeeschinstallment" class="dropdown-content" required on-iron-select="FnSelectInstallment" valueattr="value" >
+              <!-- <template  is="dom-repeat" items="{{installmentarr}}" as="item"> -->
+              <paper-item value="1">1</paper-item>
+              <paper-item value="2">2</paper-item>
+              <paper-item value="3">3</paper-item>
+              <paper-item value="4">4</paper-item>
+              <paper-item value="5">5</paper-item>
+              <!-- </template> -->
+            </paper-menu>
+          </paper-dropdown-menu>
+        </div>
+        <div class="col-sm-6" style="margin-top: 4%;">
+        <paper-checkbox id="transportfeeschamount" on-change="FnAmount">Amount</paper-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <paper-checkbox id="transportfeeschpercent" on-change="FnPercent">Percent</paper-checkbox>
+        </div>
+      </div>
+
+      <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hideinstallmentcard}}">
+        <template is="dom-repeat" items="{{transportfeeinsarr}}">
+          <transportfee-schedule-itemcard installment="{{item.installment}}" flag1="{{item.flag1}}" flag2="{{item.flag2}}" insamount="{{item.insamount}}" noofinstallment="{{item.noofinstallment}}" zonename="{{item.zonename}}" distanceid="{{item.distanceid}}" type="{{item.type}}">
+          </transportfee-schedule-itemcard>
+        </template>
+      </div>
+
+      <div class="col-md-12 form-button">
+          <!-- <paper-button id="transportfeehidegenerate" class="btn btn-primary" on-click="FnGenerate">Generate</paper-button> -->
+          <paper-button id="transportfeehidesubmit" class="btn btn-primary" on-click="FnSubmit">Submit</paper-button>
+          <paper-button class="btn btn-primary" on-click="FnCancel">Cancel</paper-button>
+      </div>
+      </div>
+      <transportfee-service id="transportfeeservice"></transportfee-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    ; 
+    var academicyear,distanceid,zonename,installment,type;   
+    var insarr=[];
+    Polymer({
+      is: 'transportfee-schedule-card',
+      ready:function(){
+        this.hideinstallmentcard=true;
+        // this.$.transportfeehidegenerate.hidden=false;
+        // this.$.transportfeehidesubmit.hidden=true;
+        this.schoolname=localStorage.getItem("schoolname");
+      },
+      FnSelectAcademicYear:function(e){
+        academicyear=(e.target.selectedItem.textContent).trim();
+      },
+      FnSelectZone:function(e){
+        zonename=(e.target.selectedItem.textContent).trim();
+        distanceid=(e.target.selectedItem.value).trim();
+        this.$.transportfeeservice.fetchzonefeeService(distanceid);
+      },
+      FnSelectInstallment:function(e){
+        installment=(e.target.selectedItem.textContent).trim();
+        // alert(installment+"  "+type);
+        var temp=[];
+        for(var i=0;i<parseInt(installment);i++){
+          var obj={};
+          obj.installment="Installment"+(i+1);
+          if(type=="amount"){
+          obj.insamount=this.fees;
+          obj.amount= "";
+          obj.noofinstallment=installment;
+          obj.zonename=zonename;
+          obj.distanceid=distanceid;
+          obj.type=type;
+          obj.flag1= false;
+          obj.flag2= true;
+          }
+          if(type=="percent"){
+          obj.insamount=this.fees;
+          obj.amount= "";
+          obj.noofinstallment=installment;
+          obj.zonename=zonename;
+          obj.distanceid=distanceid;
+          obj.flag1= true;
+          obj.flag2= false;
+          }
+          temp.push(obj);
+        }
+        // alert(JSON.stringify(temp));
+        this.transportfeeinsarr=temp;
+        this.hideinstallmentcard=false;
+      },
+      FnAmount:function(e){
+        type="amount";
+        if(document.querySelector('#transportfeeschamount').checked==true){
+          document.querySelector('#transportfeeschpercent').checked=false;
+        var temp=[];
+        for(var i=0;i<parseInt(installment);i++){
+          var obj={};
+          obj.installment="Installment"+(i+1);
+          if(type=="amount"){
+          obj.insamount=this.fees;
+          obj.amount= "";
+          obj.noofinstallment=installment;
+          obj.zonename=zonename;
+          obj.distanceid=distanceid;
+          obj.type=type;
+          obj.flag1= false;
+          obj.flag2= true;
+          }
+          if(type=="percent"){
+          obj.insamount=this.fees;
+          obj.amount= "";
+          obj.noofinstallment=installment;
+          obj.zonename=zonename;
+          obj.distanceid=distanceid;
+          obj.flag2= true;
+          obj.flag1= false;
+          }
+          temp.push(obj);
+        }
+        alert(JSON.stringify(temp));
+        this.transportfeeinsarr=[];
+        this.transportfeeinsarr=temp;
+        this.hideinstallmentcard=false;  
+        }
+      },
+      FnPercent:function(e){
+        type="percent";
+        if(document.querySelector('#transportfeeschpercent').checked==true){
+          document.querySelector('#transportfeeschamount').checked=false;
+          var temp=[];
+        for(var i=0;i<parseInt(installment);i++){
+          var obj={};
+          obj.installment="Installment"+(i+1);
+          if(type=="amount"){
+          obj.insamount=this.fees;
+          obj.amount= "";
+          obj.noofinstallment=installment;
+          obj.zonename=zonename;
+          obj.distanceid=distanceid;
+          obj.type=type;
+          obj.flag2= false;
+          obj.flag1= true;
+          }
+          if(type=="percent"){
+          obj.insamount=this.fees;
+          obj.amount= "";
+          obj.noofinstallment=installment;
+          obj.zonename=zonename;
+          obj.distanceid=distanceid;
+          obj.flag1= false;
+          obj.flag2= true;
+          }
+          temp.push(obj);
+        }
+        this.transportfeeinsarr=[];
+        alert(JSON.stringify(temp));
+        this.transportfeeinsarr=temp;
+        this.hideinstallmentcard=false;
+        }
+      },
+      FnRefresh:function(){
+        academicyear="";
+        distanceid="";
+        zonename="";
+        installment="";
+        this.fees="";
+        document.querySelector('#transportfeeschacademicyear').selected=-1;
+        document.querySelector('#transportfeeschzone').selected=-1;
+        document.querySelector('#transportfeeschinstallment').selected=-1;
+        this.$.transportfeeschamount.checked=true;
+        type="amount";
+        this.$.transportfeeschpercent.checked=false;
+        insarr=[];
+      },
+      FnSubmit:function()
+      {
+        if(insarr.length>0)
+        this.$.transportfeeservice.inserttransportfeeService(insarr);
+        else
+        alert('Please check the info!!');
+      },
+      FnCancel:function(){
+        academicyear="";
+        distanceid="";
+        zonename="";
+        installment="";
+        document.querySelector('#transportfeeschacademicyear').selected=-1;
+        document.querySelector('#transportfeeschzone').selected=-1;
+        document.querySelector('#transportfeeschinstallment').selected=-1;
+        this.$.transportfeeschamount.checked=true;
+        type="amount";
+        this.$.transportfeeschpercent.checked=false;
+        insarr=[];
+      },
+      FnSetInstallment:function(arr){
+        insarr=arr;
+      }
+    });
+  })();
+  </script>
+</dom-module>

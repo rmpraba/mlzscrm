@@ -1452,7 +1452,7 @@
         }
         else{
             arr=[];
-           document.querySelector('editdelete-cheques-card').chequearr=arr;
+        document.querySelector('editdelete-cheques-card').chequearr=arr;
         document.querySelector('editdelete-cheques-card').FnSetChequeArray(arr); 
         }
       },
@@ -1463,7 +1463,7 @@
         obj.admissionno=enrno;
         obj.chequeno=chequeno;
         obj.bankname=bankname;
-        obj.chequedate=localStorage.getItem("curr_sess_chequedate");
+        obj.chequedate=chequedate;
         obj.amount=installmentamount;
         obj.installment=installmenttype;
         this.editchequeparam=obj;
@@ -1473,14 +1473,15 @@
         alert(e.detail.response.returnval);
         this.fetchchequeforeditordelete(localStorage.getItem("curr_sess_enquiryno"));
       },
-      deletechequeService:function(enrno,chequeno,bankname,chequedate,installmentamount,paiddate){
+      deletechequeService:function(enrno,chequeno,bankname,chequedate,installmentamount,paiddate,installmenttype){
         this.deletechequeurl=sessionStorage.getItem("addrinfo")+"/deletecheque-service";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.admissionno=enrno;
         obj.chequeno=chequeno;
         obj.bankname=bankname;
-        obj.chequedate=localStorage.getItem("curr_sess_chequedate");
+        obj.installmenttype=installmenttype;
+        obj.chequedate=chequedate;
         obj.amount=installmentamount;
         this.deletechequeparam=obj;
         this.$.deletechequeajax.generateRequest();

@@ -1,0 +1,139 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transportdaily-collection-report">
+  <template>
+    <style>
+      .datecard {
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <div class="col-md-6"> -->
+              <div class="col-md-2" style="margin-top: 2%;">
+                  <fromdate-icon-pickercard></fromdate-icon-pickercard>
+                </div>
+                <div class="col-md-1" style="margin-top: 2%;margin-left: -3%;">
+                  <todate-icon-pickercard></todate-icon-pickercard>
+                </div>
+                <!-- <div class="col-sm-2" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Grade" attr-for-selected="value">
+                  <paper-menu id="daycollectiongrade" class="dropdown-content" required on-iron-select="FnSelectGrade" valueattr="value" >
+                    <template  is="dom-repeat" items="{{gradearr}}" as="item">
+                    <paper-item value="{{item.grade_id}}">{{item.grade_name}}</paper-item>
+                    </template>
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div>  -->               
+                <div class="col-sm-2" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Select Type" attr-for-selected="value">
+                  <paper-menu id="transportdaycollectiontype" class="dropdown-content" required on-iron-select="FnSelectType" valueattr="value" >
+                    <!-- <template  is="dom-repeat" items="{{}}" as="item"> -->
+                    <paper-item value="all">All</paper-item>
+                    <paper-item value="new">New</paper-item>
+                    <paper-item value="promoted">Promoted</paper-item>
+                    <!-- </template> -->
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div> 
+                <div class="col-md-1" style="margin-top: 2.5%;margin-left: 5%;">
+                  <paper-button style="height:30px;text-transform: none;" on-click="FnView" class="btn btn-primary">View</paper-button>
+                </div>
+                <div class="col-md-1" style="margin-top: 2%;margin-left: 10%;">
+                <p>Download
+                <a href="#">
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('transportdaycollectionreport', 'Transport Daily Collection')"></span>
+                </a>
+                </p>
+                </div>                 
+              <!-- </div> -->
+            </div>
+          </div>
+        </div>
+    </div>
+    <div id="transportdaycollectionreport">
+     <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Sno</th><th>Enr No</th><th>Student Name</th><th>Grade</th>
+        <th>Type</th><th>Installment Type</th><th>Mode Of Payment</th><th>Cheque No</th><th>Bank Name</th><th>Cheque Date</th><th>Received Date</th><th>Receipt/Ack No</th><th>Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+      <template  is="dom-repeat" items="{{transportdaycollectionarr}}" as="item">
+        <tr><td>{{item.sno}}</td><td>{{item.studentid}}</td><td>{{item.studentname}}</td><td>{{item.grade}}</td><td>{{item.type}}</td>
+        <td>{{item.installment}}</td><td>{{item.modeofpayment}}</td><td>{{item.chequeno}}</td><td>{{item.bankname}}</td><td>{{item.chequedate}}</td><td>{{item.receiveddate}}</td>
+        <td>{{item.receiptno}}</td><td>{{item.amount}}</td></tr>
+      </template>
+      <tr></tr>
+      </tbody>
+    </table>  
+    <table>
+      <tr><th colspan="8" style="text-align: right;">Total amount from CASH: &nbsp;&nbsp;</th><th>{{cashtotal}}</th></tr>
+      <tr><th colspan="8" style="text-align: right;">Total amount from CHEQUE: &nbsp;&nbsp;</th><th>{{chequetotal}}</th></tr>
+      <tr><th colspan="8" style="text-align: right;">Total amount from NEFT/RTGS: &nbsp;&nbsp;</th><th>{{transfertotal}}</th></tr>
+      <tr><th colspan="8" style="text-align: right;">Total amount from CARD SWIPE: &nbsp;&nbsp;</th><th>{{swipetotal}}</th></tr>
+      <tr><th colspan="8" style="text-align: right;">Grand Total: &nbsp;&nbsp;</th><th>{{total}}</th></tr>
+    </table>  
+    </div>
+    <transportfee-service id="feereportservice"></transportfee-service>
+  </template>
+  <script type="text/javascript">
+      var tableToExcel = (function() {
+      var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+     return function(table, name) {
+     if (!table.nodeType) table = document.getElementById(table)
+     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+     window.location.href = uri + base64(format(template, ctx))
+     }
+     })()
+  </script>
+  <script>
+  (function() {
+    'use strict';
+    // var grade="All Grades";
+    var type="All";
+    Polymer({
+      is: 'transportdaily-collection-report',
+      ready:function(){
+        this.hidetotal=true;
+      },
+      FnHideView:function(){
+        this.hidetotal=false;
+      },
+      FnCallService:function(){        
+        this.$.feereportservice.FnFetchDayCollectionService();
+      },
+      FnView:function(){
+        this.$.feereportservice.FnFetchDayCollectionService();
+      },
+      FnSelectGrade:function(e){
+        grade=(e.target.selectedItem.textContent).trim();
+        if(this.flag==1)
+         this.$.feereportservice.FnFetchDayCollectionService(); 
+      },
+      FnRefresh:function(){
+        // document.querySelector('#transportdaycollectiongrade').selected=-1;
+        // document.querySelector('#reportfiltertype').selected=-1;
+        this.daycollectionarr="";
+        document.querySelector('fromdate-icon-pickercard').ready();
+        // document.querySelector('todate-icon-pickercard').ready();
+        this.hidetotal=true;
+        document.querySelector('#transportdaycollectiontype').selected=-1;
+        type="";
+      },
+      FnSelectType:function(e){
+        this.flag=1;
+        type=(e.target.selectedItem.textContent).trim();
+        this.$.feereportservice.FnFetchDayCollectionService();
+      }
+    });
+  })();
+  </script>
+</dom-module>

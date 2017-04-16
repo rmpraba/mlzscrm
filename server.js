@@ -6515,7 +6515,7 @@ app.post('/fetchchequeforeditordelete-service',  urlencodedParser,function (req,
 
 
 app.post('/editcheque-Service',  urlencodedParser,function (req, res){
-  var qur="UPDATE md_student_paidfee SET cheque_no='"+req.query.chequeno+"',bank_name='"+req.query.bankname+"',cheque_date='"+req.query.chequedate+"',installment_amount='"+req.query.amount+"',installment_date='"+req.query.chequedate+"' where school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"' and installment='"+req.query.installment+"' ";
+  var qur="UPDATE md_student_paidfee SET cheque_no='"+req.query.chequeno+"',bank_name='"+req.query.bankname+"',cheque_date='"+req.query.chequedate+"',installment_amount='"+req.query.amount+"' where school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"' and installment='"+req.query.installment+"' ";
   console.log('-------------------------------------------');
   console.log(qur);
   connection.query(qur,
@@ -6536,7 +6536,7 @@ app.post('/editcheque-Service',  urlencodedParser,function (req, res){
 
 app.post('/deletecheque-Service',  urlencodedParser,function (req, res){
   
-  var qur="DELETE FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"' and cheque_no='"+req.query.chequeno+"' ";
+  var qur="DELETE FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"' and cheque_no='"+req.query.chequeno+"' and installment='"+req.query.installmenttype+"'";
   console.log('-------------------------------------------');
   console.log(qur);
   connection.query(qur,
@@ -8961,7 +8961,7 @@ app.post('/usercreation-service',  urlencodedParser,function (req, res){
   school_id:req.query.schoolid,
   employee_id:req.query.empid,
   employee_name:req.query.empname,
-  password:'Password',
+  password:req.query.password,
   role_id:req.query.roleid
  };
 
@@ -9102,6 +9102,535 @@ app.post('/deletesubmenu-service',  urlencodedParser,function (req, res){
     });
 });
 
+
+app.post('/fetchzone-service',  urlencodedParser,function (req, res){
+ 
+ var qur="SELECT * FROM transport.md_zone WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";
+ console.log(qur);
+ connection.query(qur,
+    function(err, rows)
+    {
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/fetchzonefee-service',  urlencodedParser,function (req, res){
+ 
+ var qur="SELECT * FROM transport.md_distance WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and id='"+req.query.distanceid+"'";
+ console.log(qur);
+ connection.query(qur,
+    function(err, rows)
+    {
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/inserttransportsch-service',  urlencodedParser,function (req, res){
+var response={
+  school_id:req.query.schoolid,
+  academic_year:req.query.academicyear,
+  distance_id:req.query.distanceid,
+  zone_name:req.query.zonename,
+  installment:req.query.installment,
+  installment_date:req.query.installmentdate,
+  amount:req.query.amount
+}; 
+ var qur="INSERT INTO transport_fee_schedule SET ?";
+ console.log(qur);
+ connection.query(qur,[response],
+    function(err, rows)
+    {
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/fetchtransportfeesearch-service',  urlencodedParser,function (req, res){
+ 
+ var qur="SELECT * FROM transport.student_fee f join transport.student_details d on(f.student_id=d.id) "+
+ " where f.school_id=d.school_id and f.academic_year=d.academic_year and f.status='mapped' and f.academic_year='"+req.query.academicyear+"' and f.school_id='"+req.query.schoolid+"' "+
+ " and f.academic_year='"+req.query.academicyear+"' and f.school_id='"+req.query.schoolid+"'";
+ console.log(qur);
+ connection.query(qur,
+    function(err, rows)
+    {
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/searchtransportfeepaidinfo-service',  urlencodedParser,function (req, res){
+ var qur="SELECT * FROM transport.student_fee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and student_id='"+req.query.studentid+"' and "+
+ " status='mapped' and ((install1_status in('processing','paid')) or (install2_status in('processing','paid'))) ";
+ var qur1="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"'";
+ console.log(qur);
+ var paidarr=[];
+ connection.query(qur,function(err, rows)
+    {
+      if(!err)
+      {
+        if(rows.length==0){
+          res.status(200).json({'paidarr': "no rows",'paidcheque': "no rows"});
+        }
+        else{
+          paidarr=rows;
+          connection.query(qur1,function(err, rows){
+          if(!err){
+          res.status(200).json({'paidarr': paidarr,'paidcheque': rows});
+          }
+          });
+        } 
+      } 
+      else
+      {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/fetchtransportfees-service',  urlencodedParser,function (req, res){
+ 
+ var qur1="SELECT zone_name from transport.md_zone where id in(SELECT zone_id FROM transport.student_fee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"') and academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"'";
+ // var qur2="SELECT * FROM transport_fee_schedule";
+ console.log(qur1);
+ var feesplit=[];
+ var zonename="";
+ var studinfo=[];
+ connection.query("SELECT * FROM mlzscrm.md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.studentid+"'",function(err, rows){
+ if(!err){
+ if(rows.length>0){
+ studinfo=rows;
+ connection.query(qur1,function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          zonename=rows[0].zone_name;
+          connection.query("SELECT * FROM mlzscrm.transport_fee_schedule WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and zone_name='"+zonename+"'",function(err, rows){
+          if(!err){
+          if(rows.length>0){
+          feesplit=rows;
+          connection.query("SELECT sum(amount) as total FROM mlzscrm.transport_fee_schedule WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and zone_name='"+zonename+"'",function(err, rows){
+          if(!err)            
+          res.status(200).json({'studinfo':studinfo,'total': rows[0].total,'zonename':zonename,'feesplit':feesplit});
+          });
+          }
+          else
+          res.status(200).json({'returnval': 'no rows'});
+          }
+        });
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } 
+      else {
+        console.log(err);
+      }
+    });
+  }
+  }
+  });
+});
+
+app.post('/fetchreceiptseq-service',  urlencodedParser,function (req, res){
+ var qur="SELECT transport_receipt_seq FROM receipt_sequence";
+ console.log(qur);
+ connection.query(qur,
+    function(err, rows)
+    {
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': ''});
+        }
+      } 
+      else 
+      {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/inserttransportfees-service',  urlencodedParser,function (req, res){
+ var response1={
+  installment_1: req.query.insamount,
+  receipt_no1: req.query.insreceiptno,
+  installment_1Date: req.query.insdate,
+  modeofpayment1: req.query.inspaymentmode,
+  install1_status: req.query.insstatus,
+  install1_fine: req.query.insfineamount,
+  discount_fee: req.query.discount,
+  receipt_date1: req.query.receiptdate,
+  paid_date1: req.query.paiddate,
+  installment_pattern: req.query.pattern
+ };
+ var cheque1={
+  school_id:req.query.schoolid,
+  student_id:req.query.studentid,
+  name:req.query.studentname,
+  installtype:req.query.installment,
+  cheque_no:req.query.inschequeno,
+  bank_name:req.query.insbankname,
+  cheque_date: req.query.inschequedate,
+  cheque_status: req.query.inschequestatus,
+  academic_year:req.query.academicyear,
+  paid_date:req.query.paiddate
+ };
+ var response2={
+  installment_2: req.query.insamount,
+  receipt_no2: req.query.insreceiptno,
+  installment_2Date: req.query.insdate,
+  modeofpayment2: req.query.inspaymentmode,
+  install2_status: req.query.insstatus,
+  install2_fine: req.query.insfineamount,
+  discount_fee: req.query.discount,
+  receipt_date2: req.query.receiptdate,
+  paid_date2: req.query.paiddate,
+  installment_pattern: req.query.pattern
+ };
+  var cheque2={
+  school_id:req.query.schoolid,
+  student_id:req.query.studentid,
+  name:req.query.studentname,
+  installtype:req.query.installment,
+  cheque_no:req.query.inschequeno,
+  bank_name:req.query.insbankname,
+  cheque_date: req.query.inschequedate,
+  cheque_status: req.query.inschequestatus,
+  academic_year:req.query.academicyear,
+  paid_date:req.query.paiddate
+ };
+
+ console.log('-----------------------------');
+ console.log(cheque1);
+ console.log('-----------------------------');
+ console.log(cheque2);
+ console.log('-----------------------------');
+
+ console.log(response1.receipt_no1+" "+response2.receipt_no2);
+ if(req.query.installment=="Installment1"||req.query.installment=="Lumpsum"){
+ var qur="update transport.student_fee SET ? WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"'";
+ console.log(qur);
+ connection.query(qur,[response1],
+    function(err, result)
+    {
+      if(!err){
+        if(result.affectedRows>0){
+          if(req.query.inspaymentmode=="Cheque"||req.query.inspaymentmode=="Transfer"||req.query.inspaymentmode=="Card Swipe")
+          {
+            connection.query("INSERT INTO transport.cheque_details SET ?",[cheque1],function(err, result){
+              if(!err){
+              if(result.affectedRows>0){
+                res.status(200).json({'returnval': 'Updated!'});
+              }
+              else{
+                console.log(err);
+                res.status(200).json({'returnval': 'Not Updated!'});
+              }
+              }
+              else
+                console.log(err);
+            });
+          }
+          else
+          res.status(200).json({'returnval': 'Updated!'});
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Not Updated!'});
+        }
+      } 
+      else 
+      {
+        console.log(err);
+      }
+    });
+}
+if(req.query.installment=="Installment2"){
+ var qur="update transport.student_fee SET ? WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"'";
+ console.log(qur);
+ connection.query(qur,[response2],
+    function(err, result)
+    {
+      if(!err){
+        if(result.affectedRows>0){
+          if(req.query.inspaymentmode=="Cheque"||req.query.inspaymentmode=="Transfer"||req.query.inspaymentmode=="Card Swipe")
+          {
+            connection.query("INSERT INTO transport.cheque_details SET ?",[cheque2],function(err, result){
+              if(result.affectedRows>0){
+                res.status(200).json({'returnval': 'Updated!'});
+              }
+              else{
+                console.log(err);
+                res.status(200).json({'returnval': 'Not Updated!'});
+              }
+            });
+          }
+          else
+          res.status(200).json({'returnval': 'Updated!'});
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Not Updated!'});
+        }
+      } 
+      else 
+      {
+        console.log(err);
+      }
+    });
+}
+});
+
+
+app.post('/updatingreceiptseq-service',  urlencodedParser,function (req, res){
+ var qur="update receipt_sequence SET transport_receipt_seq='"+req.query.seqno+"'";
+ console.log(qur);
+ connection.query(qur,
+    function(err, result)
+    {
+      if(!err){
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Updated!'});
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Not Updated!'});
+        }
+      } 
+      else 
+      {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/fetchstudentforreceiptsearch-service',  urlencodedParser,function (req, res){
+ var qur="SELECT * FROM transport.student_fee f join mlzscrm.md_admission d on(f.student_id=d.admission_no) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and (f.install1_status in ('processing','paid') or f.install2_status in ('processing','paid'))"+
+ " and d.school_id='"+req.query.schoolid+"' and d.academic_year='"+req.query.academicyear+"'";
+ console.log(qur);
+ connection.query(qur,
+    function(err, rows)
+    {
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } 
+      else 
+      {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/fetchreceiptinfo-service',  urlencodedParser,function (req, res){
+ var qur="SELECT * FROM transport.student_fee f join md_admission a on(f.student_id=a.admission_no) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and f.student_id='"+req.query.studentid+"' and a.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and a.admission_no='"+req.query.studentid+"'";
+ var qur1="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"'";
+ console.log(qur);
+ var fees=[];
+ connection.query(qur,function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          fees=rows;
+          connection.query(qur1,function(err, rows){
+          res.status(200).json({'fees': fees,'cheques':rows});
+          });
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } 
+      else 
+      {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/fetchstudentforprocessing-service',  urlencodedParser,function (req, res){
+ var qur="SELECT * FROM transport.student_fee f join mlzscrm.md_admission d on(f.student_id=d.admission_no) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and (f.install1_status in ('processing','paid') or f.install2_status in ('processing','paid')) and (f.modeofpayment1 in('Cheque','Card Swipe','Transfer') or f.modeofpayment2 in('Cheque','Card Swipe','Transfer'))"+
+ " and d.school_id='"+req.query.schoolid+"' and d.academic_year='"+req.query.academicyear+"'";
+ console.log(qur);
+ connection.query(qur,
+    function(err, rows)
+    {
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } 
+      else 
+      {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/fetchtransportchequeforeditordelete-service',  urlencodedParser,function (req, res){
+  var qur="SELECT * FROM transport.cheque_details where school_id='"+req.query.schoolid+"' and (student_id like '%"+req.query.searchvalue+"%' or cheque_no like '%"+req.query.searchvalue+"%')";
+  console.log('-------------------------------------------');
+  console.log(qur);
+  connection.query(qur,
+    function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+app.post('/edittransportcheque-Service',  urlencodedParser,function (req, res){
+  var qur="UPDATE transport.cheque_details SET cheque_no='"+req.query.chequeno+"',bank_name='"+req.query.bankname+"',cheque_date='"+req.query.chequedate+"' where school_id='"+req.query.schoolid+"' and student_id='"+req.query.admissionno+"' and installtype='"+req.query.installment+"' ";
+  console.log('-------------------------------------------');
+  console.log(qur);
+  connection.query(qur,
+    function(err, result){
+      if(!err){
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Updated!'});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Not Updated!'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/deletetransportcheque-Service',  urlencodedParser,function (req, res){
+  var qur="DELETE FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and student_id='"+req.query.admissionno+"' and cheque_no='"+req.query.chequeno+"' and installtype='"+req.query.installmenttype+"'";
+  console.log('-------------------------------------------');
+  console.log(qur);
+  connection.query(qur,
+    function(err, result){
+      if(!err){
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Deleted!'});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Not Deleted!'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/fetchtransportdaycollection-service',  urlencodedParser,function (req, res){
+var qur1="SELECT * FROM transport.student_fee WHERE school_id='SCH002' and "+
+" academic_year='"+req.query.academicyear+"' and  (((STR_TO_DATE(paid_date1,'%m/%d/%Y')>= "+
+" STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')) and (STR_TO_DATE(paid_date1,'%m/%d/%Y')<= "+
+" STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and modeofpayment1='Cash') or "+
+" ((STR_TO_DATE(paid_date1,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')) and "+
+" (STR_TO_DATE(paid_date1,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and "+
+" modeofpayment1 in ('Cheque','Card Swipe','Transfer') and install1_status "+
+" in('processing','paid'))) or (((STR_TO_DATE(paid_date2,'%m/%d/%Y')>= "+
+" STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')) and (STR_TO_DATE(paid_date2,'%m/%d/%Y')<= "+
+" STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and modeofpayment2='Cash') or "+
+" ((STR_TO_DATE(paid_date2,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')) and "+
+" (STR_TO_DATE(paid_date2,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and "+
+" modeofpayment2 in ('Cheque','Card Swipe','Transfer') and install2_status "+
+" in('processing','paid')))";
+var qur2="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and "+
+" (STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y'))";
+var feearr=[];
+var chequearr=[];
+console.log('-------------------------------');
+console.log(qur1);
+console.log('-------------------------------');
+console.log(qur2);
+var qur3="SELECT * FROM mlzscrm.md_admission a join transport.student_fee f on(a.admission_no=f.student_id) "+
+" WHERE a.school_id='"+req.query.schoolid+"' and f.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and f.academic_year='"+req.query.academicyear+"'";
+connection.query(qur1,function(err, rows){
+       if(!err){
+         if(rows.length>0){
+         feearr=rows;
+         connection.query(qur2,function(err, rows){
+         if(!err){
+         chequearr=rows;
+         connection.query(qur3,function(err, rows){
+         if(!err){
+         res.status(200).json({'feearr': feearr,'chequearr': chequearr,'studarr':rows});
+         }
+         });
+         }
+         else
+          console.log(err);
+         });
+         }else{
+           console.log(err);
+           res.status(200).json({'returnval':'no rows'});
+         }
+       }else{
+         console.log(err);
+       }
+     });
+});
 
 function setvalue(){
   console.log("calling setvalue.....");

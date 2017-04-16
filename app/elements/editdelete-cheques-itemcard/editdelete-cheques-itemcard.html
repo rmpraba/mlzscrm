@@ -46,7 +46,7 @@
       },
       FnDeletecheque:function(e){
         this.$.editdeletecheque.toggle();
-        this.$.processingservice.deletechequeService(this.enrno,this.chequeno,this.bankname,this.chequedate,this.installmentamount,this.paiddate);
+        this.$.processingservice.deletechequeService(this.enrno,this.chequeno,this.bankname,this.chequedate,this.installmentamount,this.paiddate,this.installmenttype);
       },
       FnCancel:function(){
         this.$.editdeletecheque.toggle(); 

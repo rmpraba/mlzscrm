@@ -1,0 +1,123 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\feereceipt-card/feereceipt-card.html">
+<script type="text/javascript" src="../../scripts/jspdf.debug.js"></script>
+<script type="text/javascript" src="../../scripts/jspdf.min.js"></script>
+<script type="text/javascript" src="http://html2canvas.hertzen.com/build/html2canvas.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+<dom-module id="transport-receipt-outcard">
+  <template>
+    <style>
+      .home{
+        background-color: black;
+        color: white;
+      }
+      #btn{
+        margin-top: 2%;
+        margin-left: 25%;
+      }
+    </style>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">{{schoolname}}</a>
+      </div>
+      <ul class="nav navbar-top-links navbar-right">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" on-click="FnHome">
+          <i class="fa fa-home"></i>
+        </a>
+        </li>
+      </ul>
+    </nav>
+    <img id="imgRes" height="1px" width="1px" />
+    <div id="canvas1">
+    <div id="canvas">
+      <table>
+        <tr>
+          <td><img style="width: 100px; height: 100px;" 
+          src="../../images/schoollogo.png"></td>
+          <th colspan="5" style="text-align: center;"><h3 style="margin-left: 10px;">{{schoolname}}</h3></th>          
+        </tr>
+        <tr>
+          <th></th>
+          <th colspan="5" style="text-align: center;">{{schooladdress}}</th>
+        </tr>
+      </table>
+      <hr></hr>
+      <template  is="dom-repeat" items="{{paymentreceiptarr}}" as="pay">
+        <transport-receipt parentname="{{pay.parentname}}" receipttype="{{pay.receipttype}}" studentid="{{pay.studentid}}" studentname="{{pay.studentname}}" grade="{{pay.grade}}" installment="{{pay.installment}}" installmentdate="{{pay.installmentdate}}" installmentamount="{{pay.amount}}"  modeofpayment="{{pay.modeofpayment}}" receiveddate="{{pay.receiptdate}}" chequeno="{{pay.chequeno}}" bankname="{{pay.bankname}}" chequedate="{{pay.chequedate}}" ackno="{{pay.ackno}}" receiptno="{{pay.receiptno}}"  hidereceipt="{{pay.hidereceipt}}" hideack="{{pay.hideack}}" chequeview="{{pay.chequeview}}" transferview="{{pay.transferview}}" paiddate="{{pay.receiptdate}}" totalfees="{{pay.totalfees}}" hidecashparticular="{{pay.hidecashparticular}}" hidechequeparticular="{{pay.hidechequeparticular}}" hidetransferparticular="{{pay.hidetransferparticular}}"  hidecurrreceipt="{{pay.hidecurrreceipt}}"  fineamount="{{pay.fineamount}}" paymentarr="{{pay.paymentarr}}"></transport-receipt>
+      </template>
+      <table><tr><th><U>TERMS AND CONDITIONS FOR FEE PAYMENTS</U></th></tr>
+      <tr><td>1.  In Case the cheque is not honoured by the bank, service charge of Rs.250/- will be levied and the amount has to be<br> paid by Cash / DD.</td></tr>
+      <tr><td>2.  Fees once paid will not be refunded at any given circumstances.</td></tr>
+      <tr><td>3.  Cheque Subject to realization.</td></tr>
+      <tr><td>4.  Please retain this receipt for future correspondence.</td></tr>
+      <tr><td>5.  Cheque should be in favour of Samsidhi Educational Society.</td></tr>
+      <tr><td>
+        <strong>THIS IS SYSTEM GENERATED RECEIPT, NO SIGNATURE IS REQUIRED.</strong>
+      </td></tr>
+      </table>
+      </div>
+      </div>
+      <div class="row-buttons" id="btn">
+      <paper-button id="pdf"   style="height: 34px  !important;" on-click="downloadpdf" class="btn btn-primary center">PDF</paper-button>
+      <paper-button id="email" style="height: 34px  !important;" on-click="email" class="btn btn-primary center">Email</paper-button>
+      <paper-button id="print" style="height: 34px  !important;" on-click="print" class="btn btn-primary center">Print</paper-button>
+      </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'transport-receipt-outcard',
+      ready:function(){
+        this.schoolname=localStorage.getItem("schoolname");
+        this.schooladdress=localStorage.getItem("schooladdress");
+        this.parentname=localStorage.getItem("curr_sess_parentname");
+      },
+      Fnsetinfo:function(){
+        this.schoolname=localStorage.getItem("schoolname");
+        this.schooladdress=localStorage.getItem("schooladdress");
+        this.parentname=localStorage.getItem("curr_sess_parentname");
+      },
+      FnHome:function(){
+        document.querySelector('CRM-app').setPage('applist');
+      },
+      print:function(){
+              this.$.pdf.hidden=true;
+              this.$.email.hidden=true;
+              this.$.print.hidden=true;
+              this.$.print.home=true;
+
+            if (!window.print){
+            alert("You need NS4.x to use this print button!")
+            return
+            }
+            window.print()
+              this.$.pdf.hidden=false;
+              this.$.email.hidden=false;
+              this.$.print.hidden=false;
+      },
+      downloadpdf:function(){
+        html2canvas($("#canvas1"), {
+          onrendered: function(canvas) {
+            var imgData = canvas.toDataURL('image/png');
+            $("#imgRes").attr("src", imgData);
+            var doc = new jsPDF('p', 'mm');
+            doc.addImage(imgData, 'PNG', 10, 8);
+            doc.save('receipt.pdf');
+          }
+        });
+      }
+    });
+  })();
+  </script>
+</dom-module>

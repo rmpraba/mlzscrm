@@ -1,0 +1,108 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\..\bower_components/paper-item/paper-item.html">
+<link rel="import" href="..\..\bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="..\..\bower_components/paper-input/paper-input.html">
+<link rel="import" href="..\..\bower_components/paper-button/paper-button.html">
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js"></script>
+<script type="text/javascript" src="http://html2canvas.hertzen.com/build/html2canvas.js"></script>
+
+<dom-module id="transport-receipt">
+  <template>
+    <style>
+      .receiptcard{
+        width: 800px;
+        margin-left: 10px;
+        margin-top: 10px;
+      }
+      table{
+        width: 700px;
+        margin-top: -10px;
+        margin-bottom: -5px;
+      }
+      hr{
+        border: 1px solid grey;
+      }
+    </style>    
+    <div class="receiptcard">
+      <h4 style="margin-left: 300px;">FEE&nbsp;&nbsp;{{receipttype}}</h4><br>
+      <table>
+        <tr hidden$="{{hidereceipt}}"><td style="text-align: left;">Receipt No: {{receiptno}}</td><td style="text-align: left;"></td><td colspan="4"></td><td style="text-align: right;">Receipt Date: {{paiddate}}</td><td style="text-align: left;"></td></tr>
+
+        <tr hidden$="{{hideack}}"><td style="text-align: left;">Acknowledgement No: {{ackno}}</td><td style="text-align: left;"></td><td colspan="4"></td>
+        <td style="text-align: right;" hidden$="{{hideack}}">Acknowledgement Date: {{receiveddate}}</td><td style="text-align: left;"></td>
+        <!-- <td style="text-align: center;" hidden$="{{hidereceipt}}">Receipt Date: {{paiddate}}</td><td style="text-align: left;"></td> --></tr>
+      </table>
+      <hr></hr>
+      <table >
+        <tr><td style="text-align: left;">Enrollment No: {{studentid}}</td><td colspan="7"></td><td style="text-align: right;">Student Name: {{studentname}}</td></tr>
+        <tr><td></td><td></td><td colspan="3"></td>
+        <tr><td style="text-align: left;">Parent Name: {{parentname}}</td><td colspan="7"></td><td style="text-align: right;">Grade: {{grade}}</td></tr>
+        <!-- <tr><td style="text-align: left;">Student Name: {{studentname}}</td><td style="text-align: left;"></td><td colspan="3"></td><td style="text-align: center;">Grade: {{grade}}</td><td style="text-align: left;"></td></tr> -->
+        <tr><td></td><td></td><td colspan="3"></td></tr>
+      </table>
+      <hr></hr>
+      <table hidden$="{{hidecashparticular}}">
+        <tr style="text-align: center;"><th colspan="2" style="text-align: center;">Sl.No</th><th colspan="2" style="text-align: center;">Particulars</th><th colspan="2" style="text-align: center;">Amount</th></tr>
+      </table>
+      <hr hidden$="{{hidecashparticular}}"></hr>
+      <table hidden$="{{hidecashparticular}}">
+      <template  is="dom-repeat" items="{{paymentarr}}" as="pay">
+        <tr><td colspan="2" width="50px" style="text-align: center;">{{pay.slno}}</td><td  colspan="2" width="150px" style="text-align: center;">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{pay.installment}}</td><td colspan="2" width="100px" style="text-align: center;margin-left: 20px;">{{pay.installmentamount}}</td></tr>
+      </template>
+      </table>
+       <table hidden$="{{hidechequeparticular}}">       
+        <tr style="text-align: center;"><th colspan="2" style="text-align: center;">Sl.No</th><th colspan="3" style="text-align: center;">Particulars</th><th colspan="3" style="text-align: right;margin-left: 80px;">Bank Name</th><th colspan="2" style="text-align: center;">Cheque No</th><th colspan="2" style="text-align: center;">Cheque Date</th><th colspan="2" style="text-align: center;">Amount</th></tr>
+      </table>      
+      <hr hidden$="{{hidechequeparticular}}"></hr>
+      <table hidden$="{{hidechequeparticular}}">
+      <template  is="dom-repeat" items="{{paymentarr}}" as="pay">
+        <tr><td colspan="2" width="50px" style="text-align: center;">{{pay.slno}}</td><td  colspan="2" width="150px" style="text-align: center;">{{pay.installment}}</td><td colspan="2" width="100px" style="text-align: center;margin-left: 10px;">{{pay.bankname}}</td><td colspan="2" width="100px" style="text-align: left;margin-left: 20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{pay.chequeno}}</td><td colspan="2" width="100px" style="text-align: center;margin-left: 20px;">{{pay.chequedate}}</td><td colspan="2" width="100px" style="text-align: center;margin-left: 20px;">{{pay.installmentamount}}</td></tr>
+      </template>
+      </table>
+       <table hidden$="{{hidetransferparticular}}">
+       <!-- <template  is="dom-repeat" items="{{paymentreceiptarr}}" as="pay"> -->
+        <tr style="text-align: center;"><th colspan="2" style="text-align: center;">Sl.No</th><th colspan="3" style="text-align: center;">Particulars</th><th colspan="2" style="text-align: right;margin-left:30px;">Bank Name</th><th colspan="2" style="text-align: center;">Reference No</th><th colspan="2" style="text-align: center;">Received Date</th><th colspan="2" style="text-align: center;">Amount</th></tr>
+      </table>
+      <!-- </template> -->
+      <hr hidden$="{{hidetransferparticular}}"></hr>
+      <table hidden$="{{hidetransferparticular}}">
+      <template  is="dom-repeat" items="{{paymentarr}}" as="pay">
+        <tr><td colspan="2" width="50px" style="text-align: center;">{{pay.slno}}</td><td  colspan="2" width="150px" style="text-align: center;">{{pay.installment}}</td><td colspan="2" width="100px" style="text-align: center;margin-left: 20px;">{{pay.bankname}}</td><td colspan="2" width="100px" style="text-align: left;margin-left: 20px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{pay.chequeno}}</td><td colspan="2" width="100px" style="text-align: center;margin-left: 20px;">{{pay.chequedate}}</td><td colspan="2" width="100px" style="text-align: center;margin-left: 20px;">{{pay.installmentamount}}</td></tr>
+      </template>
+      </table>
+      <hr></hr>
+      <table hidden$="{{hidecashparticular}}">
+        <tr style="text-align: left;"><td colspan="2">Fine Amount:{{fineamount}}</td>
+        <td colspan="3" width="170px">
+         Payment Mode: {{modeofpayment}} 
+        </td><td colspan="2">Total Fee: {{totalfees}}</td></tr>
+      </table>
+      <table hidden$="{{hidechequeparticular}}">
+        <tr style="text-align: left;"><td colspan="2">Fine Amount:{{fineamount}}</td>
+        <td colspan="4" width="310px">
+         Payment Mode: {{modeofpayment}} 
+        </td><td colspan="2">Total Fee: {{totalfees}}</td></tr>
+      </table>
+      <table hidden$="{{hidetransferparticular}}">
+        <tr style="text-align: left;"><td colspan="2">Fine Amount:{{fineamount}}</td>
+        <td colspan="4" width="310px">
+         Payment Mode: {{modeofpayment}} 
+        </td><td colspan="2">Total Fee: {{totalfees}}</td></tr>
+      </table>
+      <hr></hr>
+    </div>   
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'transport-receipt',
+      ready:function(){       
+      }
+    });
+  })();
+  </script>
+</dom-module>

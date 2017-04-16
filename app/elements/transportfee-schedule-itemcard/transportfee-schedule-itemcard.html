@@ -1,0 +1,91 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="../transportfee-sch-datepicker/transportfee-sch-datepicker.html">
+
+<dom-module id="transportfee-schedule-itemcard">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      table{
+        margin-left: 15%;
+        width: 60%;
+      }
+      th{
+        padding-left: 5%;
+      }
+    </style>
+    <div>
+    <table>
+    <tr hidden><th><p>{{insamount}}{{noofinstallment}}{{zonename}}{{distanceid}}{{type}}</p></th></tr>
+    <tr><th><p>{{installment}}</p></th>
+    <th hidden$="{{flag1}}"><paper-input style="margin-top: -2%;" label="Enter Amount" value="{{amount}}"  on-change="FnChangeAmount"></paper-input></th>
+    <th hidden$="{{flag2}}"><paper-input style="margin-top: -2%;" label="Enter Percentage" value="{{percent}}"  on-change="FnChangePercent"></paper-input></th>
+    <th>
+      <transportfee-sch-datepicker></transportfee-sch-datepicker>
+    </th>
+    </tr>
+    <!-- <th><p hidden$="{{flag2}}">{{amount}}</p></th></tr> -->
+    </table>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var tempamount=0;
+    var temp=[];
+    Polymer({
+      is: 'transportfee-schedule-itemcard',
+      FnChangeAmount:function(e){
+        var obj={};
+        obj.zonename=this.zonename;
+        obj.distanceid=this.distanceid;
+        obj.installment=this.installment;
+        obj.installmentdate=localStorage.getItem("localsess_transportfeesch_date");
+        if(this.type=="amount")
+        obj.amount=this.amount;
+        if(this.type=="percent"){
+          obj.amount=parseFloat(parseFloat(this.insamount)*(parseFloat(this.percent)/100)).toFixed(2);
+        }
+        if(temp.length==0)
+        temp.push(obj);
+        else{
+        for(var i=0;i<temp.length;i++){
+          if(temp[i].installment==this.installment){
+            temp.splice(i,1);
+          }
+        }
+        temp.push(obj);
+        }
+        document.querySelector('transportfee-schedule-card').FnSetInstallment(temp);
+        // alert(JSON.stringify(temp));
+      },
+      FnChangePercent:function(e){
+        var obj={};
+        obj.zonename=this.zonename;
+        obj.distanceid=this.distanceid;
+        obj.installment=this.installment;
+        obj.installmentdate=localStorage.getItem("localsess_transportfeesch_date");
+        if(this.type=="amount")
+        obj.amount=this.amount;
+        if(this.type=="percent"){
+          obj.amount=parseFloat(parseFloat(this.insamount)*(parseFloat(this.percent)/100)).toFixed(2);
+        }
+        if(temp.length==0)
+        temp.push(obj);
+        else{
+        for(var i=0;i<temp.length;i++){
+          if(temp[i].installment==this.installment){
+            temp.splice(i,1);
+            }
+        }
+        temp.push(obj);
+        }
+        document.querySelector('transportfee-schedule-card').FnSetInstallment(temp);
+        // alert(JSON.stringify(temp));
+      }
+    });
+  })();
+  </script>
+</dom-module>
