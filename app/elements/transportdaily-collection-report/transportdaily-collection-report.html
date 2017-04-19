@@ -59,12 +59,12 @@
       <thead>
       <tr>
         <th>Sno</th><th>Enr No</th><th>Student Name</th><th>Grade</th>
-        <th>Type</th><th>Installment Type</th><th>Mode Of Payment</th><th>Cheque No</th><th>Bank Name</th><th>Cheque Date</th><th>Received Date</th><th>Receipt/Ack No</th><th>Amount</th>
+        <th>Installment Type</th><th>Mode Of Payment</th><th>Cheque No</th><th>Bank Name</th><th>Cheque Date</th><th>Received Date</th><th>Receipt/Ack No</th><th>Amount</th>
       </tr>
       </thead>
       <tbody>
       <template  is="dom-repeat" items="{{transportdaycollectionarr}}" as="item">
-        <tr><td>{{item.sno}}</td><td>{{item.studentid}}</td><td>{{item.studentname}}</td><td>{{item.grade}}</td><td>{{item.type}}</td>
+        <tr><td>{{item.sno}}</td><td>{{item.studentid}}</td><td>{{item.studentname}}</td><td>{{item.grade}}</td>
         <td>{{item.installment}}</td><td>{{item.modeofpayment}}</td><td>{{item.chequeno}}</td><td>{{item.bankname}}</td><td>{{item.chequedate}}</td><td>{{item.receiveddate}}</td>
         <td>{{item.receiptno}}</td><td>{{item.amount}}</td></tr>
       </template>

@@ -93,7 +93,7 @@
             </div>
             <div style="margin-left:12%;" hidden$="{{hiddeninstallment}}"> 
               <template  is="dom-repeat" items="{{feearr}}" as="view">
-              <transportfee-installment-card installmentid="{{view.installment}}" hiddenpayflag="{{view.hiddenpayflag}}" modeofpayment="{{view.modeofpayment}}" paidflag="{{view.paidflag}}" readonlyflag="{{view.readonlyflag}}" hiddenflag="{{view.hiddenflag}}" installment="{{view.installment}}" installmenttype="{{view.installment}}" actualamount="{{view.amount}}" amount="{{view.amount}}" discountamount="{{view.discountamount}}" installmentdate="{{view.installment_date}}" chequeno="{{view.chequeno}}" paiddate="{{view.paiddate}}" bankname="{{view.bankname}}" chequedate="{{view.chequedate}}" receiptdate="{{view.receiptdate}}" hiddencommitinput="{{view.hiddencommitinput}}" hiddencommititem="{{view.hiddencommititem}}" editdate="{{view.editdate}}" bounceflag="{{view.bounceflag}}" fineamount="{{view.fineamount}}"></transportfee-installment-card>
+              <transportfee-installment-card id="transportfeeinscard" installmentid="{{view.installment}}" hiddenpayflag="{{view.hiddenpayflag}}" modeofpayment="{{view.modeofpayment}}" paidflag="{{view.paidflag}}" readonlyflag="{{view.readonlyflag}}" hiddenflag="{{view.hiddenflag}}" installment="{{view.installment}}" installmenttype="{{view.installment}}" actualamount="{{view.amount}}" amount="{{view.amount}}" discountamount="{{view.discountamount}}" installmentdate="{{view.installment_date}}" chequeno="{{view.chequeno}}" paiddate="{{view.paiddate}}" bankname="{{view.bankname}}" chequedate="{{view.chequedate}}" receiptdate="{{view.receiptdate}}" hiddencommitinput="{{view.hiddencommitinput}}" hiddencommititem="{{view.hiddencommititem}}" editdate="{{view.editdate}}" bounceflag="{{view.bounceflag}}" fineamount="{{view.fineamount}}"></transportfee-installment-card>
               </template>
             </div>
             <div>
@@ -137,7 +137,8 @@
         this.hiddentitleflag=false;
         installment=installmentarr;       
       },
-      FnPayfee:function(){  
+      FnPayfee:function(){ 
+      // alert(JSON.stringify(installment)); 
       this.$.transportfeeservice.inserttransportfeesService(this.totalfees,this.totaldiscount,installment);
       installment=[];
       },
@@ -161,6 +162,8 @@
         // this.hiddeninstallment=true;
         this.feearr=[];
         this.hiddenaddbtn=true;
+        // document.querySelector('transportfee-installment-card').FnRefresh();
+        // this.$.transportfeeinscard.FnRefresh();
       },
       FnRefresh1:function(){
         item=[];
@@ -182,6 +185,8 @@
         // this.hiddeninstallment=true;
         this.feearr=[];
         this.hiddenaddbtn=true;
+        // document.querySelector('transportfee-installment-card').FnRefresh();
+        // this.$.transportfeeinscard.FnRefresh();
       },
       generalHandler:function(e){
         localStorage.setItem("curr_sess_paymentpattern",1);

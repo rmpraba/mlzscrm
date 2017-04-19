@@ -424,9 +424,12 @@
           </ul>
         </li>
 
-        <li id="process">
+        <li id="transportprocess">
           <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Transport Process<span class="fa arrow"></span></a>
           <ul class="nav nav-second-level">
+           <!-- <li id="zoneallocation">
+            <a href="" aria-hidden="true" on-click="FnZoneAllocation">Zone Allocation</a>
+           </li> --> 
            <li id="transportsearchreceipt">
             <a href="" aria-hidden="true" on-click="FnTransportSearchReceipt">Search Receipt</a>
            </li> 
@@ -1175,6 +1178,9 @@
         document.querySelector('app-list').setPage("searchreceipt","Search Receipt");
         document.querySelector('searchreceipt-card').callService();
         document.querySelector('searchreceipt-card').ready();
+      },
+      FnZoneAllocation:function(){
+
       },
       FnTransportSearchReceipt:function(){
         this.$.scheduleservice.fetchacademicyearService();        

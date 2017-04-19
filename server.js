@@ -26,7 +26,7 @@ app.post('/loginpage',  urlencodedParser,function (req, res)
   //console.log('hi');
   var loginarr=[];
   var rolearr=[];
-  connection.query('SELECT (select short_name from md_school where id=e.school_id) as shortname,(select address from md_school where id=e.school_id) as address,(select name from md_school where id=e.school_id) as schoolname,e.school_id,e.employee_id, e.employee_name,e.role_id, r.role_name, a.rt_dashboard, a.rt_enquiry,a.rt_admission_form,a.rt_adm_approval, a.rt_followup, a.rt_collectionentry FROM md_employee as e JOIN md_role as r JOIN md_access_rights as a on r.role_id=e.role_id and a.role_id=e.role_id where ? and ?',[user,pass],
+  connection.query('SELECT (select short_name from md_school where id=e.school_id) as shortname,(select address from md_school where id=e.school_id) as address,(select name from md_school where id=e.school_id) as schoolname,e.school_id,e.employee_id, e.employee_name,e.role_id, r.role_name FROM md_employee as e JOIN md_role as r  on r.role_id=e.role_id  where ? and ?',[user,pass],
     function(err, rows){
     if(!err)
     {
@@ -9180,7 +9180,7 @@ app.post('/fetchtransportfeesearch-service',  urlencodedParser,function (req, re
  
  var qur="SELECT * FROM transport.student_fee f join transport.student_details d on(f.student_id=d.id) "+
  " where f.school_id=d.school_id and f.academic_year=d.academic_year and f.status='mapped' and f.academic_year='"+req.query.academicyear+"' and f.school_id='"+req.query.schoolid+"' "+
- " and f.academic_year='"+req.query.academicyear+"' and f.school_id='"+req.query.schoolid+"'";
+ " and d.academic_year='"+req.query.academicyear+"' and d.school_id='"+req.query.schoolid+"'";
  console.log(qur);
  connection.query(qur,
     function(err, rows)
@@ -9237,7 +9237,7 @@ app.post('/fetchtransportfees-service',  urlencodedParser,function (req, res){
  var feesplit=[];
  var zonename="";
  var studinfo=[];
- connection.query("SELECT * FROM mlzscrm.md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.studentid+"'",function(err, rows){
+ connection.query("SELECT * FROM transport.md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.studentid+"'",function(err, rows){
  if(!err){
  if(rows.length>0){
  studinfo=rows;
@@ -9451,7 +9451,7 @@ app.post('/updatingreceiptseq-service',  urlencodedParser,function (req, res){
 
 
 app.post('/fetchstudentforreceiptsearch-service',  urlencodedParser,function (req, res){
- var qur="SELECT * FROM transport.student_fee f join mlzscrm.md_admission d on(f.student_id=d.admission_no) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and (f.install1_status in ('processing','paid') or f.install2_status in ('processing','paid'))"+
+ var qur="SELECT * FROM transport.student_fee f join transport.md_admission d on(f.student_id=d.admission_no) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and (f.install1_status in ('processing','paid') or f.install2_status in ('processing','paid'))"+
  " and d.school_id='"+req.query.schoolid+"' and d.academic_year='"+req.query.academicyear+"'";
  console.log(qur);
  connection.query(qur,
@@ -9475,7 +9475,7 @@ app.post('/fetchstudentforreceiptsearch-service',  urlencodedParser,function (re
 
 
 app.post('/fetchreceiptinfo-service',  urlencodedParser,function (req, res){
- var qur="SELECT * FROM transport.student_fee f join md_admission a on(f.student_id=a.admission_no) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and f.student_id='"+req.query.studentid+"' and a.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and a.admission_no='"+req.query.studentid+"'";
+ var qur="SELECT * FROM transport.student_fee f join transport.md_admission a on(f.student_id=a.admission_no) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and f.student_id='"+req.query.studentid+"' and a.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and a.admission_no='"+req.query.studentid+"'";
  var qur1="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"'";
  console.log(qur);
  var fees=[];
@@ -9500,7 +9500,7 @@ app.post('/fetchreceiptinfo-service',  urlencodedParser,function (req, res){
 });
 
 app.post('/fetchstudentforprocessing-service',  urlencodedParser,function (req, res){
- var qur="SELECT * FROM transport.student_fee f join mlzscrm.md_admission d on(f.student_id=d.admission_no) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and (f.install1_status in ('processing','paid') or f.install2_status in ('processing','paid')) and (f.modeofpayment1 in('Cheque','Card Swipe','Transfer') or f.modeofpayment2 in('Cheque','Card Swipe','Transfer'))"+
+ var qur="SELECT * FROM transport.student_fee f join transport.md_admission d on(f.student_id=d.admission_no) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and (f.install1_status in ('processing','paid') or f.install2_status in ('processing','paid')) and (f.modeofpayment1 in('Cheque','Card Swipe','Transfer') or f.modeofpayment2 in('Cheque','Card Swipe','Transfer'))"+
  " and d.school_id='"+req.query.schoolid+"' and d.academic_year='"+req.query.academicyear+"'";
  console.log(qur);
  connection.query(qur,
@@ -9560,7 +9560,6 @@ app.post('/edittransportcheque-Service',  urlencodedParser,function (req, res){
     });
 });
 
-
 app.post('/deletetransportcheque-Service',  urlencodedParser,function (req, res){
   var qur="DELETE FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and student_id='"+req.query.admissionno+"' and cheque_no='"+req.query.chequeno+"' and installtype='"+req.query.installmenttype+"'";
   console.log('-------------------------------------------');
@@ -9579,7 +9578,6 @@ app.post('/deletetransportcheque-Service',  urlencodedParser,function (req, res)
       }
     });
 });
-
 
 app.post('/fetchtransportdaycollection-service',  urlencodedParser,function (req, res){
 var qur1="SELECT * FROM transport.student_fee WHERE school_id='SCH002' and "+
@@ -9604,7 +9602,7 @@ console.log('-------------------------------');
 console.log(qur1);
 console.log('-------------------------------');
 console.log(qur2);
-var qur3="SELECT * FROM mlzscrm.md_admission a join transport.student_fee f on(a.admission_no=f.student_id) "+
+var qur3="SELECT * FROM transport.md_admission a join transport.student_fee f on(a.admission_no=f.student_id) "+
 " WHERE a.school_id='"+req.query.schoolid+"' and f.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and f.academic_year='"+req.query.academicyear+"'";
 connection.query(qur1,function(err, rows){
        if(!err){
