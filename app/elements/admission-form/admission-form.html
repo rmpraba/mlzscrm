@@ -738,7 +738,8 @@
         var enquiry_name=enquiry.substring(inx+1);
         localStorage.setItem("curr_sess_enquiryno",enquiry_no);
         localStorage.setItem("curr_sess_enquiryname",enquiry_name);
-        this.$.admissionservice.callFetchenquiryinfoService();
+        this.$.admissionservice.callCheckApplicationFeePaidStatus(enquiry_no);
+        // this.$.admissionservice.callFetchenquiryinfoService();
       },
       maleHandler:function(){
         if(document.querySelector("#admnboy").checked==true)

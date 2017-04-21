@@ -1340,11 +1340,14 @@
       FnSetRoleView:function(arr){
         // alert(JSON.stringify(arr));
         for(var i=0;i<arr.length;i++){
-          var id=((arr[i].menu_name).replace(/[^a-zA-Z0-9]/g, '')).toLowerCase();
+          var id=((arr[i].menu_id).replace(/[^a-zA-Z0-9]/g, '')).toLowerCase();
+          // alert(id);
           if((arr[i].status).toLowerCase()=="true"){
+          // alert('true');
           document.getElementById(''+id).style.visibility="visible";
           }
           if((arr[i].status).toLowerCase()=="false"){
+          // alert('false');
           document.getElementById(''+id).style.display="none";
           }
         }

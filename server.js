@@ -1391,7 +1391,6 @@ app.post('/verifymobileno',  urlencodedParser,function (req, res)
 app.post('/searchenquiry',  urlencodedParser,function (req, res){
 
     var qur="SELECT * FROM student_enquiry_details WHERE school_id='"+req.query.schoolid+"' and (enquiry_no like '%"+req.query.enquiryno+"%' or enquiry_name like '%"+req.query.enquiryno+"%') and status='Enquired' ";
-
     var checkqur="SELECT * FROM student_enquiry_details WHERE school_id='"+req.query.schoolid+"' and (enquiry_no like '%"+req.query.enquiryno+"%' or enquiry_name like '%"+req.query.enquiryno+"%') and status='Admitted'";
    console.log(qur);
    console.log(checkqur);
@@ -1556,6 +1555,31 @@ app.post('/checkregfeepaidstatus-service',  urlencodedParser,function (req, res)
     {
       console.log(err);
       res.status(200).json({'returnval': 'no feecode'});
+    }
+  }
+  else{
+     console.log(err);
+  }
+});
+});
+
+
+app.post('/checkapplicationfeepaidstatus-service',  urlencodedParser,function (req, res){
+    var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and (enquiry_no = '"+req.query.enquiryno+"' or admission_no='"+req.query.enquiryno+"') and installment='Application Fee' ";
+   console.log(qur);
+    connection.query(qur,
+    function(err, rows)
+    {
+    if(!err)
+    {
+    if(rows.length>0)
+    {
+      res.status(200).json({'returnval': rows});
+    }
+    else
+    {
+      console.log(err);
+      res.status(200).json({'returnval': 'no rows'});
     }
   }
   else{
@@ -8339,7 +8363,7 @@ app.post('/updatenonpaidfee-service',  urlencodedParser,function (req, res){
   var updatequery="update mlzscrm.due_report set discountkitfee='0',discountannualfee='0',discounttutionfee='0',discounttotal='0', "+
   " commitkitfee='0',commitannualfee='0',ins1annualfee='0',ins1tutionfee='0', "+
   " ins2annualfee='0',ins2tutionfee='0',ins3annualfee='0',ins3tutionfee='0', "+
-  " WHERE school_id='"+req.query.schoolid+"' and pattern_flag='"+req.query.installmenttypeflag+"'";
+  " WHERE school_id='"+req.query.schoolid+"' and pattern_flag is null";
   console.log('-----------discount update-------------');
   console.log(updatequery); 
   connection.query(updatequery,function(err, result){

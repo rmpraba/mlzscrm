@@ -466,6 +466,17 @@
         on-response="updateadmissionchecklistResponse"
         debounce-duration="300"
         >
+        
+        <iron-ajax
+        method="post"
+        id="checkapplicationfeepaidstatusajax"
+        url="{{checkapplicationfeepaidstatusurl}}"
+        params="{{checkapplicationfeepaidstatusparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="checkapplicationfeepaidstatusResponse"
+        debounce-duration="300"
+        >
 
   </template>
   <script>
@@ -541,6 +552,21 @@
         }
         // else
             // alert('Please pay Application fee!');
+      },
+      callCheckApplicationFeePaidStatus:function(enquiryno){
+        this.checkapplicationfeepaidstatusurl=sessionStorage.getItem("addrinfo")+"/checkapplicationfeepaidstatus-service";
+        var obj={"enquiryno":"","schoolid":""}
+        obj.enquiryno=enquiryno;
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.checkapplicationfeepaidstatusparam=obj;
+        this.$.checkapplicationfeepaidstatusajax.generateRequest();
+      },
+      checkapplicationfeepaidstatusResponse:function(e){
+
+        if(e.detail.response.returnval=='no rows')
+            alert('Please Pay Application Fee!! Before Admission...');
+        else
+          this.callFetchenquiryinfoService();  
       },
       callFetchenquiryinfoService:function(){
         this.fetchenquiryinfourl=sessionStorage.getItem("addrinfo")+"/fetchenquiryinfo";
