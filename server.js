@@ -7859,7 +7859,8 @@ app.post('/insertduereportstructure-service',  urlencodedParser,function (req, r
     kitfee:req.query.kitfee,
     annualfee:req.query.annualfee,
     tutionfee:req.query.tutionfee,
-    totalfee:req.query.total
+    totalfee:req.query.total,
+    fee_code:req.query.feecode
   };
 
   // connection.query("DELETE FROM due_report",function(err, result){
@@ -8356,15 +8357,66 @@ app.post('/duereportdiscountlumpsumupdate-service2',  urlencodedParser,function 
 });
 
 
-app.post('/updatenonpaidfee-service',  urlencodedParser,function (req, res){
+// app.post('/updatenonpaidfee-service',  urlencodedParser,function (req, res){
 
+//   var schoolid={school_id:req.query.schoolid};
+
+//   var updatequery="update mlzscrm.due_report set discountkitfee='0',discountannualfee='0',discounttutionfee='0',discounttotal='0', "+
+//   " commitkitfee='0',commitannualfee='0',ins1annualfee='0',ins1tutionfee='0', "+
+//   " ins2annualfee='0',ins2tutionfee='0',ins3annualfee='0',ins3tutionfee='0', "+
+//   " WHERE school_id='"+req.query.schoolid+"' and pattern_flag is null";
+//   console.log('-----------non paid update-------------');
+//   console.log(updatequery); 
+//   connection.query(updatequery,function(err, result){
+//       if(!err){   
+//         res.status(200).json({'returnval': 'Updated!'});
+//       } else {
+//         console.log(err);
+//       }
+//   });
+// });
+
+app.post('/fetchnonpaidfeecode-service',  urlencodedParser,function (req, res){
   var schoolid={school_id:req.query.schoolid};
+  var fetchquery="select * from mlzscrm.due_report where school_id='"+req.query.schoolid+"' and acttotalpaidfee is null";
+  // var fetchquery1="select * from mlzscrm.due_report where school_id='"+req.query.schoolid+"' and acttotalpaidfee is null";
+  console.log('----------- fetch non paid -------------');
+  console.log(fetchquery); 
+  connection.query(fetchquery,function(err, rows){
+      if(!err){   
+        res.status(200).json({'returnval': rows});
+      } else {
+        console.log(err);
+      }
+  });
+});
 
-  var updatequery="update mlzscrm.due_report set discountkitfee='0',discountannualfee='0',discounttutionfee='0',discounttotal='0', "+
-  " commitkitfee='0',commitannualfee='0',ins1annualfee='0',ins1tutionfee='0', "+
-  " ins2annualfee='0',ins2tutionfee='0',ins3annualfee='0',ins3tutionfee='0', "+
-  " WHERE school_id='"+req.query.schoolid+"' and pattern_flag is null";
-  console.log('-----------discount update-------------');
+app.post('/fetchnonpaidfeecodestructure-service',  urlencodedParser,function (req, res){
+  var schoolid={school_id:req.query.schoolid};
+  var fetchquery="select * from mlzscrm.md_fee_splitup_master where school_id='"+req.query.schoolid+"'";
+  console.log('----------- fetch non paid -------------');
+  console.log(fetchquery); 
+  connection.query(fetchquery,function(err, rows){
+      if(!err){   
+        res.status(200).json({'returnval': rows});
+      } else {
+        console.log(err);
+      }
+  });
+});
+
+app.post('/updatenonpaidfee-service',  urlencodedParser,function (req, res){
+  var schoolid={school_id:req.query.schoolid};
+  var updatequery="update due_report set actcommitkitfee='"+req.query.commitkitfee+"',actcommitannualfee='"+req.query.commitannualfee+"', "+
+  " actins1annualfee='"+req.query.ins1annualfee+"',actins1tutionfee='"+req.query.ins1tutionfee+"', "+
+  " actins2annualfee='"+req.query.ins2annualfee+"',actins2tutionfee='"+req.query.ins2tutionfee+"' , "+
+  " actins3annualfee='"+req.query.ins3annualfee+"',actins3tutionfee='"+req.query.ins3tutionfee+"', "+
+  " duecommitkitfee='"+req.query.commitkitfee+"',duecommitannualfee='"+req.query.commitannualfee+"', "+
+  " dueins1annualfee='"+req.query.ins1annualfee+"',dueins1tutionfee='"+req.query.ins1tutionfee+"', "+
+  " dueins2annualfee='"+req.query.ins2annualfee+"',dueins2tutionfee='"+req.query.ins2tutionfee+"' , "+
+  " dueins3annualfee='"+req.query.ins3annualfee+"',dueins3tutionfee='"+req.query.ins3tutionfee+"',duetotalpaidfee=totalfee,pattern_flag='NP'  "+
+  " where admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"'";
+  console.log('----------- update non paid -------------');
   console.log(updatequery); 
   connection.query(updatequery,function(err, result){
       if(!err){   
@@ -8373,19 +8425,60 @@ app.post('/updatenonpaidfee-service',  urlencodedParser,function (req, res){
         console.log(err);
       }
   });
-
 });
 
+app.post('/updatenonpaidotherfee-service',  urlencodedParser,function (req, res){
+  var schoolid={school_id:req.query.schoolid};
+  var updatequery="update mlzscrm.due_report set discountkitfee=0,discountannualfee=0,discounttutionfee=0, "+
+  " discounttotal=0,commitkitfee=0,commitannualfee=0,ins1annualfee=0,ins1tutionfee=0, "+
+  " ins2annualfee=0,ins2tutionfee=0,ins3annualfee=0,ins3tutionfee=0,totalpaidfee=0 WHERE school_id='"+req.query.schoolid+"' and totalpaidfee is null";
+  console.log('-----------non paid update-------------');
+  console.log(updatequery); 
+  connection.query(updatequery,function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+  });
+});
+
+app.post('/fetchthirdparty-service',  urlencodedParser,function (req, res){
+  var schoolid={school_id:req.query.schoolid};
+  var fetchquery="select distinct(s.admission_no) from mlzscrm.due_report d "+
+  " join mlzscrm.md_student_paidfee s on(d.admission_no=s.admission_no) "+
+  " where s.payment_through='thirdparty' and s.mode_of_payment='Third Party' and s.school_id='"+req.query.schoolid+"' and d.school_id='"+req.query.schoolid+"'";
+  console.log('-----------fetch tp stud-------------');
+  console.log(fetchquery); 
+  connection.query(fetchquery,function(err, rows){
+      if(!err){   
+        res.status(200).json({'returnval': rows});
+      } else {
+        console.log(err);
+      }
+  });
+});
+
+app.post('/updatethirdparty-service',  urlencodedParser,function (req, res){
+  var schoolid={school_id:req.query.schoolid};
+  var updatequery="update mlzscrm.due_report set payment_through='Paid through NEEV' "+
+  " where admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"' ";
+  console.log('-----------tp update-------------');
+  console.log(updatequery); 
+  connection.query(updatequery,function(err, result){
+      if(!err){   
+        res.status(200).json({'returnval': 'Updated!'});
+      } else {
+        console.log(err);
+      }
+  });
+});
 
 app.post('/fetchfeestructureforcustompattern-service',  urlencodedParser,function (req, res){
-
   var schoolid={school_id:req.query.schoolid};
-
   var qur1="SELECT * FROM md_admission WHERE admission_no='"+req.query.admissionno+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";
-
   var qur2="SELECT *,(select grade_name from grade_master where grade_id=grade) as gradename FROM mlzscrm.md_fee_splitup_master where school_id='"+req.query.schoolid+"'";
-
- console.log('-----------custom pattern-------------');
+  console.log('-----------custom pattern-------------');
   console.log(qur1);
   console.log(qur2);
   var admnarr=[];
