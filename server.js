@@ -9747,6 +9747,80 @@ connection.query(qur1,function(err, rows){
      });
 });
 
+app.post('/fetchallstudentforzone-service',  urlencodedParser,function (req, res){
+  var qur="SELECT * FROM mlzscrm.md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and transport_availed='yes'";
+  console.log('-------------------------------------------');
+  console.log(qur);
+  connection.query(qur,
+    function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/fetchstudentinfoforzoneallocation-service',  urlencodedParser,function (req, res){
+  var qurr="SELECT * FROM transport.student_fee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"' and status='mapped'";
+  var qur="SELECT * FROM mlzscrm.md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.studentid+"'";
+  console.log('-------------------------------------------');
+  console.log(qurr);
+  console.log(qur);
+  connection.query(qurr,function(err, rows){
+  if(!err){
+  if(rows.length==0){
+  connection.query(qur,
+    function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+    }
+  else
+    res.status(200).json({'returnval': 'Already Mapped!!'});
+  }
+  });
+});
+
+
+app.post('/allocatezone-service',  urlencodedParser,function (req, res){
+  // var qur="SELECT * FROM transport.student_fee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"' and status='mapped'";
+  var queryy="insert into transport.student_fee values('"+req.query.schoolid+"','"+req.query.studentid+"',(select id from transport.md_zone where zone_name='"+req.query.zonename+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),'','',0,0,'"+req.query.fees+"',0,'','','','',(SELECT distinct(start_date) FROM transport.transport_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),(SELECT distinct(end_date) FROM transport.transport_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),'Two-Way','"+req.query.updatedby+"',STR_TO_DATE('"+req.query.currdate+"','%Y/%m/%d'),'mapped','','',0,0,'"+req.query.academicyear+"','','','','','')";
+  console.log('-------------------------------------------');
+  console.log(queryy);
+  
+  connection.query(queryy,function(err, rows){
+      if(!err)
+      {
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      }
+      else
+      {
+        console.log(err);
+      }
+  });
+
+});
+
 function setvalue(){
   console.log("calling setvalue.....");
 }

@@ -164,7 +164,37 @@
         on-response="fetchtransportdaycollectionResponse"
         debounce-duration="300"
         > 
+    <iron-ajax
+        method="post"
+        id="fetchallstudentforzoneajax"
+        url="{{fetchallstudentforzoneurl}}"
+        params="{{fetchallstudentforzoneparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallstudentforzoneResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchstudentinfoforzoneallocationajax"
+        url="{{fetchstudentinfoforzoneallocationurl}}"
+        params="{{fetchstudentinfoforzoneallocationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentinfoforzoneallocationResponse"
+        debounce-duration="300"
+        >
         
+    <iron-ajax
+        method="post"
+        id="allocatezoneajax"
+        url="{{allocatezoneurl}}"
+        params="{{allocatezoneparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="allocatezoneResponse"
+        debounce-duration="300"
+        >  
   </template>
   <script>
   (function() {
@@ -182,6 +212,44 @@
     var paymentarr=[];
     Polymer({
       is: 'transportfee-service',
+      fetchallstudentforzoneService:function(){
+        this.fetchallstudentforzoneurl=sessionStorage.getItem("addrinfo")+"/fetchallstudentforzone-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.fetchallstudentforzoneparam=obj;
+        this.$.fetchallstudentforzoneajax.generateRequest();
+      },
+      fetchallstudentforzoneResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        if(arr!='no rows'){
+          document.querySelector('zonetostudent-card').autocompletearr(arr);
+        }
+      },
+      fetchStudentInfoForZoneAllocation:function(studentid){
+        this.fetchstudentinfoforzoneallocationurl=sessionStorage.getItem("addrinfo")+"/fetchstudentinfoforzoneallocation-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studentid;
+        this.fetchstudentinfoforzoneallocationparam=obj;
+        this.$.fetchstudentinfoforzoneallocationajax.generateRequest();
+      },
+      fetchstudentinfoforzoneallocationResponse:function(e){
+        var arr=e.detail.response.returnval;
+        if(e.detail.response.returnval=='Already Mapped!!'){
+          alert('Zone Already Mapped!!');
+        }
+        else{
+        if(arr!='no rows'){
+        document.querySelector('zonetostudent-card').studentid=arr[0].admission_no;
+        document.querySelector('zonetostudent-card').studentname=arr[0].student_name;
+        document.querySelector('zonetostudent-card').grade=arr[0].class_for_admission;
+        document.querySelector('zonetostudent-card').parentname=arr[0].father_name;
+        }
+        }
+      },
       fetchzoneService:function(){
         this.fetchzoneurl=sessionStorage.getItem("addrinfo")+"/fetchzone-service";
         var obj={"schoolid":"","prefixid":""};
@@ -193,6 +261,7 @@
       fetchzoneResponse:function(e){
         var arr=e.detail.response.returnval;
         document.querySelector('transportfee-schedule-card').zonearr=arr;
+        document.querySelector('zonetostudent-card').zonearr=arr;
       },
       fetchzonefeeService:function(distanceid){
         this.fetchzonefeeurl=sessionStorage.getItem("addrinfo")+"/fetchzonefee-service";
@@ -206,8 +275,36 @@
       fetchzonefeeResponse:function(e){
         var arr=e.detail.response.returnval;
         // alert(JSOn.stringify(arr));
-        if(arr!='no rows')
+        if(arr!='no rows'){
         document.querySelector('transportfee-schedule-card').fees=arr[0].fees;
+        document.querySelector('zonetostudent-card').fees=arr[0].fees;
+        }
+      },
+      FnAllocateZone:function(studentid,studentname,grade,fees,zone,zoneid,parentname){
+        this.allocatezoneurl=sessionStorage.getItem("addrinfo")+"/allocatezone-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.distanceid=zoneid;
+        obj.studentid=studentid;
+        obj.studentname=studentname;
+        obj.grade=grade;
+        obj.fees=fees;
+        obj.zonename=zone;
+        obj.zoneid=zoneid;
+        obj.parentname=parentname;
+        obj.updatedby=localStorage.getItem("employeeid"); 
+        var d=new Date();
+        var dat=d.getDate();
+        var mon=d.getMonth()+1;
+        var yr=d.getFullYear();
+        obj.currdate=yr+"/"+mon+"/"+dat;
+        this.allocatezoneparam=obj;
+        this.$.allocatezoneajax.generateRequest();
+      },
+      allocatezoneResponse:function(e){
+        alert('Zone Allocation Done!!');
+        document.querySelector('zonetostudent-card').FnRefresh();
       },
       inserttransportfeeService:function(arr){
         this.inserttransportfeeschurl=sessionStorage.getItem("addrinfo")+"/inserttransportsch-service";

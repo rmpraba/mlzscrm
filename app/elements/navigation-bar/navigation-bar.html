@@ -427,9 +427,9 @@
         <li id="transportprocess">
           <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Transport Process<span class="fa arrow"></span></a>
           <ul class="nav nav-second-level">
-           <!-- <li id="zoneallocation">
-            <a href="" aria-hidden="true" on-click="FnZoneAllocation">Zone Allocation</a>
-           </li> --> 
+           <li id="zoneallocation">
+            <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezoneallocation" on-click="FnZoneAllocation">Zone Allocation</a>
+           </li> 
            <li id="transportsearchreceipt">
             <a href="" aria-hidden="true" on-click="FnTransportSearchReceipt">Search Receipt</a>
            </li> 
@@ -485,6 +485,23 @@
     </div>
   </nav>
 
+ <div class="modal fade bd-example-modal-lg" id="togglezoneallocation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="center-block event-title" id="eventTitle">
+                Zone Allocation
+              </h4>
+            </div>
+            <div class="modal-body">
+              <zonetostudent-card></zonetostudent-card>
+            </div>
+          </div>
+        </div>
+  </div>
  <div class="modal fade bd-example-modal-lg" id="addEnquiry" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
@@ -501,7 +518,7 @@
             </div>
           </div>
         </div>
-      </div>
+  </div>
     <div class="modal fade bd-example-modal-lg" id="addDetailedEnquiry" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -1180,7 +1197,10 @@
         document.querySelector('searchreceipt-card').ready();
       },
       FnZoneAllocation:function(){
-
+        // document.querySelector('app-list').setPage("zonetostudent-card","Zone Allocation");
+        document.querySelector('zonetostudent-card').callService();
+        this.$.transportfeeservice.fetchzoneService();
+        document.querySelector('zonetostudent-card').ready();
       },
       FnTransportSearchReceipt:function(){
         this.$.scheduleservice.fetchacademicyearService();        
