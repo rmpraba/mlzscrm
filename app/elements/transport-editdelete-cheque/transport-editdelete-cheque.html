@@ -31,14 +31,11 @@
         </div>
     </div>
      <div>
-      <table class="table table-hover" id="bounceprocessreport">
+      <table class="table table-hover" id="bounceprocessreport" style="width: 100%;">
       <thead>
-      <!-- <tr>
-        <th>Sno</th><th>Student ID</th><th>Student Name</th><th>Installment Type</th><th>Cheque No</th><th>Bank Name</th><th>Cheque Date</th><th>Edit/Delete</th>
-      </tr> -->      
       
         <template  is="dom-repeat" items="{{chequearr}}" as="item">
-        <tr><th colspan="{{item.span}}"><transport-editdelete-cheque-itemcard sno="{{item.sno}}" studentid="{{item.student_id}}" studentname="{{item.name}}" installmenttype="{{item.installtype}}" chequeno="{{item.cheque_no}}" bankname="{{item.bank_name}}" chequedate="{{item.cheque_date}}" hidebtn="{{item.hidebtn}}"></transport-editdelete-cheque-itemcard>
+        <tr style="width: 100%;"><th><transport-editdelete-cheque-itemcard sno="{{item.sno}}" studentid="{{item.student_id}}" studentname="{{item.name}}" installmenttype="{{item.installtype}}" chequeno="{{item.cheque_no}}" bankname="{{item.bank_name}}" chequedate="{{item.cheque_date}}" hidebtn="{{item.hidebtn}}"></transport-editdelete-cheque-itemcard>
         </th></tr>
         </template>      
       
