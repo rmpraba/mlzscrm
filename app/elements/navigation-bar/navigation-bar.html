@@ -486,22 +486,23 @@
   </nav>
 
  <div class="modal fade bd-example-modal-lg" id="togglezoneallocation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <h4 class="center-block event-title" id="eventTitle">
-                Zone Allocation
-              </h4>
-            </div>
-            <div class="modal-body">
-              <zonetostudent-card></zonetostudent-card>
-            </div>
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Zone Allocation 
+            </h4>
+          </div>
+          <div class="modal-body">
+            <zonetostudent-card></zonetostudent-card>
           </div>
         </div>
-  </div>
+      </div>
+ </div>
+
  <div class="modal fade bd-example-modal-lg" id="addEnquiry" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
@@ -1201,6 +1202,7 @@
         document.querySelector('zonetostudent-card').callService();
         this.$.transportfeeservice.fetchzoneService();
         document.querySelector('zonetostudent-card').ready();
+        document.querySelector('zonetostudent-card').FnRefresh();
       },
       FnTransportSearchReceipt:function(){
         this.$.scheduleservice.fetchacademicyearService();        

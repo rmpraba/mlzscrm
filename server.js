@@ -9390,6 +9390,81 @@ app.post('/fetchtransportfees-service',  urlencodedParser,function (req, res){
   });
 });
 
+app.post('/searchtransportfeepaidinfo-service1',  urlencodedParser,function (req, res){
+ var qur="SELECT * FROM transport.student_fee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and student_id='"+req.query.studentid+"' and "+
+ " status='mapped' and ((install1_status in('processing','paid')) or (install2_status in('processing','paid'))) ";
+ var qur1="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"'";
+ console.log(qur);
+ var paidarr=[];
+ connection.query(qur,function(err, rows)
+    {
+      if(!err)
+      {
+        if(rows.length==0){
+          res.status(200).json({'paidarr': "no rows",'paidcheque': "no rows"});
+        }
+        else{
+          paidarr=rows;
+          connection.query(qur1,function(err, rows){
+          if(!err){
+          res.status(200).json({'paidarr': paidarr,'paidcheque': rows});
+          }
+          });
+        } 
+      } 
+      else
+      {
+        console.log(err);
+      }
+    });
+});
+
+
+app.post('/fetchtransportfees-service1',  urlencodedParser,function (req, res){
+ 
+ var qur1="SELECT zone_name from transport.md_zone where id in(SELECT zone_id FROM transport.student_fee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"') and academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"'";
+ // var qur2="SELECT * FROM transport_fee_schedule";
+ console.log(qur1);
+ var feesplit=[];
+ var zonename="";
+ var studinfo=[];
+ connection.query("SELECT * FROM mlzscrm.md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.studentid+"'",function(err, rows){
+ if(!err){
+ if(rows.length>0){
+ studinfo=rows;
+ connection.query(qur1,function(err, rows){
+      if(!err){
+        if(rows.length>0){
+          zonename=rows[0].zone_name;
+          connection.query("SELECT * FROM mlzscrm.transport_fee_schedule WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and zone_name='"+zonename+"'",function(err, rows){
+          if(!err){
+          if(rows.length>0){
+          feesplit=rows;
+          connection.query("SELECT sum(amount) as total FROM mlzscrm.transport_fee_schedule WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and zone_name='"+zonename+"'",function(err, rows){
+          if(!err)            
+          res.status(200).json({'studinfo':studinfo,'total': rows[0].total,'zonename':zonename,'feesplit':feesplit});
+          });
+          }
+          else
+          res.status(200).json({'returnval': 'no rows'});
+          }
+        });
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      } 
+      else {
+        console.log(err);
+      }
+    });
+  }
+  }
+  });
+});
+
+
 app.post('/fetchreceiptseq-service',  urlencodedParser,function (req, res){
  var qur="SELECT transport_receipt_seq FROM receipt_sequence";
  console.log(qur);
