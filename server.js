@@ -3,9 +3,13 @@
  var email   = require("emailjs/email");
  var connection = mysql.createConnection({
   host     : 'localhost',
-  port     : '3306',
-  user     : 'root',
-  password : 'admin',
+  // port     : '3306',
+  // user     : 'root',
+  // password : 'admin',
+  // database : 'mlzscrm'
+  port     : '60841',
+  user     : 'admin8k1QrR9',
+  password : 'gBH5PqAxBWjL',
   database : 'mlzscrm'
  });
 
@@ -9772,20 +9776,20 @@ app.post('/deletetransportcheque-Service',  urlencodedParser,function (req, res)
 });
 
 app.post('/fetchtransportdaycollection-service',  urlencodedParser,function (req, res){
-var qur1="SELECT * FROM transport.student_fee WHERE school_id='SCH002' and "+
+var qur1="SELECT * FROM transport.student_fee WHERE school_id='"+req.query.schoolid+"' and "+
 " academic_year='"+req.query.academicyear+"' and  (((STR_TO_DATE(paid_date1,'%m/%d/%Y')>= "+
 " STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')) and (STR_TO_DATE(paid_date1,'%m/%d/%Y')<= "+
-" STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and modeofpayment1='Cash') or "+
+" STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and modeofpayment1='Cash' and school_id='"+req.query.schoolid+"') or "+
 " ((STR_TO_DATE(paid_date1,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')) and "+
 " (STR_TO_DATE(paid_date1,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and "+
 " modeofpayment1 in ('Cheque','Card Swipe','Transfer') and install1_status "+
-" in('processing','paid'))) or (((STR_TO_DATE(paid_date2,'%m/%d/%Y')>= "+
+" in('processing','paid')) and school_id='"+req.query.schoolid+"') or (((STR_TO_DATE(paid_date2,'%m/%d/%Y')>= "+
 " STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')) and (STR_TO_DATE(paid_date2,'%m/%d/%Y')<= "+
-" STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and modeofpayment2='Cash') or "+
+" STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and modeofpayment2='Cash' and school_id='"+req.query.schoolid+"') or "+
 " ((STR_TO_DATE(paid_date2,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')) and "+
 " (STR_TO_DATE(paid_date2,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and "+
 " modeofpayment2 in ('Cheque','Card Swipe','Transfer') and install2_status "+
-" in('processing','paid')))";
+" in('processing','paid')) and school_id='"+req.query.schoolid+"')";
 var qur2="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and "+
 " (STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y'))";
 var feearr=[];
@@ -9800,6 +9804,7 @@ connection.query(qur1,function(err, rows){
        if(!err){
          if(rows.length>0){
          feearr=rows;
+         console.log(feearr.length);
          connection.query(qur2,function(err, rows){
          if(!err){
          chequearr=rows;
