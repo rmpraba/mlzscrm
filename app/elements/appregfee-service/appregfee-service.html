@@ -530,6 +530,7 @@
         obj.fineamount=0;  
         obj.feecashcount=0;   
         obj.createdby=localStorage.getItem("employeeid");     
+        obj.type=localStorage.getItem("curr_sess_feetypepaymentflag");
         this.insertcashfeesparam=obj;    
         this.$.insertcashfeesajax.generateRequest();
         cash=[];
