@@ -3,14 +3,14 @@
  var email   = require("emailjs/email");
  var connection = mysql.createConnection({
   host     : 'localhost',
-  // port     : '3306',
-  // user     : 'root',
-  // password : 'admin',
-  // database : 'mlzscrm'
-  port     : '60841',
-  user     : 'admin8k1QrR9',
-  password : 'gBH5PqAxBWjL',
+  port     : '3306',
+  user     : 'root',
+  password : 'admin',
   database : 'mlzscrm'
+  // port     : '60841',
+  // user     : 'admin8k1QrR9',
+  // password : 'gBH5PqAxBWjL',
+  // database : 'mlzscrm'
  });
 
 var bodyParser = require('body-parser');
@@ -9697,7 +9697,7 @@ app.post('/fetchreceiptinfo-service',  urlencodedParser,function (req, res){
 
 app.post('/fetchstudentforprocessing-service',  urlencodedParser,function (req, res){
  var qur="SELECT * FROM transport.student_fee f join mlzscrm.md_admission d on(f.student_id=d.admission_no) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and (f.install1_status in ('processing','paid') or f.install2_status in ('processing','paid')) and (f.modeofpayment1 in('Cheque','Card Swipe','Transfer') or f.modeofpayment2 in('Cheque','Card Swipe','Transfer'))"+
- " and d.school_id='"+req.query.schoolid+"' and d.academic_year='"+req.query.academicyear+"'";
+ " and d.school_id='"+req.query.schoolid+"' and d.academic_year='"+req.query.academicyear+"' and f.academic_year='"+req.query.academicyear+"'";
  console.log(qur);
  connection.query(qur,
     function(err, rows)
@@ -9719,7 +9719,7 @@ app.post('/fetchstudentforprocessing-service',  urlencodedParser,function (req, 
 });
 
 app.post('/fetchtransportchequeforeditordelete-service',  urlencodedParser,function (req, res){
-  var qur="SELECT * FROM transport.cheque_details where school_id='"+req.query.schoolid+"' and (student_id like '%"+req.query.searchvalue+"%' or cheque_no like '%"+req.query.searchvalue+"%')";
+  var qur="SELECT * FROM transport.cheque_details where school_id='"+req.query.schoolid+"' and (student_id like '%"+req.query.searchvalue+"%' or cheque_no like '%"+req.query.searchvalue+"%') and academic_year='"+req.query.academicyear+"'";
   console.log('-------------------------------------------');
   console.log(qur);
   connection.query(qur,
@@ -9758,13 +9758,24 @@ app.post('/edittransportcheque-Service',  urlencodedParser,function (req, res){
 
 app.post('/deletetransportcheque-Service',  urlencodedParser,function (req, res){
   var qur="DELETE FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and student_id='"+req.query.admissionno+"' and cheque_no='"+req.query.chequeno+"' and installtype='"+req.query.installmenttype+"'";
+  if(req.query.installmenttype=='Installment1')
+  var qur1="UPDATE transport.student_fee set install1_status='Deleted' WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.admissionno+"'";
+  if(req.query.installmenttype=='Installment2')
+  var qur1="UPDATE transport.student_fee set install2_status='Deleted' WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.admissionno+"'";
   console.log('-------------------------------------------');
   console.log(qur);
-  connection.query(qur,
-    function(err, result){
+  console.log(qur1);
+  console.log('-------------------------------------------');
+  connection.query(qur,function(err, result){
       if(!err){
         if(result.affectedRows>0){
+        connection.query(qur1,function(err, result){
+          if(!err){
           res.status(200).json({'returnval': 'Deleted!'});
+          }
+          else
+          res.status(200).json({'returnval': 'Not Deleted!'}); 
+        });
         } else {
           console.log(err);
           res.status(200).json({'returnval': 'Not Deleted!'});
@@ -9791,7 +9802,7 @@ var qur1="SELECT * FROM transport.student_fee WHERE school_id='"+req.query.schoo
 " modeofpayment2 in ('Cheque','Card Swipe','Transfer') and install2_status "+
 " in('processing','paid')) and school_id='"+req.query.schoolid+"')";
 var qur2="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and "+
-" (STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y'))";
+" (STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and cheque_status in('paid','processing','cleared')";
 var feearr=[];
 var chequearr=[];
 console.log('-------------------------------');
