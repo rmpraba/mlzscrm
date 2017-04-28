@@ -1213,7 +1213,7 @@
         var collection=[];
         for(var i=0;i<feearr.length;i++){
           if(feearr[i].install1_status=="cleared"||feearr[i].install1_status=="paid"||feearr[i].install1_status=="processing"){
-            alert(feearr[i].install1_status);
+            // alert(feearr[i].install1_status);
             var obj={};
             obj.studentid=feearr[i].student_id;
             obj.installment="Installment1";
@@ -1224,7 +1224,7 @@
             collection.push(obj);
           }
           if(feearr[i].install2_status=="cleared"||feearr[i].install2_status=="paid"||feearr[i].install2_status=="processing"){
-            alert(feearr[i].install2_status);
+            // alert(feearr[i].install2_status);
             var obj={};
             obj.studentid=feearr[i].student_id;
             obj.installment="Installment2";

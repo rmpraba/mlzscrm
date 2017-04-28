@@ -195,7 +195,7 @@ Polymer({
          item=autocompletearr;
       },
       FnSearchStudent:function(e){
-      this.FnRefresh();  
+      this.FnRefresh1();  
       if(e.keyCode==13|| e.keyCode==40)
       this.querySelector('#zoneallocationinput').focus();
       var arr=[];
@@ -277,6 +277,27 @@ Polymer({
       this.querySelector('#zoneallocationinput').style.visibility='hidden';
       this.itemArray=[];
       this.value="";
+      this.studentid="";
+      this.parentname="";
+      this.fees="";
+      // this.zonearr="";
+      this.grade="";
+      zoneid="";
+      zonename="";
+      this.feearr="";
+      this.hidezonebtn=false;
+      this.hiddenpayment=true;
+      this.hiddeninstallment=true;
+      document.querySelector('#transportfeegeneral1').checked=true;
+      document.querySelector('#transportfeelumpsum1').checked=false;
+      localStorage.setItem("curr_sess_paymentpattern",1);
+    },
+    FnRefresh1:function(){
+      document.querySelector('#zoneallocationinput').selected=-1;
+      document.querySelector('#zoneallocationzone').selected=-1;
+      this.querySelector('#zoneallocationinput').style.visibility='hidden';
+      // this.itemArray=[];
+      // this.value="";
       this.studentid="";
       this.parentname="";
       this.fees="";
