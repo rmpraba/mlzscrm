@@ -43,7 +43,7 @@
         </div>      
         <div class="col-sm-3 enquiry-input">
           <paper-dropdown-menu label="Zone" style="width: 100%;">
-            <paper-menu id="zoneallocationzone" class="dropdown-content" required on-iron-select="FnSelectZone" valueattr="value" >
+            <paper-menu id="zoneallocationzone" class="dropdown-content" required on-iron-select="FnSelectZone" attr-for-selected="value" selected="{{selectedzone}}">
               <template  is="dom-repeat" items="{{zonearr}}" as="item">
               <paper-item value="{{item.distance_id}}">{{item.zone_name}}</paper-item>
               </template>
@@ -195,6 +195,7 @@ Polymer({
          item=autocompletearr;
       },
       FnSearchStudent:function(e){
+      this.FnRefresh();  
       if(e.keyCode==13|| e.keyCode==40)
       this.querySelector('#zoneallocationinput').focus();
       var arr=[];
@@ -259,6 +260,7 @@ Polymer({
       }
     },
     FnSelectStudent:function(e){
+
     this.querySelector('#zoneallocationinput').style.visibility='hidden';
     var studentname = e.target.selectedItem.textContent.trim();
     var studentid = e.target.selectedItem.value.trim();
@@ -306,6 +308,10 @@ Polymer({
       document.querySelector('#transportfeegeneral1').checked=true;
       document.querySelector('#transportfeelumpsum1').checked=false;
       }
+    },
+    FnSetSelectedZone:function(zone){
+      // alert(JSON.stringify(zone));
+      this.selectedzone=zone;
     }
   });
 })();

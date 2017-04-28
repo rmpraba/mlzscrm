@@ -258,8 +258,22 @@
       },
       fetchstudentinfoforzoneallocationResponse:function(e){
         var arr=e.detail.response.returnval;
-        if(e.detail.response.returnval=='Already Mapped!!'){
+        var feearr=e.detail.response.feearr;
+        // alert(JSON.stringify(feearr));
+        // alert(JSON.stringify(arr));
+        if(e.detail.response.flag=='mapped'){
           alert('Zone Already Mapped!!');
+          document.querySelector('zonetostudent-card').studentid=arr[0].admission_no;
+          document.querySelector('zonetostudent-card').studentname=arr[0].student_name;
+          document.querySelector('zonetostudent-card').grade=arr[0].class_for_admission;
+          document.querySelector('zonetostudent-card').parentname=arr[0].father_name;
+          // document.querySelector('zonetostudent-card').selectedzone=arr[0].distance_id;
+          // alert(feearr[0].distance_id);
+          document.querySelector('zonetostudent-card').FnSetSelectedZone(feearr[0].distance_id);
+          document.querySelector('zonetostudent-card').fees=feearr[0].fees;
+          localStorage.setItem("curr_sess_studentid",arr[0].admission_no);
+          // alert(arr[0].admission_no);
+          document.querySelector('zonetostudent-card').FnEnablePaymentCard();
         }
         else{
         if(arr!='no rows'){

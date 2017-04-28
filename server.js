@@ -9398,7 +9398,10 @@ app.post('/searchtransportfeepaidinfo-service1',  urlencodedParser,function (req
  var qur="SELECT * FROM transport.student_fee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and student_id='"+req.query.studentid+"' and "+
  " status='mapped' and ((install1_status in('processing','paid')) or (install2_status in('processing','paid'))) ";
  var qur1="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"'";
+ console.log('---------------------------------------------------');
  console.log(qur);
+ console.log('---------------------------------------------------');
+ console.log(qur1);
  var paidarr=[];
  connection.query(qur,function(err, rows)
     {
@@ -9859,19 +9862,27 @@ app.post('/fetchallstudentforzone-service',  urlencodedParser,function (req, res
 
 
 app.post('/fetchstudentinfoforzoneallocation-service',  urlencodedParser,function (req, res){
-  var qurr="SELECT * FROM transport.student_fee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"' and status='mapped'";
+  var qurr="SELECT * FROM transport.student_fee  f join transport.md_zone z on(f.zone_id=z.id) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and f.student_id='"+req.query.studentid+"' and f.status='mapped' and z.school_id='"+req.query.schoolid+"' and z.academic_year='"+req.query.academicyear+"'";
   var qur="SELECT * FROM mlzscrm.md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.studentid+"'";
   console.log('-------------------------------------------');
   console.log(qurr);
   console.log(qur);
+  var feearr=[];
+  var flag="";
   connection.query(qurr,function(err, rows){
   if(!err){
-  if(rows.length==0){
+  if(rows.length>=0){
+  feearr=rows;
+  if(rows.length==0)
+    flag="notmapped";
+  if(rows.length>0)
+    flag="mapped";
   connection.query(qur,
     function(err, rows){
       if(!err){
         if(rows.length>0){
-          res.status(200).json({'returnval': rows});
+
+          res.status(200).json({'flag':flag,'feearr':feearr,'returnval': rows});
         } else {
           console.log(err);
           res.status(200).json({'returnval': 'no rows'});
