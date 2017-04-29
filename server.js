@@ -9923,6 +9923,100 @@ app.post('/allocatezone-service',  urlencodedParser,function (req, res){
 
 });
 
+
+app.post('/fetchtransportgrade-service',  urlencodedParser,function (req, res){
+  var queryy="SELECT * FROM mlzscrm.grade_master";
+  console.log('-------------------------------------------');
+  console.log(queryy);
+  
+  connection.query(queryy,function(err, rows){
+      if(!err)
+      {
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      }
+      else
+      {
+        console.log(err);
+      }
+  });
+
+});
+
+
+app.post('/insertnewstudent-service',  urlencodedParser,function (req, res){
+  var response={
+    admission_no: req.query.enrollmentno,
+    school_id: req.query.schoolid,
+    academic_year: req.query.academicyear,
+    first_name: req.query.firstname,
+    middle_name: req.query.middlename,
+    last_name: req.query.lastname,
+    student_name: req.query.studentname,
+    class_for_admission: req.query.grade,
+    dob: req.query.dob,
+    father_name: req.query.fathername,
+    mother_name: req.query.mothername,
+    transport_availed:'Yes'
+  };
+  var response1={
+    first_name: req.query.firstname,
+    middle_name: req.query.middlename,
+    last_name: req.query.lastname,
+    student_name: req.query.studentname,
+    class_for_admission: req.query.grade,
+    dob: req.query.dob,
+    father_name: req.query.fathername,
+    mother_name: req.query.mothername,
+    transport_availed:'Yes'
+  };
+  var queryy="INSERT INTO mlzscrm.md_admission SET ?";
+  var checkqur="SELECT * FROM mlzscrm.md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.enrollmentno+"'";
+  console.log('-------------------------------------------');
+  console.log(queryy);
+    var queryy1="UPDATE mlzscrm.md_admission SET ? WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.enrollmentno+"'";
+  connection.query(checkqur,function(err, rows){
+  if(rows.length==0){
+  connection.query(queryy,[response],function(err, result){
+      if(!err)
+      {
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Inserted!!'});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Not Inserted!!'});
+        }
+      }
+      else
+      {
+        console.log(err);
+      }
+  });
+  }
+  else{
+  connection.query(queryy1,[response1],function(err, result){
+    if(!err)
+      {
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Updated!!'});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Not Updated!!'});
+        }
+      }
+      else
+      {
+        console.log(err);
+      }
+  });
+  }
+  });
+});
+
 function setvalue(){
   console.log("calling setvalue.....");
 }

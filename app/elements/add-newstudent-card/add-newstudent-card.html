@@ -1,0 +1,148 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\dateofbirth-datepicker\dateofbirth-datepicker.html">
+
+<dom-module id="add-newstudent-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    
+    <div class="row enquiry-form">
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-3">
+        <paper-input label="Enrollment Number" id="addnewstudenrno" value="{{enrollmentno}}"></paper-input>
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="First Name" id="addnewstudfname" value="{{firstname}}"></paper-input>
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="Middle Name" value="{{middlename}}"></paper-input>
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="Last Name" value="{{lastname}}"></paper-input>
+        </div>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-3" style="margin-top: -1%;">
+        <dateofbirth-datepicker></dateofbirth-datepicker>
+        </div>
+        <div class="col-sm-3">
+        <paper-dropdown-menu label="Select Grade" on-iron-select="FnSelectGrade">
+            <paper-listbox class="dropdown-content" id="addnewstudgrade">
+            <template  is="dom-repeat" items="{{gradearr}}" as="item">
+              <paper-item value="{{item.grade_id}}">{{item.grade_name}}</paper-item>
+            </template>
+            </paper-listbox>
+        </paper-dropdown-menu>
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="Father Name" id="addnewstudfaname" value="{{fathername}}"></paper-input>
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="Mother Name" value="{{mothername}}"></paper-input>
+        </div>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-3">
+        <paper-input label="Father Mobile" id="addnewstudfamobile" value="{{fathermobile}}"></paper-input>
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="Mother Mobile" value="{{mothermobile}}"></paper-input>
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="Father Email" id="addnewstudfaemail" value="{{fatheremail}}"></paper-input>
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="Mother Email" value="{{motheremail}}"></paper-input>
+        </div>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        
+        <div class="col-sm-3">
+        <paper-input label="Address" id="addnewstudaddress" value="{{address}}"></paper-input>
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="City/Town" value="{{city}}"></paper-input>
+        </div>
+        <div class="col-sm-3">
+        <paper-input label="Pincode" value="{{pincode}}"></paper-input>
+        </div>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-3" style="margin-left: 30%;">
+        <paper-button  class="btn btn-primary" on-click="FnSubmit">Submit</paper-button>
+        </div>
+        <div class="col-sm-3">
+        <paper-button on-click="FnCancel"   class="btn btn-primary" >Cancel</paper-button>
+        </div>
+      </div>
+    </div>
+    <transportfee-service id="service"></transportfee-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var grade="";
+    var gradeid="";
+    Polymer({
+      is: 'add-newstudent-card',
+      FnSelectGrade:function(e){
+        grade=e.target.selectedItem.textContent.trim();
+        gardeid=e.target.selectedItem.value;
+      },
+      FnSubmit:function(){
+        if(this.enrollmentno==""||this.enrollmentno==null||this.firstname==""||this.firstname==null||grade==""){
+          if(this.enrollmentno==""||this.enrollmentno==null)
+            this.$.addnewstudenrno.validate();
+          if(this.firstname==""||this.firstname==null)
+            this.$.addnewstudfname.validate();
+          if(grade=="")
+            alert('Please select the grade!!');
+        }
+        else{
+          this.$.service.FnInsertnewstudentService(this.enrollmentno,this.firstname,this.middlename,this.lastname,grade,this.fathername,this.mothername,this.fathermobile,this.mothermobile,this.fatheremail,this.motheremail,this.address,this.city,this.pincode);
+        }
+      },
+      FnCancel:function(){
+        this.enrollmentno="";
+        this.firstname="";
+        this.middlename="";
+        this.lastname="";
+        grade="";
+        this.fathername="";
+        this.mothername="";
+        this.fathermobile="";
+        this.mothermobile="";
+        this.fatheremail="";
+        this.motheremail="";
+        this.address="";
+        this.city="";
+        this.pincode="";
+        document.querySelector('#addnewstudgrade').selected=-1;
+        document.querySelector('dateofbirth-datepicker').ready();
+      },
+      FnRefresh:function(){
+        this.enrollmentno="";
+        this.firstname="";
+        this.middlename="";
+        this.lastname="";
+        grade="";
+        this.fathername="";
+        this.mothername="";
+        this.fathermobile="";
+        this.mothermobile="";
+        this.fatheremail="";
+        this.motheremail="";
+        this.address="";
+        this.city="";
+        this.pincode="";
+        document.querySelector('#addnewstudgrade').selected=-1;
+        document.querySelector('dateofbirth-datepicker').ready();
+      }
+    });
+  })();
+  </script>
+</dom-module>

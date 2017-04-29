@@ -430,6 +430,9 @@
            <li id="zoneallocation">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezoneallocation" on-click="FnZoneAllocation">Zone Allocation</a>
            </li> 
+           <li id="addstudent">
+            <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggleaddstudent" on-click="FnAddStudent">Add Student</a>
+           </li> 
            <li id="transportsearchreceipt">
             <a href="" aria-hidden="true" on-click="FnTransportSearchReceipt">Search Receipt</a>
            </li> 
@@ -498,6 +501,24 @@
           </div>
           <div class="modal-body">
             <zonetostudent-card></zonetostudent-card>
+          </div>
+        </div>
+      </div>
+ </div>
+
+ <div class="modal fade bd-example-modal-lg" id="toggleaddstudent" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Add Student
+            </h4>
+          </div>
+          <div class="modal-body">
+            <add-newstudent-card></add-newstudent-card>
           </div>
         </div>
       </div>
@@ -1203,6 +1224,11 @@
         this.$.transportfeeservice.fetchzoneService();
         document.querySelector('zonetostudent-card').ready();
         document.querySelector('zonetostudent-card').FnRefresh();
+      },
+      FnAddStudent:function(){
+        this.$.transportfeeservice.fetchgradeService();
+        // this.$.transportfeeservice.fetchsectionService();
+        document.querySelector('add-newstudent-card').FnRefresh();
       },
       FnTransportSearchReceipt:function(){
         this.$.scheduleservice.fetchacademicyearService();        

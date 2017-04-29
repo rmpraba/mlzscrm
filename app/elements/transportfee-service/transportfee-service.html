@@ -215,6 +215,36 @@
         on-response="allocatezoneResponse"
         debounce-duration="300"
         >  
+    <iron-ajax
+        method="post"
+        id="fetchtransportgradeajax"
+        url="{{fetchtransportgradeurl}}"
+        params="{{fetchtransportgradeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtransportgradeResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchtransportsectionajax"
+        url="{{fetchtransportsectionurl}}"
+        params="{{fetchtransportsectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtransportsectionResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="insertnewstudentajax"
+        url="{{insertnewstudenturl}}"
+        params="{{insertnewstudentparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="insertnewstudentResponse"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
@@ -232,6 +262,58 @@
     var paymentarr=[];
     Polymer({
       is: 'transportfee-service',
+      FnInsertnewstudentService:function(enrollmentno,firstname,middlename,lastname,grade,fathername,mothername,fathermobile,mothermobile,fatheremail,motheremail,address,city,pincode){
+        this.insertnewstudenturl=sessionStorage.getItem("addrinfo")+"/insertnewstudent-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.enrollmentno=enrollmentno;
+        obj.firstname=firstname;
+        obj.middlename=middlename;
+        obj.lastname=lastname;
+        obj.studentname=firstname+" "+middlename+" "+lastname;
+        obj.grade=grade;
+        obj.fathername=fathername;
+        obj.mothername=mothername;
+        obj.fatheremail=fatheremail;
+        obj.motheremail=motheremail;
+        obj.fathermobile=fathermobile;
+        obj.mothermobile=mothermobile;
+        obj.address=address;
+        obj.city=city;
+        obj.pincode=pincode;
+        obj.dob=localStorage.getItem("localsess_start_date");
+        this.insertnewstudentparam=obj;
+        this.$.insertnewstudentajax.generateRequest();
+      },
+      insertnewstudentResponse:function(e){
+        alert(e.detail.response.returnval);
+        document.querySelector('add-newstudent-card').FnRefresh();
+      },
+      fetchgradeService:function(){
+        this.fetchtransportgradeurl=sessionStorage.getItem("addrinfo")+"/fetchtransportgrade-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.fetchtransportgradeparam=obj;
+        this.$.fetchtransportgradeajax.generateRequest();
+      },
+      fetchtransportgradeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        document.querySelector('add-newstudent-card').gradearr=arr;
+      },
+      fetchsectionService:function(){
+        this.fetchtransportsectionurl=sessionStorage.getItem("addrinfo")+"/fetchtransportsection-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.fetchtransportsectionparam=obj;
+        this.$.fetchtransportsectionajax.generateRequest();
+      },
+      fetchtransportsectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        document.querySelector('add-newstudent-card').sectionarr=arr;
+      },
       fetchallstudentforzoneService:function(){
         this.fetchallstudentforzoneurl=sessionStorage.getItem("addrinfo")+"/fetchallstudentforzone-service";
         var obj={"schoolid":"","prefixid":""};

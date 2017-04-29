@@ -38,16 +38,6 @@
           <paper-input label="{{enqenrlabel}}" id="enqenrno" readonly value="{{enqenrno}}"></paper-input>
           </div>         
       </div>
-      <!-- </div>
-      <div class="row enquiry-form"> -->
-      <!-- <div class="list-group col-sm-12 panel-body form-category">
-        <div class="col-sm-6 enquiry-input">
-          <paper-input label="Application Number" id="applicationno" readonly value="{{applicationno}}"></paper-input>
-        </div>
-        <div class="col-sm-6">
-          <paper-textarea label="School" readonly value="{{schoolname}}"></paper-textarea>
-        </div>
-      </div> -->
       <div class="list-group col-sm-12 panel-body form-category">
         <div class="col-sm-4">
           <paper-textarea label="School" readonly value="{{schoolname}}"></paper-textarea>
@@ -65,25 +55,7 @@
           </paper-dropdown-menu>
         </div>
       </div>
-
-     <!--  <div class="list-group col-sm-12 panel-body form-category">
-        
-        <label>Admission Type</label>
-        
-        <div class="col-sm-12">          
-          <span><paper-checkbox class="col-sm-3" id="generaladmn" readonly class="checkbox" on-change="generaladmnHandler" checked>General</paper-checkbox></span>
-          <span><paper-checkbox class="col-sm-3" id="provisionaladmn" readonly class="checkbox" on-change="provisionaladmnHandler">Provisional</paper-checkbox></span>
-          <span><paper-checkbox class="col-sm-3" id="spotadmn" readonly class="checkbox" on-change="spotadmnHandler">Spot</paper-checkbox></span>
-        </div>
-      </div> -->
-
       <div class="list-group col-sm-12 panel-body form-category">
-        <!-- <div class="col-sm-4">
-          <span class="col-sm-12"><h5>Admission Type</h5></span>
-          <span><paper-checkbox  checked class="col-sm-6" id="general" class="checkbox" on-change="generalHandler">General</paper-checkbox></span>
-          <span><paper-checkbox class="col-sm-6" id="spot" class="checkbox" on-change="spotHandler">Spot</paper-checkbox></span>          
-        </div> -->
-        <!-- <label>Category</label> -->
         <div class="lbl"><label>Admission Category </label><p id="admncategory">&nbsp; *</p> </div>
         <div class="col-sm-12 enquiry-input">
           <template  is="dom-repeat" items="{{discountarr}}" as="view">
@@ -91,7 +63,6 @@
           </template>
         </div>
       </div>
-
       <div class="list-group col-sm-12 panel-body form-category">
         <div class="col-sm-4">
           <paper-input label="Student First Name" value="{{firstname}}"></paper-input>
