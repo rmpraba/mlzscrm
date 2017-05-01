@@ -10017,6 +10017,55 @@ app.post('/insertnewstudent-service',  urlencodedParser,function (req, res){
   });
 });
 
+
+app.post('/fetchalltransportstudent-service',  urlencodedParser,function (req, res){
+  var queryy="SELECT distinct(f.student_id),c.name FROM transport.student_fee f join transport.cheque_details c on(f.student_id=c.student_id) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' "+
+  " and c.school_id='"+req.query.schoolid+"' and c.academic_year='"+req.query.academicyear+"'";
+  console.log('-------------------------------------------');
+  console.log(queryy);
+  
+  connection.query(queryy,function(err, rows){
+      if(!err)
+      {
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      }
+      else
+      {
+        console.log(err);
+      }
+  });
+});
+
+app.post('/processtransportbouncecheque-servicee',  urlencodedParser,function (req, res){
+  console.log('---------------------'+req.query.id);
+  var queryy="SELECT * FROM transport.student_fee f join transport.cheque_details c on(f.student_id=c.student_id) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' "+
+  " and c.school_id='"+req.query.schoolid+"' and c.academic_year='"+req.query.academicyear+"' and  (c.student_id='"+req.query.id+"' and  f.student_id='"+req.query.id+"') or (c.cheque_no='"+req.query.id+"')";
+  console.log('-------------------------------------------');
+  console.log(queryy);  
+  connection.query(queryy,function(err, rows){
+      if(!err)
+      {
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } 
+        else{
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      }
+      else
+      {
+        console.log(err);
+      }
+  });
+});
+
+
 function setvalue(){
   console.log("calling setvalue.....");
 }

@@ -1,0 +1,82 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="zonechange-card">
+  <template>
+    <style>
+    .horizontalframe,.inshead{
+    @apply(--layout-horizontal);
+    }
+    .cb{
+    @apply(--layout-horizontal);
+    }
+    .inshead{
+    @apply(--layout-horizontal);
+    }
+    #paybtn{
+    margin-top: 3%;
+    }
+    paper-dropdown-menu{
+    width: 80%;
+    }
+    </style>
+    <div>
+    <div class="row enquiry-form">      
+     <div class="list-group col-sm-12 panel-body form-category">
+      <div class="col-md-3" style="margin-top: 2%;">
+          <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchStudent"></paper-input>
+          <paper-listbox class="dropdown-content" id="schoolfeeinput" on-iron-select="FnSelectStudent">
+          <template is="dom-repeat" items="{{itemArray}}" as="item">
+            <paper-item value="{{item.admission_no}}">{{item.itemdes}}</paper-item>
+          </template>
+          </paper-listbox>
+      </div>
+      <div class="col-sm-3 enquiry-input">
+          <paper-input label="Enrollment Number" value="{{enrollmentno}}"></paper-input>
+      </div>
+      <div class="col-sm-3 enquiry-input">
+          <paper-input label="Parent Name" value="{{parentname}}"></paper-input>
+      </div>
+      <div class="col-sm-3 enquiry-input">
+          <paper-input label="Grade" value="{{grade}}"></paper-input>
+      </div>
+     </div>
+
+     <div class="list-group col-sm-12 panel-body form-category">
+      <div class="col-sm-3 enquiry-input">
+          <paper-input label="Previous Zone" value="{{previouszone}}"></paper-input>
+      </div>
+      <div class="col-sm-3 enquiry-input">
+          <paper-input label="Previous Zone Fee" value="{{previouszonefee}}"></paper-input>
+      </div>
+      <div class="col-sm-3 enquiry-input">
+          <datepicker-card></datepicker-card>
+      </div>
+     </div>
+
+     <div class="list-group col-sm-12 panel-body form-category">
+      <div class="col-sm-3 enquiry-input">
+          <paper-input label="Used Month" value="{{usedmonth}}"></paper-input>
+      </div>
+      <div class="col-sm-3 enquiry-input">
+          <paper-input label="Used Fee" value="{{usedfee}}"></paper-input>
+      </div>
+      <div class="col-sm-3 enquiry-input">
+          <paper-input label="Remaining Fee" value="{{remaingfee}}"></paper-input>
+      </div>
+     </div>
+
+    </div>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'zonechange-card',
+
+    });
+  })();
+  </script>
+</dom-module>

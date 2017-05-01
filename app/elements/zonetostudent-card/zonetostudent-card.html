@@ -125,15 +125,18 @@ Polymer({
           var m=date.getMonth();
           var d=date.getDate(); 
           if(m<4){ 
+            // alert('if');
           var y1=(y-1)+1;
           var y2=y+1;  
           academicyear="AY-"+y1+"-"+y2;
           } 
           else{
-          var y1=y+1;
-          var y2=y+1+1;  
+            // alert('else');
+          var y1=y;
+          var y2=y+1;  
           academicyear="AY-"+y1+"-"+y2;
           }
+          // alert(academicyear);
           localStorage.setItem("curr_sess_academicyear",academicyear);
           this.hideinstallmentpattern
           // document.querySelector('#transportfeegeneral1').checked=true;

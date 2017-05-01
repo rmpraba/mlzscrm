@@ -430,6 +430,15 @@
            <li id="zoneallocation">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezoneallocation" on-click="FnZoneAllocation">Zone Allocation</a>
            </li> 
+           <li id="zonechange">
+            <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonechange" on-click="FnZoneChange">Zone Change</a>
+           </li>
+           <li id="zonecancellation">
+            <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonecancellation" on-click="FnZoneCancellation">Zone Cancellation</a>
+           </li>
+           <li id="transportchequecancelorbounce">
+            <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportchequecancelorbounce" on-click="FnTransportchequecancelorbounce">Transport cheque Bounce/Cancel</a>
+           </li>
            <li id="addstudent">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggleaddstudent" on-click="FnAddStudent">Add Student</a>
            </li> 
@@ -1224,6 +1233,11 @@
         this.$.transportfeeservice.fetchzoneService();
         document.querySelector('zonetostudent-card').ready();
         document.querySelector('zonetostudent-card').FnRefresh();
+      },
+      FnTransportchequecancelorbounce:function(){
+        document.querySelector('app-list').setPage("transport-cheque-bouncecancel","Cheque Bounce/Cancel");
+        document.querySelector('transport-cheque-bouncecancel').callService();
+        document.querySelector('transport-cheque-bouncecancel').FnRefresh();
       },
       FnAddStudent:function(){
         this.$.transportfeeservice.fetchgradeService();

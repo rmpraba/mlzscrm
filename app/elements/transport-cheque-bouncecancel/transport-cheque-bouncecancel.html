@@ -1,0 +1,197 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-cheque-bouncecancel">
+  <template>
+    <style>
+    </style>
+     <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <div class="col-md-6"> -->
+                <div class="col-md-3" style="margin-top: -1%;">
+                   <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchEnquiry"></paper-input>
+                   <paper-listbox class="dropdown-content" id="transportchequebouncecancelinput" on-iron-select="FnSelectEnquiry">
+                   <template is="dom-repeat" items="{{itemArray}}" as="item">
+                   <paper-item value="{{item.admission_no}}">{{item.itemdes}}</paper-item>
+                   </template>
+                   </paper-listbox>
+                </div>
+                <div class="col-md-1" style="margin-top: 2%;">
+                <label>(OR)</label>
+                </div>
+                <div class="col-md-3" style="margin-top: -2%;">
+                   <paper-input  label="Cheque No" is="" value="{{chequeno}}">
+                   <paper-icon-button suffix icon="search" on-click="FnSearchbychequeno" title="Search"></paper-icon-button>
+                   </paper-input>
+                </div>
+                <div class="col-md-2" style="margin-top: 1%;">
+                  <paper-button on-click="FnSubmit" class="btn btn-primary">Process</paper-button>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+     <div >
+      <table class="table table-hover" id="bounceprocessreport">
+      <thead>
+      <tr>
+        <th>Sno</th><th>Enr/Enq No</th><th>Student Name</th><th style="text-align: right;">Installment Type</th><th style="text-align: right;">Cheque No</th><th style="text-align: right;">Bank Name</th><th style="text-align: right;">Cheque Date</th><th style="text-align: right;">Amount</th><th style="text-align: right;">Bounce</th><th style="text-align: center;">Cancel</th>
+      </tr>
+      <tr>
+      <td colspan="12">
+        <template  is="dom-repeat" items="{{chequearr}}" as="item">
+        <transport-cheque-bouncecancel-itemcard sno="{{item.sno}}" enrno="{{item.student_id}}" studentname="{{item.student_name}}" grade="{{item.grade}}" installmenttype="{{item.installtype}}" chequeno="{{item.cheque_no}}" bankname="{{item.bank_name}}" chequedate="{{item.cheque_date}}" installmentamount="{{item.installment_amount}}"></transport-cheque-bouncecancel-itemcard>
+        </template>
+      </td>
+      </tr>
+      </thead>
+      </table>
+    </div>
+    <transport-processing-service id="transportprocessingservice"></transport-processing-service>
+    
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var item=[];
+    var allchequesarr=[];
+    var cheques=[];
+    Polymer({
+      is: 'transport-cheque-bouncecancel',
+      ready:function(){
+        this.querySelector('#transportchequebouncecancelinput').style.visibility='hidden';
+      },
+      FnSetChequeArray:function(arr){
+        allchequesarr=arr;
+      },
+      FnPushPopCheques:function(sno,chequestatus,flag){
+        // alert(sno+"  "+flag)
+        if(flag==1)
+        {
+          for(var i=0;i<allchequesarr.length;i++){
+            if(allchequesarr[i].sno==sno){
+              allchequesarr[i].status=chequestatus;
+              cheques.push(allchequesarr[i]);
+            }
+          }
+        }
+        if(flag==0)
+        {
+          for(var i=0;i<cheques.length;i++){
+            if(cheques[i].sno==sno){
+              cheques.splice(i,1);
+            }
+          }
+        }
+      },
+      FnSubmit:function(){  
+        alert(JSON.stringify(cheques));
+        if(cheques.length>0) {
+        this.$.transportprocessingservice.FnUpdateChequeStatus(cheques);
+        }
+        else
+        alert('No cheques are exist to process!!!');       
+      },
+      callService:function(){
+        this.$.transportprocessingservice.fetchalltransportstudentService();
+      },
+      autocompletearr:function(autocompletearr)
+      {
+         item=autocompletearr;
+      },
+
+      FnSearchEnquiry:function(e){
+      if(e.keyCode==13|| e.keyCode==40)
+      this.querySelector('#transportchequebouncecancelinput').focus();
+      var arr=[];
+      arr.push({"itemdes":"-----Select-----"});
+      this.querySelector('#transportchequebouncecancelinput').style.visibility='visible';
+      if(e.keyCode==8){
+        this.itemflag="true";
+        this.itemval="";
+        //alert('yes');
+        var len=(this.value).length;
+        if(len<=1){
+          this.querySelector('#transportchequebouncecancelinput').style.visibility='hidden';
+          this.itemArray="";
+          this.itemval="";
+        }
+        if(len>1){
+          this.querySelector('#transportchequebouncecancelinput').style.visibility='visible';
+          var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].name).trim()).substring(0,backsubval.length);
+            if((item[i].name).toUpperCase().indexOf((this.value).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].name;
+              obj.admission_no=item[i].student_id;
+              arr.push(obj);
+            }
+          }
+          this.itemArray=arr;
+        }
+      }
+      if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+        if(this.itemflag=="true") {
+          this.itemval = (this.value).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+          this.itemflag="false";
+        }
+        else
+        this.itemval = this.value +String.fromCharCode((e.keyCode));
+        if(this.itemval.length>0)
+        {
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].name).trim()).substring(0,this.itemval.length);
+            if((item[i].name).toUpperCase().indexOf((this.itemval).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].name;
+              obj.admission_no=item[i].student_id;
+              arr.push(obj);
+            }
+          }
+          if(arr.length>0)
+            this.itemArray=arr;
+          else
+          {
+            var obj={"itemdes":"","enquiry_no":""};
+            obj.itemdes="No items found";
+            arr.push(obj);
+            this.itemArray=arr;
+          }
+        }
+      }
+    },
+    FnSelectEnquiry:function(e){
+    this.querySelector('#transportchequebouncecancelinput').style.visibility='hidden';
+    var enquiry_name = e.target.selectedItem.textContent.trim();
+    var admission_no = e.target.selectedItem.value.trim();
+    localStorage.setItem("curr_sess_enquiryno",admission_no);
+    localStorage.setItem("curr_sess_enquiryname",enquiry_name);
+    this.itemArray=[];
+    document.querySelector('#transportchequebouncecancelinput').selected=-1;
+    this.value=enquiry_name;
+    // alert(admission_no);
+    this.$.transportprocessingservice.processtransportbouncechequeService(admission_no);
+    },
+    FnSearchbychequeno:function(){
+    this.$.transportprocessingservice.processtransportbouncechequeService(this.chequeno);
+    },
+    FnRefresh:function(){
+      this.value="";
+      this.querySelector('#transportchequebouncecancelinput').style.visibility='hidden';
+      // item=[];
+      allchequesarr=[];
+      cheques=[];
+      this.chequearr=[];
+      this.itemArray=[];
+    }
+    });
+  })();
+  </script>
+</dom-module>
