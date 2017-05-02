@@ -459,8 +459,7 @@
         this.updatechequestatusurl=sessionStorage.getItem("addrinfo")+"/updatechequestatus-service";
         for(var i=0;i<cheque.length;i++){ 
           var obj={"schoolid":""};
-          var d=new Date();
-        
+          var d=new Date();        
         obj.schoolid=cheque[i].school_id; 
         obj.academicyear=cheque[i].academic_year; 
         obj.admissionno=cheque[i].admission_no; 

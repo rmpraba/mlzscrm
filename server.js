@@ -10020,7 +10020,8 @@ app.post('/insertnewstudent-service',  urlencodedParser,function (req, res){
 
 app.post('/fetchalltransportstudent-service',  urlencodedParser,function (req, res){
   var queryy="SELECT distinct(f.student_id),c.name FROM transport.student_fee f join transport.cheque_details c on(f.student_id=c.student_id) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' "+
-  " and c.school_id='"+req.query.schoolid+"' and c.academic_year='"+req.query.academicyear+"'";
+  " and c.school_id='"+req.query.schoolid+"' and c.academic_year='"+req.query.academicyear+"' and c.cheque_status not in('cancel','bounce') and f.install1_status not in('cancel','bounce') "+
+  "and f.install2_status not in('cancel','bounce')";
   console.log('-------------------------------------------');
   console.log(queryy);
   
@@ -10043,8 +10044,9 @@ app.post('/fetchalltransportstudent-service',  urlencodedParser,function (req, r
 
 app.post('/processtransportbouncecheque-servicee',  urlencodedParser,function (req, res){
   console.log('---------------------'+req.query.id);
-  var queryy="SELECT * FROM transport.student_fee f join transport.cheque_details c on(f.student_id=c.student_id) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' "+
-  " and c.school_id='"+req.query.schoolid+"' and c.academic_year='"+req.query.academicyear+"' and  (c.student_id='"+req.query.id+"' and  f.student_id='"+req.query.id+"') or (c.cheque_no='"+req.query.id+"')";
+  var queryy="SELECT * FROM transport.student_fee f join transport.cheque_details c on(f.student_id=c.student_id) WHERE f.academic_year=c.academic_year and f.school_id=c.school_id and f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' "+
+  " and c.school_id='"+req.query.schoolid+"' and c.academic_year='"+req.query.academicyear+"' and  (c.student_id='"+req.query.id+"' and  f.student_id='"+req.query.id+"') or (c.cheque_no='"+req.query.id+"') and c.cheque_status not in('cancel','bounce') and f.install1_status not in('cancel','bounce') "+
+  "and f.install2_status not in('cancel','bounce')";
   console.log('-------------------------------------------');
   console.log(queryy);  
   connection.query(queryy,function(err, rows){
@@ -10056,6 +10058,47 @@ app.post('/processtransportbouncecheque-servicee',  urlencodedParser,function (r
         else{
           console.log(err);
           res.status(200).json({'returnval': 'no rows'});
+        }
+      }
+      else
+      {
+        console.log(err);
+      }
+  });
+});
+
+
+app.post('/updatetransportchequestatus-service',urlencodedParser,function (req, res){
+  var queryy1="UPDATE transport.cheque_details SET cheque_status='"+req.query.chequestatus+"',cancel_date='"+req.query.canceldate+"' WHERE school_id='"+req.query.schoolid+"' and "+
+  " academic_year='"+req.query.academicyear+"' and installtype='"+req.query.installmenttype+"' and student_id='"+req.query.studentid+"'";
+  if(req.query.installmenttype=="Installment1")
+  var queryy2="UPDATE  transport.student_fee SET install1_status='"+req.query.chequestatus+"' WHERE school_id='"+req.query.schoolid+"' and "+
+  " academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"'";
+  if(req.query.installmenttype=="Installment2")
+  var queryy2="UPDATE  transport.student_fee SET install2_status='"+req.query.chequestatus+"' WHERE school_id='"+req.query.schoolid+"' and "+
+  " academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"'";
+ 
+  console.log('-------------------------------------------');
+  console.log(queryy1); 
+  console.log('-------------------------------------------');
+  console.log(queryy2);  
+  connection.query(queryy1,function(err, result){
+      if(!err)
+      {
+        if(result.affectedRows>0){
+          connection.query(queryy2,function(err, result){
+          if(!err)
+          res.status(200).json({'returnval': 'Updated!'});
+          else
+          {
+            console.log(err);
+            res.status(200).json({'returnval': 'Not Updated!'});
+          }
+          });
+        } 
+        else{
+          console.log(err);
+          res.status(200).json({'returnval': 'Not Updated!!'});
         }
       }
       else

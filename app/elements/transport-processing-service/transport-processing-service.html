@@ -23,12 +23,23 @@
         on-response="processtransportbouncechequeResponse"
         debounce-duration="300"
         >
+    <iron-ajax
+        method="post"
+        id="updatetransportchequestatusajax"
+        url="{{updatetransportchequestatusurl}}"
+        params="{{updatetransportchequestatusparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updatetransportchequestatusResponse"
+        debounce-duration="300"
+        >
+
     
   </template>
   <script>
   (function() {
     'use strict';
-
+    var count1=0,count2=0;
     Polymer({
       is: 'transport-processing-service',
       fetchalltransportstudentService:function(){
@@ -44,13 +55,11 @@
         document.querySelector('transport-cheque-bouncecancel').autocompletearr(arr);
       },
       processtransportbouncechequeService:function(studentid){
-        // alert(studentid);
         this.processtransportbouncechequeurl=sessionStorage.getItem("addrinfo")+"/processtransportbouncecheque-servicee";
         var obj={"schoolid":"","academicyear":"","id":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.id=studentid;
-        // alert(JSON.stringify(obj));
         this.processtransportbouncechequeparam=obj;
         this.$.processtransportbouncechequeajax.generateRequest();
       },
@@ -60,12 +69,12 @@
         var temparr=[];
         var t=1;
         for(var i=0;i<arr.length;i++){          
-          if(arr[i].installtype="Installment1"&&arr[i].installment_1!=""&&arr[i].installment_1>0){
+          if(arr[i].installtype="Installment1"&&arr[i].installment_1!=""&&arr[i].installment_1>0&&arr[i].install1_status!='cancel'&&arr[i].install1_status!='bounce'){
             var obj={};
             obj.sno=t;
             obj.student_id=arr[i].student_id;
             obj.student_name=arr[i].name;
-            obj.installtype=arr[i].installtype;
+            obj.installtype="Installment1";
             obj.cheque_no=arr[i].cheque_no;
             obj.bank_name=arr[i].bank_name;
             obj.cheque_date=arr[i].cheque_date;
@@ -73,12 +82,12 @@
             temparr.push(obj);
             t=t+1;
           }
-          if(arr[i].installtype="Installment2"&&arr[i].installment_2!=""&&arr[i].installment_2>0){
+          if(arr[i].installtype="Installment2"&&arr[i].installment_2!=""&&arr[i].installment_2>0&&arr[i].install2_status!='cancel'&&arr[i].install2_status!='bounce'){
             var obj={};
             obj.sno=t;
             obj.student_id=arr[i].student_id;
             obj.student_name=arr[i].name;
-            obj.installtype=arr[i].installtype;
+            obj.installtype="Installment2";
             obj.cheque_no=arr[i].cheque_no;
             obj.bank_name=arr[i].bank_name;
             obj.cheque_date=arr[i].cheque_date;
@@ -87,7 +96,39 @@
             t=t+1;
           }
         }
+        // alert(JSON.stringify(temparr));
         document.querySelector('transport-cheque-bouncecancel').chequearr=temparr;
+        document.querySelector('transport-cheque-bouncecancel').FnSetChequeArray(temparr);
+      },
+      FnUpdateChequeStatus:function(cheque){
+        count1=cheque.length;
+        // alert(JSON.stringify(cheque));
+        this.updatetransportchequestatusurl=sessionStorage.getItem("addrinfo")+"/updatetransportchequestatus-service";
+        for(var i=0;i<cheque.length;i++){ 
+          var obj={"schoolid":""};
+          var d=new Date();        
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear"); 
+        obj.studentid=cheque[i].student_id; 
+        obj.studentname=cheque[i].student_name; 
+        obj.installmenttype=cheque[i].installtype; 
+        obj.chequeno=(cheque[i].cheque_no);        
+        obj.bankname=cheque[i].bank_name; 
+        obj.chequestatus=cheque[i].status; 
+        obj.canceldate=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+        this.updatetransportchequestatusparam=obj;     
+        this.$.updatetransportchequestatusajax.generateRequest();
+        }
+      },
+      updatetransportchequestatusResponse:function(e){
+        if(e.detail.response.returnval=="Updated!")
+          count2++;
+        if(count1==count2){
+          alert('Cheques are updated!');
+          count1=0;
+          count2=0;
+          document.querySelector('transport-cheque-bouncecancel').FnRefresh();
+        }
       }
     });
   })();

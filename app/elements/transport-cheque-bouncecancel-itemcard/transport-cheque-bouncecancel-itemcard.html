@@ -29,16 +29,16 @@
     Polymer({
       is: 'transport-cheque-bouncecancel-itemcard',
       FnBounceHandler:function(e){
-        chequestatus="bounced";
-        // alert(document.querySelector('#bounce'+this.sno).checked);
+        chequestatus="bounce";
+        // alert(document.querySelector('#transportbounce'+this.sno).checked);
         if(document.querySelector('#transportbounce'+this.sno).checked==true)
         document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,1);
         if(document.querySelector('#transportbounce'+this.sno).checked==false)
         document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,0);
       },
       FnCancelHandler:function(e){
-        chequestatus="cancelled";
-        // alert(document.querySelector('#cancel'+this.sno).checked);
+        chequestatus="cancel";
+        // alert(document.querySelector('#transportcancel'+this.sno).checked);
         if(document.querySelector('#transportcancel'+this.sno).checked==true)
         document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,1);
         if(document.querySelector('#transportcancel'+this.sno).checked==false)
