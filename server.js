@@ -9396,7 +9396,7 @@ app.post('/fetchtransportfees-service',  urlencodedParser,function (req, res){
 
 app.post('/searchtransportfeepaidinfo-service1',  urlencodedParser,function (req, res){
  var qur="SELECT * FROM transport.student_fee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and student_id='"+req.query.studentid+"' and "+
- " status='mapped' and ((install1_status in('processing','paid')) or (install2_status in('processing','paid'))) ";
+ " status='mapped' and ((install1_status in('processing','paid','bounce','cancel')) or (install2_status in('processing','paid','bounce','cancel'))) ";
  var qur1="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"'";
  console.log('---------------------------------------------------');
  console.log(qur);

@@ -566,6 +566,8 @@
           }
         }
         // alert(JSON.stringify(collection));
+        // alert(JSON.stringify(feearr));
+        // alert(JSON.stringify(collection));
         for(var i=0;i<feearr.length;i++){
               for(var j=0;j<collection.length;j++){
               // alert(collection[j].installment+" "+feearr[i].installment+" "+collection[j].amount+" "+feearr[i].amount);
@@ -1380,6 +1382,7 @@
         paidcheque=e.detail.response.paidcheque;
         // alert(JSON.stringify(paidarr));
         // alert(JSON.stringify(paidcheque));
+        // alert(paidarr[0].installment_pattern);
         if(e.detail.response.paidarr!='no rows')
           localStorage.setItem("curr_sess_paymentpattern",paidarr[0].installment_pattern);
         this.fetchtransportfeesService1();
@@ -1396,8 +1399,10 @@
       fetchtransportfeesResponse1:function(e){
         var feearr=e.detail.response.feesplit;
         var studarr=e.detail.response.studinfo;
+        // alert(localStorage.getItem("curr_sess_paymentpattern"));
         // alert(JSON.stringify(feearr));
         // alert(JSON.stringify(studarr));
+        // alert(paidarr[0].installment_pattern);
         if(paidarr!='no rows'){
         localStorage.setItem("curr_sess_paymentpattern",paidarr[0].installment_pattern);
         document.querySelector('zonetostudent-card').FnSetDefaultPattern(paidarr[0].installment_pattern);
@@ -1445,7 +1450,8 @@
             obj.receiveddate=paidarr[i].paid_date1;
             obj.receiptdate=paidarr[i].receipt_date1;
             obj.receiptno=paidarr[i].receipt_no1;
-            obj.amount=paidarr[i].installment_1;
+            obj.amount=parseInt(paidarr[i].installment_1)+parseInt(paidarr[i].install1_fine);
+            obj.installstatus=paidarr[i].install1_status;
             collection.push(obj);
           }
           if(paidarr[i].install2_status!=""){
@@ -1456,7 +1462,8 @@
             obj.receiveddate=paidarr[i].paid_date2;
             obj.receiptdate=paidarr[i].receipt_date2;
             obj.receiptno=paidarr[i].receipt_no2;
-            obj.amount=paidarr[i].installment_2;
+            obj.amount=parseInt(paidarr[i].installment_2)+parseInt(paidarr[i].install2_fine);
+            obj.installstatus=paidarr[i].install2_status;
             collection.push(obj);
           }
         }
@@ -1470,10 +1477,11 @@
           }
         }
         // alert(JSON.stringify(collection));
+        
         for(var i=0;i<feearr.length;i++){
               for(var j=0;j<collection.length;j++){
               // alert(collection[j].installment+" "+feearr[i].installment+" "+collection[j].amount+" "+feearr[i].amount);
-              if(collection[j].installment==feearr[i].installment&&collection[j].amount==feearr[i].amount){
+              if(collection[j].installment==feearr[i].installment&&collection[j].amount==feearr[i].amount&&(collection[j].installstatus!='cancel'||collection[j].installstatus!='bounce')){
               feearr[i].receiptdate=collection[j].receiptdate;
               feearr[i].modeofpayment=collection[j].modeofpayment;
               feearr[i].chequeno=collection[j].chequeno;
@@ -1488,8 +1496,27 @@
               feearr[i].readonlyflag=true;
               feearr[i].hiddenpayflag=true;
               }
+              if(collection[j].installment==feearr[i].installment&&collection[j].amount==feearr[i].amount&&(collection[j].installstatus=='cancel'||collection[j].installstatus=='bounce')){
+              feearr[i].receiptdate="";
+              feearr[i].modeofpayment="";
+              feearr[i].chequeno="";
+              feearr[i].bankname="";
+              feearr[i].chequedate="";
+              feearr[i].discountamount=0;
+              if(collection[j].installstatus=='bounce')
+              feearr[i].fineamount=250;
+              if(collection[j].installstatus=='cancel')
+              feearr[i].fineamount=0;
+              feearr[i].amount=parseInt(collection[j].amount)+parseInt(feearr[i].fineamount);
+              feearr[i].hiddencommitinput=true;
+              feearr[i].hiddencommititem=false;
+              feearr[i].paidflag=false;
+              feearr[i].hiddenflag=true;
+              feearr[i].readonlyflag=true;
+              feearr[i].hiddenpayflag=false;
               }
-        }
+              }
+          }
           }
         }
         }
@@ -1536,7 +1563,8 @@
             obj.receiveddate=paidarr[i].paid_date1;
             obj.receiptdate=paidarr[i].receipt_date1;
             obj.receiptno=paidarr[i].receipt_no1;
-            obj.amount=paidarr[i].installment_1;
+            obj.amount=parseInt(paidarr[i].installment_1)+parseInt(paidarr[i].install1_fine);
+            obj.installstatus=paidarr[i].install1_status;
             collection.push(obj);
           }
           if(paidarr[i].install2_status!=""){
@@ -1547,7 +1575,8 @@
             obj.receiveddate=paidarr[i].paid_date2;
             obj.receiptdate=paidarr[i].receipt_date2;
             obj.receiptno=paidarr[i].receipt_no2;
-            obj.amount=paidarr[i].installment_2;
+            obj.amount=parseInt(paidarr[i].installment_2)+parseInt(paidarr[i].install2_fine);
+            obj.installstatus=paidarr[i].install2_status;
             collection.push(obj);
           }
         }
@@ -1560,11 +1589,11 @@
           }
           }
         }
-        // alert(JSON.stringify(collection));
+
         for(var i=0;i<feearr.length;i++){
               var t=0;
               for(var j=0;j<collection.length;j++){
-              if(collection[j].installment==feearr[i].installment){
+              if(collection[j].installment==feearr[i].installment&&(collection[j].installstatus!='cancel'||collection[j].installstatus!='bounce')){
               t=1;
               feearr[i].installment=collection[j].installment;
               feearr[i].amount=collection[j].amount;
@@ -1581,6 +1610,27 @@
               feearr[i].hiddenflag=false;
               feearr[i].readonlyflag=true;
               feearr[i].hiddenpayflag=true;
+              }
+              if(collection[j].installment==feearr[i].installment&&(collection[j].installstatus=='cancel'||collection[j].installstatus=='bounce')){
+              t=1;
+              feearr[i].installment=collection[j].installment;
+              feearr[i].receiptdate=collection[j].receiptdate;
+              feearr[i].modeofpayment=collection[j].modeofpayment;
+              feearr[i].chequeno=collection[j].chequeno;
+              feearr[i].bankname=collection[j].bankname;
+              feearr[i].chequedate=collection[j].chequedate;
+              feearr[i].discountamount=0;
+              if(collection[j].installstatus=='bounce')
+              feearr[i].fineamount=250;
+              if(collection[j].installstatus=='cancel')
+              feearr[i].fineamount=0;
+              feearr[i].amount=parseInt(collection[j].amount)+parseInt(feearr[i].fineamount);
+              feearr[i].hiddencommitinput=true;
+              feearr[i].hiddencommititem=false;
+              feearr[i].paidflag=false;
+              feearr[i].hiddenflag=true;
+              feearr[i].readonlyflag=true;
+              feearr[i].hiddenpayflag=false;
               }
               }
               if(t==0){
