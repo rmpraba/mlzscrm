@@ -2,15 +2,16 @@
  var mysql      = require('mysql');
  var email   = require("emailjs/email");
  var connection = mysql.createConnection({
-  host     : 'localhost',
-  port     : '3306',
-  user     : 'root',
-  password : 'admin',
-  database : 'mlzscrm'
-  // port     : '60841',
-  // user     : 'admin8k1QrR9',
-  // password : 'gBH5PqAxBWjL',
+  // host     : 'localhost',
+  // port     : '3306',
+  // user     : 'root',
+  // password : 'admin',
   // database : 'mlzscrm'
+ host     : 'localhost',
+   port     : '60841',
+  user     : 'admin8k1QrR9',
+  password : 'gBH5PqAxBWjL',
+   database : 'mlzscrm'
  });
 
 var bodyParser = require('body-parser');

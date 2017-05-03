@@ -430,10 +430,10 @@
            <li id="zoneallocation">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezoneallocation" on-click="FnZoneAllocation">Zone Allocation</a>
            </li> 
-           <li id="zonechange">
+           <li id="zonechange" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonechange" on-click="FnZoneChange">Zone Change</a>
            </li>
-           <li id="zonecancellation">
+           <li id="zonecancellation" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonecancellation" on-click="FnZoneCancellation">Zone Cancellation</a>
            </li>
            <li id="transportchequecancelorbounce">
@@ -510,6 +510,24 @@
           </div>
           <div class="modal-body">
             <zonetostudent-card></zonetostudent-card>
+          </div>
+        </div>
+      </div>
+ </div>
+
+ <div class="modal fade bd-example-modal-lg" id="togglezonechange" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Zone Change 
+            </h4>
+          </div>
+          <div class="modal-body">
+            <zonechange-card></zonechange-card>
           </div>
         </div>
       </div>

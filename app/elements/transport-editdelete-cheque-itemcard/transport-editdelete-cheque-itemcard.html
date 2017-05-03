@@ -22,7 +22,7 @@
        <div  class="layout" style='margin-left: 5%;margin-top: -2%;'> <paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires bankName!"  id="edbankname" label="Bank Name" value="{{bankname}}"> </paper-input></div>
        <div style="width: 100%;margin-top: -2%;margin-left: 3%;"><cheque-datepicker showdate="{{chequedate}}"></cheque-datepicker></div>
        <div class="buttons" style="margin-left: -5%;">
-        <paper-button id="{{chequeno}}" class="btn btn-primary left" on-click="FnEditcheque">Edit</paper-button>
+        <paper-button id="{{chequeno}}" class="btn btn-primary left" on-click="FnEditcheque">Save</paper-button>
         <paper-button id="{{chequeno}}" class="btn btn-primary left" on-click="FnDeletecheque">Delete</paper-button>
         <paper-button id="{{chequeno}}" class="btn btn-primary left" on-click="FnCancel">Close</paper-button>
       </div>     
@@ -42,11 +42,11 @@
       },
       FnEditcheque:function(e){
         this.$.transporteditdeletecheque.toggle();
-        this.$.transportservice.editchequeService(this.studentid,this.chequeno,this.bankname,this.chequedate,this.installmenttype);
+        this.$.transportservice.editchequeService(this.studentid,this.chequeno,this.bankname,localStorage.getItem("curr_sess_chequedate"),this.installmenttype);
       },
       FnDeletecheque:function(e){
         this.$.transporteditdeletecheque.toggle();
-        this.$.transportservice.deletechequeService(this.studentid,this.chequeno,this.bankname,this.chequedate,this.installmenttype);
+        this.$.transportservice.deletechequeService(this.studentid,this.chequeno,this.bankname,localStorage.getItem("curr_sess_chequedate"),this.installmenttype);
       },
       FnCancel:function(){
         this.$.transporteditdeletecheque.toggle(); 

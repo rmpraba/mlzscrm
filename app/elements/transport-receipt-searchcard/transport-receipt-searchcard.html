@@ -13,7 +13,7 @@
             <div class="col-md-12">
                 <div class="col-md-3" style="margin-top: -1%;">
                    <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchEnquiry"></paper-input>
-                   <paper-listbox class="dropdown-content" id="transportsearchreceipt" on-iron-select="FnSelectEnquiry">
+                   <paper-listbox class="dropdown-content" id="transportsearchreceiptinput" on-iron-select="FnSelectEnquiry">
                    <template is="dom-repeat" items="{{itemArray}}" as="item">
                    <paper-item value="{{item.student_id}}">{{item.itemdes}}</paper-item>
                    </template>
@@ -47,7 +47,7 @@
     Polymer({
       is: 'transport-receipt-searchcard',
       ready:function(){
-      this.querySelector('#transportsearchreceipt').style.visibility='hidden';
+      this.querySelector('#transportsearchreceiptinput').style.visibility='hidden';
       },
       callService:function(){
         this.$.transportservice.fetchstudentforreceiptsearchService();
@@ -57,22 +57,24 @@
          item=autocompletearr;
       },
       FnSearchEnquiry:function(e){
+      // this.value="";
+      // alert(this.value);
       if(e.keyCode==13|| e.keyCode==40)
-      this.querySelector('#transportsearchreceipt').focus();
+      this.querySelector('#transportsearchreceiptinput').focus();
       var arr=[];
       arr.push({"itemdes":"-----Select-----"});
-      this.querySelector('#transportsearchreceipt').style.visibility='visible';
+      this.querySelector('#transportsearchreceiptinput').style.visibility='visible';
       if(e.keyCode==8){
         this.itemflag="true";
         this.itemval="";
         var len=(this.value).length;
         if(len<=1){
-          this.querySelector('#transportsearchreceipt').style.visibility='hidden';
+          this.querySelector('#transportsearchreceiptinput').style.visibility='hidden';
           this.itemArray="";
           this.itemval="";
         }
         if(len>1){
-          this.querySelector('#transportsearchreceipt').style.visibility='visible';
+          this.querySelector('#transportsearchreceiptinput').style.visibility='visible';
           var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
           for(var i=0;i<item.length;i++)
           {
@@ -122,13 +124,13 @@
       }
     },
     FnSelectEnquiry:function(e){
-    this.querySelector('#transportsearchreceipt').style.visibility='hidden';
+    this.querySelector('#transportsearchreceiptinput').style.visibility='hidden';
     var studentname = e.target.selectedItem.textContent.trim();
     var studentid = e.target.selectedItem.value.trim();
     localStorage.setItem("curr_sess_studentid",studentid);
     localStorage.setItem("curr_sess_studentname",studentname);
     this.itemArray=[];
-    document.querySelector('#transportsearchreceipt').selected=-1;
+    document.querySelector('#transportsearchreceiptinput').selected=-1;
     this.value=studentname;
     },
       FnSelectAcademicYear:function(e){
@@ -139,11 +141,14 @@
         this.$.transportservice.fetchreceiptinfoService(localStorage.getItem("curr_sess_studentid"),localStorage.getItem("curr_sess_studentname"));
       },
       FnRefresh:function(){
-        this.querySelector('#transportsearchreceipt').style.visibility='hidden';
-        document.querySelector('#transportsearchreceiptacademicyear').selected=-1;
-        document.querySelector('#transportsearchreceipt').selected=-1;
-        // this.itemArray=[];
+        // alert('coming');
         this.value="";
+        this.itemArray=[];
+        this.querySelector('#transportsearchreceiptinput').style.visibility='hidden';
+        document.querySelector('#transportsearchreceiptacademicyear').selected=-1;
+        document.querySelector('#transportsearchreceiptinput').selected=-1;
+        localStorage.setItem("curr_sess_studentid","");
+        localStorage.setItem("curr_sess_studentname","");    
       }
     });
   })();
