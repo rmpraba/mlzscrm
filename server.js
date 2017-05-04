@@ -9866,7 +9866,7 @@ app.post('/fetchtransportpdccollection-service',  urlencodedParser,function (req
 var qur2="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and "+
 " (STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) "+
 " and ((cheque_date in(select installment_date from mlzscrm.transport_fee_schedule where "+
-" installment='Installment2' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"')) or (STR_TO_DATE(cheque_date,'%m/%d/%Y')>STR_TO_DATE('"+req.query.currdate+"','%m/%d/%Y'))) and cheque_status in('paid','processing','cleared')";
+" installment='Installment2' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"')) or (STR_TO_DATE(cheque_date,'%m/%d/%Y')>STR_TO_DATE('"+req.query.currdate+"','%m/%d/%Y'))) and cheque_status in('processing')";
 var feearr=[];
 var chequearr=[];
 // console.log('-------------------------------');

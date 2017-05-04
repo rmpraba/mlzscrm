@@ -1383,7 +1383,7 @@
             collection.push(obj);
           }
         }
-        // alert(JSON.stringify(collection));
+        // alert(JSON.stringify(collection.length));
         for(var i=0;i<collection.length;i++){          
           for(var j=0;j<chequesarr.length;j++){
           if(collection[i].studentid==chequesarr[j].student_id&&collection[i].installment==chequesarr[j].installtype){            
@@ -1393,15 +1393,22 @@
           }
           }          
         }
+
+
         for(var i=0;i<collection.length;i++){
           var temp=0;
           for(var j=0;j<chequesarr.length;j++){
+
           if(collection[i].studentid==chequesarr[j].student_id&&collection[i].installment==chequesarr[j].installtype){
+            // alert(collection[i].studentid+" "+chequesarr[j].student_id+" "+collection[i].installment+" "+chequesarr[j].installtype);
             temp=1;
           }
           }
           if(temp==0)
+            {
             collection.splice(i,1);
+            i--;
+            }
         }
 
         // alert(JSON.stringify(collection));
