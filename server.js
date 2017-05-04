@@ -7,11 +7,11 @@
   // user     : 'root',
   // password : 'admin',
   // database : 'mlzscrm'
- host     : 'localhost',
-   port     : '60841',
+  host     : 'localhost',
+  port     : '60841',
   user     : 'admin8k1QrR9',
   password : 'gBH5PqAxBWjL',
-   database : 'mlzscrm'
+  database : 'mlzscrm'
  });
 
 var bodyParser = require('body-parser');
@@ -9805,8 +9805,13 @@ var qur1="SELECT * FROM transport.student_fee WHERE school_id='"+req.query.schoo
 " (STR_TO_DATE(paid_date2,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and "+
 " modeofpayment2 in ('Cheque','Card Swipe','Transfer') and install2_status "+
 " in('processing','paid')) and school_id='"+req.query.schoolid+"')";
+if(req.query.type=="All")
 var qur2="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and "+
 " (STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and cheque_status in('paid','processing','cleared')";
+if(req.query.type!="All")
+var qur2="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and "+
+" (STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and cheque_status in('paid','processing','cleared') and installtype='"+req.query.type+"'";
+
 var feearr=[];
 var chequearr=[];
 console.log('-------------------------------');
@@ -9840,6 +9845,61 @@ connection.query(qur1,function(err, rows){
          console.log(err);
        }
      });
+});
+
+
+app.post('/fetchtransportpdccollection-service',  urlencodedParser,function (req, res){
+// var qur1="SELECT * FROM transport.student_fee WHERE school_id='"+req.query.schoolid+"' and "+
+// " academic_year='"+req.query.academicyear+"' and  (((STR_TO_DATE(paid_date1,'%m/%d/%Y')>= "+
+// " STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')) and (STR_TO_DATE(paid_date1,'%m/%d/%Y')<= "+
+// " STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and modeofpayment1='Cash' and school_id='"+req.query.schoolid+"') or "+
+// " ((STR_TO_DATE(paid_date1,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')) and "+
+// " (STR_TO_DATE(paid_date1,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and "+
+// " modeofpayment1 in ('Cheque','Card Swipe','Transfer') and install1_status "+
+// " in('processing','paid')) and school_id='"+req.query.schoolid+"') or (((STR_TO_DATE(paid_date2,'%m/%d/%Y')>= "+
+// " STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')) and (STR_TO_DATE(paid_date2,'%m/%d/%Y')<= "+
+// " STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and modeofpayment2='Cash' and school_id='"+req.query.schoolid+"') or "+
+// " ((STR_TO_DATE(paid_date2,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y')) and "+
+// " (STR_TO_DATE(paid_date2,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and "+
+// " modeofpayment2 in ('Cheque','Card Swipe','Transfer') and install2_status "+
+// " in('processing','paid')) and school_id='"+req.query.schoolid+"')";
+var qur2="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and "+
+" (STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) "+
+" and ((cheque_date in(select installment_date from mlzscrm.transport_fee_schedule where "+
+" installment='Installment2' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"')) or (STR_TO_DATE(cheque_date,'%m/%d/%Y')>STR_TO_DATE('"+req.query.currdate+"','%m/%d/%Y'))) and cheque_status in('paid','processing','cleared')";
+var feearr=[];
+var chequearr=[];
+// console.log('-------------------------------');
+// console.log(qur1);
+console.log('-------------------------------');
+console.log(qur2);
+var qur3="SELECT * FROM mlzscrm.md_admission a join transport.student_fee f on(a.admission_no=f.student_id) "+
+" WHERE a.school_id='"+req.query.schoolid+"' and f.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and f.academic_year='"+req.query.academicyear+"'";
+// connection.query(qur1,function(err, rows){
+//        if(!err){
+//          if(rows.length>0){
+//          feearr=rows;
+//          console.log(feearr.length);
+         connection.query(qur2,function(err, rows){
+         if(!err){
+         chequearr=rows;
+         connection.query(qur3,function(err, rows){
+         if(!err){
+         res.status(200).json({'chequearr': chequearr,'studarr':rows});
+         }
+         });
+         }
+         else
+          console.log(err);
+         });
+     //     }else{
+     //       console.log(err);
+     //       res.status(200).json({'returnval':'no rows'});
+     //     }
+     //   }else{
+     //     console.log(err);
+     //   }
+     // });
 });
 
 app.post('/fetchallstudentforzone-service',  urlencodedParser,function (req, res){

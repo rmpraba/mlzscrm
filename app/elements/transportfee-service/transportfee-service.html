@@ -186,6 +186,16 @@
         > 
     <iron-ajax
         method="post"
+        id="fetchtransportpdccollectionajax"
+        url="{{fetchtransportpdccollectionurl}}"
+        params="{{fetchtransportpdccollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtransportpdccollectionResponse"
+        debounce-duration="300"
+        > 
+    <iron-ajax
+        method="post"
         id="fetchallstudentforzoneajax"
         url="{{fetchallstudentforzoneurl}}"
         params="{{fetchallstudentforzoneparam}}"
@@ -1279,13 +1289,59 @@
         alert(e.detail.response.returnval);
         this.fetchchequeforeditordelete(localStorage.getItem("curr_sess_studentid"));
       },
-      FnFetchDayCollectionService:function(){
+      FnFetchPDCCollectionService:function(){
+        this.fetchtransportpdccollectionurl=sessionStorage.getItem("addrinfo")+"/fetchtransportpdccollection-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        var d=new Date();
+        var currdate=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+        obj.currdate=currdate;
+        this.fetchtransportpdccollectionparam=obj;
+        this.$.fetchtransportpdccollectionajax.generateRequest();
+      },
+      fetchtransportpdccollectionResponse:function(e){
+        var chequearr=e.detail.response.chequearr;
+        var studarr=e.detail.response.studarr;
+        var t=1;
+        var total=0;
+        for(var i=0;i<chequearr.length;i++){
+            for(var j=0;j<studarr.length;j++){
+                if(chequearr[i].student_id==studarr[j].admission_no){
+                    chequearr[i].sno=t;
+                    chequearr[i].grade=studarr[j].class_for_admission;
+                    if(chequearr[i].installtype=="Installment1"){
+                        chequearr[i].receiptno=studarr[j].receipt_no1;
+                        chequearr[i].amount=studarr[j].installment_1;
+                    }
+                    if(chequearr[i].installtype=="Installment2"){
+                        chequearr[i].receiptno=studarr[j].receipt_no2;
+                        chequearr[i].amount=studarr[j].installment_2;
+                    }
+                    t=t+1;
+                    total=parseInt(total)+parseInt(chequearr[i].amount);
+                }
+            }
+        }
+        for(var i=0;i<chequearr.length;i++){
+            var d=new Date(chequearr[i].cheque_date);
+            chequearr[i].cheque_date=d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear();
+            var d1=new Date(chequearr[i].paid_date);
+            chequearr[i].paid_date=d1.getDate()+"/"+(d1.getMonth()+1)+"/"+d1.getFullYear();
+        }
+        document.querySelector('transport-pdc-report').total=total;
+        document.querySelector('transport-pdc-report').transportpdccollectionarr=chequearr;
+      },
+      FnFetchDayCollectionService:function(type){
         this.fetchtransportdaycollectionurl=sessionStorage.getItem("addrinfo")+"/fetchtransportdaycollection-service";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.fromdate=localStorage.getItem("localsess_from_date");
         obj.todate=localStorage.getItem("localsess_to_date");
+        obj.type=type;
         this.fetchtransportdaycollectionparam=obj;
         this.$.fetchtransportdaycollectionajax.generateRequest();
       },
@@ -1293,8 +1349,15 @@
         var feearr=e.detail.response.feearr;
         var chequesarr=e.detail.response.chequearr;
         var studarr=e.detail.response.studarr;
+
         // alert(JSON.stringify(e.detail.response.feearr));
         // alert(JSON.stringify(e.detail.response.chequearr));
+        for(var i=0;i<chequesarr.length;i++){
+            var d=new Date(chequesarr[i].cheque_date);
+            chequesarr[i].cheque_date=d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear();
+            var d1=new Date(chequesarr[i].paid_date);
+            chequesarr[i].paid_date=d1.getDate()+"/"+(d1.getMonth()+1)+"/"+d1.getFullYear();
+        }
         var collection=[];
         for(var i=0;i<feearr.length;i++){
           if(feearr[i].install1_status=="cleared"||feearr[i].install1_status=="paid"||feearr[i].install1_status=="processing"){
@@ -1321,15 +1384,26 @@
           }
         }
         // alert(JSON.stringify(collection));
-        for(var i=0;i<collection.length;i++){
+        for(var i=0;i<collection.length;i++){          
           for(var j=0;j<chequesarr.length;j++){
-          if(collection[i].studentid==chequesarr[j].student_id&&collection[i].installment==chequesarr[j].installtype){
+          if(collection[i].studentid==chequesarr[j].student_id&&collection[i].installment==chequesarr[j].installtype){            
             collection[i].chequeno=chequesarr[j].cheque_no;
             collection[i].bankname=chequesarr[j].bank_name;
             collection[i].chequedate=chequesarr[j].cheque_date;
           }
-          }
+          }          
         }
+        for(var i=0;i<collection.length;i++){
+          var temp=0;
+          for(var j=0;j<chequesarr.length;j++){
+          if(collection[i].studentid==chequesarr[j].student_id&&collection[i].installment==chequesarr[j].installtype){
+            temp=1;
+          }
+          }
+          if(temp==0)
+            collection.splice(i,1);
+        }
+
         // alert(JSON.stringify(collection));
         for(var i=0;i<collection.length;i++){
           for(var j=0;j<studarr.length;j++){
@@ -1368,6 +1442,7 @@
         document.querySelector('transportdaily-collection-report').transfertotal=transfertotal;
         document.querySelector('transportdaily-collection-report').swipetotal=swipetotal;
         document.querySelector('transportdaily-collection-report').total=total;
+
       },
        searchtransportfeepaidinfoService1:function(studid){
         this.searchtransportfeepaidinfourl1=sessionStorage.getItem("addrinfo")+"/searchtransportfeepaidinfo-service1";

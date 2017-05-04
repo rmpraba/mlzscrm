@@ -451,6 +451,9 @@
            <li id="transportdailycollection">
             <a href="" aria-hidden="true" on-click="FnTransportDailyCollection">Transport Daily Collection</a>
            </li>
+           <li id="transportpdccollection">
+            <a href="" aria-hidden="true" on-click="FnTransportPdcCollection">PDC Collection</a>
+           </li>
           </ul>
         </li>
 
@@ -1145,6 +1148,11 @@
           document.querySelector('app-list').setPage("transportdaily-collection-report","Transport Daily Collection");
           document.querySelector('transportdaily-collection-report').FnRefresh();
           document.querySelector('transportdaily-collection-report').FnCallService();
+      },
+      FnTransportPdcCollection:function(){
+        document.querySelector('app-list').setPage("transport-pdc-report","Transport PDC Collection");
+        document.querySelector('transport-pdc-report').FnRefresh();
+        document.querySelector('transport-pdc-report').FnCallService();
       },
       FnDetaildaycollection:function(){
           this.$.scheduleservice.fetchgradeforreportService();
