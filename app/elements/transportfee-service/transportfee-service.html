@@ -1342,6 +1342,7 @@
         obj.fromdate=localStorage.getItem("localsess_from_date");
         obj.todate=localStorage.getItem("localsess_to_date");
         obj.type=type;
+        this.type=type;
         this.fetchtransportdaycollectionparam=obj;
         this.$.fetchtransportdaycollectionajax.generateRequest();
       },
@@ -1352,6 +1353,7 @@
 
         // alert(JSON.stringify(e.detail.response.feearr));
         // alert(JSON.stringify(e.detail.response.chequearr));
+
         for(var i=0;i<chequesarr.length;i++){
             var d=new Date(chequesarr[i].cheque_date);
             chequesarr[i].cheque_date=d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear();
@@ -1394,19 +1396,31 @@
           }          
         }
 
+        if(this.type!='All'){
         for(var i=0;i<collection.length;i++){
-          var temp=0;
-          for(var j=0;j<chequesarr.length;j++){
-          if(collection[i].studentid==chequesarr[j].student_id&&collection[i].installment==chequesarr[j].installtype){
-            temp=1;
-          }
-          }
-          if(temp==0)
-            {
+            if(collection[i].installment==this.type){
+            }
+            else{
             collection.splice(i,1);
             i--;
             }
         }
+        }
+
+        // for(var i=0;i<collection.length;i++){
+        //   var temp=0;
+        //   for(var j=0;j<chequesarr.length;j++){
+        //   if(collection[i].studentid==chequesarr[j].student_id&&collection[i].installment==chequesarr[j].installtype&&(collection[i].modeofpayment1!='Cash'||collection[i].modeofpayment2!='Cash')){
+        //     temp=1;
+        //     // break;
+        //   }
+        //   }
+        //   if(temp==0)
+        //     {
+        //     collection.splice(i,1);
+        //     i--;
+        //     }
+        // }
 
         // alert(JSON.stringify(collection));
         for(var i=0;i<collection.length;i++){
