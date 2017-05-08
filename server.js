@@ -2,16 +2,16 @@
  var mysql      = require('mysql');
  var email   = require("emailjs/email");
  var connection = mysql.createConnection({
-  // host     : 'localhost',
-  // port     : '3306',
-  // user     : 'root',
-  // password : 'admin',
-  // database : 'mlzscrm'
   host     : 'localhost',
-  port     : '60841',
-  user     : 'admin8k1QrR9',
-  password : 'gBH5PqAxBWjL',
+  port     : '3306',
+  user     : 'root',
+  password : 'admin',
   database : 'mlzscrm'
+  // host     : 'localhost',
+  // port     : '60841',
+  // user     : 'admin8k1QrR9',
+  // password : 'gBH5PqAxBWjL',
+  // database : 'mlzscrm'
  });
 
 var bodyParser = require('body-parser');
@@ -10169,6 +10169,80 @@ app.post('/updatetransportchequestatus-service',urlencodedParser,function (req, 
   });
 });
 
+app.post('/fetchstudentforcancellation-service',  urlencodedParser,function (req, res){
+  var queryy="SELECT a.admission_no,a.student_name FROM transport.student_fee f join mlzscrm.md_admission a on(f.student_id=a.admission_no) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' "+
+  " and a.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"'"+
+  "";
+  console.log('-------------------------------------------');
+  console.log(queryy);
+  
+  connection.query(queryy,function(err, rows){
+      if(!err)
+      {
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      }
+      else
+      {
+        console.log(err);
+      }
+  });
+});
+
+app.post('/fetchstudinfoforcancellation-service',  urlencodedParser,function (req, res){
+  var queryy="SELECT a.admission_no,a.student_name,z.zone_name,a.class_for_admission,a.father_name FROM transport.student_fee f join mlzscrm.md_admission a on(f.student_id=a.admission_no) join transport.md_zone z on(f.zone_id=z.id) WHERE z.school_id='"+req.query.schoolid+"' and z.academic_year='"+req.query.academicyear+"' and f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' "+
+  " and a.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and f.student_id='"+req.query.studentid+"'";
+  console.log('-------------------------------------------');
+  console.log(queryy);
+  
+  connection.query(queryy,function(err, rows){
+      if(!err)
+      {
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      }
+      else
+      {
+        console.log(err);
+      }
+  });
+});
+
+app.post('/cancelzone-service',  urlencodedParser,function (req, res){
+  var queryy1="DELETE FROM transport.student_fee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'"+
+  " and student_id='"+req.query.studentid+"'";
+  var queryy2="DELETE FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'"+
+  " and student_id='"+req.query.studentid+"'";
+  console.log('-------------------------------------------');
+  console.log(queryy1);
+  console.log(queryy2);
+  
+  connection.query(queryy1,function(err, rows){
+      if(!err)
+      {
+      connection.query(queryy2,function(err, rows){
+      if(!err)
+      {
+        res.status(200).json({'returnval': 'Updated!'});
+      }
+      else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Not Updated!'});
+        }
+      });
+      }
+      else
+      console.log(err);
+  });
+});
 
 function setvalue(){
   console.log("calling setvalue.....");

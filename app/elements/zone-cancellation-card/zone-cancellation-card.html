@@ -1,38 +1,156 @@
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
 
 <link rel="import" href="..\..\bower_components/polymer/polymer.html">
 
 <dom-module id="zone-cancellation-card">
   <template>
     <style>
-      :host {
-        display: block;
-      }
+    td{
+      padding: 2%;
+    }
     </style>
-    <div>Hello from <span>{{foo}}</span></div>
+     <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <div class="col-md-6"> -->
+                <div class="col-md-3" style="margin-top: -1%;">
+                   <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchEnquiry"></paper-input>
+                   <paper-listbox class="dropdown-content" id="zonecancellationinput2" on-iron-select="FnSelectEnquiry">
+                   <template is="dom-repeat" items="{{itemArray}}" as="item">
+                   <paper-item value="{{item.student_id}}">{{item.itemdes}}</paper-item>
+                   </template>
+                   </paper-listbox>
+                </div>
+                <div class="col-md-3" style="margin-left: 15%;margin-top: 2%;">
+                  <paper-button on-click='FnCancel' class="btn btn-primary center">Cancel</paper-button>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+     <div>
+      <table style="width: 60%;">
+      <thead>
+        <tr>
+          <td><paper-input Label='Enrollment No' value="{{enrno}}"></paper-input></td>
+          <td><paper-input Label='Grade' value="{{grade}}"></paper-input></td>
+        </tr> 
+        <tr>
+          <td><paper-input Label='Parent Name' value="{{parentname}}"></paper-input></td>
+          <td><paper-input Label='Allocated Zone' value="{{zone}}"></paper-input></td>
+        </tr>    
+      </thead>
+      </table>
+    </div>    
+    <transportfee-service id="transportservice"></transportfee-service>
   </template>
   <script>
   (function() {
     'use strict';
-
+    var item=[];
+    var allchequesarr=[];
+    var cheques=[];
     Polymer({
       is: 'zone-cancellation-card',
-
-      properties: {
-        foo: {
-          type: String,
-          value: 'zone-cancellation-card',
-          notify: true
+      ready:function(){
+        this.querySelector('#zonecancellationinput2').style.visibility='hidden';
+      },
+      callService:function(){
+        this.$.transportservice.fetchstudentforcancellationService();
+      },
+      autocompletearr:function(autocompletearr)
+      {
+         item=autocompletearr;
+      },
+      FnSearchEnquiry:function(e){
+      if(e.keyCode==13|| e.keyCode==40)
+      this.querySelector('#zonecancellationinput2').focus();
+      var arr=[];
+      arr.push({"itemdes":"-----Select-----"});
+      this.querySelector('#zonecancellationinput2').style.visibility='visible';
+      if(e.keyCode==8){
+        this.itemflag="true";
+        this.itemval="";
+        //alert('yes');
+        var len=(this.value).length;
+        if(len<=1){
+          this.querySelector('#zonecancellationinput2').style.visibility='hidden';
+          this.itemArray="";
+          this.itemval="";
+        }
+        if(len>1){
+          this.querySelector('#zonecancellationinput2').style.visibility='visible';
+          var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,backsubval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.value).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.student_id=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          this.itemArray=arr;
         }
       }
+      if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+        if(this.itemflag=="true") {
+          this.itemval = (this.value).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+          this.itemflag="false";
+        }
+        else
+        this.itemval = this.value +String.fromCharCode((e.keyCode));
+        if(this.itemval.length>0)
+        {
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,this.itemval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.itemval).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.student_id=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          if(arr.length>0)
+            this.itemArray=arr;
+          else
+          {
+            var obj={"itemdes":"","enquiry_no":""};
+            obj.itemdes="No items found";
+            arr.push(obj);
+            this.itemArray=arr;
+          }
+        }
+      }
+    },
+    FnSelectEnquiry:function(e){
+    this.querySelector('#zonecancellationinput2').style.visibility='hidden';
+    var student_name = e.target.selectedItem.textContent.trim();
+    var student_id = e.target.selectedItem.value.trim();
+    localStorage.setItem("curr_sess_studentid",student_id);
+    localStorage.setItem("curr_sess_studentname",student_name);
+    this.itemArray=[];
+    document.querySelector('#zonecancellationinput2').selected=-1;
+    this.value=student_name;  
+    this.$.transportservice.fetchstudinfoforcancellation(student_id);  
+    },
+    FnCancel:function(){
+    this.$.transportservice.cancelzoneService(localStorage.getItem("curr_sess_studentid"));
+    },
+    FnRefresh:function()
+    {
+      document.querySelector('#zonecancellationinput2').selected=-1;
+      this.value="";
+      this.querySelector('#zonecancellationinput2').style.visibility='hidden';
+      this.enrno="";
+      this.parentname="";
+      this.grade="";
+      this.zone="";
+    }
     });
   })();
   </script>

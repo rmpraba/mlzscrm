@@ -433,7 +433,7 @@
            <li id="zonechange" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonechange" on-click="FnZoneChange">Zone Change</a>
            </li>
-           <li id="zonecancellation" hidden>
+           <li id="zonecancellation">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonecancellation" on-click="FnZoneCancellation">Zone Cancellation</a>
            </li>
            <li id="transportchequecancelorbounce">
@@ -1259,6 +1259,12 @@
         this.$.transportfeeservice.fetchzoneService();
         document.querySelector('zonetostudent-card').ready();
         document.querySelector('zonetostudent-card').FnRefresh();
+      },
+      FnZoneCancellation:function(){
+        document.querySelector('app-list').setPage("zone-cancellation-card","Zone Cancellation");
+        document.querySelector('zone-cancellation-card').callService();
+        document.querySelector('zone-cancellation-card').ready();
+        document.querySelector('zone-cancellation-card').FnRefresh();
       },
       FnTransportchequecancelorbounce:function(){
         document.querySelector('app-list').setPage("transport-cheque-bouncecancel","Cheque Bounce/Cancel");

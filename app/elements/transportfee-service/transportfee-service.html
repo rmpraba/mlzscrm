@@ -255,6 +255,37 @@
         on-response="insertnewstudentResponse"
         debounce-duration="300"
         >
+    <iron-ajax
+        method="post"
+        id="fetchstudentforcancellationajax"
+        url="{{fetchstudentforcancellationurl}}"
+        params="{{fetchstudentforcancellationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentforcancellationResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchstudinfoforcancellationajax"
+        url="{{fetchstudinfoforcancellationurl}}"
+        params="{{fetchstudinfoforcancellationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudinfoforcancellationResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="cancelzoneajax"
+        url="{{cancelzoneurl}}"
+        params="{{cancelzoneparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="cancelzoneResponse"
+        debounce-duration="300"
+        >
+        
   </template>
   <script>
   (function() {
@@ -272,6 +303,56 @@
     var paymentarr=[];
     Polymer({
       is: 'transportfee-service',
+      fetchstudentforcancellationService:function(){
+        this.fetchstudentforcancellationurl=sessionStorage.getItem("addrinfo")+"/fetchstudentforcancellation-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.fetchstudentforcancellationparam=obj;
+        this.$.fetchstudentforcancellationajax.generateRequest();
+      },
+      fetchstudentforcancellationResponse:function(e){
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+            document.querySelector('zone-cancellation-card').autocompletearr(arr);
+        }
+      },
+      fetchstudinfoforcancellation:function(studid){
+        this.fetchstudinfoforcancellationurl=sessionStorage.getItem("addrinfo")+"/fetchstudinfoforcancellation-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studid;
+        this.fetchstudinfoforcancellationparam=obj;
+        this.$.fetchstudinfoforcancellationajax.generateRequest();
+      },
+      fetchstudinfoforcancellationResponse:function(e){
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+            document.querySelector('zone-cancellation-card').enrno=arr[0].admission_no;
+            document.querySelector('zone-cancellation-card').grade=arr[0].class_for_admission;
+            document.querySelector('zone-cancellation-card').parentname=arr[0].father_name;
+            document.querySelector('zone-cancellation-card').zone=arr[0].zone_name;
+        }
+        
+      },
+      cancelzoneService:function(studid){
+        this.cancelzoneurl=sessionStorage.getItem("addrinfo")+"/cancelzone-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studid;
+        this.cancelzoneparam=obj;
+        this.$.cancelzoneajax.generateRequest();
+      },
+      cancelzoneResponse:function(e){
+        if(e.detail.response.returnval=='Updated!'){
+            alert('Cancellation Done!!');
+            document.querySelector('zone-cancellation-card').FnRefresh();
+        }
+        else
+            alert('Problem in updation!!');
+      },
       FnInsertnewstudentService:function(enrollmentno,firstname,middlename,lastname,grade,fathername,mothername,fathermobile,mothermobile,fatheremail,motheremail,address,city,pincode){
         this.insertnewstudenturl=sessionStorage.getItem("addrinfo")+"/insertnewstudent-service";
         var obj={"schoolid":"","prefixid":""};
@@ -872,12 +953,34 @@
                 // currchequeno++;
                 // }
                 // else{
+
+                var d=new Date(paymentarr[i].inschequedate);
+                var dt=d.getDate();
+                if(dt<9)
+                    dt="0"+dt;                
+                var mn=d.getMonth()+1;
+                if(mn<9)
+                    mn="0"+mn;
+                var yr=d.getFullYear();
+                var dat=dt+"-"+mn+"-"+yr;
+                paymentarr[i].inschequedate=dat;
+
                 chequetotal=parseFloat(parseFloat(paymentarr[i].insamount)+parseFloat(chequetotal)+parseFloat(paymentarr[i].insfineamount)).toFixed(2);
                 chequeparticular.push({"slno":chequeno,"installment":paymentarr[i].installment,"bankname":paymentarr[i].insbankname,"chequeno":paymentarr[i].inschequeno,"chequedate":paymentarr[i].inschequedate,"installmentamount":paymentarr[i].insamount});
                 chequeno++;
                 // }
             }
             else if(paymentarr[i].inspaymentmode=="Transfer"||paymentarr[i].inspaymentmode=="Card Swipe"){
+                var d=new Date(paymentarr[i].inschequedate);
+                var dt=d.getDate();
+                if(dt<9)
+                    dt="0"+dt;                
+                var mn=d.getMonth()+1;
+                if(mn<9)
+                    mn="0"+mn;
+                var yr=d.getFullYear();
+                var dat=dt+"-"+mn+"-"+yr;
+                paymentarr[i].inschequedate=dat;
                 if(paymentarr[i].insfineamount==""||paymentarr[i].insfineamount==null)
             paymentarr[i].insfineamount=0;
                 transfertotal=parseFloat(parseFloat(paymentarr[i].insamount)+parseFloat(transfertotal)+parseFloat(paymentarr[i].insfineamount)).toFixed(2);
@@ -1360,6 +1463,7 @@
             var d1=new Date(chequesarr[i].paid_date);
             chequesarr[i].paid_date=d1.getDate()+"/"+(d1.getMonth()+1)+"/"+d1.getFullYear();
         }
+
         var collection=[];
         for(var i=0;i<feearr.length;i++){
           if(feearr[i].install1_status=="cleared"||feearr[i].install1_status=="paid"||feearr[i].install1_status=="processing"){
@@ -1421,8 +1525,8 @@
         //     i--;
         //     }
         // }
-
         // alert(JSON.stringify(collection));
+
         for(var i=0;i<collection.length;i++){
           for(var j=0;j<studarr.length;j++){
             if(collection[i].studentid==studarr[j].admission_no){
