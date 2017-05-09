@@ -1641,6 +1641,7 @@
         var collection=[];
         for(var i=0;i<paidarr.length;i++){
           if(paidarr[i].install1_status!=""){
+            // alert('1');
             var obj={};
             obj.studentid=paidarr[i].student_id;
             obj.installment="Installment1";
@@ -1653,6 +1654,7 @@
             collection.push(obj);
           }
           if(paidarr[i].install2_status!=""){
+            // alert('2');
             var obj={};
             obj.studentid=paidarr[i].student_id;
             obj.installment="Installment2";
@@ -1664,6 +1666,22 @@
             obj.installstatus=paidarr[i].install2_status;
             collection.push(obj);
           }
+          if(paidarr[i].install2_status==""){
+            var obj={};
+            // alert('come');
+            obj.studentid=paidarr[i].student_id;
+            obj.installment="Installment2";
+            obj.installstatus="";
+            collection.push(obj);
+          }   
+          if(paidarr[i].install1_status==""){
+            var obj={};
+            // alert('come');
+            obj.studentid=paidarr[i].student_id;
+            obj.installment="Installment1";
+            obj.installstatus="";
+            collection.push(obj);
+          }       
         }
         for(var i=0;i<collection.length;i++){
           for(var j=0;j<paidcheque.length;j++){
@@ -1679,7 +1697,8 @@
         for(var i=0;i<feearr.length;i++){
               for(var j=0;j<collection.length;j++){
               // alert(collection[j].installment+" "+feearr[i].installment+" "+collection[j].amount+" "+feearr[i].amount);
-              if(collection[j].installment==feearr[i].installment&&collection[j].amount==feearr[i].amount&&(collection[j].installstatus!='cancel'||collection[j].installstatus!='bounce')){
+              if(collection[j].installment==feearr[i].installment&&collection[j].amount==feearr[i].amount&&collection[j].installstatus!=''&&(collection[j].installstatus!='cancel'||collection[j].installstatus!='bounce')){
+              // alert('in');
               feearr[i].receiptdate=collection[j].receiptdate;
               feearr[i].modeofpayment=collection[j].modeofpayment;
               feearr[i].chequeno=collection[j].chequeno;
@@ -1693,6 +1712,17 @@
               feearr[i].hiddenflag=false;
               feearr[i].readonlyflag=true;
               feearr[i].hiddenpayflag=true;
+              }
+              if(collection[j].installment==feearr[i].installment&&collection[j].installstatus==''&&(collection[j].installstatus!='cancel'||collection[j].installstatus!='bounce')){
+              // alert('out');
+              feearr[i].discountamount=0;
+              feearr[i].fineamount=0;
+              feearr[i].hiddencommitinput=true;
+              feearr[i].hiddencommititem=false;
+              feearr[i].paidflag=false;
+              feearr[i].hiddenflag=true;
+              feearr[i].readonlyflag=true;
+              feearr[i].hiddenpayflag=false;
               }
               if(collection[j].installment==feearr[i].installment&&collection[j].amount==feearr[i].amount&&(collection[j].installstatus=='cancel'||collection[j].installstatus=='bounce')){
               feearr[i].receiptdate="";
