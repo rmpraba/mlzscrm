@@ -436,6 +436,9 @@
            <li id="zonecancellation">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonecancellation" on-click="FnZoneCancellation">Zone Cancellation</a>
            </li>
+           <li id="transportdiscount">
+            <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportdiscount" on-click="FnTransportDiscount">Transport Discount</a>
+           </li>
            <li id="transportchequecancelorbounce">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportchequecancelorbounce" on-click="FnTransportchequecancelorbounce">Transport cheque Bounce/Cancel</a>
            </li>
@@ -1265,6 +1268,12 @@
         document.querySelector('zone-cancellation-card').callService();
         document.querySelector('zone-cancellation-card').ready();
         document.querySelector('zone-cancellation-card').FnRefresh();
+      },
+      FnTransportDiscount:function(){
+        document.querySelector('app-list').setPage("transport-discount-card","Transport Discount");
+        document.querySelector('transport-discount-card').callService();
+        document.querySelector('transport-discount-card').ready();
+        document.querySelector('transport-discount-card').FnRefresh();
       },
       FnTransportchequecancelorbounce:function(){
         document.querySelector('app-list').setPage("transport-cheque-bouncecancel","Cheque Bounce/Cancel");

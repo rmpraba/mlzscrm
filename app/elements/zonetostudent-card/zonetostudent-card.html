@@ -82,7 +82,7 @@
             </div>
             <div style="margin-left:12%;" hidden$="{{hiddeninstallment}}"> 
               <template  is="dom-repeat" items="{{feearr}}" as="view">
-              <transportfee-installment-card id="transportfeeinscard" installmentid="{{view.installment}}" hiddenpayflag="{{view.hiddenpayflag}}" modeofpayment="{{view.modeofpayment}}" paidflag="{{view.paidflag}}" readonlyflag="{{view.readonlyflag}}" hiddenflag="{{view.hiddenflag}}" installment="{{view.installment}}" installmenttype="{{view.installment}}" actualamount="{{view.amount}}" amount="{{view.amount}}" discountamount="{{view.discountamount}}" installmentdate="{{view.installment_date}}" chequeno="{{view.chequeno}}" paiddate="{{view.paiddate}}" bankname="{{view.bankname}}" chequedate="{{view.chequedate}}" receiptdate="{{view.receiptdate}}" hiddencommitinput="{{view.hiddencommitinput}}" hiddencommititem="{{view.hiddencommititem}}" editdate="{{view.editdate}}" bounceflag="{{view.bounceflag}}" fineamount="{{view.fineamount}}"></transportfee-installment-card>
+              <transportfee-installment-card id="transportfeeinscard" installmentid="{{view.installment}}" hiddenpayflag="{{view.hiddenpayflag}}" modeofpayment="{{view.modeofpayment}}" paidflag="{{view.paidflag}}" readonlyflag="{{view.readonlyflag}}" hiddenflag="{{view.hiddenflag}}" installment="{{view.installment}}" installmenttype="{{view.installment}}" actualamount="{{view.actualamount}}" amount="{{view.amount}}" discountamount="{{view.discountamount}}" installmentdate="{{view.installment_date}}" chequeno="{{view.chequeno}}" paiddate="{{view.paiddate}}" bankname="{{view.bankname}}" chequedate="{{view.chequedate}}" receiptdate="{{view.receiptdate}}" hiddencommitinput="{{view.hiddencommitinput}}" hiddencommititem="{{view.hiddencommititem}}" editdate="{{view.editdate}}" bounceflag="{{view.bounceflag}}" fineamount="{{view.fineamount}}"></transportfee-installment-card>
               </template>
             </div>
             
@@ -294,6 +294,8 @@ Polymer({
       document.querySelector('#transportfeegeneral1').checked=true;
       document.querySelector('#transportfeelumpsum1').checked=false;
       localStorage.setItem("curr_sess_paymentpattern",1);
+      localStorage.setItem("curr_sess_ins1discount",0);
+      localStorage.setItem("curr_sess_ins2discount",0);
     },
     FnRefresh1:function(){
       document.querySelector('#zoneallocationinput').selected=-1;
@@ -315,6 +317,8 @@ Polymer({
       document.querySelector('#transportfeegeneral1').checked=true;
       document.querySelector('#transportfeelumpsum1').checked=false;
       localStorage.setItem("curr_sess_paymentpattern",1);
+      localStorage.setItem("curr_sess_ins1discount",0);
+      localStorage.setItem("curr_sess_ins2discount",0);
     },
     FnEnablePaymentCard:function(){
       this.$.service.searchtransportfeepaidinfoService1(localStorage.getItem("curr_sess_studentid"));

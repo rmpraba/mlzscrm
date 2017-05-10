@@ -9962,7 +9962,7 @@ app.post('/fetchstudentinfoforzoneallocation-service',  urlencodedParser,functio
 
 app.post('/allocatezone-service',  urlencodedParser,function (req, res){
   // var qur="SELECT * FROM transport.student_fee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"' and status='mapped'";
-  var queryy="insert into transport.student_fee values('"+req.query.schoolid+"','"+req.query.studentid+"',(select id from transport.md_zone where zone_name='"+req.query.zonename+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),'','',0,0,'"+req.query.fees+"',0,'','','','',(SELECT distinct(start_date) FROM transport.transport_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),(SELECT distinct(end_date) FROM transport.transport_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),'Two-Way','"+req.query.updatedby+"',STR_TO_DATE('"+req.query.currdate+"','%Y/%m/%d'),'mapped','','',0,0,'"+req.query.academicyear+"','','','','','')";
+  var queryy="insert into transport.student_fee values('"+req.query.schoolid+"','"+req.query.studentid+"',(select id from transport.md_zone where zone_name='"+req.query.zonename+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),'','',0,0,'"+req.query.fees+"',0,'','','','',(SELECT distinct(start_date) FROM transport.transport_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),(SELECT distinct(end_date) FROM transport.transport_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),'Two-Way','"+req.query.updatedby+"',STR_TO_DATE('"+req.query.currdate+"','%Y/%m/%d'),'mapped','','',0,0,'"+req.query.academicyear+"','','','','','','0','0','','')";
   console.log('-------------------------------------------');
   console.log(queryy);
   
@@ -10241,6 +10241,82 @@ app.post('/cancelzone-service',  urlencodedParser,function (req, res){
       }
       else
       console.log(err);
+  });
+});
+
+app.post('/fetchstudentfordiscount-service',  urlencodedParser,function (req, res){
+  // var queryy="SELECT * from mlzscrm.md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";
+  var queryy="SELECT a.admission_no,a.student_name FROM transport.student_fee f join mlzscrm.md_admission a on(f.student_id=a.admission_no) WHERE f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' "+
+  " and a.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"'"+
+  "";
+  console.log('-------------------------------------------');
+  console.log(queryy);
+  
+  connection.query(queryy,function(err, rows){
+      if(!err)
+      {
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      }
+      else
+      {
+        console.log(err);
+      }
+  });
+});
+
+app.post('/fetchstudinfofordiscount-service',  urlencodedParser,function (req, res){
+  // var queryy="SELECT * FROM mlzscrm.md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.studentid+"'";
+  var queryy="SELECT a.admission_no,a.student_name,z.zone_name,a.class_for_admission,a.father_name,f.fees FROM transport.student_fee f join mlzscrm.md_admission a on(f.student_id=a.admission_no) join transport.md_zone z on(f.zone_id=z.id) WHERE z.school_id='"+req.query.schoolid+"' and z.academic_year='"+req.query.academicyear+"' and f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' "+
+  " and a.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and f.student_id='"+req.query.studentid+"'";
+
+  console.log('-------------------------------------------');
+  console.log(queryy);
+  
+  connection.query(queryy,function(err, rows){
+      if(!err)
+      {
+        if(rows.length>0){
+          res.status(200).json({'returnval': rows});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+        }
+      }
+      else
+      {
+        console.log(err);
+      }
+  });
+});
+
+app.post('/attachtransportdiscount-service',  urlencodedParser,function (req, res){
+  if(req.query.installment=="Installment1")
+  var queryy="UPDATE transport.student_fee SET install1_discount='"+req.query.amount+"',install1_discount_comment='"+req.query.reason+"' WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"'";
+  if(req.query.installment=="Installment2")
+  var queryy="UPDATE transport.student_fee SET install2_discount='"+req.query.amount+"',install2_discount_comment='"+req.query.reason+"' WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"'";
+  
+  console.log('-------------------------------------------');
+  console.log(queryy);
+  
+  connection.query(queryy,function(err, result){
+      if(!err)
+      {
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Updated!!'});
+        } else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Not Updated!!'});
+        }
+      }
+      else
+      {
+        console.log(err);
+      }
   });
 });
 

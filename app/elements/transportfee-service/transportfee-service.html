@@ -277,12 +277,42 @@
         >
     <iron-ajax
         method="post"
+        id="fetchstudentfordiscountajax"
+        url="{{fetchstudentfordiscounturl}}"
+        params="{{fetchstudentfordiscountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentfordiscountResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchstudinfofordiscountajax"
+        url="{{fetchstudinfofordiscounturl}}"
+        params="{{fetchstudinfofordiscountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudinfofordiscountResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
         id="cancelzoneajax"
         url="{{cancelzoneurl}}"
         params="{{cancelzoneparam}}"
         handle-as="json"
         content-type="application/json"
         on-response="cancelzoneResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="attachtransportdiscountajax"
+        url="{{attachtransportdiscounturl}}"
+        params="{{attachtransportdiscountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="attachtransportdiscountResponse"
         debounce-duration="300"
         >
         
@@ -303,6 +333,63 @@
     var paymentarr=[];
     Polymer({
       is: 'transportfee-service',
+      attachdiscount:function(studentid,installment,amount,reason){
+        this.attachtransportdiscounturl=sessionStorage.getItem("addrinfo")+"/attachtransportdiscount-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studentid;
+        obj.installment=installment;
+        obj.amount=amount;
+        obj.reason=reason;
+        this.attachtransportdiscountparam=obj;
+        this.$.attachtransportdiscountajax.generateRequest();
+      },
+      attachtransportdiscountResponse:function(e){
+        if(e.detail.response.returnval=="Updated!!"){
+            alert('Discount Added!!');
+            document.querySelector('transport-discount-card').FnRefresh();
+        }
+        else{
+            alert('Problem in updation!!');
+        }
+      },
+      fetchstudentfordiscountService:function(){
+        this.fetchstudentfordiscounturl=sessionStorage.getItem("addrinfo")+"/fetchstudentfordiscount-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.fetchstudentfordiscountparam=obj;
+        this.$.fetchstudentfordiscountajax.generateRequest();
+      },
+      fetchstudentfordiscountResponse:function(e){
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+           
+            document.querySelector('transport-discount-card').autocompletearr(arr);
+        }
+      },
+      fetchstudinfofordiscount:function(studid){
+        this.fetchstudinfofordiscounturl=sessionStorage.getItem("addrinfo")+"/fetchstudinfofordiscount-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studid;
+        this.fetchstudinfofordiscountparam=obj;
+        this.$.fetchstudinfofordiscountajax.generateRequest();
+      },
+      fetchstudinfofordiscountResponse:function(e){
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+           
+            document.querySelector('transport-discount-card').enrno=arr[0].admission_no;
+            document.querySelector('transport-discount-card').grade=arr[0].class_for_admission;
+            document.querySelector('transport-discount-card').parentname=arr[0].father_name;
+            document.querySelector('transport-discount-card').zone=arr[0].zone_name;
+            document.querySelector('transport-discount-card').fees=arr[0].fees;
+        }
+        
+      },
       fetchstudentforcancellationService:function(){
         this.fetchstudentforcancellationurl=sessionStorage.getItem("addrinfo")+"/fetchstudentforcancellation-service";
         var obj={"schoolid":""};
@@ -315,6 +402,7 @@
         var arr=e.detail.response.returnval;
         if(arr!='no rows'){
             document.querySelector('zone-cancellation-card').autocompletearr(arr);
+            
         }
       },
       fetchstudinfoforcancellation:function(studid){
@@ -333,7 +421,7 @@
             document.querySelector('zone-cancellation-card').grade=arr[0].class_for_admission;
             document.querySelector('zone-cancellation-card').parentname=arr[0].father_name;
             document.querySelector('zone-cancellation-card').zone=arr[0].zone_name;
-        }
+                   }
         
       },
       cancelzoneService:function(studid){
@@ -444,6 +532,9 @@
           // alert(feearr[0].distance_id);
           document.querySelector('zonetostudent-card').FnSetSelectedZone(feearr[0].distance_id);
           document.querySelector('zonetostudent-card').fees=feearr[0].fees;
+          // alert(feearr[0].install1_discount+" "+feearr[0].install2_discount);
+          localStorage.setItem("curr_sess_ins1discount",feearr[0].install1_discount);
+          localStorage.setItem("curr_sess_ins2discount",feearr[0].install2_discount);
           localStorage.setItem("curr_sess_studentid",arr[0].admission_no);
           // alert(arr[0].admission_no);
           document.querySelector('zonetostudent-card').FnEnablePaymentCard();
@@ -604,11 +695,16 @@
         if(feearr!='no rows'){
           document.querySelector('transportfee-card').hiddenaddbtn=false;
           document.querySelector('transportfee-card').hiddenpayment=false;
-          if(paidarr=="no rows"){
-            // alert('no rows');
+        if(paidarr=="no rows"){
+            alert('no rows');
             document.querySelector('transportfee-card').disableflag=false;
             for(var i=0;i<feearr.length;i++){
-              feearr[i].discountamount=0;
+              if(feearr[i].installment=='Installment1')
+              feearr[i].discountamount=localStorage.getItem("curr_sess_ins1discount");
+              if(feearr[i].installment=='Installment2')
+              feearr[i].discountamount=localStorage.getItem("curr_sess_ins2discount");
+              alert(feearr[i].discountamount);
+              feearr[i].amount=parseInt(feearr[i].amount)+parseInt(feearr[i].discountamount);
               feearr[i].fineamount=0;
               feearr[i].hiddencommitinput=true;
               feearr[i].hiddencommititem=false;
@@ -617,9 +713,9 @@
               feearr[i].readonlyflag=true;
               feearr[i].hiddenpayflag=false;
             }
-          }
-          else{
-            // alert('coming in....');
+        }
+        else{
+        // alert('coming in....');
         document.querySelector('transportfee-card').disableflag=true;
         // alert(JSON.stringify(paidarr));    
         var collection=[];
@@ -662,13 +758,13 @@
         for(var i=0;i<feearr.length;i++){
               for(var j=0;j<collection.length;j++){
               // alert(collection[j].installment+" "+feearr[i].installment+" "+collection[j].amount+" "+feearr[i].amount);
-              if(collection[j].installment==feearr[i].installment&&collection[j].amount==feearr[i].amount){
+              if(collection[j].installment==feearr[i].installment){
               feearr[i].receiptdate=collection[j].receiptdate;
               feearr[i].modeofpayment=collection[j].modeofpayment;
               feearr[i].chequeno=collection[j].chequeno;
               feearr[i].bankname=collection[j].bankname;
               feearr[i].chequedate=collection[j].chequedate;
-              feearr[i].discountamount=0;
+              // feearr[i].discountamount=0;
               feearr[i].fineamount=0;
               feearr[i].hiddencommitinput=true;
               feearr[i].hiddencommititem=false;
@@ -702,8 +798,9 @@
               var currdate=dd+"/"+m+"/"+y;
               obj.installmentdate=currdate;
               obj.installment="Lumpsum";
-              obj.amount=totamt;
-              obj.discountamount=0;
+              obj.discountamount=parseInt(localStorage.getItem('curr_sess_ins1discount'))+parseInt(localStorage.getItem('curr_sess_ins1discount'));
+              obj.amount=parseInt(totamt)+parseInt(obj.discountamount);
+              // obj.discountamount=0;
               obj.fineamount=0;
               obj.hiddencommitinput=true;
               obj.hiddencommititem=false;
@@ -762,7 +859,7 @@
               feearr[i].chequeno=collection[j].chequeno;
               feearr[i].bankname=collection[j].bankname;
               feearr[i].chequedate=collection[j].chequedate;
-              feearr[i].discountamount=0;
+              // feearr[i].discountamount=0;
               feearr[i].fineamount=0;
               feearr[i].hiddencommitinput=true;
               feearr[i].hiddencommititem=false;
@@ -1613,7 +1710,7 @@
         document.querySelector('zonetostudent-card').academicyear=studarr[0].academic_year;
         document.querySelector('zonetostudent-card').zone=e.detail.response.zonename;
         document.querySelector('zonetostudent-card').totalfees=e.detail.response.total;
-        document.querySelector('zonetostudent-card').totaldiscount=0;
+        document.querySelector('zonetostudent-card').totaldiscount=parseInt(localStorage.getItem('curr_sess_ins1discount'))+parseInt(localStorage.getItem('curr_sess_ins1discount'));
         document.querySelector('zonetostudent-card').payableamount=parseFloat(e.detail.response.total)+parseFloat(0);
         // alert(paidarr.length);
         if(localStorage.getItem("curr_sess_paymentpattern")==1){
@@ -1624,7 +1721,14 @@
             // alert('no rows');
             document.querySelector('zonetostudent-card').disableflag=false;
             for(var i=0;i<feearr.length;i++){
-              feearr[i].discountamount=0;
+              // feearr[i].discountamount=0;
+              if(feearr[i].installment=='Installment1')
+              feearr[i].discountamount=localStorage.getItem("curr_sess_ins1discount");
+              if(feearr[i].installment=='Installment2')
+              feearr[i].discountamount=localStorage.getItem("curr_sess_ins2discount");
+              // alert(feearr[i].discountamount);
+              feearr[i].actualamount=feearr[i].amount;
+              feearr[i].amount=parseInt(feearr[i].amount)-parseInt(feearr[i].discountamount);
               feearr[i].fineamount=0;
               feearr[i].hiddencommitinput=true;
               feearr[i].hiddencommititem=false;
@@ -1649,8 +1753,10 @@
             obj.receiveddate=paidarr[i].paid_date1;
             obj.receiptdate=paidarr[i].receipt_date1;
             obj.receiptno=paidarr[i].receipt_no1;
+            obj.actualamount=parseInt(paidarr[i].installment_1)+parseInt(paidarr[i].install1_fine);
             obj.amount=parseInt(paidarr[i].installment_1)+parseInt(paidarr[i].install1_fine);
             obj.installstatus=paidarr[i].install1_status;
+            obj.installdiscount=paidarr[i].install1_discount;
             collection.push(obj);
           }
           if(paidarr[i].install2_status!=""){
@@ -1662,8 +1768,10 @@
             obj.receiveddate=paidarr[i].paid_date2;
             obj.receiptdate=paidarr[i].receipt_date2;
             obj.receiptno=paidarr[i].receipt_no2;
+            obj.actualamount=parseInt(paidarr[i].installment_2)+parseInt(paidarr[i].install2_fine);
             obj.amount=parseInt(paidarr[i].installment_2)+parseInt(paidarr[i].install2_fine);
             obj.installstatus=paidarr[i].install2_status;
+            obj.installdiscount=paidarr[i].install2_discount;
             collection.push(obj);
           }
           if(paidarr[i].install2_status==""){
@@ -1672,6 +1780,7 @@
             obj.studentid=paidarr[i].student_id;
             obj.installment="Installment2";
             obj.installstatus="";
+            obj.installdiscount=paidarr[i].install2_discount;
             collection.push(obj);
           }   
           if(paidarr[i].install1_status==""){
@@ -1680,6 +1789,7 @@
             obj.studentid=paidarr[i].student_id;
             obj.installment="Installment1";
             obj.installstatus="";
+            obj.installdiscount=paidarr[i].install1_discount;
             collection.push(obj);
           }       
         }
@@ -1697,14 +1807,16 @@
         for(var i=0;i<feearr.length;i++){
               for(var j=0;j<collection.length;j++){
               // alert(collection[j].installment+" "+feearr[i].installment+" "+collection[j].amount+" "+feearr[i].amount);
-              if(collection[j].installment==feearr[i].installment&&collection[j].amount==feearr[i].amount&&collection[j].installstatus!=''&&(collection[j].installstatus!='cancel'||collection[j].installstatus!='bounce')){
+              if(collection[j].installment==feearr[i].installment&&collection[j].installstatus!=''&&(collection[j].installstatus!='cancel'||collection[j].installstatus!='bounce')){
               // alert('in');
               feearr[i].receiptdate=collection[j].receiptdate;
               feearr[i].modeofpayment=collection[j].modeofpayment;
               feearr[i].chequeno=collection[j].chequeno;
               feearr[i].bankname=collection[j].bankname;
               feearr[i].chequedate=collection[j].chequedate;
-              feearr[i].discountamount=0;
+              feearr[i].discountamount=collection[j].installdiscount;
+              feearr[i].actualamount=parseInt(collection[j].actualamount)+parseInt(collection[j].installdiscount);
+              feearr[i].amount=collection[j].amount;
               feearr[i].fineamount=0;
               feearr[i].hiddencommitinput=true;
               feearr[i].hiddencommititem=false;
@@ -1714,8 +1826,10 @@
               feearr[i].hiddenpayflag=true;
               }
               if(collection[j].installment==feearr[i].installment&&collection[j].installstatus==''&&(collection[j].installstatus!='cancel'||collection[j].installstatus!='bounce')){
-              // alert('out');
-              feearr[i].discountamount=0;
+              // alert('out'+collection[j].installdiscount);
+              feearr[i].discountamount=collection[j].installdiscount;
+              feearr[i].actualamount=parseInt(feearr[i].amount);
+              feearr[i].amount=parseInt(feearr[i].amount)-parseInt(collection[j].installdiscount);
               feearr[i].fineamount=0;
               feearr[i].hiddencommitinput=true;
               feearr[i].hiddencommititem=false;
@@ -1724,18 +1838,21 @@
               feearr[i].readonlyflag=true;
               feearr[i].hiddenpayflag=false;
               }
-              if(collection[j].installment==feearr[i].installment&&collection[j].amount==feearr[i].amount&&(collection[j].installstatus=='cancel'||collection[j].installstatus=='bounce')){
+              if(collection[j].installment==feearr[i].installment&&(collection[j].installstatus=='cancel'||collection[j].installstatus=='bounce')){
               feearr[i].receiptdate="";
               feearr[i].modeofpayment="";
               feearr[i].chequeno="";
               feearr[i].bankname="";
               feearr[i].chequedate="";
-              feearr[i].discountamount=0;
+              // feearr[i].discountamount=0;
+
               if(collection[j].installstatus=='bounce')
               feearr[i].fineamount=250;
               if(collection[j].installstatus=='cancel')
               feearr[i].fineamount=0;
-              feearr[i].amount=parseInt(collection[j].amount)+parseInt(feearr[i].fineamount);
+              feearr[i].discountamount=collection[j].installdiscount;
+              feearr[i].actualamount=parseInt(collection[j].amount)+parseInt(feearr[i].fineamount)+parseInt(collection[j].installdiscount);
+              feearr[i].amount=parseInt(collection[j].amount)+parseInt(feearr[i].fineamount);              
               feearr[i].hiddencommitinput=true;
               feearr[i].hiddencommititem=false;
               feearr[i].paidflag=false;
@@ -1768,8 +1885,12 @@
               var currdate=m+"/"+dd+"/"+y;
               obj.installment_date=currdate;
               obj.installment="Lumpsum";
-              obj.amount=totamt;
-              obj.discountamount=0;
+              // obj.amount=totamt;
+              // obj.discountamount=0;
+              obj.discountamount=parseInt(localStorage.getItem('curr_sess_ins1discount'))+parseInt(localStorage.getItem('curr_sess_ins2discount'));
+              // alert(obj.discountamount);
+              obj.actualamount=parseInt(totamt);
+              obj.amount=parseInt(totamt)-parseInt(obj.discountamount);              
               obj.fineamount=0;
               obj.hiddencommitinput=true;
               obj.hiddencommititem=false;
@@ -1791,22 +1912,25 @@
             obj.receiveddate=paidarr[i].paid_date1;
             obj.receiptdate=paidarr[i].receipt_date1;
             obj.receiptno=paidarr[i].receipt_no1;
+            obj.discountamount=parseInt(localStorage.getItem('curr_sess_ins1discount'))+parseInt(localStorage.getItem('curr_sess_ins2discount'));
+            obj.actualamount=parseInt(paidarr[i].installment_1)+parseInt(obj.discountamount);
             obj.amount=parseInt(paidarr[i].installment_1)+parseInt(paidarr[i].install1_fine);
             obj.installstatus=paidarr[i].install1_status;
             collection.push(obj);
           }
-          if(paidarr[i].install2_status!=""){
-            var obj={};
-            obj.studentid=paidarr[i].student_id;
-            obj.installment="Installment2";
-            obj.modeofpayment=paidarr[i].modeofpayment2;
-            obj.receiveddate=paidarr[i].paid_date2;
-            obj.receiptdate=paidarr[i].receipt_date2;
-            obj.receiptno=paidarr[i].receipt_no2;
-            obj.amount=parseInt(paidarr[i].installment_2)+parseInt(paidarr[i].install2_fine);
-            obj.installstatus=paidarr[i].install2_status;
-            collection.push(obj);
-          }
+          // if(paidarr[i].install2_status!=""){
+          //   var obj={};
+          //   obj.studentid=paidarr[i].student_id;
+          //   obj.installment="Installment2";
+          //   obj.modeofpayment=paidarr[i].modeofpayment2;
+          //   obj.receiveddate=paidarr[i].paid_date2;
+          //   obj.receiptdate=paidarr[i].receipt_date2;
+          //   obj.receiptno=paidarr[i].receipt_no2;
+          //   obj.amount=parseInt(paidarr[i].installment_2)+parseInt(paidarr[i].install2_fine);
+          //   obj.actualamount=obj.amount;
+          //   obj.installstatus=paidarr[i].install2_status;
+          //   collection.push(obj);
+          // }
         }
         for(var i=0;i<collection.length;i++){
           for(var j=0;j<paidcheque.length;j++){
@@ -1825,12 +1949,13 @@
               t=1;
               feearr[i].installment=collection[j].installment;
               feearr[i].amount=collection[j].amount;
+              feearr[i].actualamount=parseInt(collection[j].amount)+parseInt(collection[j].discountamount);
               feearr[i].receiptdate=collection[j].receiptdate;
               feearr[i].modeofpayment=collection[j].modeofpayment;
               feearr[i].chequeno=collection[j].chequeno;
               feearr[i].bankname=collection[j].bankname;
               feearr[i].chequedate=collection[j].chequedate;
-              feearr[i].discountamount=0;
+              feearr[i].discountamount=collection[j].discountamount;
               feearr[i].fineamount=0;
               feearr[i].hiddencommitinput=true;
               feearr[i].hiddencommititem=false;
@@ -1847,12 +1972,13 @@
               feearr[i].chequeno=collection[j].chequeno;
               feearr[i].bankname=collection[j].bankname;
               feearr[i].chequedate=collection[j].chequedate;
-              feearr[i].discountamount=0;
+              feearr[i].discountamount=collection[j].discountamount;
               if(collection[j].installstatus=='bounce')
               feearr[i].fineamount=250;
               if(collection[j].installstatus=='cancel')
               feearr[i].fineamount=0;
               feearr[i].amount=parseInt(collection[j].amount)+parseInt(feearr[i].fineamount);
+              feearr[i].actualamount=parseInt(collection[j].actualamount)+parseInt(feearr[i].fineamount);
               feearr[i].hiddencommitinput=true;
               feearr[i].hiddencommititem=false;
               feearr[i].paidflag=false;
