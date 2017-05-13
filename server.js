@@ -5986,7 +5986,6 @@ var qur2 = "SELECT admission_no FROM md_admission WHERE admission_no NOT IN "+
      });
  });
 
-
 app.post('/pendingfeecollectionreport-service',  urlencodedParser,function (req, res){
    console.log('-------------------');
    console.log(req.query.grade+"   "+req.query.type);
@@ -6031,6 +6030,7 @@ app.post('/pendingfeecollectionreport-service',  urlencodedParser,function (req,
    var pendingqur = "select admission_no,student_name,grade,sum(installment_amount) as pendingamount from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' and school_id='"+req.query.schoolid+"' and paid_status not in "+
    "('paid','cleared','inprogress') and cheque_status in('bounced','cancelled') group by school_id,admission_no,student_name,grade";
+   var qur="select * from fee_splitup where school_id='sch002' and fee_type='Registration fee'";
   }
   else{
     console.log('spec grades...................');
@@ -6072,6 +6072,7 @@ app.post('/pendingfeecollectionreport-service',  urlencodedParser,function (req,
    var pendingqur = "select admission_no,student_name,grade,sum(installment_amount) as pendingamount from "+
    "md_student_paidfee where academic_year='"+req.query.academicyear+"' AND school_id='"+req.query.schoolid+"' and grade='"+req.query.grade+"' and  paid_status not in "+
    "('paid','cleared','inprogress') and cheque_status in('bounced','cancelled') group by school_id,admission_no,student_name,grade";
+   var qur="select * from fee_splitup where school_id='sch002' and fee_type='Registration fee'";
    }
  console.log('-----------------------pending fee report--------------------------');
  console.log(totalqur);
@@ -6092,7 +6093,13 @@ app.post('/pendingfeecollectionreport-service',  urlencodedParser,function (req,
               connection.query(pendingqur,function(err, rows){
               if(!err){
               pendingarr=rows;
-              res.status(200).json({'totalarr':totalarr,'paidarr':paidarr,'pendingarr':pendingarr});
+              connection.query(qur,function(err, rows){
+              if(!err){
+              // pendingarr=rows;
+              res.status(200).json({'regfee':rows,'totalarr':totalarr,'paidarr':paidarr,'pendingarr':pendingarr});
+              }
+              });
+              // res.status(200).json({'totalarr':totalarr,'paidarr':paidarr,'pendingarr':pendingarr});
               }
               });
             }

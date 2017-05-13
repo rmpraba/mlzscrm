@@ -120,7 +120,7 @@
         this.flag=1;
         type=(e.target.selectedItem.textContent).trim();
         // this.$.feereportservice.FnFetchAllStudentStructureService(academicyear,grade);
-        this.$.feereportservice.FnFetchDueReportService(academicyear,grade,type);
+        // this.$.feereportservice.FnFetchDueReportService(academicyear,grade,type);
       },
       FnView:function(){
         // this.$.feereportservice.FnFetchAllStudentStructureService(academicyear,grade);
@@ -137,7 +137,7 @@
         grade=(e.target.selectedItem.textContent).trim();
         if(this.flag==1){
         // this.$.feereportservice.FnFetchAllStudentStructureService(academicyear,grade);
-        this.$.feereportservice.FnFetchDueReportService(academicyear,grade,type);
+        // this.$.feereportservice.FnFetchDueReportService(academicyear,grade,type);
         }
       },
       FnSelectAcademicYear:function(e){
@@ -145,7 +145,7 @@
         localStorage.setItem("curr_sess_academicyear",academicyear);
         if(this.flag==1){
         // this.$.feereportservice.FnFetchAllStudentStructureService(academicyear,grade);
-        this.$.feereportservice.FnFetchDueReportService(academicyear,grade,type);
+        // this.$.feereportservice.FnFetchDueReportService(academicyear,grade,type);
 
         }
       }

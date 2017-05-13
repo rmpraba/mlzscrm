@@ -1227,6 +1227,19 @@
         var totalarr=e.detail.response.totalarr;
         var paidarr=e.detail.response.paidarr;
         var pendingarr=e.detail.response.pendingarr;
+        var regfee=e.detail.response.regfee;
+        for(var j=0;j<totalarr.length;j++){
+          var t=0;
+          for(var i=0;i<regfee.length;i++){
+            if(regfee[i].fee_code==totalarr[j].fee_code){
+              t=1;
+              totalarr[j].regfee=regfee[i].total_fee;
+            }
+          }
+          if(t==0)
+            totalarr[j].regfee=0;
+        }
+
         if(totalarr.length>0){
         var pflag=0;
         var npflag=0;
@@ -1261,30 +1274,11 @@
           paidflag=0;
           discountamount=0;
           }
-          // if(pendingarr.length>0){
-          // for(var j=0;j<pendingarr.length;j++){
-          //   if(totalarr[i].admission_no==pendingarr[j].admission_no)
-          //   {
-          //     pendingflag=1;
-          //     pendingamount=parseFloat(pendingamount)+parseFloat(pendingarr[j].pendingamount);
-          //     totalarr[i].paid_amount=parseFloat(totalarr[i].paid_amount)-parseFloat(pendingamount);
-          //     totalarr[i].pending_amount=pendingamount;
-          //   }
-          // }
-          // if(pendingflag==0)
-          //   {
-          //   pendingamount=parseFloat(pendingamount)+parseFloat(0);
-          //   totalarr[i].pending_amount=pendingamount;
-          //   }
-          // pendingamount=0;
-          // pendingflag=0;
-          // }
-          // else
-          //   totalarr[i].pending_amount=pendingamount;
         }
         }
 
         for(var i=0;i<totalarr.length;i++){
+          totalarr[i].fees=parseFloat(totalarr[i].fees)-parseFloat(totalarr[i].regfee);
           totalarr[i].total_amount=parseFloat(totalarr[i].fees)-parseFloat(totalarr[i].discount_amount);
           totalarr[i].pending_amount=parseFloat(totalarr[i].total_amount)-parseFloat(totalarr[i].paid_amount);
 
