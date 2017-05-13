@@ -5856,7 +5856,7 @@ console.log(req.query.schoolid);
   "and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' "+ 
   "or enquiry_no like '"+req.query.admissionno+"')) as fathername,(select mother_name from md_admission where school_id='"+req.query.schoolid+"' "+
   "and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' "+
-  "or enquiry_no like '"+req.query.admissionno+"')) as mothername FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' or student_name='"+req.query.name+"' or enquiry_no like '"+req.query.admissionno+"') and cheque_status not in('bounced','cancelled')";
+  "or enquiry_no like '"+req.query.admissionno+"')) as mothername FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' or enquiry_no like '"+req.query.admissionno+"') and cheque_status not in('bounced','cancelled')";
   console.log('-----------------------------------------------');
   console.log(qur);
   console.log('-----------------------------------------------');
@@ -7356,6 +7356,7 @@ app.post('/fetchstudfeesplitup-service',  urlencodedParser,function (req, res){
   // console.log('fetchstudinstallmentsplitup');
   var qur="SELECT * FROM md_studwise_fee_splitup WHERE "+
   " school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_no='"+req.query.admissionno+"'";
+  console.log(qur);
   connection.query(qur,
     function(err, rows){
       if(!err){
@@ -9308,7 +9309,8 @@ var response={
 app.post('/fetchtransportfeesearch-service',  urlencodedParser,function (req, res){
  
  var qur="SELECT * FROM transport.student_fee f join transport.student_details d on(f.student_id=d.id) "+
- " where f.school_id=d.school_id and f.academic_year=d.academic_year and f.status='mapped' and f.academic_year='"+req.query.academicyear+"' and f.school_id='"+req.query.schoolid+"' "+
+ " where f.school_id=d.school_id and f.academic_year=d.academic_year and f.status='mapped' and "+
+ " f.academic_year='"+req.query.academicyear+"' and f.school_id='"+req.query.schoolid+"' "+
  " and d.academic_year='"+req.query.academicyear+"' and d.school_id='"+req.query.schoolid+"'";
  console.log(qur);
  connection.query(qur,

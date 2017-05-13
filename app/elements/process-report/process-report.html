@@ -113,8 +113,8 @@
       FnSelectType:function(e){
         this.flag=1;
         type=(e.target.selectedItem.textContent).trim();
-        this.$.feereportservice.FnFetchAllStudentStructureService(academicyear,grade);
-        this.$.feereportservice.FnProcessReportService(academicyear,grade,type);
+        // this.$.feereportservice.FnFetchAllStudentStructureService(academicyear,grade);
+        // this.$.feereportservice.FnProcessReportService(academicyear,grade,type);
       },
       FnProcess:function(){
         this.$.feereportservice.FnFetchAllStudentStructureService(academicyear,grade);
