@@ -33,6 +33,16 @@
         on-response="updatetransportchequestatusResponse"
         debounce-duration="300"
         >
+     <iron-ajax
+        method="post"
+        id="transportdailycollectionajax"
+        url="{{transportdailycollectionurl}}"
+        params="{{transportdailycollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="transportdailycollectionResponse"
+        debounce-duration="300"
+        >
 
     
   </template>
@@ -132,6 +142,38 @@
           count2=0;
           document.querySelector('transport-cheque-bouncecancel').FnRefresh();
         }
+      },
+      FnFetchDailycollectionDashboardService:function(academicyear){
+        this.transportdailycollectionurl=sessionStorage.getItem("addrinfo")+"/transportdailycollection-service";
+        var obj={};
+        obj.academicyear=academicyear;
+        var d=new Date();
+        var da=d.getDate();
+        var mn=d.getMonth()+1;
+        var yr=d.getFullYear();
+        obj.currdate=mn+"/"+da+"/"+yr;
+        this.transportdailycollectionparam=obj;
+        this.$.transportdailycollectionajax.generateRequest();
+      },
+      transportdailycollectionResponse:function(e){
+        var total=e.detail.response.total;
+        var today=e.detail.response.today;
+        // alert(JSON.stringify(total));
+        // alert(JSON.stringify(today));
+        for(var i=0;i<total.length;i++){
+          for(var j=0;j<today.length;j++){
+            // alert(total[i].school_id+" "+today[j].school_id+" "+total[i].admission_status+" "+today[j].admission_status);
+            if(total[i].school_id==today[j].school_id&&total[i].admission_status==today[j].admission_status){
+              total[i].todaycnt=today[j].todaycnt;
+              total[i].todaytotal=today[j].todaytotal;
+              today.splice(j,1);
+              break;
+            }
+          }
+        }
+        // alert(JSON.stringify(total));
+        document.querySelector('transport-dashboard').FnShowTable();
+        document.querySelector('transport-dashboard').transportdailydashboardarr=total;
       }
     });
   })();

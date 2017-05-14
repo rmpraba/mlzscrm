@@ -1,0 +1,91 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-dashboard">
+  <template>
+    <style>
+      .datecard {
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-1" style="margin-top: 1%;margin-left: 80%;">
+                <p>Download
+                <a href="#">
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('transportdailydashboard', 'Transport Collection Dashboard')"></span>
+                </a>
+                </p>
+                </div> 
+            </div>
+          </div>
+        </div>
+    </div>
+    <div id="transportdailydashboard" hidden="{{hidetable}}">
+     <table border="1" style="border-collapse: collapse;border: 1px grey;width: 100%;">
+      <thead>
+      <tr>
+        <th>School Name</th><th>Type</th><th>Today's Count</th><th>Today's Collection</th><th>Total Count</th><th>Total Collection</th>
+      </tr>
+      </thead>
+      <tbody>
+        <template is="dom-repeat" items="{{transportdailydashboardarr}}">
+          <tr><td>{{item.schoolname}}</td><td>{{item.admission_status}}</td><td>{{item.todaycnt}}</td><td>{{item.todaytotal}}</td><td>{{item.totcnt}}</td><td>{{item.tottotal}}</td></tr>
+        </template>
+      </tbody>
+    </table>    
+
+    </div>
+    <transport-processing-service id="transportprocessingservice"></transport-processing-service>
+  </template>
+  <script type="text/javascript">
+      var tableToExcel = (function() {
+      var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+     return function(table, name) {
+     if (!table.nodeType) table = document.getElementById(table)
+     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+     window.location.href = uri + base64(format(template, ctx))
+     }
+     })()
+  </script>
+  <script>
+  (function() {
+    'use strict';
+    var academicyear;
+    Polymer({
+      is: 'transport-dashboard',
+      ready:function(){
+        this.hidetable=true;
+      },
+      FnCallService:function(){
+        var d=new Date(); 
+        var cy=d.getFullYear(); 
+        var ny='';
+        var m=d.getMonth()+1;
+        if(m>4){
+          cy=parseInt(cy);
+          ny=parseInt(cy)+1;
+        }
+        else{
+          cy=parseInt(cy)-1;
+          ny=parseInt(cy)+1;
+        }
+        academicyear="AY-"+cy+"-"+ny;
+        // alert(academicyear);
+        this.$.transportprocessingservice.FnFetchDailycollectionDashboardService(academicyear);
+      },
+      FnShowTable:function(){
+        this.hidetable=false;
+      },
+      FnRefresh:function(){
+        // document.querySelector('#dailydashboardacademicyear').selected=-1;
+      }
+    });
+  })();
+  </script>
+</dom-module>

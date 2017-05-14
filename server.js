@@ -9971,7 +9971,7 @@ app.post('/fetchstudentinfoforzoneallocation-service',  urlencodedParser,functio
 
 app.post('/allocatezone-service',  urlencodedParser,function (req, res){
   // var qur="SELECT * FROM transport.student_fee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"' and status='mapped'";
-  var queryy="insert into transport.student_fee values('"+req.query.schoolid+"','"+req.query.studentid+"',(select id from transport.md_zone where zone_name='"+req.query.zonename+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),'','',0,0,'"+req.query.fees+"',0,'','','','',(SELECT distinct(start_date) FROM transport.transport_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),(SELECT distinct(end_date) FROM transport.transport_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),'Two-Way','"+req.query.updatedby+"',STR_TO_DATE('"+req.query.currdate+"','%Y/%m/%d'),'mapped','','',0,0,'"+req.query.academicyear+"','','','','','','0','0','','')";
+  var queryy="insert into transport.student_fee values('"+req.query.schoolid+"','"+req.query.studentid+"',(select id from transport.md_zone where zone_name='"+req.query.zonename+"' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),'','',0,0,'"+req.query.fees+"',0,'','','','',(SELECT distinct(start_date) FROM transport.transport_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),(SELECT distinct(end_date) FROM transport.transport_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'),'Two-Way','"+req.query.updatedby+"',STR_TO_DATE('"+req.query.currdate+"','%Y/%m/%d'),'mapped','','',0,0,'"+req.query.academicyear+"','','','','','','0','0','','','','')";
   console.log('-------------------------------------------');
   console.log(queryy);
   
@@ -10328,6 +10328,41 @@ app.post('/attachtransportdiscount-service',  urlencodedParser,function (req, re
       }
   });
 });
+
+
+app.post('/transportdailycollection-service',  urlencodedParser,function (req, res){
+  
+  var totqur="select school_id,(select name from transport.md_school where id=school_id) as schoolname ,admission_status ,count(*) as totcnt,sum(installment_1+installment_2) as tottotal from transport.student_fee where admission_status in('New','Promoted') and academic_year='"+req.query.academicyear+"' and paid_date1 is not null group by school_id,admission_status";
+  var todayqur="select school_id,(select name from transport.md_school where id=school_id) as schoolname ,admission_status,count(*) as todaycnt,sum(installment_1+installment_2) as todaytotal from transport.student_fee where admission_status in('New','Promoted') and academic_year='"+req.query.academicyear+"' and paid_date1 is not null and STR_TO_DATE(paid_date1,'%m/%d/%Y')=STR_TO_DATE('"+req.query.currdate+"','%m/%d/%Y') group by school_id,admission_status";
+  // var totcollqur="select (select name from transport.md_school where id=school_id) ,admission_status,sum(installment_1+installment_2) as total from transport.student_fee where admission_status in('New','Promoted') and academic_year='"+req.query.academicyear+"' and paid_date1 is not null group by school_id,admission_status";
+  // var todaycollqur="select (select name from transport.md_school where id=school_id) ,admission_status,sum(installment_1+installment_2) as total from transport.student_fee where admission_status in('New','Promoted') and academic_year='"+req.query.academicyear+"' and paid_date1 is not null and paid_date1='"+req.query.currdate+"' group by school_id,admission_status";
+
+  console.log('-------------------------------------------');
+  console.log(totqur);
+  console.log(todayqur);
+  var total=[];
+  var today=[];
+  connection.query(totqur,function(err, rows){
+      if(!err)
+      {
+        total=rows;
+      connection.query(todayqur,function(err, rows){
+      if(!err)
+      {
+        today=rows;
+        res.status(200).json({'total': total,'today': today});
+      }
+      else
+      console.log(err); 
+      });
+      }
+      else
+      {
+        console.log(err);
+      }
+  });
+});
+
 
 function setvalue(){
   console.log("calling setvalue.....");

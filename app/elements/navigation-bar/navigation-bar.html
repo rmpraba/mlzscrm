@@ -457,6 +457,9 @@
            <li id="transportpdccollection">
             <a href="" aria-hidden="true" on-click="FnTransportPdcCollection">PDC Collection</a>
            </li>
+           <li id="transportcollectiondashboard">
+            <a href="" aria-hidden="true" on-click="FnTransportCollectionDashboard">Transport Collection Dashboard</a>
+           </li>
           </ul>
         </li>
 
@@ -1156,6 +1159,11 @@
         document.querySelector('app-list').setPage("transport-pdc-report","Transport PDC Collection");
         document.querySelector('transport-pdc-report').FnRefresh();
         document.querySelector('transport-pdc-report').FnCallService();
+      },
+      FnTransportCollectionDashboard:function(){
+        document.querySelector('app-list').setPage("transport-dashboard","transport-dashboard");
+        // document.querySelector('transport-dashboard').FnRefresh();
+        document.querySelector('transport-dashboard').FnCallService();
       },
       FnDetaildaycollection:function(){
           this.$.scheduleservice.fetchgradeforreportService();
