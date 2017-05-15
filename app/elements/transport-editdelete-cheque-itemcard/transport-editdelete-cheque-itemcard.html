@@ -42,11 +42,11 @@
       },
       FnEditcheque:function(e){
         this.$.transporteditdeletecheque.toggle();
-        this.$.transportservice.editchequeService(this.studentid,this.chequeno,this.bankname,localStorage.getItem("curr_sess_chequedate"),this.installmenttype);
+        this.$.transportservice.editchequeService(this.studentid,this.studentname,this.chequeno,this.bankname,localStorage.getItem("curr_sess_chequedate"),this.installmenttype);
       },
       FnDeletecheque:function(e){
         this.$.transporteditdeletecheque.toggle();
-        this.$.transportservice.deletechequeService(this.studentid,this.chequeno,this.bankname,localStorage.getItem("curr_sess_chequedate"),this.installmenttype);
+        this.$.transportservice.deletechequeService(this.studentid,this.studentname,this.chequeno,this.bankname,localStorage.getItem("curr_sess_chequedate"),this.installmenttype);
       },
       FnCancel:function(){
         this.$.transporteditdeletecheque.toggle(); 

@@ -89,7 +89,7 @@
       FnSubmit:function(){  
         // alert(JSON.stringify(cheques));
         if(cheques.length>0) {
-        this.$.transportprocessingservice.FnUpdateChequeStatus(cheques);
+        this.$.transportprocessingservice.FnUpdateChequeStatus(cheques,localStorage.getItem("curr_sess_enquiryname"));
         }
         else
         alert('No cheques are exist to process!!!');       
@@ -177,10 +177,10 @@
     document.querySelector('#transportchequebouncecancelinput').selected=-1;
     this.value=enquiry_name;
     // alert(admission_no);
-    this.$.transportprocessingservice.processtransportbouncechequeService(admission_no);
+    this.$.transportprocessingservice.processtransportbouncechequeService(admission_no,enquiry_name);
     },
     FnSearchbychequeno:function(){
-    this.$.transportprocessingservice.processtransportbouncechequeService(this.chequeno);
+    this.$.transportprocessingservice.processtransportbouncechequeService(this.chequeno,'');
     },
     FnRefresh:function(){
       this.value="";

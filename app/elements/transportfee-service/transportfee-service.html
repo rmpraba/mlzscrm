@@ -369,12 +369,13 @@
             document.querySelector('transport-discount-card').autocompletearr(arr);
         }
       },
-      fetchstudinfofordiscount:function(studid){
+      fetchstudinfofordiscount:function(studid,studentname){
         this.fetchstudinfofordiscounturl=sessionStorage.getItem("addrinfo")+"/fetchstudinfofordiscount-service";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.studentid=studid;
+        obj.studentname=studentname;
         this.fetchstudinfofordiscountparam=obj;
         this.$.fetchstudinfofordiscountajax.generateRequest();
       },
@@ -405,12 +406,13 @@
             
         }
       },
-      fetchstudinfoforcancellation:function(studid){
+      fetchstudinfoforcancellation:function(studid,studentname){
         this.fetchstudinfoforcancellationurl=sessionStorage.getItem("addrinfo")+"/fetchstudinfoforcancellation-service";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.studentid=studid;
+        obj.studentname=studentname;
         this.fetchstudinfoforcancellationparam=obj;
         this.$.fetchstudinfoforcancellationajax.generateRequest();
       },
@@ -424,12 +426,13 @@
                    }
         
       },
-      cancelzoneService:function(studid){
+      cancelzoneService:function(studid,studentname){
         this.cancelzoneurl=sessionStorage.getItem("addrinfo")+"/cancelzone-service";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.studentid=studid;
+        obj.studentname=studentname;
         this.cancelzoneparam=obj;
         this.$.cancelzoneajax.generateRequest();
       },
@@ -508,12 +511,13 @@
           document.querySelector('zonetostudent-card').autocompletearr(arr);
         }
       },
-      fetchStudentInfoForZoneAllocation:function(studentid){
+      fetchStudentInfoForZoneAllocation:function(studentid,studentname){
         this.fetchstudentinfoforzoneallocationurl=sessionStorage.getItem("addrinfo")+"/fetchstudentinfoforzoneallocation-service";
         var obj={"schoolid":"","prefixid":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.studentid=studentid;
+        obj.studentname=studentname.trim();
         this.fetchstudentinfoforzoneallocationparam=obj;
         this.$.fetchstudentinfoforzoneallocationajax.generateRequest();
       },
@@ -668,6 +672,7 @@
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.studentid=localStorage.getItem("curr_sess_studentid");
+        obj.studentname=localStorage.getItem("curr_sess_studentname");
         this.fetchtransportfeesparam=obj;
         this.$.fetchtransportfeesajax.generateRequest();
       },
@@ -1295,6 +1300,7 @@
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.studentid=id;
+        obj.studentname=name;
         this.fetchreceiptinfoparam=obj;
         this.$.fetchreceiptinfoajax.generateRequest();
       },
@@ -1413,12 +1419,13 @@
         var arr=e.detail.response.returnval;
         document.querySelector('transport-editdelete-cheque').autocompletearr(arr);
       },
-      fetchchequeforeditordelete:function(value){
+      fetchchequeforeditordelete:function(value,studname){
         this.fetchchequeforeditordeleteurl=sessionStorage.getItem("addrinfo")+"/fetchtransportchequeforeditordelete-service";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.searchvalue=value;
+        obj.studentname=studname;
         this.fetchchequeforeditordeleteparam=obj;
         this.$.fetchchequeforeditordeleteajax.generateRequest();
       },
@@ -1455,7 +1462,7 @@
         document.querySelector('transport-editdelete-cheque').FnSetChequeArray(arr); 
         }
       },
-      editchequeService:function(enrno,chequeno,bankname,chequedate,installmenttype){
+      editchequeService:function(enrno,studentname,chequeno,bankname,chequedate,installmenttype){
         this.edittransportchequeurl=sessionStorage.getItem("addrinfo")+"/edittransportcheque-service";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
@@ -1463,6 +1470,7 @@
         obj.chequeno=chequeno;
         obj.bankname=bankname;
         obj.chequedate=chequedate;
+        obj.studentname=studentname;
         // obj.amount=installmentamount;
         obj.installment=installmenttype;
         this.edittransportchequeparam=obj;
@@ -1472,7 +1480,8 @@
         alert(e.detail.response.returnval);
         this.fetchchequeforeditordelete(localStorage.getItem("curr_sess_studentid"));
       },
-      deletechequeService:function(enrno,chequeno,bankname,chequedate,installmenttype){
+      deletechequeService:function(enrno,studentname,chequeno,bankname,chequedate,installmenttype){
+        // alert(studentname);
         this.deletetransportchequeurl=sessionStorage.getItem("addrinfo")+"/deletetransportcheque-service";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
@@ -1482,12 +1491,13 @@
         obj.bankname=bankname;
         obj.installmenttype=installmenttype;
         obj.chequedate=chequedate;
+        obj.studentname=studentname;
         this.deletetransportchequeparam=obj;
         this.$.deletetransportchequeajax.generateRequest();
       },
       deletetransportchequeResponse:function(e){
         alert(e.detail.response.returnval);
-        this.fetchchequeforeditordelete(localStorage.getItem("curr_sess_studentid"));
+        this.fetchchequeforeditordelete(localStorage.getItem("curr_sess_studentid"),localStorage.getItem("curr_sess_studentname"));
       },
       FnFetchPDCCollectionService:function(){
         this.fetchtransportpdccollectionurl=sessionStorage.getItem("addrinfo")+"/fetchtransportpdccollection-service";
@@ -1509,7 +1519,7 @@
         var total=0;
         for(var i=0;i<chequearr.length;i++){
             for(var j=0;j<studarr.length;j++){
-                if(chequearr[i].student_id==studarr[j].admission_no){
+                if(chequearr[i].student_id==studarr[j].admission_no&&(chequearr[i].name).trim()==(studarr[j].student_name).trim()){
                     chequearr[i].sno=t;
                     chequearr[i].grade=studarr[j].class_for_admission;
                     if(chequearr[i].installtype=="Installment1"){
@@ -1567,6 +1577,7 @@
             // alert(feearr[i].install1_status);
             var obj={};
             obj.studentid=feearr[i].student_id;
+            obj.studentname=feearr[i].student_name;
             obj.installment="Installment1";
             obj.modeofpayment=feearr[i].modeofpayment1;
             obj.receiveddate=feearr[i].paid_date1;
@@ -1578,6 +1589,7 @@
             // alert(feearr[i].install2_status);
             var obj={};
             obj.studentid=feearr[i].student_id;
+            obj.studentname=feearr[i].student_name;
             obj.installment="Installment2";
             obj.modeofpayment=feearr[i].modeofpayment2;
             obj.receiveddate=feearr[i].paid_date2;
@@ -1589,7 +1601,8 @@
         // alert(JSON.stringify(collection.length));
         for(var i=0;i<collection.length;i++){          
           for(var j=0;j<chequesarr.length;j++){
-          if(collection[i].studentid==chequesarr[j].student_id&&collection[i].installment==chequesarr[j].installtype){            
+          // alert(collection[i].studentid+" "+chequesarr[j].student_id+" "+collection[i].studentname+" "+chequesarr[j].name+" "+collection[i].installment+" "+chequesarr[j].installtype);
+          if(collection[i].studentid==chequesarr[j].student_id&&(collection[i].studentname).trim()==(chequesarr[j].name).trim()&&collection[i].installment==chequesarr[j].installtype){            
             collection[i].chequeno=chequesarr[j].cheque_no;
             collection[i].bankname=chequesarr[j].bank_name;
             collection[i].chequedate=chequesarr[j].cheque_date;
@@ -1626,7 +1639,7 @@
 
         for(var i=0;i<collection.length;i++){
           for(var j=0;j<studarr.length;j++){
-            if(collection[i].studentid==studarr[j].admission_no){
+            if(collection[i].studentid==studarr[j].admission_no&&collection[i].studentname==studarr[j].student_name){
               collection[i].studentname=studarr[j].student_name;
               collection[i].grade=studarr[j].class_for_admission;
               collection[i].type=studarr[j].admission_status;
@@ -1663,12 +1676,13 @@
         document.querySelector('transportdaily-collection-report').total=total;
 
       },
-       searchtransportfeepaidinfoService1:function(studid){
+       searchtransportfeepaidinfoService1:function(studid,studentname){
         this.searchtransportfeepaidinfourl1=sessionStorage.getItem("addrinfo")+"/searchtransportfeepaidinfo-service1";
         var obj={"schoolid":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.studentid=studid;
+        obj.studentname=studentname;
         this.searchtransportfeepaidinfoparam1=obj;
         this.$.searchtransportfeepaidinfoajax1.generateRequest();
       },
@@ -1688,6 +1702,7 @@
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.studentid=localStorage.getItem("curr_sess_studentid");
+        obj.studentname=localStorage.getItem("curr_sess_studentname");
         this.fetchtransportfeesparam1=obj;
         this.$.fetchtransportfeesajax1.generateRequest();
       },

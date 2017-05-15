@@ -64,12 +64,13 @@
         var arr=e.detail.response.returnval;
         document.querySelector('transport-cheque-bouncecancel').autocompletearr(arr);
       },
-      processtransportbouncechequeService:function(studentid){
+      processtransportbouncechequeService:function(studentid,studentname){
         this.processtransportbouncechequeurl=sessionStorage.getItem("addrinfo")+"/processtransportbouncecheque-servicee";
         var obj={"schoolid":"","academicyear":"","id":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         obj.id=studentid;
+        obj.studentname=studentname;
         this.processtransportbouncechequeparam=obj;
         this.$.processtransportbouncechequeajax.generateRequest();
       },
@@ -113,7 +114,7 @@
         document.querySelector('transport-cheque-bouncecancel').chequearr=temparr;
         document.querySelector('transport-cheque-bouncecancel').FnSetChequeArray(temparr);
       },
-      FnUpdateChequeStatus:function(cheque){
+      FnUpdateChequeStatus:function(cheque,studentname){
         count1=cheque.length;
         // alert(JSON.stringify(cheque));
         this.updatetransportchequestatusurl=sessionStorage.getItem("addrinfo")+"/updatetransportchequestatus-service";
@@ -128,6 +129,7 @@
         obj.chequeno=(cheque[i].cheque_no);        
         obj.bankname=cheque[i].bank_name; 
         obj.chequestatus=cheque[i].status; 
+        obj.studentname=studentname;
         obj.canceldate=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
         this.updatetransportchequestatusparam=obj;     
         this.$.updatetransportchequestatusajax.generateRequest();

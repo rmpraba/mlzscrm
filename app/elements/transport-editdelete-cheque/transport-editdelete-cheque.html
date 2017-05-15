@@ -78,7 +78,7 @@
       },
       FnSubmit:function(){  
         if(cheques.length>0){
-        this.$.transportservice.FnUpdateChequeStatus(cheques);
+        this.$.transportservice.FnUpdateChequeStatus(cheques,localStorage.getItem("curr_sess_studentname"));
         }
         else
         alert('No cheques are exist to process!!!');       
@@ -164,11 +164,11 @@
     this.itemArray=[];
     document.querySelector('#transportinput2').selected=-1;
     this.value=student_name;
-    this.$.transportservice.fetchchequeforeditordelete(student_id);
+    this.$.transportservice.fetchchequeforeditordelete(student_id,student_name);
     },
     FnSearchbychequeno:function(){
     localStorage.setItem("curr_sess_enquiryno",this.chequeno);
-    this.$.transportservice.fetchchequeforeditordelete(this.chequeno);
+    this.$.transportservice.fetchchequeforeditordelete(this.chequeno,'');
     },
     FnRefresh:function()
     {

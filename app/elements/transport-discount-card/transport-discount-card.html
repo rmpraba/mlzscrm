@@ -150,7 +150,7 @@
     this.itemArray=[];
     document.querySelector('#transportdiscountinput2').selected=-1;
     this.value=student_name;  
-    this.$.transportservice.fetchstudinfofordiscount(student_id);  
+    this.$.transportservice.fetchstudinfofordiscount(student_id,student_name);  
     },
     FnAdd:function(){
     this.$.transportservice.attachdiscount(localStorage.getItem("curr_sess_studentid"),installment,this.discountamount,this.reason);

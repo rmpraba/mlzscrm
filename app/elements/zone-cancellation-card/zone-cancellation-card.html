@@ -136,10 +136,10 @@
     this.itemArray=[];
     document.querySelector('#zonecancellationinput2').selected=-1;
     this.value=student_name;  
-    this.$.transportservice.fetchstudinfoforcancellation(student_id);  
+    this.$.transportservice.fetchstudinfoforcancellation(student_id,student_name);  
     },
     FnCancel:function(){
-    this.$.transportservice.cancelzoneService(localStorage.getItem("curr_sess_studentid"));
+    this.$.transportservice.cancelzoneService(localStorage.getItem("curr_sess_studentid"),localStorage.getItem("curr_sess_studentname"));
     },
     FnRefresh:function()
     {

@@ -272,7 +272,7 @@ Polymer({
     this.itemArray=[];
     document.querySelector('#zoneallocationinput').selected=-1;
     this.value=studentname;
-    this.$.service.fetchStudentInfoForZoneAllocation(studentid);
+    this.$.service.fetchStudentInfoForZoneAllocation(studentid,studentname);
     },
     FnRefresh:function(){
       document.querySelector('#zoneallocationinput').selected=-1;
@@ -321,7 +321,7 @@ Polymer({
       localStorage.setItem("curr_sess_ins2discount",0);
     },
     FnEnablePaymentCard:function(){
-      this.$.service.searchtransportfeepaidinfoService1(localStorage.getItem("curr_sess_studentid"));
+      this.$.service.searchtransportfeepaidinfoService1(localStorage.getItem("curr_sess_studentid"),localStorage.getItem("curr_sess_studentname"));
       this.hiddenpayment=false;
       this.hiddeninstallment=false;
       this.hidezonebtn=true;

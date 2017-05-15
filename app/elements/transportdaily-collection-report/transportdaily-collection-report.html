@@ -108,7 +108,7 @@
       FnSelectGrade:function(e){
         grade=(e.target.selectedItem.textContent).trim();
         if(this.flag==1)
-         this.$.feereportservice.FnFetchDayCollectionService(); 
+         this.$.feereportservice.FnFetchDayCollectionService(type); 
       },
       FnRefresh:function(){
         // document.querySelector('#transportdaycollectiongrade').selected=-1;
