@@ -103,8 +103,8 @@
    <paper-input id="inputchequeno" hidden$="{{hiddeninputtflag}}" value="{{chequeno}}"></paper-input>
    <paper-input id="inputbankname" hidden$="{{hiddeninputtflag}}" value="{{bankname}}"></paper-input>
    <!-- <paper-item id="inputpaiddate" hidden$="{{hiddeninputflag}}" value="{{chequedate}}">{{chequedate}}</paper-item> -->
-   <editcheque-datepicker showdate="{{chequedate}}" hidden$="{{hiddeninputflag}}"></editcheque-datepicker>
-   <editreceipt-datepicker showdate="{{receiptdate}}" hidden$="{{hiddeninputflag}}" style="width:6%;right:6%;position: absolute;"></editreceipt-datepicker>
+   <transporteditcheque-datepicker showdate="{{chequedate}}" ></transporteditcheque-datepicker>
+   <transporteditreceipt-datepicker showdate="{{receiptdate}}" hidden$="{{hiddeninputflag}}" style="width:6%;right:6%;position: absolute;"></transporteditreceipt-datepicker>
    <!-- <paper-input id="paiddate" hidden$="{{hiddeninputflag}}" value="{{chequedate}}"></paper-input> -->
    <!-- <paper-input id="receiptdate" hidden$="{{hiddeninputflag}}" value="{{receiptdate}}"></paper-input> -->
    
@@ -118,11 +118,11 @@
        <paper-input required allowed-pattern="[0-9a-zA-Z]" error-message="Requires Cheque number!"  id="chequeschoolfeechequeno" label="Enter Cheque Number" value="{{chequeno}}"> 
        </paper-input></div>
        <div  class="layout" style='margin-left: 5%;margin-top: -2%;'><paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires bankName!"  id="chequeschoolfeebankname" label="Enter Bank Name" value="{{bankname}}"> </paper-input></div>
-       <div style="width: 68%;margin-top: -2%;margin-left: 3%;"><installment-date-picker editdate="{{editdate}}" showdate="{{installmentdate}}"></installment-date-picker></div>
-       <div style="margin-top: -6%;margin-left: 2%;"><receiptdatepicker-card showdate="{{receiptdate}}"></receiptdatepicker-card></div>
+       <div style="width: 68%;margin-top: -2%;margin-left: 3%;"><transportinstallment-date-picker showdate="{{installmentdate}}" ></transportinstallment-date-picker></div>
+       <div style="margin-top: -6%;margin-left: 2%;"><transportreceiptdatepicker-card showdate="{{receiptdate}}"></transportreceiptdatepicker-card></div>
       <div class="buttons" style="margin-left: -5%;">
         <paper-button id="{{installment}}" class="btn btn-primary left" on-click="FnAddcheque">Add</paper-button>
-        <paper-button id="{{installment}}"class="btn btn-primary left" on-click="FnCancelcheque">Cancel</paper-button>
+        <paper-button id="{{installment}}" class="btn btn-primary left" on-click="FnCancelcheque">Cancel</paper-button>
       </div>     
     </paper-dialog>  
 
@@ -131,8 +131,8 @@
      <div  class="layout" style='margin-left: 5%;'><paper-input required allowed-pattern="[0-9a-zA-Z]" error-message="Requiress Reference number!"  id="creditschoolfeechequeno" label="Enter Reference No:" value="{{chequeno}}"> </paper-input>
      </div>
      <div  class="layout" style='margin-left: 5%;margin-top: -2%;'> <paper-input required allowed-pattern="[a-zA-Z ]"  error-message="Requires BankName!"  id="creditschoolfeebankname" label="Enter the Bank Name" value="{{bankname}}"> </paper-input></div>     
-     <div style="width: 68%;margin-top: -2%;margin-left: 3%;"><installment-date-picker showdate="{{installmentdate}}"></installment-date-picker></div>
-     <div style="margin-top: -6%;margin-left: 2%;"><receiptdatepicker-card showdate="{{receiptdate}}"></receiptdatepicker-card></div>
+     <div style="width: 68%;margin-top: -2%;margin-left: 3%;"><transportinstallment-date-picker showdate="{{installmentdate}}" ></transportinstallment-date-picker></div>
+     <div style="margin-top: -6%;margin-left: 2%;"><transportreceiptdatepicker-card showdate="{{receiptdate}}"></transportreceiptdatepicker-card></div>
     <div class="buttons" style="margin-left: -5%;">
       <paper-button id="{{installment}}" class="btn btn-primary left" on-click="FnAddcredit">Add</paper-button>
       <paper-button id="{{installment}}" class="btn btn-primary left" on-click="FnCancelcredit">Cancel</paper-button>
@@ -182,16 +182,17 @@
           m="0"+m;
         if(d<10)
           d="0"+d;
+        localStorage.setItem("curr_sess_installmentdate",this.installmentdate);
         // var current_date=m+"/"+d+"/"+y;
         var current_date=localStorage.getItem("curr_sess_date");
         paymenttype = (e.target.selectedItem.textContent).trim();
         // if(this.installment!='Commitmentfee'||localStorage.getItem("curr_sess_installmentpattern")!='3')
-        document.querySelector('installment-date-picker').FnSetDate(this.installmentdate);
+        // alert(this.installmentdate);
+        // document.querySelector('transportinstallment-date-picker').FnSetDate(this.installmentdate);
         // else
           // alert(current_date);
         // localStorage.setItem("curr_sess_installmentdate",current_date);
-        // document.querySelector('installment-date-picker').FnSetDate(current_date);        
-
+        // document.querySelector('installment-date-picker').FnSetDate(current_date);       
       
         if(paymenttype=="Cash"){
             this.hiddeninputtflag=true; 
@@ -208,9 +209,9 @@
             obj.fineamount=this.fineamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
-            obj.installmentdate=this.installmentdate;            
-            obj.paiddate=current_date;
-            
+            // obj.installmentdate=this.installmentdate;
+            obj.installmentdate=localStorage.getItem("curr_sess_installmentdate");            
+            obj.paiddate=current_date;         
 
             // alert(localStorage.getItem("curr_sess_receiptdate"));
             obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
@@ -220,7 +221,12 @@
             this.bankname="";
             this.chequeno="";
             this.chequedate="";
-            this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            // alert(localStorage.getItem("curr_sess_receiptdate"));
+            // this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            // var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
+            var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
+            // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
+            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
             this.hiddenflag=false;
             this.hiddenpayflag=true;
             this.FnPrepareInstallment(obj);
@@ -242,7 +248,8 @@
             obj.fineamount=this.fineamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
-            obj.installmentdate=this.installmentdate;            
+            // obj.installmentdate=this.installmentdate; 
+            obj.installmentdate=localStorage.getItem("curr_sess_installmentdate");          
             obj.paiddate=current_date;
             // alert(localStorage.getItem("curr_sess_receiptdate"));
             obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
@@ -252,7 +259,11 @@
             this.bankname="";
             this.chequeno="";
             this.chequedate="";
-            this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            // this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            // var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
+            var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
+            // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
+            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
             this.hiddenflag=false;
             this.hiddenpayflag=true;
             this.FnPrepareInstallment(obj);
@@ -305,7 +316,8 @@
             obj.discountamount=this.discountamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
-            obj.installmentdate=this.installmentdate;
+            // obj.installmentdate=this.installmentdate;
+            obj.installmentdate=localStorage.getItem("curr_sess_installmentdate");
             obj.chequeno=(this.chequeno).trim();
             obj.bankname=this.bankname;
             obj.chequedate=localStorage.getItem("curr_sess_installmentdate");
@@ -313,20 +325,25 @@
             obj.chequestatus="processing";          
             obj.paidstatus="processing";
             obj.paiddate=current_date; 
-            obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
             // alert(localStorage.getItem("curr_sess_receiptdate"));
-
+            obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
             this.modeofpayment=paymenttype;
             this.bankname=this.bankname;
             this.chequeno=(this.chequeno).trim();
+            // alert(localStorage.getItem("curr_sess_installmentdate"));
+            var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
+            var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
+            // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
+            // alert(this.chequedate);
             this.chequedate=localStorage.getItem("curr_sess_installmentdate");
-            this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            // alert(this.receiptdate);
             this.hiddenflag=false;
             this.hiddenpayflag=true;
             this.FnPrepareInstallment(obj);   
             // installmentarr.push(obj);
             // alert(JSON.stringify(installmentarr));
-            // document.querySelector('fees-card').FnSetfee(installmentarr);
+            document.querySelector('fees-card').FnSetfee(installmentarr);
             }  
       },
       FnCancelcheque:function(){
@@ -365,7 +382,8 @@
             obj.discountamount=this.discountamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
-            obj.installmentdate=this.installmentdate;
+            // obj.installmentdate=this.installmentdate;
+            obj.installmentdate=localStorage.getItem("curr_sess_installmentdate");
             obj.chequeno=this.chequeno;
             obj.bankname=this.bankname;            
             obj.receiveddate=localStorage.getItem("curr_sess_installmentdate");   
@@ -378,8 +396,13 @@
             this.modeofpayment=paymenttype;
             this.bankname=this.bankname;
             this.chequeno=(this.chequeno).trim();
+            // this.chequedate=localStorage.getItem("curr_sess_installmentdate");
+            // this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
+            var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
+            // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
             this.chequedate=localStorage.getItem("curr_sess_installmentdate");
-            this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
             this.hiddenflag=false;
             this.hiddenpayflag=true;         
             this.FnPrepareInstallment(obj);   
@@ -444,8 +467,8 @@
         if(d<10)
           d="0"+d;
         // var current_date=m+"/"+d+"/"+y;
-        var current_date=localStorage.getItem("curr_sess_date");
-      
+        var current_date=localStorage.getItem("curr_sess_date");   
+        
         if(paymenttype=="Cash"){
             this.hiddeninputtflag=true; 
             this.hiddenflag=false;
@@ -454,7 +477,12 @@
             this.bankname="";
             this.chequeno="";
             this.chequedate="";
-            this.receiptdate=current_date;
+
+            // var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
+            var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
+            // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
+            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            
             this.hiddenflag=false;
             this.hiddenpayflag=true;
           // var installmentarr=[];
@@ -469,11 +497,11 @@
             obj.fineamount=this.fineamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
-            obj.installmentdate=this.installmentdate;            
+            // obj.installmentdate=this.installmentdate;            
+            obj.installmentdate=localStorage.getItem("curr_sess_installmentdate");
             obj.paiddate=current_date;
             obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
             obj.paidstatus="paid";
-
             
             this.FnPrepareInstallment(obj);
             // installmentarr.push(obj);
@@ -487,7 +515,11 @@
             this.bankname="";
             this.chequeno="";
             this.chequedate="";
-            this.receiptdate=current_date;
+            // this.receiptdate=current_date;
+            // var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
+            var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
+            // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
+            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
             this.hiddenflag=false;
             this.hiddenpayflag=true;
           // var installmentarr=[];
@@ -502,7 +534,8 @@
             obj.fineamount=this.fineamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
-            obj.installmentdate=this.installmentdate;            
+            // obj.installmentdate=this.installmentdate;            
+            obj.installmentdate=localStorage.getItem("curr_sess_installmentdate");
             obj.paiddate=current_date;
             obj.receiptdate=localStorage.getItem("curr_sess_receiptdate");
             obj.paidstatus="processing";
@@ -533,8 +566,13 @@
             this.modeofpayment=paymenttype;
             this.bankname=this.bankname;
             this.chequeno=(this.chequeno).trim();
+            // this.chequedate=localStorage.getItem("curr_sess_installmentdate");
+            // this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
+            var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
+            // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
             this.chequedate=localStorage.getItem("curr_sess_installmentdate");
-            this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
             this.hiddenflag=false;
             this.hiddenpayflag=true;
             obj.paymenttype=paymenttype;
@@ -548,7 +586,8 @@
             obj.discountamount=this.discountamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
-            obj.installmentdate=this.installmentdate;
+            // obj.installmentdate=this.installmentdate;
+            obj.installmentdate=localStorage.getItem("curr_sess_installmentdate");
             obj.chequeno=(this.chequeno).trim();
             obj.bankname=this.bankname;
             obj.chequedate=localStorage.getItem("curr_sess_installmentdate");
@@ -581,8 +620,13 @@
             this.modeofpayment=paymenttype;
             this.bankname=this.bankname;
             this.chequeno=(this.chequeno).trim();
+            // this.chequedate=localStorage.getItem("curr_sess_installmentdate");
+            // this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
+            var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
+            // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
             this.chequedate=localStorage.getItem("curr_sess_installmentdate");
-            this.receiptdate=localStorage.getItem("curr_sess_receiptdate");
+            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
             this.hiddenflag=false;
             this.hiddenpayflag=true;
             obj.paymenttype=paymenttype;       
@@ -596,7 +640,8 @@
             obj.discountamount=this.discountamount;
             obj.waiveoff=localStorage.getItem("curr_sess_waiveoff");
             obj.paymentmode=paymenttype;
-            obj.installmentdate=this.installmentdate;
+            // obj.installmentdate=this.installmentdate;
+            obj.installmentdate=localStorage.getItem("curr_sess_installmentdate");
             obj.chequeno=this.chequeno;
             obj.bankname=this.bankname;            
             obj.receiveddate=localStorage.getItem("curr_sess_installmentdate");   
