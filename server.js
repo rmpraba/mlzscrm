@@ -8,9 +8,9 @@
   password : 'admin',
   database : 'mlzscrm'
   // host     : 'localhost',
-  // port     : '60841',
-  // user     : 'admin8k1QrR9',
-  // password : 'gBH5PqAxBWjL',
+  // port     : '37506',
+  // user     : 'adminVwbmIka',
+  // password : '6RNH4TEavBhh',
   // database : 'mlzscrm'
  });
 
@@ -31,7 +31,7 @@ app.post('/loginpage',  urlencodedParser,function (req, res)
   //console.log('hi');
   var loginarr=[];
   var rolearr=[];
-  connection.query('SELECT (select short_name from md_school where id=e.school_id) as shortname,(select address from md_school where id=e.school_id) as address,(select name from md_school where id=e.school_id) as schoolname,e.school_id,e.employee_id, e.employee_name,e.role_id, r.role_name FROM md_employee as e JOIN md_role as r  on r.role_id=e.role_id  where ? and ?',[user,pass],
+  connection.query('SELECT (select society_name from md_school where id=e.school_id) as societyname,(select short_name from md_school where id=e.school_id) as shortname,(select address from md_school where id=e.school_id) as address,(select name from md_school where id=e.school_id) as schoolname,e.school_id,e.employee_id, e.employee_name,e.role_id, r.role_name FROM md_employee as e JOIN md_role as r  on r.role_id=e.role_id  where ? and ?',[user,pass],
     function(err, rows){
     if(!err)
     {

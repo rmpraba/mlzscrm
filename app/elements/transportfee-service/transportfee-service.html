@@ -464,6 +464,7 @@
         obj.address=address;
         obj.city=city;
         obj.pincode=pincode;
+        // alert(localStorage.getItem("localsess_start_date"));
         obj.dob=localStorage.getItem("localsess_start_date");
         this.insertnewstudentparam=obj;
         this.$.insertnewstudentajax.generateRequest();
@@ -920,13 +921,19 @@
             obj.insamount=insarr[i].amount;
             if(insarr[i].installment=="Lumpsum")
               insarr[i].installmentdate=currdate;
-            obj.insdate=insarr[i].installmentdate;
+            var dateParts = (insarr[i].installmentdate).split("/");
+            var insdate=dateParts[1]+"/"+dateParts[0]+"/"+dateParts[2];
+            // alert(insdate);
+            obj.insdate=insdate;
             obj.inspaymentmode=insarr[i].paymentmode;
             obj.insstatus=insarr[i].paidstatus;
             obj.insfineamount=insarr[i].fineamount;
             // obj.ins1amount=insarr[i].fineamount;
             obj.inschequeno=insarr[i].chequeno;
-            obj.inschequedate=insarr[i].chequedate;
+            var dateParts1 = (insarr[i].chequedate).split("/");
+            var insdate1=dateParts1[1]+"/"+dateParts1[0]+"/"+dateParts1[2];
+            obj.inschequedate=insdate1;
+            // obj.inschequedate=insarr[i].chequedate;
             obj.insbankname=insarr[i].bankname;
             obj.inschequestatus=insarr[i].paidstatus;
             obj.discount=totaldiscount;
@@ -949,13 +956,19 @@
             obj.receiptdate=insarr[i].receiptdate;
             obj.paiddate=insarr[i].paiddate;
             obj.insamount=insarr[i].amount;
-            obj.insdate=insarr[i].installmentdate;
+            // obj.insdate=insarr[i].installmentdate;
+            var dateParts = (insarr[i].installmentdate).split("/");
+            var insdate=dateParts[1]+"/"+dateParts[0]+"/"+dateParts[2];
+            obj.insdate=insdate;
             obj.inspaymentmode=insarr[i].paymentmode;
             obj.insstatus=insarr[i].paidstatus;
             obj.insfineamount=insarr[i].fineamount;
             // obj.ins2amount=insarr[i].fineamount;
             obj.inschequeno=insarr[i].chequeno;
-            obj.inschequedate=insarr[i].chequedate;
+            var dateParts1 = (insarr[i].chequedate).split("/");
+            var insdate1=dateParts1[1]+"/"+dateParts1[0]+"/"+dateParts1[2];
+            obj.inschequedate=insdate1;
+            // obj.inschequedate=insarr[i].chequedate;
             obj.insbankname=insarr[i].bankname;
             obj.inschequestatus=insarr[i].paidstatus;
             
@@ -1015,7 +1028,6 @@
         }
       },
       FnFormReceipt:function(){
-
         var cashparticular=[];
         var chequeparticular=[];
         var currchequeparticular=[];
@@ -1056,16 +1068,16 @@
                 // }
                 // else{
 
-                var d=new Date(paymentarr[i].inschequedate);
-                var dt=d.getDate();
-                if(dt<9)
-                    dt="0"+dt;                
-                var mn=d.getMonth()+1;
-                if(mn<9)
-                    mn="0"+mn;
-                var yr=d.getFullYear();
-                var dat=dt+"-"+mn+"-"+yr;
-                paymentarr[i].inschequedate=dat;
+                // var d=new Date(paymentarr[i].inschequedate);
+                // var dt=d.getDate();
+                // if(dt<9)
+                //     dt="0"+dt;                
+                // var mn=d.getMonth()+1;
+                // if(mn<9)
+                //     mn="0"+mn;
+                // var yr=d.getFullYear();
+                // var dat=dt+"-"+mn+"-"+yr;
+                // paymentarr[i].inschequedate=dat;
 
                 chequetotal=parseFloat(parseFloat(paymentarr[i].insamount)+parseFloat(chequetotal)+parseFloat(paymentarr[i].insfineamount)).toFixed(2);
                 chequeparticular.push({"slno":chequeno,"installment":paymentarr[i].installment,"bankname":paymentarr[i].insbankname,"chequeno":paymentarr[i].inschequeno,"chequedate":paymentarr[i].inschequedate,"installmentamount":paymentarr[i].insamount});
@@ -1073,16 +1085,16 @@
                 // }
             }
             else if(paymentarr[i].inspaymentmode=="Transfer"||paymentarr[i].inspaymentmode=="Card Swipe"){
-                var d=new Date(paymentarr[i].inschequedate);
-                var dt=d.getDate();
-                if(dt<9)
-                    dt="0"+dt;                
-                var mn=d.getMonth()+1;
-                if(mn<9)
-                    mn="0"+mn;
-                var yr=d.getFullYear();
-                var dat=dt+"-"+mn+"-"+yr;
-                paymentarr[i].inschequedate=dat;
+                // var d=new Date(paymentarr[i].inschequedate);
+                // var dt=d.getDate();
+                // if(dt<9)
+                //     dt="0"+dt;                
+                // var mn=d.getMonth()+1;
+                // if(mn<9)
+                //     mn="0"+mn;
+                // var yr=d.getFullYear();
+                // var dat=dt+"-"+mn+"-"+yr;
+                // paymentarr[i].inschequedate=dat;
                 if(paymentarr[i].insfineamount==""||paymentarr[i].insfineamount==null)
             paymentarr[i].insfineamount=0;
                 transfertotal=parseFloat(parseFloat(paymentarr[i].insamount)+parseFloat(transfertotal)+parseFloat(paymentarr[i].insfineamount)).toFixed(2);
@@ -1266,6 +1278,7 @@
                 feereceiptarr[i].receiptdate=dat2;
             }
         }
+
         document.querySelector('CRM-app').setPage("transport-receipt-outcard");
         document.querySelector('transport-receipt-outcard').paymentreceiptarr=feereceiptarr;
         item=[];
@@ -1451,6 +1464,9 @@
             arrr[i].flag=0;
             arrr[i].hidebtn=false;
             // arrr[i].span=11;
+            var d=new Date(arrr[i].cheque_date);
+            var dat=d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear();
+            arrr[i].cheque_date=dat;
             arr.push(arrr[i]);
           }
         document.querySelector('transport-editdelete-cheque').chequearr=arr;
@@ -1621,22 +1637,6 @@
         }
         }
 
-        // for(var i=0;i<collection.length;i++){
-        //   var temp=0;
-        //   for(var j=0;j<chequesarr.length;j++){
-        //   if(collection[i].studentid==chequesarr[j].student_id&&collection[i].installment==chequesarr[j].installtype&&(collection[i].modeofpayment1!='Cash'||collection[i].modeofpayment2!='Cash')){
-        //     temp=1;
-        //     // break;
-        //   }
-        //   }
-        //   if(temp==0)
-        //     {
-        //     collection.splice(i,1);
-        //     i--;
-        //     }
-        // }
-        // alert(JSON.stringify(collection));
-
         for(var i=0;i<collection.length;i++){
           for(var j=0;j<studarr.length;j++){
             if(collection[i].studentid==studarr[j].admission_no&&collection[i].studentname==studarr[j].student_name){
@@ -1668,6 +1668,11 @@
           total+=parseFloat(collection[i].amount);
         }
         // alert(JSON.stringify(collection));
+        for(var i=0;i<collection.length;i++){
+            var d=new Date(collection[i].receiveddate);
+            var dat=d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear();
+            collection[i].receiveddate=dat;
+        }
         document.querySelector('transportdaily-collection-report').transportdaycollectionarr=collection;
         document.querySelector('transportdaily-collection-report').cashtotal=cashtotal;
         document.querySelector('transportdaily-collection-report').chequetotal=chequetotal;
@@ -2008,6 +2013,19 @@
         }
           }
         }
+        }
+
+        for(var i=0;i<feearr.length;i++){
+            if(feearr[i].installment=='Installment1'){
+            var d=new Date();
+            var dd=d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear();
+            feearr[i].installment_date=dd;
+            }
+            else{
+            var d=new Date(feearr[i].installment_date);
+            var dd=d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear();
+            feearr[i].installment_date=dd;
+            }
         }
         // alert(JSON.stringify(feearr));
         document.querySelector('zonetostudent-card').feearr=feearr;

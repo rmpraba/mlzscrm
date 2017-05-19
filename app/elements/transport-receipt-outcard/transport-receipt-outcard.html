@@ -59,7 +59,7 @@
       <tr><td>2.  Fees once paid will not be refunded at any given circumstances.</td></tr>
       <tr><td>3.  Cheque Subject to realization.</td></tr>
       <tr><td>4.  Please retain this receipt for future correspondence.</td></tr>
-      <tr><td>5.  Cheque should be in favour of Samsidhi Educational Society.</td></tr>
+      <tr><td>5.  Cheque should be in favour of {{societyname}}.</td></tr>
       <tr><td>
         <strong>THIS IS SYSTEM GENERATED RECEIPT, NO SIGNATURE IS REQUIRED.</strong>
       </td></tr>
@@ -82,6 +82,7 @@
         this.schoolname=localStorage.getItem("schoolname");
         this.schooladdress=localStorage.getItem("schooladdress");
         this.parentname=localStorage.getItem("curr_sess_parentname");
+        this.societyname=localStorage.getItem("societyname");
       },
       Fnsetinfo:function(){
         this.schoolname=localStorage.getItem("schoolname");

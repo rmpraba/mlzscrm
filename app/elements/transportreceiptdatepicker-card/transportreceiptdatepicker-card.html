@@ -1,0 +1,82 @@
+<!--Component import-->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-date-picker/paper-date-picker.html">
+<link rel="import" href="../../bower_components/paper-styles/demo-pages.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+
+
+<dom-module id="transportreceiptdatepicker-card">
+  <template>
+    <!--component which invokes the predefined date picker control-->
+    <div class="datepicker">
+      <paper-input  class="btn" label="Receipt Date" on-click="FnShowDialog" raised value="{{showdate}}"></paper-input>
+      <paper-dialog id="dialog" class="paper-date-picker-dialog" modal on-iron-overlay-closed="FnDismissDialog" style="left: 0 !important;">
+        <paper-date-picker id="receiptpicker" date="{{date}}"></paper-date-picker>
+        <div class="buttons">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button dialog-confirm>OK</paper-button>
+        </div>
+      </paper-dialog>
+    </div>
+    <dialog-page id="ID_Show_Dialog"></dialog-page>
+    <!-- <transport-service id="service"></transport-service> -->
+  </template>
+  <!--Calling dialog control-->
+
+  <!--JS file import-->
+  <script>
+    Polymer({
+      is: 'transportreceiptdatepicker-card',
+
+      ready:function()
+      {
+        // this.showdate=moment(new Date()).format('dd/mm/yyyy');
+        // localStorage.setItem("curr_sess_receiptdate",this.showdate);
+        // alert(localStorage.getItem("curr_sess_receiptdate"));
+        //this.$.service.feereport(this.showdate);
+        
+        this.showdate=moment(new Date()).format('DD/MM/YYYY');
+        var d=new Date();
+        var dat=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+        localStorage.setItem("curr_sess_receiptdate",dat);
+      },
+      FnShowDialog:function(){
+        this.date=new Date();
+        this.$.dialog.toggle();
+      },
+      FnDismissDialog:function(e)
+      {
+        if (e.detail.confirmed)
+        {
+          // var pickdate=moment(this.$.receiptpicker.date).format('dd/mm/yyyy');
+          // var dd1=new Date();
+          // var dd2=new Date(pickdate);
+          // var days=parseInt((dd1 - dd2) / (1000 * 60 * 60 * 24));
+          // this.showdate = moment(this.$.receiptpicker.date).format('dd/mm/yyyy');
+          // localStorage.setItem("curr_sess_receiptdate",this.showdate); 
+          var pickdate=moment(this.$.picker.date).format('DD/MM/YYYY');
+          var dd1=new Date();
+          var dd2=new Date(pickdate);
+          var days=parseInt((dd1 - dd2) / (1000 * 60 * 60 * 24));
+          this.showdate = moment(this.$.picker.date).format('DD/MM/YYYY');
+          var d=new Date(this.$.picker.date);
+          var dat=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+          localStorage.setItem("curr_sess_receiptdate",dat);         
+        }
+      },
+      FnClear:function(){
+        this.showdate = moment(new Date()).format('DD/MM/YYYY');
+      },
+      setinstalldate:function(installmentdate)
+      {
+      var d1=installmentdate;
+      this.showdate=moment(new Date(d1)).format('DD/MM/YYYY');
+      localStorage.setItem("curr_sess_receiptdate",this.showdate);
+      }
+    });
+  </script>
+</dom-module>

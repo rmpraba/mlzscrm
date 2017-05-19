@@ -67,6 +67,7 @@
           alert("Username and Password is incorrect..!");
           } 
           else {
+          var societyname= result[0].societyname;
           var shortname= result[0].shortname;
           var school= result[0].schoolname;
           var role=result[0].role_name;
@@ -89,6 +90,7 @@
           // localStorage.setItem("collectionentry",pr_collectionentry);
           /*document.querySelector('navigation-bar').Fn_access_rights(pr_enquiry,pr_followup,pr_dashboear,pr_admission_form,pr_adm_approval,pr_collectionentry)*/          
           // document.querySelector('navigation-bar').Fncheck();
+          localStorage.setItem("societyname",societyname);
           localStorage.setItem("shortname",shortname);
           localStorage.setItem("schoolname",school);
           localStorage.setItem("employeename",employeename);
