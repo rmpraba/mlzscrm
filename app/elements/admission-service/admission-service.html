@@ -13,7 +13,7 @@
         on-response="fetchallstudentforsearchResponse"
         debounce-duration="300"
         >
-   <!-- It would fetch the enquiry no's -->
+        <!-- It would fetch the enquiry no's -->
      <iron-ajax
         method="post"
         id="searchenquiryajax"
@@ -1404,8 +1404,12 @@ insertstudenthistoryResponse:function(e){
             // this.callfetchdiscountService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"),localStorage.getItem("curr_sess_discounttype"));
             // this.fetchfeesplitup(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));
         }
-        if(e.detail.response.returnval=="not paid"){
+        if(e.detail.response.returnval=="not paid"&&localStorage.getItem("curr_sess_alreadypaidflag")=="0"){
             alert('Please pay registeration fee before!!');
+        }
+        if(e.detail.response.returnval=="not paid"&&localStorage.getItem("curr_sess_alreadypaidflag")=="1"){
+            this.fetchinstallmentdateService();
+            this.callfetchfeesService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade")); 
         }
       },
       callfetchfeesService:function(academicyear,admissionyear,grade){
