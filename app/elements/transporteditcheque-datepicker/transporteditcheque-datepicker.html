@@ -39,14 +39,14 @@
         //this.$.service.feereport(this.showdate);
         this.showdate=moment(new Date()).format('DD/MM/YYYY');
         var d=new Date();
-        var mm=(d.getMonth()+1);
-        if(mm<10)
-          mm="0"+mm;
-        if(dd<10)
-          dd="0"+dd;
-        var dd=d.getDate();
-        var yy=d.getFullYear();
-        var dat=mm+"/"+dd+"/"+yy;
+        // var mm=(d.getMonth()+1);
+        // if(mm<10)
+        //   mm="0"+mm;
+        // if(dd<10)
+        //   dd="0"+dd;
+        // var dd=d.getDate();
+        // var yy=d.getFullYear();
+        var dat=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
         localStorage.setItem("curr_sess_installmentdate",dat);
       },
       FnShowDialog:function(){
