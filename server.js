@@ -2,16 +2,16 @@
  var mysql      = require('mysql');
  var email   = require("emailjs/email");
  var connection = mysql.createConnection({
-  host     : 'localhost',
-  port     : '3306',
-  user     : 'root',
-  password : 'admin',
-  database : 'mlzscrm'
   // host     : 'localhost',
-  // port     : '37506',
-  // user     : 'adminVwbmIka',
-  // password : '6RNH4TEavBhh',
+  // port     : '3306',
+  // user     : 'root',
+  // password : 'admin',
   // database : 'mlzscrm'
+  host     : 'localhost',
+  port     : '37506',
+  user     : 'adminVwbmIka',
+  password : '6RNH4TEavBhh',
+  database : 'mlzscrm'
  });
 
 var bodyParser = require('body-parser');
@@ -7128,14 +7128,22 @@ app.post('/fetchgradewisediscountstructure-service',  urlencodedParser,function 
 
 
 app.post('/fetchallenrolledadmissions-service',  urlencodedParser,function (req, res){
-  if(req.query.grade=='All Grades')
-  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"'";
+  if(req.query.grade=='All Grades'){
+  if(req.query.type=="All")
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.active_status in ('Admitted') order by a.class_for_admission";
   else
-  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.class_for_admission='"+req.query.grade+"' and s.class_for_admission='"+req.query.grade+"'";
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.admission_status='"+req.query.type+"' and a.active_status in ('Admitted') order by a.class_for_admission";
+  }
+  else{
+  if(req.query.type=="All")
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.class_for_admission='"+req.query.grade+"' and s.class_for_admission='"+req.query.grade+"' and a.active_status in ('Admitted') order by a.class_for_admission";
+  else
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.class_for_admission='"+req.query.grade+"' and s.class_for_admission='"+req.query.grade+"' and a.admission_status='"+req.query.type+"' and a.active_status in ('Admitted') order by a.class_for_admission";
+  }
   console.log('------------------------------------------------------');
   console.log(qur);
   console.log('------------------------------------------------------');
-  // console.log(qur3);
+  
   connection.query(qur,function(err, rows){
       if(!err){
               if(rows.length>0){

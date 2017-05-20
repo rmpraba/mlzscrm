@@ -1800,26 +1800,31 @@
           this.discountmaster=e.detail.response.returnval;
         }
         else{
-
         }
       },
-      FnFetchAllAdmissionService:function(academicyear,grade){
+      FnFetchAllAdmissionService:function(academicyear,grade,type){
         this.fetchallenrolledadmissionsurl=sessionStorage.getItem("addrinfo")+"/fetchallenrolledadmissions-service";
         var obj={"schoolid":"","fromdate":"","todate":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.academicyear=academicyear;
         obj.grade=grade;
+        obj.type=type;
         this.fetchallenrolledadmissionsparam=obj;
         this.$.fetchallenrolledadmissionsajax.generateRequest();
       }, 
       fetchallenrolledadmissionsResponse:function(e){
         if(e.detail.response.returnval!='no rows'){
         this.admission=e.detail.response.returnval;
+        var arr=e.detail.response.returnval;
+        for(var i=0;i<arr.length;i++){
+          arr[i].sno=i+1;
+        }
         document.querySelector('enrollment-report').enrollmentarr=e.detail.response.returnval;
         }
         else
         {
-
+        var arr=[];
+        document.querySelector('enrollment-report').enrollmentarr=arr;
         }
       },
       FnFetchAllStudentsService:function(academicyear,grade){
