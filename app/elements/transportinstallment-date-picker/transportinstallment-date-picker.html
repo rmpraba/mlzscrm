@@ -44,10 +44,20 @@
         // alert(this.showdate);
         var d=new Date();
         var dat=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+         var mm=(d.getMonth()+1);
+          if(mm<10)
+          mm="0"+mm;
+          var dd=d.getDate();
+          if(dd<10)
+          dd="0"+dd;
+          var yy=d.getFullYear();
+          var dat=mm+"/"+dd+"/"+yy;
         localStorage.setItem("curr_sess_installmentdate",dat);
+        localStorage.setItem("curr_sess_installmentdatechangeflag",0);
       },
       FnShowDialog:function(){
         this.date=new Date();
+        // localStorage.setItem("curr_sess_installmentdatechangeflag",0);
         this.$.dialog.toggle();
       },
       FnDismissDialog:function(e)
@@ -60,7 +70,17 @@
           var days=parseInt((dd1 - dd2) / (1000 * 60 * 60 * 24));
           this.showdate = moment(this.$.picker.date).format('DD/MM/YYYY');
           var d=new Date(this.$.picker.date);
-          var dat=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+           var mm=(d.getMonth()+1);
+          if(mm<10)
+          mm="0"+mm;
+          var dd=d.getDate();
+          if(dd<10)
+          dd="0"+dd;
+          var yy=d.getFullYear();
+          var dat=mm+"/"+dd+"/"+yy;
+          // alert(dat);
+          // var dat=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+          localStorage.setItem("curr_sess_installmentdatechangeflag",1);
           localStorage.setItem("curr_sess_installmentdate",dat);
         }
       },

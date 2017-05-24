@@ -2,17 +2,17 @@
  var mysql      = require('mysql');
  var email   = require("emailjs/email");
  var connection = mysql.createConnection({
-  // host     : 'localhost',
-  // port     : '3306',
-  // user     : 'root',
-  // password : 'admin',
-  // database : 'mlzscrm'
   host     : 'localhost',
-  port     : '37506',
-  user     : 'adminVwbmIka',
-  password : '6RNH4TEavBhh',
+  port     : '3306',
+  user     : 'root',
+  password : 'admin',
   database : 'mlzscrm'
- });
+  // host     : 'localhost',
+  // port     : '37506',
+  // user     : 'adminVwbmIka',
+  // password : '6RNH4TEavBhh',
+  // database : 'mlzscrm'
+ }); 
 
 var bodyParser = require('body-parser');
 var app = express();
@@ -1848,7 +1848,8 @@ app.post('/insertadmission',  urlencodedParser,function (req, res){
         disabled_student:req.query.admissiondisabled,
         academic_acheivement:req.query.acheivehandler,
         canteen_availed:req.query.admissioncanteen,
-        transport_availed:req.query.admissiontransport,
+        // transport_availed:req.query.admissiontransport,
+        transport_availed:'Yes',
         created_By:req.query.createdby,
         father_name:req.query.fathername,
         mother_name:req.query.mothername,
@@ -7893,7 +7894,7 @@ app.post('/insertduereportstructure-service',  urlencodedParser,function (req, r
       } else {
         console.log(err);
       }
-    });
+  });
   // }
   // });
 });

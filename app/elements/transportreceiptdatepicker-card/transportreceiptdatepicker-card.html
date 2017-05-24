@@ -15,7 +15,7 @@
     <div class="datepicker">
       <paper-input  class="btn" label="Receipt Date" on-click="FnShowDialog" raised value="{{showdate}}"></paper-input>
       <paper-dialog id="dialog" class="paper-date-picker-dialog" modal on-iron-overlay-closed="FnDismissDialog" style="left: 0 !important;">
-        <paper-date-picker id="receiptpicker" date="{{date}}"></paper-date-picker>
+        <paper-date-picker id="transportreceiptpicker" date="{{date}}"></paper-date-picker>
         <div class="buttons">
           <paper-button dialog-dismiss>Cancel</paper-button>
           <paper-button dialog-confirm>OK</paper-button>
@@ -41,7 +41,14 @@
         
         this.showdate=moment(new Date()).format('DD/MM/YYYY');
         var d=new Date();
-        var dat=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+        var mm=(d.getMonth()+1);
+          if(mm<10)
+          mm="0"+mm;
+          var dd=d.getDate();
+          if(dd<10)
+          dd="0"+dd;
+          var yy=d.getFullYear();
+        var dat=mm+"/"+dd+"/"+yy;
         localStorage.setItem("curr_sess_receiptdate",dat);
       },
       FnShowDialog:function(){
@@ -58,13 +65,21 @@
           // var days=parseInt((dd1 - dd2) / (1000 * 60 * 60 * 24));
           // this.showdate = moment(this.$.receiptpicker.date).format('dd/mm/yyyy');
           // localStorage.setItem("curr_sess_receiptdate",this.showdate); 
-          var pickdate=moment(this.$.picker.date).format('DD/MM/YYYY');
+          var pickdate=moment(this.$.transportreceiptpicker.date).format('DD/MM/YYYY');
           var dd1=new Date();
           var dd2=new Date(pickdate);
           var days=parseInt((dd1 - dd2) / (1000 * 60 * 60 * 24));
-          this.showdate = moment(this.$.picker.date).format('DD/MM/YYYY');
-          var d=new Date(this.$.picker.date);
-          var dat=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+          this.showdate = moment(this.$.transportreceiptpicker.date).format('DD/MM/YYYY');
+          var d=new Date(this.$.transportreceiptpicker.date);
+           var mm=(d.getMonth()+1);
+          if(mm<10)
+          mm="0"+mm;
+          var dd=d.getDate();
+          if(dd<10)
+          dd="0"+dd;
+          var yy=d.getFullYear();
+          var dat=mm+"/"+dd+"/"+yy;
+          // var dat=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
           localStorage.setItem("curr_sess_receiptdate",dat);         
         }
       },

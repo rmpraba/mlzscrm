@@ -49,7 +49,14 @@
         // localStorage.setItem("localsess_to_date",this.showdate);  
         this.showdate=moment(new Date()).format('DD/MM/YYYY');
         var d=new Date();
-        var dat=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+        var mm=(d.getMonth()+1);
+        if(mm<10)
+          mm="0"+mm;
+        var dd=d.getDate();
+        if(dd<10)
+          dd="0"+dd;
+        var yy=d.getFullYear();
+        var dat=mm+"/"+dd+"/"+yy;
         localStorage.setItem("localsess_to_date",dat);      
       },
       FnShowDialog:function(){
@@ -73,7 +80,14 @@
           var days=parseInt((dd1 - dd2) / (1000 * 60 * 60 * 24));
           this.showdate = moment(this.$.picker.date).format('DD/MM/YYYY');
           var d=new Date(this.$.picker.date);
-          var dat=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+          var mm=(d.getMonth()+1);
+          if(mm<10)
+          mm="0"+mm;
+          var dd=d.getDate();
+          if(dd<10)
+          dd="0"+dd;
+          var yy=d.getFullYear();
+          var dat=mm+"/"+dd+"/"+yy;
           localStorage.setItem("localsess_to_date",dat); 
         }
       },

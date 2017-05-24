@@ -169,6 +169,7 @@
       },    
 
       FnPaymentMode:function(e){
+        localStorage.setItem("curr_sess_installmentdatechangeflag",0);
         this.hiddeninputflag=true;
         if(this.flag==1)
           this.hiddeninputtflag-true;
@@ -226,7 +227,14 @@
             // var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
             var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
             // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
-            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            var mm=(rd.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=rd.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=rd.getFullYear();
+            this.receiptdate=dd+"/"+mm+"/"+yy;
             this.hiddenflag=false;
             this.hiddenpayflag=true;
             this.FnPrepareInstallment(obj);
@@ -263,7 +271,15 @@
             // var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
             var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
             // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
-            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            // this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            var mm=(rd.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=rd.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=rd.getFullYear();
+            this.receiptdate=dd+"/"+mm+"/"+yy;
             this.hiddenflag=false;
             this.hiddenpayflag=true;
             this.FnPrepareInstallment(obj);
@@ -287,6 +303,9 @@
       FnAddcheque:function(){
         // var installmentarr=[];
         // alert(this.chequeno+"  "+(this.chequeno).length);
+        // alert(this.installmentdate);
+        // var insdate=new Date(this.installmentdate);
+        // alert(insdate);
         if((this.chequeno).trim()==""||(this.chequeno).trim()==null||this.bankname==""||this.bankname==null){
           this.$.chequeschoolfeechequeno.validate();
           this.$.chequeschoolfeebankname.validate();
@@ -333,10 +352,33 @@
             // alert(localStorage.getItem("curr_sess_installmentdate"));
             var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
             var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
+            var mm=(rd.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=rd.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=rd.getFullYear();
+            this.receiptdate=dd+"/"+mm+"/"+yy;
             // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
             // alert(this.chequedate);
+            if(localStorage.getItem("curr_sess_installmentdatechangeflag")==0){
             this.chequedate=localStorage.getItem("curr_sess_installmentdate");
-            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            obj.changeflag=0;
+            }
+            else{
+              var mm=(cd.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=cd.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=cd.getFullYear();
+            this.chequedate=dd+"/"+mm+"/"+yy;
+            obj.changeflag=1;
+            }
+            // this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+
             // alert(this.receiptdate);
             this.hiddenflag=false;
             this.hiddenpayflag=true;
@@ -401,8 +443,31 @@
             var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
             var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
             // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
+            // this.chequedate=localStorage.getItem("curr_sess_installmentdate");
+            // this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            var mm=(rd.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=rd.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=rd.getFullYear();
+            this.receiptdate=dd+"/"+mm+"/"+yy;
+            if(localStorage.getItem("curr_sess_installmentdatechangeflag")==0){
             this.chequedate=localStorage.getItem("curr_sess_installmentdate");
-            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            obj.changeflag=0;
+            }
+            else{
+              var mm=(cd.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=cd.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=cd.getFullYear();
+            this.chequedate=dd+"/"+mm+"/"+yy;
+            obj.changeflag=1;
+            }
             this.hiddenflag=false;
             this.hiddenpayflag=true;         
             this.FnPrepareInstallment(obj);   
@@ -481,7 +546,15 @@
             // var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
             var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
             // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
-            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            var mm=(rd.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=rd.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=rd.getFullYear();
+            this.receiptdate=dd+"/"+mm+"/"+yy;
+            // this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
             
             this.hiddenflag=false;
             this.hiddenpayflag=true;
@@ -519,7 +592,15 @@
             // var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
             var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
             // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
-            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            // this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            var mm=(rd.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=rd.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=rd.getFullYear();
+            this.receiptdate=dd+"/"+mm+"/"+yy;
             this.hiddenflag=false;
             this.hiddenpayflag=true;
           // var installmentarr=[];
@@ -571,8 +652,31 @@
             var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
             var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
             // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
+            // this.chequedate=localStorage.getItem("curr_sess_installmentdate");
+            // this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+             var mm=(rd.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=rd.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=rd.getFullYear();
+            this.receiptdate=dd+"/"+mm+"/"+yy;
+            if(localStorage.getItem("curr_sess_installmentdatechangeflag")==0){
             this.chequedate=localStorage.getItem("curr_sess_installmentdate");
-            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            obj.changeflag=0;
+            }
+            else{
+              var mm=(cd.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=cd.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=cd.getFullYear();
+            this.chequedate=dd+"/"+mm+"/"+yy;
+            obj.changeflag=1;
+            }
             this.hiddenflag=false;
             this.hiddenpayflag=true;
             obj.paymenttype=paymenttype;
@@ -625,8 +729,31 @@
             var cd=new Date(localStorage.getItem("curr_sess_installmentdate"));
             var rd=new Date(localStorage.getItem("curr_sess_receiptdate"));
             // this.chequedate=cd.getDate()+"/"+(cd.getMonth()+1)+"/"+cd.getFullYear();
+            // this.chequedate=localStorage.getItem("curr_sess_installmentdate");
+            // this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+             var mm=(rd.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=rd.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=rd.getFullYear();
+            this.receiptdate=dd+"/"+mm+"/"+yy;
+            if(localStorage.getItem("curr_sess_installmentdatechangeflag")==0){
             this.chequedate=localStorage.getItem("curr_sess_installmentdate");
-            this.receiptdate=rd.getDate()+"/"+(rd.getMonth()+1)+"/"+rd.getFullYear();
+            obj.changeflag=0;
+            }
+            else{
+              var mm=(cd.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=cd.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=cd.getFullYear();
+            this.chequedate=dd+"/"+mm+"/"+yy;
+            obj.changeflag=1;
+            }
             this.hiddenflag=false;
             this.hiddenpayflag=true;
             obj.paymenttype=paymenttype;       

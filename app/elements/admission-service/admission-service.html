@@ -1762,6 +1762,7 @@ insertstudenthistoryResponse:function(e){
                  
             for(var j=0;j<discountarr.length;j++){
                 // alert(arr[i].base_fee_type+"  "+arr[i].fee_type+"  "+discountarr[j].fee_type);
+                if(localStorage.getItem("curr_sess_alreadypaidflag")==0){
                 if(arr[i].base_fee_type=="Commitment Fee"){ 
                     // alert(arr[i].fee_type+" "+discountarr[j].fee_type);
                     if(arr[i].fee_type==discountarr[j].fee_type){  
@@ -1796,6 +1797,7 @@ insertstudenthistoryResponse:function(e){
                       }
                       }
                       }
+                      
 
                        for(var n=0;n<inscount.length;n++){
                         if(inscount[n].fee_type==arr[i].fee_type){
@@ -1806,6 +1808,7 @@ insertstudenthistoryResponse:function(e){
                       }
                     }
                 }
+
                 else{
                     // alert(arr[i].fee_type+"  "+discountarr[j].amount);
                     if(arr[i].fee_type==discountarr[j].fee_type&&discountarr[j].amount>0){
@@ -1841,6 +1844,32 @@ insertstudenthistoryResponse:function(e){
                        }
                     }
                 }
+
+            }
+            else{
+                if(arr[i].base_fee_type=="Commitment Fee")
+                {
+                    // var tempamt=0;
+                    // var tempdisamt=0;
+                    // for(var k=0;k<paidfeearr.length;k++){
+                    // if(paidfeearr[k].installment==arr[i].base_fee_type){
+                    // }
+                    // }
+                }
+                if(arr[i].base_fee_type!="Commitment Fee"){
+                if(arr[i].fee_type==discountarr[j].fee_type){  
+                if(arr[i].amount>0&&discountarr[j].amount>0) {                
+                if(parseFloat(arr[i].amount)>=parseFloat(discountarr[j].amount)){
+                flag=1;
+                arr[i].actualamount=parseFloat(arr[i].amount);
+                var discountamt=parseFloat(arr[i].amount)-parseFloat(discountarr[j].amount);
+                arr[i].amount=parseFloat(parseFloat(arr[i].amount)-parseFloat(discountarr[j].amount)).toFixed(2);
+                discountarr[j].amount=0;
+                }
+                }
+                }
+                }
+            }
             }
             if(flag==0){
                arr[i].actualamount=parseFloat(arr[i].amount); 
