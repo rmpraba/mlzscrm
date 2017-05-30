@@ -1481,15 +1481,18 @@ insertstudenthistoryResponse:function(e){
             // if(discountarr[i].discount_type_code!='5')
             discountamt=parseFloat(discountarr[i].amount)+parseFloat(discountamt);
             }
-
+            // alert(discountamt);
             totalwosdfee=parseFloat(localStorage.getItem("curr_sess_totalfees"))-parseFloat(discountamt);           
             for(var i=0;i<discountarr.length;i++){   
             if(discountarr[i].discount_type_code=='5'){
             // alert(discountarr[i].fee_type);
             localStorage.setItem("curr_sess_discountfeetype",discountarr[i].fee_type);
-            if(localStorage.getItem("curr_sess_installmentpattern")=='3'&&discountarr[i].discount_percentage!='0'){    
+            if(localStorage.getItem("curr_sess_installmentpattern")=='3'&&discountarr[i].discount_percentage!='0'){  
+                // alert('in');  
                 discountpercent=discountarr[i].discount_percentage;
                 discountpercentamt=parseFloat(parseFloat(totalwosdfee)*(parseFloat(discountarr[i].discount_percentage)/100)).toFixed(2);
+                // alert(discountpercent);
+                // alert(discountpercentamt);
             }
             if(localStorage.getItem("curr_sess_installmentpattern")=='4'&&discountarr[i].discount_percentage!='0'){    
                 discountpercent=discountarr[i].discount_percentage;
@@ -1712,6 +1715,7 @@ insertstudenthistoryResponse:function(e){
       FnFormFeePaymentstructure:function(arr){
         var noofinstallment=localStorage.getItem("curr_sess_noofinstallment");
         // alert(noofinstallment);
+        // alert(JSON.stringify(paidfeearr));
         // alert(JSON.stringify(discountarr));
         var inscount=[];
             // alert(JSON.stringify(this.studinssplit));
@@ -1847,15 +1851,18 @@ insertstudenthistoryResponse:function(e){
 
             }
             else{
-                if(arr[i].base_fee_type=="Commitment Fee")
-                {
-                    // var tempamt=0;
-                    // var tempdisamt=0;
-                    // for(var k=0;k<paidfeearr.length;k++){
-                    // if(paidfeearr[k].installment==arr[i].base_fee_type){
-                    // }
-                    // }
-                }
+                // if(arr[i].base_fee_type=="Commitment Fee")
+                // {          
+                    // alert('in');          
+                    for(var x=0;x<paidfeearr.length;x++){
+                        if(paidfeearr[x].installment==arr[i].base_fee_type){
+                            // arr[i].actualamount=paidfeearr[x].actual_amount;
+                            // arr[i].amount=parseFloat(paidfeearr[x].actual_amount)-parseFloat(paidfeearr[x].discount_amount);
+                            // arr[i].discountamount=paidfeearr[x].discount_amount;
+                            discountarr[j].amount=parseFloat(parseFloat(discountarr[j].amount)-parseFloat(paidfeearr[x].discount_amount)).toFixed(2);
+                        }
+                    }
+                // }
                 if(arr[i].base_fee_type!="Commitment Fee"){
                 if(arr[i].fee_type==discountarr[j].fee_type){  
                 if(arr[i].amount>0&&discountarr[j].amount>0) {                
@@ -1987,6 +1994,9 @@ insertstudenthistoryResponse:function(e){
         var obj={"installment":"","actualamount":"","discountamount":"","installmentamount":""};
         obj.installmentid="Lumpsum";
         obj.installment="Lumpsum";
+        // alert(localStorage.getItem("curr_sess_totalfees"));
+        // alert(localStorage.getItem("curr_sess_payablediscount"));
+        // alert(localStorage.getItem("curr_sess_payableamount"));
         obj.actualamount=localStorage.getItem("curr_sess_totalfees");
         obj.discountamount=localStorage.getItem("curr_sess_payablediscount");
         obj.installmentamount=localStorage.getItem("curr_sess_payableamount");
@@ -2032,8 +2042,8 @@ insertstudenthistoryResponse:function(e){
                     }
                     obj.installmentdate=paidfeearr[i].installment_date;
                     if(paidfeearr[i].provision_payment=="1"){
-                    obj.actualamount=arr[i].actualamount;
-                    obj.discountamount=arr[i].discountamount
+                    obj.actualamount=paidfeearr[i].actual_amount;
+                    obj.discountamount=paidfeearr[i].discount_amount
                     }
                     else{
                     obj.actualamount=paidfeearr[i].actual_amount;
@@ -2087,6 +2097,9 @@ insertstudenthistoryResponse:function(e){
                         arr[i].hiddenflag=false;
                         arr[i].readonlyflag=true;
                         arr[i].hiddenpayflag=true;
+                        arr[i].actualamount=paidfeearr[j].actual_amount;
+                        arr[i].discountamount=paidfeearr[j].discount_amount;
+                        arr[i].installmentamount=paidfeearr[j].installment_amount;
                         arr[i].chequeno=paidfeearr[j].cheque_no;
                         arr[i].chequedate=paidfeearr[j].installment_date;
                         arr[i].bankname=paidfeearr[j].bank_name;
@@ -2099,6 +2112,9 @@ insertstudenthistoryResponse:function(e){
                        // localStorage.setItem('curr_sess_bounceflag',1);
                         f=1;
                         arr[i].bounceflag=1;
+                        arr[i].actualamount=paidfeearr[j].actual_amount;
+                        arr[i].discountamount=paidfeearr[j].discount_amount;
+                        arr[i].installmentamount=paidfeearr[j].installment_amount;
                         arr[i].fineamount=parseFloat(paidfeearr[j].fine_amount);
                        arr[i].installmentamount=parseFloat(arr[i].installmentamount)+parseFloat(paidfeearr[j].fine_amount);
                        arr[i].hiddencommitinput=true;
@@ -2225,7 +2241,6 @@ insertstudenthistoryResponse:function(e){
             insdate=arr[i].installmentdate;
             // feearr=arr[i].fees;
             arr[i].installmentamount=amount;
-            
             for(j=0;j<arr[i].fees.length;j++){
              if(arr[i].fees[j].amount>0&&arr[i].fees[j].feetype=='Kit fee'){
                 if(arr[i].installmentamount<=arr[i].fees[j].amount){                
@@ -2237,7 +2252,6 @@ insertstudenthistoryResponse:function(e){
                     diffexamount=parseFloat(arr[i].fees[j].amount)-parseFloat(arr[i].installmentamount);
                     arr[i].fees[j].amount=parseFloat(arr[i].fees[j].amount)-parseFloat(diffexamount);
                   }                  
-
                 }
                 else{
                     compflag=3;
@@ -2254,7 +2268,6 @@ insertstudenthistoryResponse:function(e){
                 arr[i].fees[j].amount=diffinsexamount;
              }
              }
-
         }
         if(arr[i].installment=="Commitment Fee (Ins2)"){
         arr[i].installmentamount=ramount;
@@ -2262,9 +2275,7 @@ insertstudenthistoryResponse:function(e){
         arr[i].discountamount=0;
         arr[i].fineamount=0;
         arr[i].fees=feearr;
-
         arr[i].installmentdate=insdate;
-        
         for(var j=0;j<arr[i].fees.length;j++){
             // if(arr[i].fees[j].amount>0){
               // alert(arr[i].fees[j].feetype+" "+compflag+"  "+diffexamount+" "+diffinsexamount);
@@ -2281,14 +2292,12 @@ insertstudenthistoryResponse:function(e){
         }
         }
 
-
         arr[i].hiddencommitinput=true;
         arr[i].hiddencommititem=false;
        }
        }
 
-       // alert(JSON.stringify(arr));
-       
+       // alert(JSON.stringify(arr));       
         var finalarr=[];
         for(var i=0;i<arr.length;i++){
             if(arr[i].installment=="Commitment Fee (Ins1)"||arr[i].installment=="Commitment Fee"){
@@ -2304,8 +2313,29 @@ insertstudenthistoryResponse:function(e){
         var actualamt=0;
         var discountamt=0;
         var installdate="";
+        var tempcnt=0;
         if(localStorage.getItem("curr_sess_installmentpattern")=="4")
         {
+            if(localStorage.getItem("curr_sess_alreadypaidflag")=="1"){
+                
+                for(var i=0;i<paidfeearr.length;i++){
+                    if(paidfeearr[i].installment=="Commitment Fee"||paidfeearr[i].installment=="Installment1"){
+                        tempcnt++;
+                    }
+                }
+                // alert(tempcnt)
+                // alert(JSON.stringify(arr));
+                if(tempcnt=='2'){
+                    var temp=0;
+                    for(var i=0;i<arr.length;i++){
+                        if(arr[i].installment=="Installment2"||arr[i].installment=="Installment3"){
+                            arr.splice(i,1);
+                            i--;
+                        }
+                    }
+                }
+            }
+            // alert(JSON.stringify(arr));
             var f=new Date();
             var y=f.getFullYear();
             var m=parseInt(f.getMonth())+1;
@@ -2316,26 +2346,34 @@ insertstudenthistoryResponse:function(e){
               d="0"+d;
             var current_date=m+"/"+d+"/"+y;
             for(var i=0;i<arr.length;i++){
+                // alert(arr[i].installmentamount+" "+arr[i].actualamount+" "+arr[i].discountamount);
                 installmentamt=parseFloat(parseFloat(installmentamt)+parseFloat(arr[i].installmentamount)).toFixed(2);
                 actualamt=parseFloat(parseFloat(actualamt)+parseFloat(arr[i].actualamount)).toFixed(2);
                 discountamt=parseFloat(parseFloat(discountamt)+parseFloat(arr[i].discountamount)).toFixed(2);
                 installdate=current_date;
             }
         // alert(installmentamt+" "+actualamt+" "+discountamt);
+        var payableamount=0;
+        if(localStorage.getItem("curr_sess_alreadypaidflag")=="1"&&tempcnt=="2"){
+            discountpercentamt=0;
+            localStorage.setItem("curr_sess_discountpercentamt",discountpercentamt);
+            payableamount=parseFloat(localStorage.getItem("curr_sess_payablefees"))-(parseFloat(discountamt));
+        }
+        else{
         var discountpercentamt=0;
         if(discountamt>0)
          discountpercentamt=parseFloat(parseFloat(installmentamt)*(parseFloat(localStorage.getItem("curr_sess_discountpercent"))/100)).toFixed(2);
         else
          discountpercentamt=parseFloat(parseFloat(actualamt)*(parseFloat(localStorage.getItem("curr_sess_discountpercent"))/100)).toFixed(2);
         localStorage.setItem("curr_sess_discountpercentamt",discountpercentamt);
-        // alert(localStorage.getItem("curr_sess_payablefees"));
-        // alert(discountpercentamt);
-        var payableamount=parseFloat(localStorage.getItem("curr_sess_payablefees"))-(parseFloat(discountpercentamt));
+        payableamount=parseFloat(localStorage.getItem("curr_sess_payablefees"))-(parseFloat(discountpercentamt));
+        }
+        
         document.querySelector('fees-card').payableamount=payableamount;
         var totaldiscount=parseFloat(discountamt)+(parseFloat(discountpercentamt));
         localStorage.setItem("curr_sess_payablediscount",totaldiscount);
         localStorage.setItem("curr_sess_payableamount",payableamount);
-
+            // alert(JSON.stringify(arr));
             for(var i=0;i<arr.length;i++){
                 if(arr[i].installment=="Installment1"){
                 if(localStorage.getItem("curr_sess_discountpercent")>0){
