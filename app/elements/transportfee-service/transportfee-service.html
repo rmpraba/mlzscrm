@@ -315,6 +315,17 @@
         on-response="attachtransportdiscountResponse"
         debounce-duration="300"
         >
+    <iron-ajax
+        method="post"
+        id="deletetransportfeescheduleajax"
+        url="{{deletetransportfeescheduleurl}}"
+        params="{{deletetransportfeescheduleparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="deletetransportfeescheduleResponse"
+        debounce-duration="300"
+        >
+        
         
   </template>
   <script>
@@ -510,6 +521,7 @@
         // alert(JSON.stringify(arr));
         if(arr!='no rows'){
           document.querySelector('zonetostudent-card').autocompletearr(arr);
+          document.querySelector('transportfee-schedule-card').autocompletearr(arr);
         }
       },
       fetchStudentInfoForZoneAllocation:function(studentid,studentname){
@@ -610,7 +622,7 @@
         document.querySelector('zonetostudent-card').FnEnablePaymentCard();
         // document.querySelector('zonetostudent-card').FnRefresh();
       },
-      inserttransportfeeService:function(arr){
+      inserttransportfeeService:function(arr,insfor){
         this.inserttransportfeeschurl=sessionStorage.getItem("addrinfo")+"/inserttransportsch-service";
         count1=arr.length;
         for(var i=0;i<arr.length;i++){
@@ -622,17 +634,46 @@
         obj.installment=arr[i].installment;
         obj.installmentdate=arr[i].installmentdate;
         obj.amount=arr[i].amount;
+        obj.insfor=insfor;
         this.inserttransportfeeschparam=obj;
         this.$.inserttransportfeeschajax.generateRequest();
         }
       },
       inserttransportfeeschResponse:function(e){
+        // alert(e.detail.response.returnval);
+        if(e.detail.response.returnval=="already exist!!"){
+        count2++;
+        if(count1==count2){
+            count1=0;count2=0;
+            // alert('Schedule already exist!!');
+            document.querySelector('transportfee-schedule-card').FnToggleDialog();
+        }
+        }
+        else{
         count2++;
         if(count1==count2){
           alert('Created!!');
           count1=0;
           count2=0;
           document.querySelector('transportfee-schedule-card').FnRefresh();
+        }
+        }
+      },
+      FnDeleteTransportFeeSchedule:function(distanceid,zonename,academicyear,insfor){
+        this.deletetransportfeescheduleurl=sessionStorage.getItem("addrinfo")+"/deletetransportfeeschedule-service";        
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.distanceid=distanceid;
+        obj.zonename=zonename;
+        obj.insfor=insfor;
+        this.deletetransportfeescheduleparam=obj;
+        this.$.deletetransportfeescheduleajax.generateRequest();        
+      },
+      deletetransportfeescheduleResponse:function(e){
+        if(e.detail.response.returnval=="Deleted!!"){
+            alert('Deleted Successfully!!');
+            document.querySelector('transportfee-schedule-card').FnRefresh();   
         }
       },
       fetchtransportfeesearchService:function(){
@@ -1797,10 +1838,6 @@
       fetchtransportfeesResponse1:function(e){
         var feearr=e.detail.response.feesplit;
         var studarr=e.detail.response.studinfo;
-        // alert(localStorage.getItem("curr_sess_paymentpattern"));
-        // alert(JSON.stringify(feearr));
-        // alert(JSON.stringify(studarr));
-        // alert(paidarr[0].installment_pattern);
         if(paidarr!='no rows'){
         localStorage.setItem("curr_sess_paymentpattern",paidarr[0].installment_pattern);
         document.querySelector('zonetostudent-card').FnSetDefaultPattern(paidarr[0].installment_pattern);

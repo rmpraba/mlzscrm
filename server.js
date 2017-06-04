@@ -9312,10 +9312,19 @@ var response={
   zone_name:req.query.zonename,
   installment:req.query.installment,
   installment_date:req.query.installmentdate,
-  amount:req.query.amount
+  amount:req.query.amount,
+  schedule_for:req.query.insfor
 }; 
+ var checkqur="SELECT * FROM mlzscrm.transport_fee_schedule WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and "+
+ " distance_id='"+req.query.distanceid+"' and zone_name='"+req.query.zonename+"' and installment='"+req.query.installment+"' and schedule_for='"+req.query.insfor+"'";
+ console.log('-----------------------------------------------');
+ console.log(checkqur);
+ console.log('-----------------------------------------------');
  var qur="INSERT INTO transport_fee_schedule SET ?";
  console.log(qur);
+ console.log('-----------------------------------------------');
+ connection.query(checkqur,function(err, rows){
+ if(rows.length==0){
  connection.query(qur,[response],
     function(err, rows)
     {
@@ -9331,8 +9340,34 @@ var response={
         console.log(err);
       }
     });
+ }
+ else{
+  res.status(200).json({'returnval': 'already exist!!'});
+ }
+});
 });
 
+app.post('/deletetransportfeeschedule-service',  urlencodedParser,function (req, res){
+ 
+ var qur="DELETE FROM mlzscrm.transport_fee_schedule WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and "+
+ " distance_id='"+req.query.distanceid+"' and zone_name='"+req.query.zonename+"' and schedule_for='"+req.query.insfor+"'";
+ console.log(qur);
+ connection.query(qur,
+    function(err, result)
+    {
+      if(!err){
+        if(result.affectedRows>0){
+          res.status(200).json({'returnval': 'Deleted!!'});
+        } 
+        else {
+          console.log(err);
+          res.status(200).json({'returnval': 'Unable to Delete!!'});
+        }
+      } else {
+        console.log(err);
+      }
+    });
+});
 
 app.post('/fetchtransportfeesearch-service',  urlencodedParser,function (req, res){
  
@@ -9481,20 +9516,32 @@ app.post('/fetchtransportfees-service1',  urlencodedParser,function (req, res){
       if(!err){
         if(rows.length>0){
           zonename=rows[0].zone_name;
-          connection.query("SELECT * FROM mlzscrm.transport_fee_schedule WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and zone_name='"+zonename+"'",function(err, rows){
-          if(!err){
-          if(rows.length>0){
-          feesplit=rows;
-          connection.query("SELECT sum(amount) as total FROM mlzscrm.transport_fee_schedule WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and zone_name='"+zonename+"'",function(err, rows){
-          if(!err)            
-          res.status(200).json({'studinfo':studinfo,'total': rows[0].total,'zonename':zonename,'feesplit':feesplit});
-          });
-          }
-          else
-          res.status(200).json({'returnval': 'no rows'});
-          }
-        });
-        } 
+          connection.query("SELECT * FROM mlzscrm.transport_fee_schedule WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and zone_name='"+zonename+"' and schedule_for='"+req.query.studentid+"'",function(err, rows){
+            if(rows.length>0)
+            {
+            feesplit=rows;
+            connection.query("SELECT sum(amount) as total FROM mlzscrm.transport_fee_schedule WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and zone_name='"+zonename+"'",function(err, rows){
+            if(!err)            
+            res.status(200).json({'studinfo':studinfo,'total': rows[0].total,'zonename':zonename,'feesplit':feesplit});
+            });
+            }
+            else{
+            connection.query("SELECT * FROM mlzscrm.transport_fee_schedule WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and zone_name='"+zonename+"' and schedule_for='All'",function(err, rows){
+            if(!err){
+            if(rows.length>0){
+            feesplit=rows;
+            connection.query("SELECT sum(amount) as total FROM mlzscrm.transport_fee_schedule WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and zone_name='"+zonename+"'",function(err, rows){
+            if(!err)            
+            res.status(200).json({'studinfo':studinfo,'total': rows[0].total,'zonename':zonename,'feesplit':feesplit});
+            });
+            }
+            else
+            res.status(200).json({'returnval': 'no rows'});
+            }
+            });
+            }
+            });
+            } 
         else {
           console.log(err);
           res.status(200).json({'returnval': 'no rows'});

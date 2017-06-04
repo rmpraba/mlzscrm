@@ -2,9 +2,9 @@
 <link rel="import" href="..\transportfee-schedule-itemcard\transportfee-schedule-itemcard.html">
 
 <dom-module id="transportfee-schedule-card">
+
   <template>
     <div class="row enquiry-form">
-
       <div class="list-group col-sm-12 panel-body form-category">
         <div class="col-sm-6 enquiry-inpt">
             <paper-input label="School Name" value="{{schoolname}}"></paper-input>
@@ -19,9 +19,8 @@
           </paper-dropdown-menu>
         </div>     
       </div>
-
       <div class="list-group col-sm-12 panel-body form-category">
-        <div class="col-sm-6">
+        <div class="col-sm-3">
           <paper-dropdown-menu label="Select Zone" attr-for-selected="value">
             <paper-menu id="transportfeeschzone" class="dropdown-content" required on-iron-select="FnSelectZone" valueattr="value" >
               <template  is="dom-repeat" items="{{zonearr}}" as="item">
@@ -33,57 +32,182 @@
         <div class="col-sm-3">
         <paper-input label="Fees" value="{{fees}}"></paper-input>
         </div>
-      </div>
-
-      <div class="list-group col-sm-12 panel-body form-category">
-        <div class="col-sm-6">
+        <div class="col-sm-3">
           <paper-dropdown-menu label="No of Installment" attr-for-selected="value">
             <paper-menu id="transportfeeschinstallment" class="dropdown-content" required on-iron-select="FnSelectInstallment" valueattr="value" >
-              <!-- <template  is="dom-repeat" items="{{installmentarr}}" as="item"> -->
               <paper-item value="1">1</paper-item>
               <paper-item value="2">2</paper-item>
-              <paper-item value="3">3</paper-item>
+              <!-- <paper-item value="3">3</paper-item>
               <paper-item value="4">4</paper-item>
-              <paper-item value="5">5</paper-item>
-              <!-- </template> -->
+              <paper-item value="5">5</paper-item> -->
             </paper-menu>
           </paper-dropdown-menu>
         </div>
-        <div class="col-sm-6" style="margin-top: 4%;">
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-3" style="margin-top: 2%;">
+        <paper-checkbox id="transportfeeschallstud" on-change="FnAll">All</paper-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <paper-checkbox id="transportfeeschspecstud" on-change="FnSpecific">Specific</paper-checkbox>
+        </div>
+        <div class="col-sm-3" hidden$="{{hidesearchname}}" style="margin-top: -2%;">
+          <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchStudent"></paper-input>
+          <paper-listbox class="dropdown-content" id="transportfeeschinput" on-iron-select="FnSelectStudent">
+          <template is="dom-repeat" items="{{itemArray}}" as="item">
+            <paper-item value="{{item.admission_no}}">{{item.itemdes}}</paper-item>
+          </template>
+          </paper-listbox>
+        </div>
+        <div class="col-sm-3" style="margin-top: 2%;" hidden>
         <paper-checkbox id="transportfeeschamount" on-change="FnAmount">Amount</paper-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <paper-checkbox id="transportfeeschpercent" on-change="FnPercent">Percent</paper-checkbox>
         </div>
       </div>
-
       <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hideinstallmentcard}}">
         <template is="dom-repeat" items="{{transportfeeinsarr}}">
           <transportfee-schedule-itemcard installment="{{item.installment}}" flag1="{{item.flag1}}" flag2="{{item.flag2}}" insamount="{{item.insamount}}" noofinstallment="{{item.noofinstallment}}" zonename="{{item.zonename}}" distanceid="{{item.distanceid}}" type="{{item.type}}">
           </transportfee-schedule-itemcard>
         </template>
       </div>
-
       <div class="col-md-12 form-button">
-          <!-- <paper-button id="transportfeehidegenerate" class="btn btn-primary" on-click="FnGenerate">Generate</paper-button> -->
           <paper-button id="transportfeehidesubmit" class="btn btn-primary" on-click="FnSubmit">Submit</paper-button>
           <paper-button class="btn btn-primary" on-click="FnCancel">Cancel</paper-button>
       </div>
       </div>
+      <paper-dialog id="transportfeeschdialog" modal style="width:50%;">
+        <h3>Schedule Already exist!!Want to Delete..?</h3>
+        <div>
+          <br>
+          <paper-button class="btn btn-primary" on-click="FnDialogOk">Ok</paper-button>
+          <paper-button class="btn btn-primary" on-click="FnDialogCancel">Cancel</paper-button>
+        </div>
+      </paper-dialog>
       <transportfee-service id="transportfeeservice"></transportfee-service>
   </template>
   <script>
   (function() {
     'use strict';
-    ; 
+    var item=[];
     var academicyear,distanceid,zonename,installment,type;   
     var insarr=[];
+    var insfor="All";
     Polymer({
       is: 'transportfee-schedule-card',
       ready:function(){
+        this.itemArray=[];
         this.hideinstallmentcard=true;
-        // this.$.transportfeehidegenerate.hidden=false;
-        // this.$.transportfeehidesubmit.hidden=true;
+        this.hidesearchname=true;
         this.schoolname=localStorage.getItem("schoolname");
+        this.$.transportfeeschallstud.checked=true;
+        this.$.transportfeeschinput.style.visibility='hidden';
       },
+      FnToggleDialog:function(){
+        this.$.transportfeeschdialog.toggle();
+      },
+      FnDialogOk:function(){
+        this.$.transportfeeschdialog.toggle();
+        this.$.transportfeeservice.FnDeleteTransportFeeSchedule(distanceid,zonename,academicyear,insfor);
+      },
+      FnDialogCancel:function(){
+        this.$.transportfeeschdialog.toggle();
+        this.FnRefresh();
+      },
+      FnAll:function(e){
+        if(document.querySelector('#transportfeeschallstud').checked==true){
+          document.querySelector('#transportfeeschspecstud').checked=false;
+          this.hidesearchname=true;
+          insfor="All";
+        }
+      },
+      FnSpecific:function(e){
+        if(document.querySelector('#transportfeeschspecstud').checked==true){
+          document.querySelector('#transportfeeschallstud').checked=false;
+          this.hidesearchname=false;
+          insfor="";
+        }
+      },
+      callService:function(){
+        this.$.transportfeeservice.fetchallstudentforzoneService();
+      },
+      autocompletearr:function(autocompletearr)
+      {
+         item=autocompletearr;
+      },
+      FnSearchStudent:function(e){
+      if(e.keyCode==13|| e.keyCode==40)
+      this.querySelector('#transportfeeschinput').focus();
+      var arr=[];
+      arr.push({"itemdes":"-----Select-----"});
+      this.querySelector('#transportfeeschinput').style.visibility='visible';
+      if(e.keyCode==8){
+        this.itemflag="true";
+        this.itemval="";
+        var len=(this.value).length;
+        if(len<=1){
+          this.querySelector('#transportfeeschinput').style.visibility='hidden';
+          this.itemArray="";
+          this.itemval="";
+        }
+        if(len>1){
+          this.querySelector('#transportfeeschinput').style.visibility='visible';
+          var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,backsubval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.value).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          this.itemArray=arr;
+        }
+      }
+      if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+        if(this.itemflag=="true") {
+          this.itemval = (this.value).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+          this.itemflag="false";
+        }
+        else
+        this.itemval = this.value +String.fromCharCode((e.keyCode));
+        if(this.itemval.length>0)
+        {
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,this.itemval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.itemval).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          if(arr.length>0)
+            this.itemArray=arr;
+          else
+          {
+            var obj={"itemdes":"","enquiry_no":""};
+            obj.itemdes="No items found";
+            arr.push(obj);
+            this.itemArray=arr;
+          }
+        }
+      }
+    },
+    FnSelectStudent:function(e){
+    this.querySelector('#transportfeeschinput').style.visibility='hidden';
+    var studentname = e.target.selectedItem.textContent.trim();
+    var studentid = e.target.selectedItem.value.trim();
+    localStorage.setItem("curr_sess_studentid",studentid);
+    localStorage.setItem("curr_sess_studentname",studentname);
+    this.itemArray=[];
+    document.querySelector('#transportfeeschinput').selected=-1;
+    this.value=studentname;
+    insfor=studentid;
+    // this.$.transportservice.fetchStudentInfoForZoneAllocation(studentid,studentname);
+    },
       FnSelectAcademicYear:function(e){
         academicyear=(e.target.selectedItem.textContent).trim();
       },
@@ -153,7 +277,7 @@
           }
           temp.push(obj);
         }
-        alert(JSON.stringify(temp));
+        // alert(JSON.stringify(temp));
         this.transportfeeinsarr=[];
         this.transportfeeinsarr=temp;
         this.hideinstallmentcard=false;  
@@ -207,19 +331,44 @@
         type="amount";
         this.$.transportfeeschpercent.checked=false;
         insarr=[];
+        this.hidesearchname=true;
+        this.$.transportfeeschallstud.checked=true;
+        this.$.transportfeeschspecstud.checked=false;
+        insfor="All";
+        this.transportfeeinsarr="";
+        this.hideinstallmentcard=true;
       },
       FnSubmit:function()
       {
-        if(insarr.length>0)
-        this.$.transportfeeservice.inserttransportfeeService(insarr);
+        // alert(JSON.stringify(insarr));
+        if(academicyear==null||academicyear==""||distanceid==null||distanceid==""||zonename==null||zonename==""||installment==null||installment==""){
+          if(academicyear==null||academicyear=="")
+            alert("Please select academicyear!!");
+          else if(zonename==null||zonename=="")
+            alert("Please select zone!!");
+          else if(installment==null||installment=="")
+            alert("Please select installment!!");
+        }
+        else{
+        // alert(JSON.stringify(insarr));
+        if(insfor==""||insfor==null)
+          alert("Please select a valid student!!");
+        else{
+        if((insarr.length>0)&&(insarr.length==installment)){
+          // alert('ready to create');
+          this.$.transportfeeservice.inserttransportfeeService(insarr,insfor);
+        }
         else
-        alert('Please check the info!!');
+        alert('Unable to create...Please check the installments properly!!');
+        }
+        }
       },
       FnCancel:function(){
         academicyear="";
         distanceid="";
         zonename="";
         installment="";
+        this.fees="";
         document.querySelector('#transportfeeschacademicyear').selected=-1;
         document.querySelector('#transportfeeschzone').selected=-1;
         document.querySelector('#transportfeeschinstallment').selected=-1;
@@ -227,6 +376,12 @@
         type="amount";
         this.$.transportfeeschpercent.checked=false;
         insarr=[];
+        this.hidesearchname=true;
+        this.$.transportfeeschallstud.checked=true;
+        this.$.transportfeeschspecstud.checked=false;
+        insfor="All";
+        this.transportfeeinsarr="";
+        this.hideinstallmentcard=true;
       },
       FnSetInstallment:function(arr){
         insarr=arr;

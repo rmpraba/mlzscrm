@@ -57,14 +57,12 @@
       <div class="form-group-heading" hidden$="{{hiddenpayment}}">
         <h4>Installment Pattern</h4>
       </div>
-
       <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hiddenpayment}}">
             <div class="col-sm-12 enquiry-input" hidden$="{{hideinstallmentpattern}}">
             <span><paper-checkbox class="col-sm-3" id="transportfeegeneral1" readonly class="checkbox" on-change="generalHandler" checked disabled="{{disableflag}}">Installment</paper-checkbox></span>
             <span><paper-checkbox class="col-sm-3" id="transportfeelumpsum1" readonly class="checkbox" on-change="lumpsumHandler" disabled="{{disableflag}}">Lumpsum</paper-checkbox></span>
             </div>
       </div>
-    
       <div class="form-group-heading" hidden$="{{hiddenpayment}}">
         <h4>Payment</h4>
       </div>
@@ -85,7 +83,6 @@
               <transportfee-installment-card id="transportfeeinscard" installmentid="{{view.installment}}" hiddenpayflag="{{view.hiddenpayflag}}" modeofpayment="{{view.modeofpayment}}" paidflag="{{view.paidflag}}" readonlyflag="{{view.readonlyflag}}" hiddenflag="{{view.hiddenflag}}" installment="{{view.installment}}" installmenttype="{{view.installment}}" actualamount="{{view.actualamount}}" amount="{{view.amount}}" discountamount="{{view.discountamount}}" installmentdate="{{view.installment_date}}" chequeno="{{view.chequeno}}" paiddate="{{view.paiddate}}" bankname="{{view.bankname}}" chequedate="{{view.chequedate}}" receiptdate="{{view.receiptdate}}" hiddencommitinput="{{view.hiddencommitinput}}" hiddencommititem="{{view.hiddencommititem}}" editdate="{{view.editdate}}" bounceflag="{{view.bounceflag}}" fineamount="{{view.fineamount}}"></transportfee-installment-card>
               </template>
             </div>
-            
       </div>  
       <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hiddenpayment}}">
             <div class="col-sm-4 enquiry-input" style="margin-left: 45%;">
@@ -100,7 +97,6 @@
         </div>
       </div>
 </div>
-
 <transportfee-service id="service"></transportfee-service>
 </template>
 
@@ -263,7 +259,6 @@ Polymer({
       }
     },
     FnSelectStudent:function(e){
-
     this.querySelector('#zoneallocationinput').style.visibility='hidden';
     var studentname = e.target.selectedItem.textContent.trim();
     var studentid = e.target.selectedItem.value.trim();

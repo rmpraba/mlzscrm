@@ -18,13 +18,18 @@
     </style>
     <div>
     <table>
-    <tr hidden><th><p>{{insamount}}{{noofinstallment}}{{zonename}}{{distanceid}}{{type}}</p></th></tr>
-    <tr><th><p>{{installment}}</p></th>
-    <th hidden$="{{flag1}}"><paper-input style="margin-top: -2%;" label="Enter Amount" value="{{amount}}"  on-change="FnChangeAmount"></paper-input></th>
-    <th hidden$="{{flag2}}"><paper-input style="margin-top: -2%;" label="Enter Percentage" value="{{percent}}"  on-change="FnChangePercent"></paper-input></th>
-    <th>
+    <tr hidden>
+    <th><p>{{insamount}}{{noofinstallment}}{{zonename}}{{distanceid}}{{type}}</p></th>
+    </tr>
+    <tr><th valign="bottom"><p>{{installment}}</p></th>
+    <th hidden$="{{flag1}}" valign="top" ><paper-input label="Enter Amount" value="{{amount}}" ></paper-input></th>
+    <th hidden$="{{flag2}}" valign="top" ><paper-input label="Enter Percentage" value="{{percent}}"  on-change="FnChangePercent"></paper-input></th>
+    <th valign="bottom">
       <transportfee-sch-datepicker></transportfee-sch-datepicker>
     </th>
+    <th valign="bottom"><a href="#">
+          <span class="glyphicon glyphicon-save" on-click="FnChangeAmount">save</span>
+      </a></th>
     </tr>
     <!-- <th><p hidden$="{{flag2}}">{{amount}}</p></th></tr> -->
     </table>
@@ -48,6 +53,10 @@
         if(this.type=="percent"){
           obj.amount=parseFloat(parseFloat(this.insamount)*(parseFloat(this.percent)/100)).toFixed(2);
         }
+        if(this.amount==""||this.amount==null){
+          alert("Please enter the amount!!");
+        }
+        else{
         if(temp.length==0)
         temp.push(obj);
         else{
@@ -58,7 +67,9 @@
         }
         temp.push(obj);
         }
+        alert('Saved!!');
         document.querySelector('transportfee-schedule-card').FnSetInstallment(temp);
+        }
         // alert(JSON.stringify(temp));
       },
       FnChangePercent:function(e){
