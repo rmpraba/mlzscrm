@@ -6,10 +6,17 @@
   <template>
     <div class="row enquiry-form">
       <div class="list-group col-sm-12 panel-body form-category">
-        <div class="col-sm-6 enquiry-inpt">
-            <paper-input label="School Name" value="{{schoolname}}"></paper-input>
+        <div class="col-sm-4 enquiry-inpt">
+            <!-- <paper-input label="School Name" value="{{schoolname}}"></paper-input> -->
+            <paper-dropdown-menu label="Select School" attr-for-selected="value">
+            <paper-menu id="transportfeeschschool" class="dropdown-content" required on-iron-select="FnSelectSchool" valueattr="value" >
+              <template  is="dom-repeat" items="{{schoolarr}}" as="item">
+              <paper-item value="{{item.id}}">{{item.name}}</paper-item>
+              </template>
+            </paper-menu>
+            </paper-dropdown-menu>
         </div>  
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <paper-dropdown-menu label="Academic Year" attr-for-selected="value">
             <paper-menu id="transportfeeschacademicyear" class="dropdown-content" required on-iron-select="FnSelectAcademicYear" valueattr="value" >
               <template  is="dom-repeat" items="{{academicarr}}" as="item">
@@ -100,6 +107,14 @@
         this.$.transportfeeschallstud.checked=true;
         this.$.transportfeeschinput.style.visibility='hidden';
       },
+      FnSelectSchool:function(e){
+        var schoolname=e.target.selectedItem.textContent.trim();
+        var schoolid=e.target.selectedItem.value.trim();
+        localStorage.setItem("schoolname",schoolname);
+        localStorage.setItem("schoolid",schoolid);
+        this.$.transportfeeservice.fetchallstudentforzoneService();
+        this.$.transportfeeservice.fetchzoneService();
+      },
       FnToggleDialog:function(){
         this.$.transportfeeschdialog.toggle();
       },
@@ -126,7 +141,7 @@
         }
       },
       callService:function(){
-        this.$.transportfeeservice.fetchallstudentforzoneService();
+        this.$.transportfeeservice.fetchschoolService();
       },
       autocompletearr:function(autocompletearr)
       {
@@ -324,6 +339,7 @@
         zonename="";
         installment="";
         this.fees="";
+        document.querySelector('#transportfeeschschool').selected=-1;
         document.querySelector('#transportfeeschacademicyear').selected=-1;
         document.querySelector('#transportfeeschzone').selected=-1;
         document.querySelector('#transportfeeschinstallment').selected=-1;
@@ -369,6 +385,7 @@
         zonename="";
         installment="";
         this.fees="";
+        document.querySelector('#transportfeeschschool').selected=-1;
         document.querySelector('#transportfeeschacademicyear').selected=-1;
         document.querySelector('#transportfeeschzone').selected=-1;
         document.querySelector('#transportfeeschinstallment').selected=-1;

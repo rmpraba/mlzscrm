@@ -326,6 +326,16 @@
         debounce-duration="300"
         >
         
+    <iron-ajax
+        method="post"
+        id="fetchschoolajax"
+        url="{{fetchschoolurl}}"
+        params="{{fetchschoolparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchschoolResponse"
+        debounce-duration="300"
+        >
         
   </template>
   <script>
@@ -344,6 +354,14 @@
     var paymentarr=[];
     Polymer({
       is: 'transportfee-service',
+      fetchschoolService:function(){
+        this.fetchschoolurl=sessionStorage.getItem("addrinfo")+"/fetchschool-service";
+        // this.fetchschoolparam=obj;
+        this.$.fetchschoolajax.generateRequest();
+      },
+      fetchschoolResponse:function(e){
+        document.querySelector('transportfee-schedule-card').schoolarr=e.detail.response.returnval;
+      },
       attachdiscount:function(studentid,installment,amount,reason){
         this.attachtransportdiscounturl=sessionStorage.getItem("addrinfo")+"/attachtransportdiscount-service";
         var obj={"schoolid":""};
