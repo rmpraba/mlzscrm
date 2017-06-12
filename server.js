@@ -3259,7 +3259,8 @@ app.post('/getadmittedcount',  urlencodedParser,function (req, res){
     var qur={"school_id":req.query.schol};
     var state={"status":req.query.status};
     var acyear={"academic_year":req.query.academicyear};
-    //console.log('qur');
+    console.log('----------------admitted count-----------------');
+    console.log(acyear);
     connection.query('SELECT *,class,count(*) as total FROM `student_enquiry_details` WHERE ? and ? and ? group by (class)',[qur,state,acyear],
     function(err, rows)
     {
@@ -3288,6 +3289,8 @@ app.post('/getcancelledcount',  urlencodedParser,function (req, res){
     var state={"status":req.query.status};
     var acyear={"academic_year":req.query.academicyear};
     //console.log('qur');
+    console.log('----------------cancelled count-----------------');
+    console.log(acyear);
     connection.query('SELECT *,class,count(*) as total FROM `student_enquiry_details` WHERE ? and ? and ? group by (class)',[qur,state,acyear],
     function(err, rows)
     {
@@ -7021,7 +7024,7 @@ app.post('/cancelenrollment-service',  urlencodedParser,function (req, res){
       if(!err){
         if(rows.length==1){
               var enquiryno=rows[0].enquiry_no;
-              var status=rows[0].active_status;
+              var status=rows[0].admission_status;
               console.log(enquiryno);
               connection.query(qur2,function(err, result){
               if(result.affectedRows>0){

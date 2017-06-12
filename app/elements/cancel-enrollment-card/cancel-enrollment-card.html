@@ -55,17 +55,32 @@
       ready:function(){
         this.hideenritemcard=true;
         this.hidedashboard=false;
-        this.querySelector('#cancelinput').style.visibility='hidden';
+        this.querySelector('#cancelinput').style.visibility='hidden';       
       },
       FnSelectacademicYear:function(e){
         // document.querySelector('cancel-enrollment-card').callService();
         academicyear=(e.target.selectedItem.textContent).trim();
         sessionStorage.setItem("curr_sess_academicyear",academicyear);
-        this.callService();
-        this.$.service.getadmittedcount();
-        this.$.service.getcancelledcount();
+        this.$.service.fetchallenrollmentsforsearchService();
+        // this.callService();        
       },
       callService:function(){
+        var d=new Date(); 
+        var cy=d.getFullYear(); 
+        var ny='';
+        var m=d.getMonth()+1;
+        if(m>4){
+          cy=parseInt(cy)+1;
+          ny=parseInt(cy)+1;
+        }
+        else{
+          cy=parseInt(cy)-1;
+          ny=parseInt(cy)+1;
+        }
+        academicyear="AY-"+cy+"-"+ny;
+        sessionStorage.setItem("curr_sess_academicyear",academicyear);
+        this.$.service.getadmittedcount();
+        this.$.service.getcancelledcount();
         this.$.service.fetchallenrollmentsforsearchService();
       },
       autocompletearr:function(autocompletearr)
