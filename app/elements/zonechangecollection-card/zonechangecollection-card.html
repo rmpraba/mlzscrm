@@ -1,0 +1,290 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\..\bower_components/iron-collapse/iron-collapse.html">
+<dom-module id="zonechangecollection-card">
+<template>
+<style type="text/css">
+  .horizontalframe,.inshead{
+     @apply(--layout-horizontal);
+  }
+  .cb{
+    @apply(--layout-horizontal);
+  }
+  .inshead{
+    @apply(--layout-horizontal);
+  }
+  #paybtn{
+    margin-top: 3%;
+  }
+  paper-dropdown-menu{
+    width: 80%;
+  }
+</style>
+
+<div class="row enquiry-form">
+      <div class="list-group col-sm-12 panel-body form-category">
+      <div class="col-md-3">
+       <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchStudent"></paper-input>
+       <paper-listbox class="dropdown-content" id="zonechangecollectioninput" on-iron-select="FnSelectStudent">
+          <template is="dom-repeat" items="{{itemArray}}" as="item">
+            <paper-item value="{{item.admission_no}}">{{item.itemdes}}</paper-item>
+          </template>
+       </paper-listbox>
+      </div>
+      <div class="col-sm-3 enquiry-input">
+       <paper-input id="zonechangecollectionid" label="Student Id" value="{{studentid}}"></paper-input>
+      </div>
+      <div class="col-sm-3 enquiry-input">
+       <paper-input id="zonechangecollectionparent" label="Parent Name" value="{{parentname}}"></paper-input>
+      </div>
+      </div>
+      <div class="list-group col-sm12 panel-body form-category"> 
+        <div class="col-sm-3 enquiry-input">
+        <paper-input id="zonechangecollectiongrade" label="Grade" value="{{grade}}"></paper-input>
+        </div>      
+        <div class="col-sm-3 enquiry-input">
+          <paper-input id="zonechangecollectionzone" label="Zone" value="{{zone}}"></paper-input>
+        </div>
+        <div class="col-sm-3 enquiry-input">
+        <paper-input id="zonechangecollectionfees" label="Fees" value="{{fees}}" readonly></paper-input>
+        </div> 
+      </div>
+      <div class="form-group-heading" hidden$="{{hiddenpayment}}">
+        <h4>Payment</h4>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hiddenpayment}}">
+            <div class="inshead" hidden$="{{hiddeninstallment}}">            
+                    <div style="width: 13%;margin-left: 2%;">Installment</div>
+                    <div style="width: 9%;margin-left: 1%;">Actual Amount</div>
+                    <div style="width: 6%;margin-left: 2%;">Discount</div>
+                    <div style="width: 10%;margin-left:2%;">Payable Amount</div>                    
+                    <div style="margin-left:2%; width: 12%;">Mode of Payment</div>
+                    <div style="margin-left:2%; width: 7%;" hidden$="{{hiddentitleflag}}">Cheque No</div>
+                    <div style="margin-left:2%; width: 7%;" hidden$="{{hiddentitleflag}}">Bank Name</div>
+                    <div style="width: 9%;margin-left:2%;" hidden$="{{hiddentitleflag}}">Cheque Date</div>
+                    <div style="width: 9%;margin-left:2%;" hidden$="{{hiddentitleflag}}">Receipt Date</div>              
+            </div>
+            <div style="margin-left:12%;" hidden$="{{hiddeninstallment}}"> 
+              <template  is="dom-repeat" items="{{feearr}}" as="view">
+              <transportfee-installment-card id="transportfeeinscard" installmentid="{{view.installment}}" hiddenpayflag="{{view.hiddenpayflag}}" modeofpayment="{{view.modeofpayment}}" paidflag="{{view.paidflag}}" readonlyflag="{{view.readonlyflag}}" hiddenflag="{{view.hiddenflag}}" installment="{{view.installment}}" installmenttype="{{view.installment}}" actualamount="{{view.actualamount}}" amount="{{view.amount}}" discountamount="{{view.discountamount}}" installmentdate="{{view.installment_date}}" chequeno="{{view.chequeno}}" paiddate="{{view.paiddate}}" bankname="{{view.bankname}}" chequedate="{{view.chequedate}}" receiptdate="{{view.receiptdate}}" hiddencommitinput="{{view.hiddencommitinput}}" hiddencommititem="{{view.hiddencommititem}}" editdate="{{view.editdate}}" bounceflag="{{view.bounceflag}}" fineamount="{{view.fineamount}}"></transportfee-installment-card>
+              </template>
+            </div>
+      </div>  
+      <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hiddenpayment}}">
+            <div class="col-sm-4 enquiry-input" style="margin-left: 45%;">
+              <paper-button  id="paybtn" on-click="FnPayfee"  hidden$="{{hiddenaddbtn}}" data-dismiss="modal" class="btn btn-primary center">PAY
+              </paper-button>
+            </div>
+      </div>   
+      <div class="list-group col-sm12 panel-body form-category"  hidden> 
+        <div class="col-sm-4 enquiry-input" style="margin-left: 40%;">
+        <paper-button on-click="FnSubmit" class="btn btn-primary center">Submit</paper-button>
+        <paper-button on-click="FnCancel" class="btn btn-primary center">Cancel</paper-button>
+        </div>
+      </div>
+</div>
+<transportfee-service id="service"></transportfee-service>
+</template>
+
+<script>
+(function() { 
+  var item=[];
+  var zoneid="";
+  var zonename="";
+  var installment=[];
+Polymer({
+    is: "zonechangecollection-card",
+      ready: function() 
+      {
+        localStorage.setItem("curr_sess_paymentpattern",1);
+        this.hidezonebtn=false;
+        this.value="";
+        this.$.zonechangecollectioninput.style.visibility='hidden';
+        this.hiddenpayment=true;
+        var academicyear=""; 
+          var date=new Date();
+          var y=date.getFullYear();  
+          var m=date.getMonth();
+          var d=date.getDate(); 
+          if(m<4){ 
+          var y1=(y-1)+1;
+          var y2=y+1;  
+          academicyear="AY-"+y1+"-"+y2;
+          } 
+          else{
+          var y1=y;
+          var y2=y+1;  
+          academicyear="AY-"+y1+"-"+y2;
+          }
+          localStorage.setItem("curr_sess_academicyear",academicyear);
+          this.hideinstallmentpattern
+      },
+      FnSetfee:function(installmentarr){
+        this.hiddentitleflag=false;
+        installment=installmentarr;       
+      },
+      FnPayfee:function(){ 
+      this.$.service.inserttransportfeesService(this.fees,0,installment);
+      installment=[];
+      },
+      FnSelectZone:function(e){
+        zonename = e.target.selectedItem.textContent.trim();
+        zoneid = e.target.selectedItem.value.trim();
+        this.$.service.fetchzonefeeService(zoneid);
+      },
+      FnSubmit:function(){
+        if(this.studentid==""||this.studentid==null||this.fees==""||this.fees==null||zonename==""||zonename==null){
+        if(this.studentid==""||this.studentid==null){
+          this.$.zonechangecollectionid.validate();
+        }
+        if(this.fees==""||this.fees==null){
+          this.$.zonechangecollectionfees.validate();
+        }
+        if(zonename==""||zonename==null){
+          alert('Please select zone!!');
+        }
+        }
+        else
+        this.$.service.FnAllocateZone(this.studentid,this.studentname,this.grade,this.fees,zonename,zoneid,this.parentname);
+      },
+      FnCancel:function(){
+        this.FnRefresh();
+      },
+      callService:function(){
+        this.$.service.fetchallstudentforzonechangecollectionService();
+      },
+      autocompletearr:function(autocompletearr)
+      {
+         item=autocompletearr;
+      },
+      FnSearchStudent:function(e){
+      this.FnRefresh1();  
+      if(e.keyCode==13|| e.keyCode==40)
+      this.querySelector('#zonechangecollectioninput').focus();
+      var arr=[];
+      arr.push({"itemdes":"-----Select-----"});
+      this.querySelector('#zonechangecollectioninput').style.visibility='visible';
+      if(e.keyCode==8){
+        this.itemflag="true";
+        this.itemval="";
+        var len=(this.value).length;
+        if(len<=1){
+          this.querySelector('#zonechangecollectioninput').style.visibility='hidden';
+          this.itemArray="";
+          this.itemval="";
+        }
+        if(len>1){
+          this.querySelector('#zonechangecollectioninput').style.visibility='visible';
+          var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,backsubval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.value).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].student_id;
+              arr.push(obj);
+            }
+          }
+          this.itemArray=arr;
+        }
+      }
+      if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+        if(this.itemflag=="true") {
+          this.itemval = (this.value).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+          this.itemflag="false";
+        }
+        else
+        this.itemval = this.value +String.fromCharCode((e.keyCode));
+        if(this.itemval.length>0)
+        {
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,this.itemval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.itemval).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].student_id;
+              arr.push(obj);
+            }
+          }
+          if(arr.length>0)
+            this.itemArray=arr;
+          else
+          {
+            var obj={"itemdes":"","enquiry_no":""};
+            obj.itemdes="No items found";
+            arr.push(obj);
+            this.itemArray=arr;
+          }
+        }
+      }
+    },
+    FnSelectStudent:function(e){
+    this.querySelector('#zonechangecollectioninput').style.visibility='hidden';
+    var studentname = e.target.selectedItem.textContent.trim();
+    var studentid = e.target.selectedItem.value.trim();
+    localStorage.setItem("curr_sess_studentid",studentid);
+    localStorage.setItem("curr_sess_studentname",studentname);
+    this.itemArray=[];
+    document.querySelector('#zonechangecollectioninput').selected=-1;
+    this.value=studentname;
+    localStorage.setItem("curr_sess_ins1discount",0);
+    localStorage.setItem("curr_sess_ins2discount",0);
+    this.$.service.fetchStudentInfoForZoneChangeCollection(studentid,studentname);
+    },
+    FnRefresh:function(){
+      document.querySelector('#zonechangecollectioninput').selected=-1;
+      document.querySelector('#zonechangecollectionzone').selected=-1;
+      this.querySelector('#zonechangecollectioninput').style.visibility='hidden';
+      this.itemArray=[];
+      this.value="";
+      this.studentid="";
+      this.parentname="";
+      this.fees="";
+      // this.zonearr="";
+      this.grade="";
+      zoneid="";
+      zonename="";
+      this.feearr="";
+      this.hidezonebtn=false;
+      this.hiddenpayment=true;
+      this.hiddeninstallment=true;
+      this.zone="";
+      localStorage.setItem("curr_sess_paymentpattern",1);
+      localStorage.setItem("curr_sess_ins1discount",0);
+      localStorage.setItem("curr_sess_ins2discount",0);
+    },
+    FnRefresh1:function(){
+      document.querySelector('#zonechangecollectioninput').selected=-1;
+      document.querySelector('#zonechangecollectionzone').selected=-1;
+      this.querySelector('#zonechangecollectioninput').style.visibility='hidden';
+      this.studentid="";
+      this.parentname="";
+      this.fees="";
+      this.grade="";
+      zoneid="";
+      zonename="";
+      this.feearr="";
+      this.hidezonebtn=false;
+      this.hiddenpayment=true;
+      this.hiddeninstallment=true;
+      this.zone="";
+      localStorage.setItem("curr_sess_paymentpattern",1);
+      localStorage.setItem("curr_sess_ins1discount",0);
+      localStorage.setItem("curr_sess_ins2discount",0);
+    },
+    FnEnablePaymentCard:function(){
+      this.$.service.searchtransportzonechangefeepaidinfoService1(localStorage.getItem("curr_sess_studentid"),localStorage.getItem("curr_sess_studentname"));
+      this.hiddenpayment=false;
+      this.hiddeninstallment=false;
+      this.hidezonebtn=true;
+    },
+    FnSetSelectedZone:function(zone){
+      this.selectedzone=zone;
+    }
+  });
+})();
+</script>
+</dom-module>

@@ -361,7 +361,7 @@
           var obj={"admissionno":"","schoolid":""};
           obj.enquiryno=localStorage.getItem('curr_sess_enquiredno');
           obj.schoolid=localStorage.getItem("schoolid");
-          obj.admissionno=localStorage.getItem("curr_sess_admissionno");
+          obj.admissionno=admninfo[0].admission_no;
           this.updatewithdrawstatusurl=sessionStorage.getItem("addrinfo")+"/updatewithdrawstatus-service";
           this.updatewithdrawstatusparam=obj;
           this.$.updatewithdrawstatusajax.generateRequest();

@@ -33,7 +33,14 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">{{schoolname}}</a>
+      <a class="navbar-brand" href="index.html" hidden$="{{hideschoolname}}">{{schoolname}}</a>
+      <paper-dropdown-menu label="Select School" style="width: 122%;" hidden$="{{hideschoolmenu}}">
+            <paper-menu id="menuselectschool" class="dropdown-content" required on-iron-select="FnSelectSchool" attr-for-selected="value" selected="{{selectedschool}}">
+              <template  is="dom-repeat" items="{{schoolarr}}" as="item">
+              <paper-item value="{{item.id}}">{{item.name}}</paper-item>
+              </template>
+            </paper-menu>
+      </paper-dropdown-menu>
     </div>
     <ul class="nav navbar-top-links navbar-right">
       <li class="dropdown">
@@ -369,7 +376,7 @@
             <a href="" aria-hidden="true">Pending Collection Report<span class="fa arrow"></span></a>
             <ul class="nav nav-third-level">
             <li id="feeduereport">
-            <a href="" aria-hidden="true" on-click="FnPendingFeeReport">Fee Due Report</a>
+            <a href="" aria-hidden="true" on-click="FnPendingFeeReport">Fee Paid & Due Report</a>
             </li>
             <li id="rollovernotpaidlist">
             <a href="" aria-hidden="true" on-click="FnNotpaidReport">Rollover Not paid List</a>
@@ -379,7 +386,7 @@
             <li id="dailycollectiondashboard">
             <a href="" aria-hidden="true" on-click="FnDailycollectionDashboard">Daily Collection Dashboard<span class="fa arrow"></span></a>
             </li>
-            <li id="consolidatedcollectiondashboard">
+            <li id="consolidatedcollectiondashboard" hidden>
             <a href="" aria-hidden="true" on-click="FnCollectionDashboard">Consolidated Collection Dashboard<span class="fa arrow"></span></a>
             </li>
             <li id="feepaidduereport" hidden>
@@ -430,8 +437,11 @@
            <li id="zoneallocation">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezoneallocation" on-click="FnZoneAllocation">Zone Allocation</a>
            </li> 
-           <li id="zonechange" hidden>
+           <li id="zonechange">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonechange" on-click="FnZoneChange">Zone Change</a>
+           </li>
+           <li id="zonechangecollection">
+            <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonechangecollection" on-click="FnZoneChangeCollection">Zone Change Collection</a>
            </li>
            <li id="zonecancellation">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonecancellation" on-click="FnZoneCancellation">Zone Cancellation</a>
@@ -459,6 +469,9 @@
            </li>
            <li id="transportcollectiondashboard">
             <a href="" aria-hidden="true" on-click="FnTransportCollectionDashboard">Transport Collection Dashboard</a>
+           </li>
+           <li id="transportcancellation">
+            <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportcancellation" on-click="FnTransportCancellation">Transport Cancellation</a>
            </li>
           </ul>
         </li>
@@ -519,6 +532,24 @@
           </div>
           <div class="modal-body">
             <zonetostudent-card></zonetostudent-card>
+          </div>
+        </div>
+      </div>
+ </div>
+
+ <div class="modal fade bd-example-modal-lg" id="togglezonechangecollection" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Zone Change Collection
+            </h4>
+          </div>
+          <div class="modal-body">
+            <zonechangecollection-card></zonechangecollection-card>
           </div>
         </div>
       </div>
@@ -923,6 +954,7 @@
       is: 'navigation-bar',
 
       ready:function(){
+        this.$.transportfeeservice.fetchschoolService();
         // alert('In ready...');
         this.schoolname=localStorage.getItem("schoolname");
         this.username=localStorage.getItem("employeename");
@@ -934,13 +966,23 @@
         this.hidefeepaymentmenu=true;
         this.hidemasterreportmenu=true;
         this.hidereportmenu=true;
+        localStorage.setItem('curr_sess_page','');
+      },
+      FnSelectSchool:function(e){
+        localStorage.setItem('curr_sess_page','');
+        var schoolname=e.target.selectedItem.textContent.trim();
+        var schoolid=e.target.selectedItem.value.trim();
+        localStorage.setItem("schoolname",schoolname);
+        localStorage.setItem("schoolid",schoolid);
       },
       FnCreateUser:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.userservice.fetchuserroleService();
         document.querySelector('app-list').setPage("user-creation-card","User Creation");
         document.querySelector('user-creation-card').FnRefresh();
       },
       FnAccessControl:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.userservice.fetchuserroleService();
         // this.$.userservice.fetchmenuService();
         // this.$.userservice.fetchsubmenuService();
@@ -948,11 +990,13 @@
         document.querySelector('role-menu-mapping-card').FnRefresh();
       },
       FnEnquiryconversion:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchacademicyearService();
         document.querySelector('app-list').setPage("enquiry-conversion-report","Enquiry Conversion Report");
         document.querySelector('enquiry-conversion-report').FnRefresh();
       },
       FnFeetypeschedule:function(e){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('feetype-schedule-card').FnRefresh();
         this.$.scheduleservice.fetchgradeService();
         this.$.scheduleservice.fetchacademicyearService();
@@ -960,6 +1004,7 @@
         this.$.scheduleservice.fetchfeetypeService();
       },
       FnRTEFeetypeschedule:function(e){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('rtefeetype-schedule-card').FnRefresh();
         this.$.scheduleservice.fetchgradeService();
         this.$.scheduleservice.fetchacademicyearService();
@@ -967,16 +1012,19 @@
         this.$.scheduleservice.fetchfeetypeService();
       },
       FnTransportfeeschedule:function(e){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('transportfee-schedule-card').FnRefresh();
         document.querySelector('transportfee-schedule-card').callService();
         this.$.scheduleservice.fetchacademicyearService();
       },
       FnTransportFee:function(e){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('transportfee-card').FnRefresh();
         document.querySelector('transportfee-card').callService();
       },
       FnProspect:function(e){
       // alert(e.target.text);
+      localStorage.setItem('curr_sess_page','');
         localStorage.setItem("curr_sess_feetypepayment","Application fee");
         localStorage.setItem("curr_sess_feetypepaymentflag","1");
         document.querySelector('prospectousfee-card').callService();
@@ -986,6 +1034,7 @@
       },
       FnRegister:function(e){
       // alert(e.target.text);
+      localStorage.setItem('curr_sess_page','');
         localStorage.setItem("curr_sess_feetypepayment","Registration fee");
         localStorage.setItem("curr_sess_feetypepaymentflag","1");
         document.querySelector('registerationfee-card').callService();
@@ -994,6 +1043,7 @@
         // this.FnRefresh();
       },
       FnDiscountschedule:function(e){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('discount-master-card').FnRefresh();
         this.$.scheduleservice.fetchgradeService();
         this.$.scheduleservice.fetchacademicyearService();
@@ -1003,6 +1053,7 @@
       },
 
       FnFeestructureschedule:function(e){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('fee-structure-schedulecard').FnRefresh();
         document.querySelector('fee-structure-schedulecard').ready();
         this.$.scheduleservice.fetchgradeService();
@@ -1013,16 +1064,19 @@
         this.$.scheduleservice.fetchfeetypeService();
       },
       FnInstallmentschedule:function(e){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchgradeService();
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchadmissionyearService();
       },
 
       FnAnnual:function(e){
+        localStorage.setItem('curr_sess_page','');
         localStorage.setItem("curr_sess_feetype",e.target.text);
         this.FnRefresh();
       },
       FnKit:function(e){
+        localStorage.setItem('curr_sess_page','');
         localStorage.setItem("curr_sess_feetypepayment","School fee");
         localStorage.setItem("curr_sess_feetypepaymentflag","0");
         localStorage.setItem("curr_sess_feetype",e.target.text);
@@ -1030,6 +1084,7 @@
         this.FnRefresh();
       },
       FnRTEfee:function(e){
+        localStorage.setItem('curr_sess_page','');
         localStorage.setItem("curr_sess_feetypepayment","RTE fee");
         localStorage.setItem("curr_sess_feetypepaymentflag","2");
         localStorage.setItem("curr_sess_feetype",e.target.text);
@@ -1037,6 +1092,7 @@
         document.querySelector('rtefee-card').callService();
       },
       FnCustomfee:function(e){
+        localStorage.setItem('curr_sess_page','');
         localStorage.setItem("curr_sess_feetypepayment","Custom fee");
         localStorage.setItem("curr_sess_feetypepaymentflag","1");
         localStorage.setItem("curr_sess_feetype",e.target.text);
@@ -1044,20 +1100,24 @@
         document.querySelector('custompattern-fee-card').FnRefresh();
       },
       FnMiscellaneous:function(e){
+        localStorage.setItem('curr_sess_page','');
         localStorage.setItem("curr_sess_feetype",e.target.text);
         this.FnRefresh();
       },
       followupdashboard:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.followupservice.getfollowupcount();
         document.querySelector('app-list').setPage("follow-up");
       },
       FnRefresh:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('fees-card').ready();
         document.querySelector('fees-card').FnRefresh();
         // document.querySelector('admission-service').FnRefresh();
       },
       enquiry:function()
       {
+        localStorage.setItem('curr_sess_page','');
         this.$.service.getenquirycount();
         this.$.service.getadmittedcount();
         document.querySelector('detailed-enquiry-form').country();
@@ -1084,6 +1144,7 @@
         document.querySelector('admission-approval-card').FnRefresh();
       },
       FnAdmission:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.service.getdiscounts();
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchproofService();
@@ -1091,11 +1152,13 @@
         document.querySelector('special-discount-card').ready();
       },
       FnUpdateAdmission:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("update-admission-info","Update Admission Info");
         document.querySelector('update-admission-info').FnRefresh();
         document.querySelector('update-admission-info').callService();
       },
       Fnpreapp:function(){
+        localStorage.setItem('curr_sess_page','');
         localStorage.setItem("curr_sess_enquiryupdateflag",0);
         document.querySelector('app-list').setPage("pre-apps","Enquiry Form");
         document.querySelector('pre-apps').ready();
@@ -1103,7 +1166,7 @@
         document.querySelector('pre-apps').FnClear();        
       },
       Fnpreappupdate:function(){
-
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("update-preapps","Pre Application");
         document.querySelector('update-preapps').ready();
         document.querySelector('update-preapps').callnextyearhandler();
@@ -1116,17 +1179,20 @@
 
       FnDiscount:function()
       {
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("discount-type-ui","Discount Type");
         document.querySelector('discount-type-ui-card').ready();
         document.querySelector('discount-display-card').ready();        
       },
       FnAdhocDiscount:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("adhoc-discount","Adhoc Discount");
         document.querySelector('adhoc-discount').callService();
         document.querySelector('adhoc-discount').ready();
         // document.querySelector('discount-display-card').ready();   
       },  
       FnLatefee:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("latefee-card","Latefee Collection");
         document.querySelector('latefee-card').callService();
         document.querySelector('latefee-card').ready();
@@ -1241,6 +1307,7 @@
         this.totalfollowupstodaycount = count;
       },
       FnFeesplitupschedule:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('feesplitup-structure-card').ready();
         document.querySelector('feesplitup-structure-card').FnRefresh();
         this.$.scheduleservice.fetchgradeService();
@@ -1249,16 +1316,19 @@
 
       },
       FnAddDiscount:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("adddiscount","Add Discount");
         document.querySelector('attachdiscount-card').callService();
         document.querySelector('attachdiscount-card').ready();
       },
       FnDeleteDiscount:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("deletediscount-card","Delete Discount");
         document.querySelector('deletediscount-card').callService();
         document.querySelector('deletediscount-card').ready();
       },
       FnSearchReceipt:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchacademicyearService();        
         document.querySelector('app-list').setPage("searchreceipt","Search Receipt");
         document.querySelector('searchreceipt-card').callService();
@@ -1266,59 +1336,89 @@
       },
       FnZoneAllocation:function(){
         // document.querySelector('app-list').setPage("zonetostudent-card","Zone Allocation");
+        localStorage.setItem('curr_sess_page','zoneallocation');
         document.querySelector('zonetostudent-card').callService();
         this.$.transportfeeservice.fetchzoneService();
         document.querySelector('zonetostudent-card').ready();
         document.querySelector('zonetostudent-card').FnRefresh();
       },
+      FnZoneChange:function(){
+        localStorage.setItem('curr_sess_page','zonechange');
+        document.querySelector('zonechange-card').callService();
+        this.$.transportfeeservice.fetchzoneService();
+        document.querySelector('zonechange-card').ready();
+        document.querySelector('zonechange-card').FnRefresh();
+      },
+      FnZoneChangeCollection:function(){
+        localStorage.setItem('curr_sess_page','');
+        document.querySelector('zonechangecollection-card').callService();
+        document.querySelector('zonechangecollection-card').ready();
+        document.querySelector('zonechangecollection-card').FnRefresh();
+      },
       FnZoneCancellation:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("zone-cancellation-card","Zone Cancellation");
         document.querySelector('zone-cancellation-card').callService();
         document.querySelector('zone-cancellation-card').ready();
         document.querySelector('zone-cancellation-card').FnRefresh();
       },
+      FnTransportCancellation:function(){
+        localStorage.setItem('curr_sess_page','');
+        document.querySelector('app-list').setPage("transport-cancellation-card","Transport Cancellation");
+        document.querySelector('transport-cancellation-card').callService();
+        document.querySelector('transport-cancellation-card').ready();
+        document.querySelector('transport-cancellation-card').FnRefresh();
+      },
       FnTransportDiscount:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("transport-discount-card","Transport Discount");
         document.querySelector('transport-discount-card').callService();
         document.querySelector('transport-discount-card').ready();
         document.querySelector('transport-discount-card').FnRefresh();
       },
       FnTransportchequecancelorbounce:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("transport-cheque-bouncecancel","Cheque Bounce/Cancel");
         document.querySelector('transport-cheque-bouncecancel').callService();
         document.querySelector('transport-cheque-bouncecancel').FnRefresh();
       },
       FnAddStudent:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.transportfeeservice.fetchgradeService();
         // this.$.transportfeeservice.fetchsectionService();
         document.querySelector('add-newstudent-card').FnRefresh();
       },
       FnTransportSearchReceipt:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchacademicyearService();        
         document.querySelector('app-list').setPage("transport-receipt-searchcard","Search Receipt");
         document.querySelector('transport-receipt-searchcard').callService();
         document.querySelector('transport-receipt-searchcard').ready();
       },
       FnDefaulterUpdate:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("defaulter-update","Defaulter Update");
         document.querySelector('defaulter-update').callService();
         document.querySelector('defaulter-update').ready();
       },
       FnPendingCheques:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("pendingcheques-report","Pending Cheques Report");
         document.querySelector('pendingcheques-report').ready();
         document.querySelector('pendingcheques-report').FnRefresh();
         document.querySelector('pendingcheques-report').FnCallService();
       },
       FnPendingFeeReport:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchgradeforreportService();
-        document.querySelector('app-list').setPage("pendingfee-report","Pending Fee Report");
+        document.querySelector('app-list').setPage("pendingfee-report","Fee Paid & Due Report");
         document.querySelector('pendingfee-report').ready();
         document.querySelector('pendingfee-report').FnRefresh();
         // document.querySelector('pendingfee-report').FnCallService();
       },
       FnDetailduereport:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchgradeforreportService();
         document.querySelector('app-list').setPage("detailed-feedue-report","Due Report");
@@ -1327,6 +1427,7 @@
         document.querySelector('detailed-feedue-report').FnCallService();
       },
       FnProcessreport:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchgradeforreportService();
         document.querySelector('app-list').setPage("process-report","Due Report");
@@ -1335,6 +1436,7 @@
         document.querySelector('process-report').FnCallService();
       },
       FnDailycollectionDashboard:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchgradeforreportService();
         document.querySelector('app-list').setPage("dailycollection-dashboard","Daily Collection Dashboard");
@@ -1343,6 +1445,7 @@
         document.querySelector('dailycollection-dashboard').FnCallService();
       },
       FnCollectionDashboard:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchschoolService();
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchgradeforreportService();
@@ -1352,6 +1455,7 @@
         document.querySelector('consolidated-dashboardreport').FnCallService();
       },
       FnNotpaidReport:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchgradeforreportService();
         document.querySelector('app-list').setPage("notpaid-report","Not paid list");
@@ -1360,62 +1464,75 @@
         document.querySelector('notpaid-report').FnCallService();
       },
       FnDailyCollectionReport:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchgradeforreportService();
         document.querySelector('app-list').setPage("dailycollection-report","Daily Collection Report");
         document.querySelector('dailycollection-report').FnRefresh();
         document.querySelector('dailycollection-report').FnCallService();
       },
       FnShowBounceCheques:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("bouncecheque-displaycard","Bounce Cheques");
         document.querySelector('bouncecheque-displaycard').FnCallService();
       },
       Fncounsellorreport:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("counsellor-report","Counsellor Report");
         document.querySelector('reporting-service').counsellorreport();
       },
       FnBounceProcessing:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("chequebounceorcancel-card","Cheque Bounce / Cancel");
         document.querySelector('chequebounceorcancel-card').FnRefresh();
         document.querySelector('chequebounceorcancel-card').callService();
       },
       FnTprealisation:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("tp-realisation-card","Third Party Realization");
         document.querySelector('tp-realisation-card').callService();
       },
       FnChequeEditDelete:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("editdelete-cheques-card","Edit/Delete Cheques");
         document.querySelector('editdelete-cheques-card').FnRefresh();
         document.querySelector('editdelete-cheques-card').callService();
       },
       FnTransportChequeEditDelete:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("transport-editdelete-cheque","Edit/Delete Cheques");
         document.querySelector('transport-editdelete-cheque').FnRefresh();
         document.querySelector('transport-editdelete-cheque').callService();
       },
       FnProvisionfee:function(){
+        localStorage.setItem('curr_sess_page','');
         localStorage.setItem("curr_sess_feetypepayment","Commitment Fee (Ins1)");
         localStorage.setItem("curr_sess_provisionflag",1);
         document.querySelector('provisionalfee-card').callService();
       },
       FnPdcCheques:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("pdccheques-report-card","PDC Cheques");
         document.querySelector('pdccheques-report-card').callService();
       },
       FnchequeCollectionReport:function(){
+        localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("chequecollection-report","Cheque Collection");
         document.querySelector('chequecollection-report').callService();
       },
       FnPromotion:function(){
+        localStorage.setItem('curr_sess_page','');
           this.$.scheduleservice.fetchgradeService();
           this.$.scheduleservice.fetchacademicyearService();
           document.querySelector('app-list').setPage("promotion-card","Promote Students");
       },
       FnCancelEnrollment:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchacademicyearService();
         document.querySelector('app-list').setPage("cancel-enrollment-card","Cancel Enrollment");
         document.querySelector('cancel-enrollment-card').FnRefresh();
       },
       FnDiscountStructureReport:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchgradeforreportService();
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchadmissionyearService();
@@ -1424,6 +1541,7 @@
         document.querySelector('discount-structure-report').callService();
       },
       FnFeeStructureReport:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchgradeforreportService();
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchadmissionyearService();
@@ -1432,6 +1550,7 @@
         document.querySelector('fee-structure-report').callService();
       },
       FnFeeStructureForGradeReport:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchgradeforreportService();
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchadmissionyearService();
@@ -1440,6 +1559,7 @@
         document.querySelector('gradewise-fee-structure-report').callService();
       },
       FnEnrollmentreport:function(){
+        localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchgradeforreportService();
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchadmissionyearService();
@@ -1461,6 +1581,16 @@
           // alert('false');
           document.getElementById(''+id).style.display="none";
           }
+        }
+        if(localStorage.getItem("roleid")=="ROLE106"){
+          // alert('true');
+          this.hideschoolmenu=false;
+          this.hideschoolname=true;
+        }
+        else{
+          // alert('false');
+          this.hideschoolmenu=true;
+          this.hideschoolname=false;
         }
       },
       FnSignout:function(){

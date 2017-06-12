@@ -879,10 +879,16 @@
       daycollectionResponse:function(e){
         // alert(JSON.stringify(e.detail.response.returnval));
         var totalamount=0;
-        var arr=e.detail.response.returnval;
-
+        var arr=e.detail.response.todaycoll;
+        var chequearr=e.detail.response.returnval;
+        // alert(arr.length);
+        // alert(chequearr.length);
+        if(chequearr.length>0){
+          for(var i=0;i<chequearr.length;i++){
+            arr.push(chequearr[i]);
+          }
+        }
         if(arr!='no rows'){
-
         for(var i=0;i<arr.length;i++){
           if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
 
@@ -960,9 +966,9 @@
           // alert(JSON.stringify(arr[i].cheque_no));
           if(arr[i].adhoc_discount==""||arr[i].adhoc_discount==null)
             arr[i].adhoc_discount=0;
-        var total=parseFloat(parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount)+parseFloat(arr[i].adhoc_discount)).toFixed(2);
-        arr[i].total=total;
-        totalamount=parseFloat(parseFloat(totalamount)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount)+parseFloat(arr[i].adhoc_discount)).toFixed(2);
+          var total=parseFloat(parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount)+parseFloat(arr[i].adhoc_discount)).toFixed(2);
+          arr[i].total=total;
+          totalamount=parseFloat(parseFloat(totalamount)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount)+parseFloat(arr[i].adhoc_discount)).toFixed(2);
         }
         }
         else{
@@ -1230,6 +1236,10 @@
         var pendingarr=e.detail.response.pendingarr;
         var regfee=e.detail.response.regfee;
         var feesplitup=e.detail.response.feesplitup;
+        // alert(JSON.stringify(totalarr.length));
+        // alert(JSON.stringify(paidarr.length));
+        // alert(JSON.stringify(pendingarr.length));
+
         for(var j=0;j<totalarr.length;j++){
           var t=0;
           for(var i=0;i<regfee.length;i++){
@@ -1257,18 +1267,28 @@
           for(var j=0;j<paidarr.length;j++){
             if(totalarr[i].admission_no==paidarr[j].admission_no)
             {
+              // alert(pflag);
+              // alert(totalarr[i].admission_no+"  "+paidarr[j].admission_no);
               paidflag=1;
-              // paidamount=parseFloat(paidamount)+(parseFloat(paidarr[j].paidamount)-parseFloat(paidarr[j].diffamount));
-              paidamount=parseFloat(paidamount)+(parseFloat(paidarr[j].paidamount));
+              paidamount=parseFloat(paidamount)+(parseFloat(paidarr[j].paidamount)-parseFloat(paidarr[j].diffamount));
               totalarr[i].paid_amount=paidamount;
               discountamount=parseFloat(discountamount)+parseFloat(paidarr[j].discountamount);
               totalarr[i].discount_amount=discountamount;
+              if(paidarr[j].installment_pattern=="1")
+                paidarr[j].installment_pattern="Installment";
+              if(paidarr[j].installment_pattern=="3")
+                paidarr[j].installment_pattern="Lumpsum";
+              if(paidarr[j].installment_pattern=="4")
+                paidarr[j].installment_pattern="Commitment Fee with Lumpsum";
               totalarr[i].installmentpattern=paidarr[j].installment_pattern;
+              totalarr[i].paidthrough=paidarr[j].payment_through;
               pflag++;
+              // alert(pflag);
             }
           }
           if(paidflag==0)
             {
+            // alert(npflag);
             paidamount=parseFloat(paidamount)+parseFloat(0);
             totalarr[i].paid_amount=paidamount;
             totalarr[i].discount_amount=0;
@@ -1280,7 +1300,7 @@
           }
         }
         }
-
+        // alert(pflag+" "+npflag);
         for(var i=0;i<totalarr.length;i++){
           totalarr[i].fees=parseFloat(totalarr[i].fees)-parseFloat(totalarr[i].regfee);
           totalarr[i].total_amount=parseFloat(totalarr[i].fees)-parseFloat(totalarr[i].discount_amount);
@@ -1355,17 +1375,47 @@
           }
           }
           if(paidamt>0){
+          if(paidamt<totalarr[i].payableinstallment1){
+          totalarr[i].paidinstallment1=paidamt;
+          paidamt=0;
+          }
+          else{
           paidamt=parseFloat(paidamt)-parseFloat(totalarr[i].payableinstallment1);
           totalarr[i].paidinstallment1=totalarr[i].payableinstallment1;
           }
+          }
           if(paidamt>0){
+          if(paidamt<totalarr[i].payableinstallment2){
+          totalarr[i].paidinstallment2=paidamt;
+          paidamt=0;
+          }
+          else{
           paidamt=parseFloat(paidamt)-parseFloat(totalarr[i].payableinstallment2);
           totalarr[i].paidinstallment2=totalarr[i].payableinstallment2;
           }
+          }
           if(paidamt>0){
+          if(paidamt<totalarr[i].payableinstallment3){
+          totalarr[i].paidinstallment3=paidamt;
+          paidamt=0;
+          }
+          else{
           paidamt=parseFloat(paidamt)-parseFloat(totalarr[i].payableinstallment3);
           totalarr[i].paidinstallment3=totalarr[i].payableinstallment3;
           }
+          }
+          // if(paidamt>0){
+          // paidamt=parseFloat(paidamt)-parseFloat(totalarr[i].payableinstallment1);
+          // totalarr[i].paidinstallment1=totalarr[i].payableinstallment1;
+          // }
+          // if(paidamt>0){
+          // paidamt=parseFloat(paidamt)-parseFloat(totalarr[i].payableinstallment2);
+          // totalarr[i].paidinstallment2=totalarr[i].payableinstallment2;
+          // }
+          // if(paidamt>0){
+          // paidamt=parseFloat(paidamt)-parseFloat(totalarr[i].payableinstallment3);
+          // totalarr[i].paidinstallment3=totalarr[i].payableinstallment3;
+          // }
           }
         }
 
@@ -2174,7 +2224,6 @@
         this.fetchdailycollectiondashboardparam=obj;
         this.dailycollectionthirdpartydashboardService(academicyear,grade,type);
         this.$.fetchdailycollectiondashboardajax.generateRequest();
-        
       },
       fetchdailycollectiondashboardResponse:function(e){
         this.admncount=e.detail.response.admncount;

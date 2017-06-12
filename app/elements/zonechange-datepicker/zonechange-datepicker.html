@@ -8,27 +8,19 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 
-
-
-<dom-module id="transportfromdate-icon-pickercard">
-<style>
-  paper-input{
-    width: 63%;
-    margin-top: -3%;
-    margin-left: -5%;
-  }
-</style>
+<dom-module id="zonechange-datepicker">
   <template>
+    <style is="custom-style" include="paper-date-picker-dialog-style">
+    </style>
     <!--component which invokes the predefined date picker control-->
     <div class="datepicker">
-      <!-- <i class="fa fa-calendar" on-click="FnShowDialog"></i> -->
-      <p>From :
+      <!-- <paper-input class="btn" on-click="FnShowDialog" label="Effective From" raised value="{{showdate}}"></paper-input> -->
+      <p>Effective From :
       <a href="#">
           <span class="glyphicon glyphicon-calendar" on-click="FnShowDialog"></span>
       </a>{{showdate}}
       </p>
-      <paper-input label="From Date" class="btn" on-click="FnShowDialog" raised value="{{showdate}}" hidden></paper-input>
-      <paper-dialog id="dialog" class="paper-date-picker-dialog" modal on-iron-overlay-closed="FnDismissDialog" >
+      <paper-dialog id="dialog" class="paper-date-picker-dialog" modal on-iron-overlay-closed="FnDismissDialog" style="left: 0 !important;">
         <paper-date-picker id="picker" date="{{date}}"></paper-date-picker>
         <div class="buttons">
           <paper-button dialog-dismiss>Cancel</paper-button>
@@ -37,17 +29,16 @@
       </paper-dialog>
     </div>
     <dialog-page id="ID_Show_Dialog"></dialog-page>
-    <transport-service id="service"></transport-service>
+    
   </template>
   <script>
     Polymer({
-      is: 'transportfromdate-icon-pickercard',
+      is: 'zonechange-datepicker',
 
       ready:function()
       {
-        // this.showdate=moment(new Date()).format('dd/mm/yyyy');
-        // localStorage.setItem("localsess_from_date",this.showdate);
         this.showdate=moment(new Date()).format('DD/MM/YYYY');
+        // localStorage.setItem("curr_sess_chequedate",this.showdate);
         var d=new Date();
         var mm=(d.getMonth()+1);
         if(mm<10)
@@ -57,7 +48,7 @@
           dd="0"+dd;
         var yy=d.getFullYear();
         var dat=mm+"/"+dd+"/"+yy;
-        localStorage.setItem("localsess_from_date",dat);
+        localStorage.setItem("curr_sess_effectivedate",dat);
       },
       FnShowDialog:function(){
         this.date=new Date();
@@ -81,7 +72,8 @@
             dd="0"+dd;
           var yy=d.getFullYear();
           var dat=mm+"/"+dd+"/"+yy;
-          localStorage.setItem("localsess_from_date",dat);
+          localStorage.setItem("curr_sess_effectivedate",dat);   
+          document.querySelector('zonechange-card').FnProcess();
         }
       },
       FnClear:function(){
@@ -89,6 +81,7 @@
       },
       FnSetDate:function(value){
         this.showdate=moment(new Date(value)).format('DD/MM/YYYY');
+        localStorage.setItem("curr_sess_effectivedate",this.showdate);
       }
     });
   </script>

@@ -33,7 +33,7 @@
           </paper-listbox>
       </div>
       <div class="col-sm-3 enquiry-input">
-          <paper-input label="Enrollment Number" value="{{enrollmentno}}"></paper-input>
+          <paper-input label="Enrollment Number" value="{{studentid}}"></paper-input>
       </div>
       <div class="col-sm-3 enquiry-input">
           <paper-input label="Parent Name" value="{{parentname}}"></paper-input>
@@ -50,41 +50,143 @@
       <div class="col-sm-3 enquiry-input">
           <paper-input label="Previous Zone Fee" value="{{previouszonefee}}"></paper-input>
       </div>
-      <div class="col-sm-3 enquiry-input" style="margin-top: -1%;width: 35%;">
-          <datepicker-card></datepicker-card>
+      <div class="col-sm-3 enquiry-input" style="margin-top: 3%;">
+          <zonechange-datepicker></zonechange-datepicker>
       </div>
-     </div>
-
-     <div class="list-group col-sm-12 panel-body form-category">
       <div class="col-sm-3 enquiry-input">
           <paper-input label="Used Month" value="{{usedmonth}}"></paper-input>
       </div>
+     </div>
+     <div class="list-group col-sm-12 panel-body form-category">      
       <div class="col-sm-3 enquiry-input">
           <paper-input label="Used Fee" value="{{usedfee}}"></paper-input>
       </div>
       <div class="col-sm-3 enquiry-input">
-          <paper-input label="Remaining Fee" value="{{remaingfee}}"></paper-input>
+          <paper-dropdown-menu label="Select New Zone" style="width: 100%;">
+            <paper-menu id="zonechangezone" class="dropdown-content" required on-iron-select="FnSelectZone" attr-for-selected="value" selected="{{selectedzone}}">
+              <template  is="dom-repeat" items="{{zonearr}}" as="item">
+              <paper-item value="{{item.distance_id}}">{{item.zone_name}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+      </div>
+      <div class="col-sm-3 enquiry-input">
+          <paper-input label="New Zone Fees" value="{{newzonefee}}"></paper-input>
+      </div>
+      <div class="col-sm-3 enquiry-input">
+          <paper-input label="{{dynamiclabel}}" value="{{payableamount}}"></paper-input>
       </div>
      </div>
-
+     <div class="list-group col-sm12 panel-body form-category" hidden$="{{hidezonebtn}}"> 
+        <div class="col-sm-4 enquiry-input" style="margin-left: 40%;">
+        <paper-button on-click="FnSubmit" class="btn btn-primary center">Submit</paper-button>
+        <paper-button on-click="FnCancel" class="btn btn-primary center">Cancel</paper-button>
+        </div>
+      </div>
     </div>
     </div>
+    <paper-input hidden value="{{fromdate}}"></paper-input>
+    <paper-input hidden value="{{enddate}}"></paper-input>
+    <transportfee-service id="service"></transportfee-service>
   </template>
   <script>
   (function() {
     'use strict';
-
+    var item=[];
+    var zonename="";
+    var zoneid="";
+    var mode="";
     Polymer({
       is: 'zonechange-card',
       ready:function(){
+        this.itemArray=[];
         this.$.zonechangeinput.style.visibility='hidden';
+        this.dynamiclabel="Payable Amount";
+        this.hidezonebtn=true;
+      },
+      FnSubmit:function(){
+        this.$.service.FnSaveZoneChangeInfo(zoneid,zonename,this.payableamount,mode);
+      },
+      FnAllocateZone:function(){
+        this.$.service.FnAllocateZone(localStorage.getItem("curr_sess_studentid"),localStorage.getItem("curr_sess_studentname"),this.grade,this.payableamount,zonename,zoneid,this.parentname);
+      },
+      FnCancel:function(){
+        this.FnRefresh1();
+      },
+      FnSetZoneFee:function(fee){
+        var newzonefee=fee;
+        var newzonepermonthfee=100 * Math.ceil((parseFloat(parseFloat(newzonefee)/12).toFixed(2)) / 100);
+        var totalmonth=12;
+        var newzoneremainingmonth=parseFloat(totalmonth)-parseFloat(this.usedmonth);
+        var newzoneremainingfee=parseFloat(newzoneremainingmonth)*parseFloat(newzonepermonthfee);
+        var oldzoneremainingfee=parseFloat(this.previouszonefee)-parseFloat(this.usedfee);
+        if(newzoneremainingfee>=oldzoneremainingfee){
+        var newzonepayablefee=parseFloat(newzoneremainingfee)-parseFloat(oldzoneremainingfee);
+        this.dynamiclabel="Payable Amount";
+        this.payableamount=newzonepayablefee;
+        mode="Payable";
+        }
+        else{
+        var newzonepayablefee=parseFloat(oldzoneremainingfee)-parseFloat(newzoneremainingfee);
+        this.dynamiclabel="Return Amount";
+        this.payableamount=newzonepayablefee;
+        mode="Return";
+        }
+        this.hidezonebtn=false;        
+      },
+      FnSelectZone:function(e){
+        zonename = e.target.selectedItem.textContent.trim();
+        zoneid = e.target.selectedItem.value.trim();
+        if(zonename!=this.previouszone)
+        this.$.service.fetchzonefeeService(zoneid);
+        else
+        alert('Please choose different zone!!');
+      },
+      FnProcess:function(){
+        var startdate=new Date(this.fromdate);
+        var enddate=new Date(localStorage.getItem('curr_sess_effectivedate'));
+        var startyear=startdate.getFullYear();
+        var endyear=enddate.getFullYear();
+        var startmonth=startdate.getMonth()+1;
+        var endmonth=(enddate.getMonth()+1)+1;
+        var startday=startdate.getDate();
+        var endday=enddate.getDate();
+        if(startyear==endyear){        
+          if(endmonth>=startmonth){
+            if(startmonth==endmonth){
+            if((parseInt(endday)-parseInt(startday))<=15){
+              var usedmonth=0;
+              var actualfees=this.previouszonefee;
+              var usedfee=0;
+              this.usedmonth=usedmonth;
+              this.usedfee=usedfee;
+            }
+            else{
+            var usedmonth=parseInt(endmonth)-parseInt(startmonth);
+            var actualfees=this.previouszonefee;
+            var oldpermonthfee=100 * Math.ceil((parseFloat(parseFloat(this.previouszonefee)/12).toFixed(2)) / 100);
+            var usedfee=parseFloat(usedmonth)*parseFloat(oldpermonthfee);
+            this.usedmonth=usedmonth;
+            this.usedfee=usedfee;
+            }
+            }
+            else{
+            var usedmonth=parseInt(endmonth)-parseInt(startmonth);
+            var actualfees=this.previouszonefee;
+            var oldpermonthfee=100 * Math.ceil((parseFloat(parseFloat(this.previouszonefee)/12).toFixed(2)) / 100);
+            var usedfee=parseFloat(usedmonth)*parseFloat(oldpermonthfee);
+            this.usedmonth=usedmonth;
+            this.usedfee=usedfee;
+            }
+          }
+        }
       },
       callService:function(){
         this.$.service.fetchallstudentforzoneService();
       },
       autocompletearr:function(autocompletearr)
       {
-         item=autocompletearr;
+        item=autocompletearr;
       },
       FnSearchStudent:function(e){
       this.FnRefresh1();  
@@ -152,7 +254,6 @@
       }
     },
     FnSelectStudent:function(e){
-
     this.querySelector('#zonechangeinput').style.visibility='hidden';
     var studentname = e.target.selectedItem.textContent.trim();
     var studentid = e.target.selectedItem.value.trim();
@@ -161,8 +262,57 @@
     this.itemArray=[];
     document.querySelector('#zonechangeinput').selected=-1;
     this.value=studentname;
-    this.$.service.fetchStudentInfoForZoneAllocation(studentid);
+    this.$.service.fetchStudentInfoForZoneChange(studentid,studentname);
     },
+    FnRefresh:function(){
+      document.querySelector('#zonechangeinput').selected=-1;
+      this.querySelector('#zonechangeinput').style.visibility='hidden';
+      this.itemArray=[];
+      this.value="";
+      this.studentid="";
+      this.parentname="";
+      this.fees="";
+      this.grade="";
+      this.feearr="";
+      this.hidezonebtn=false;
+      this.hiddenpayment=true;
+      this.hiddeninstallment=true;
+      this.previouszone="";
+      this.previouszonefee="";
+      this.usedmonth="";
+      this.usedfee="";
+      this.newzonefee="";
+      this.payableamount="";
+      zonename="";
+      zoneid="";
+      this.dynamiclabel="Payable Amount";
+      this.hidezonebtn=true;
+      document.querySelector('#zonechangezone').selected=-1;
+      mode="";
+    },
+    FnRefresh1:function(){
+      document.querySelector('#zonechangeinput').selected=-1;
+      this.querySelector('#zonechangeinput').style.visibility='hidden';
+      this.studentid="";
+      this.parentname="";
+      this.fees="";
+      this.grade="";
+      this.hidezonebtn=false;
+      this.hiddenpayment=true;
+      this.hiddeninstallment=true;
+      this.previouszone="";
+      this.previouszonefee="";
+      this.usedmonth="";
+      this.usedfee="";
+      this.newzonefee="";
+      this.payableamount="";
+      zonename="";
+      zoneid="";
+      this.dynamiclabel="Payable Amount";
+      this.hidezonebtn=true;
+      document.querySelector('#zonechangezone').selected=-1;
+      mode="";
+    }
     });
   })();
   </script>

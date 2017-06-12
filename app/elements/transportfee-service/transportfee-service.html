@@ -85,6 +85,26 @@
         >
     <iron-ajax
         method="post"
+        id="searchtransportzonechangefeepaidinfoajax1"
+        url="{{searchtransportzonechangefeepaidinfourl1}}"
+        params="{{searchtransportzonechangefeepaidinfoparam1}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="searchtransportzonechangefeepaidinfoResponse1"
+        debounce-duration="300"
+        > 
+    <iron-ajax
+        method="post"
+        id="fetchtransportzonechangefeesajax1"
+        url="{{fetchtransportzonechangefeesurl1}}"
+        params="{{fetchtransportzonechangefeesparam1}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtransportzonechangefeesResponse1"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
         id="fetchreceiptseqajax"
         url="{{fetchreceiptsequrl}}"
         params="{{fetchreceiptseqparam}}"
@@ -143,7 +163,6 @@
         on-response="fetchstudentforprocessingResponse"
         debounce-duration="300"
         >  
-    
     <iron-ajax
         method="post"
         id="fetchchequeforeditordeleteajax"
@@ -214,7 +233,17 @@
         on-response="fetchstudentinfoforzoneallocationResponse"
         debounce-duration="300"
         >
-        
+    <iron-ajax
+        method="post"
+        id="fetchstudentinfoforzonechangeajax"
+        url="{{fetchstudentinfoforzonechangeurl}}"
+        params="{{fetchstudentinfoforzonechangeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentinfoforzonechangeResponse"
+        debounce-duration="300"
+        >
+    
     <iron-ajax
         method="post"
         id="allocatezoneajax"
@@ -336,6 +365,47 @@
         on-response="fetchschoolResponse"
         debounce-duration="300"
         >
+    <iron-ajax
+        method="post"
+        id="savezonechangeajax"
+        url="{{savezonechangeurl}}"
+        params="{{savezonechangeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="savezonechangeResponse"
+        debounce-duration="300"
+        >
+        
+    <iron-ajax
+        method="post"
+        id="fetchallstudentforzonechangecollectionajax"
+        url="{{fetchallstudentforzonechangecollectionurl}}"
+        params="{{fetchallstudentforzonechangecollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallstudentforzonechangecollectionResponse"
+        debounce-duration="300"
+        >
+     <iron-ajax
+        method="post"
+        id="fetchstudentinfoforzonechangecollectionajax"
+        url="{{fetchstudentinfoforzonechangecollectionurl}}"
+        params="{{fetchstudentinfoforzonechangecollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentinfoforzonechangecollectionResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="transportcancellationajax"
+        url="{{transportcancellationurl}}"
+        params="{{transportcancellationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="transportcancellationResponse"
+        debounce-duration="300"
+        >        
         
   </template>
   <script>
@@ -354,12 +424,46 @@
     var paymentarr=[];
     Polymer({
       is: 'transportfee-service',
+      FnCancelTransport:function(studentid){
+        this.transportcancellationurl=sessionStorage.getItem("addrinfo")+"/transportcancellation-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=localStorage.getItem("curr_sess_studentid");
+        this.transportcancellationparam=obj;
+        this.$.transportcancellationajax.generateRequest();
+      },
+      transportcancellationResponse:function(e){
+        alert('Transport cancelled successfully!!');
+        document.querySelector('transport-cancellation-card').FnRefresh();
+      },
+      FnSaveZoneChangeInfo:function(zoneid,zonename,amount,mode){
+        // alert(zoneid+" "+zonename+" "+amount);
+        this.savezonechangeurl=sessionStorage.getItem("addrinfo")+"/savezonechange-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=localStorage.getItem("curr_sess_studentid");
+        obj.studentname=localStorage.getItem("curr_sess_studentname");
+        obj.zoneid=zoneid;
+        obj.zonename=zonename;
+        obj.mode=mode;
+        obj.amount=amount;
+        this.savezonechangeparam=obj;
+        this.$.savezonechangeajax.generateRequest();
+      },
+      savezonechangeResponse:function(e){
+        // alert('Zone Changed Successfully!!!');
+        document.querySelector('zonechange-card').FnAllocateZone();
+        // document.querySelector('zonechange-card').FnRefresh1();
+      },
       fetchschoolService:function(){
         this.fetchschoolurl=sessionStorage.getItem("addrinfo")+"/fetchschool-service";
         // this.fetchschoolparam=obj;
         this.$.fetchschoolajax.generateRequest();
       },
       fetchschoolResponse:function(e){
+        document.querySelector('navigation-bar').schoolarr=e.detail.response.returnval;
         document.querySelector('transportfee-schedule-card').schoolarr=e.detail.response.returnval;
       },
       attachdiscount:function(studentid,installment,amount,reason){
@@ -432,6 +536,7 @@
         var arr=e.detail.response.returnval;
         if(arr!='no rows'){
             document.querySelector('zone-cancellation-card').autocompletearr(arr);
+            document.querySelector('transport-cancellation-card').autocompletearr(arr);
             
         }
       },
@@ -452,7 +557,12 @@
             document.querySelector('zone-cancellation-card').grade=arr[0].class_for_admission;
             document.querySelector('zone-cancellation-card').parentname=arr[0].father_name;
             document.querySelector('zone-cancellation-card').zone=arr[0].zone_name;
-                   }
+
+            document.querySelector('transport-cancellation-card').studentid=arr[0].admission_no;
+            document.querySelector('transport-cancellation-card').grade=arr[0].class_for_admission;
+            document.querySelector('transport-cancellation-card').parentname=arr[0].father_name;
+            document.querySelector('transport-cancellation-card').zone=arr[0].zone_name;
+        }
         
       },
       cancelzoneService:function(studid,studentname){
@@ -526,6 +636,22 @@
         var arr=e.detail.response.returnval;
         document.querySelector('add-newstudent-card').sectionarr=arr;
       },
+      fetchallstudentforzonechangecollectionService:function(){
+        this.fetchallstudentforzonechangecollectionurl=sessionStorage.getItem("addrinfo")+"/fetchallstudentforzonechangecollection-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.fetchallstudentforzonechangecollectionparam=obj;
+        this.$.fetchallstudentforzonechangecollectionajax.generateRequest();
+      },
+      fetchallstudentforzonechangecollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        if(arr!='no rows'){
+          document.querySelector('zonechangecollection-card').autocompletearr(arr);
+          // document.querySelector('transport-cancellation-card').autocompletearr(arr);
+        }
+      },
       fetchallstudentforzoneService:function(){
         this.fetchallstudentforzoneurl=sessionStorage.getItem("addrinfo")+"/fetchallstudentforzone-service";
         var obj={"schoolid":"","prefixid":""};
@@ -539,7 +665,42 @@
         // alert(JSON.stringify(arr));
         if(arr!='no rows'){
           document.querySelector('zonetostudent-card').autocompletearr(arr);
+          document.querySelector('zonechange-card').autocompletearr(arr);
           document.querySelector('transportfee-schedule-card').autocompletearr(arr);
+        }
+      },
+      fetchStudentInfoForZoneChange:function(studentid,studentname){
+        this.fetchstudentinfoforzonechangeurl=sessionStorage.getItem("addrinfo")+"/fetchstudentinfoforzonechange-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studentid;
+        obj.studentname=studentname.trim();
+        this.fetchstudentinfoforzonechangeparam=obj;
+        this.$.fetchstudentinfoforzonechangeajax.generateRequest();
+      },
+      fetchstudentinfoforzonechangeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        var feearr=e.detail.response.feearr;
+        // alert(JSON.stringify(feearr));
+        // alert(JSON.stringify(arr));
+        if(e.detail.response.flag=='mapped'){
+          document.querySelector('zonechange-card').studentid=arr[0].admission_no;
+          document.querySelector('zonechange-card').studentname=arr[0].student_name;
+          document.querySelector('zonechange-card').grade=arr[0].class_for_admission;
+          document.querySelector('zonechange-card').parentname=arr[0].father_name;
+          document.querySelector('zonechange-card').previouszone=feearr[0].zone_name;
+          document.querySelector('zonechange-card').previouszonefee=feearr[0].fees;
+          document.querySelector('zonechange-card').fromdate=feearr[0].from_date;
+          document.querySelector('zonechange-card').enddate=feearr[0].to_date;
+        }
+        else{
+        if(arr!='no rows'){
+        document.querySelector('zonechange-card').studentid=arr[0].admission_no;
+        document.querySelector('zonechange-card').studentname=arr[0].student_name;
+        document.querySelector('zonechange-card').grade=arr[0].class_for_admission;
+        document.querySelector('zonechange-card').parentname=arr[0].father_name;
+        }
         }
       },
       fetchStudentInfoForZoneAllocation:function(studentid,studentname){
@@ -563,11 +724,8 @@
           document.querySelector('zonetostudent-card').studentname=arr[0].student_name;
           document.querySelector('zonetostudent-card').grade=arr[0].class_for_admission;
           document.querySelector('zonetostudent-card').parentname=arr[0].father_name;
-          // document.querySelector('zonetostudent-card').selectedzone=arr[0].distance_id;
-          // alert(feearr[0].distance_id);
           document.querySelector('zonetostudent-card').FnSetSelectedZone(feearr[0].distance_id);
           document.querySelector('zonetostudent-card').fees=feearr[0].fees;
-          // alert(feearr[0].install1_discount+" "+feearr[0].install2_discount);
           localStorage.setItem("curr_sess_ins1discount",feearr[0].install1_discount);
           localStorage.setItem("curr_sess_ins2discount",feearr[0].install2_discount);
           localStorage.setItem("curr_sess_studentid",arr[0].admission_no);
@@ -583,6 +741,42 @@
         }
         }
       },
+      fetchStudentInfoForZoneChangeCollection:function(studentid,studentname){
+        this.fetchstudentinfoforzonechangecollectionurl=sessionStorage.getItem("addrinfo")+"/fetchstudentinfoforzonechangecollection-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studentid;
+        obj.studentname=studentname.trim();
+        this.fetchstudentinfoforzonechangecollectionparam=obj;
+        this.$.fetchstudentinfoforzonechangecollectionajax.generateRequest();
+      },
+      fetchstudentinfoforzonechangecollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // var feearr=e.detail.response.feearr;
+        // alert(JSON.stringify(feearr));
+        // alert(JSON.stringify(arr));
+        if(arr!='no rows'){
+          document.querySelector('zonechangecollection-card').studentid=arr[0].admission_no;
+          document.querySelector('zonechangecollection-card').studentname=arr[0].student_name;
+          document.querySelector('zonechangecollection-card').grade=arr[0].class_for_admission;
+          document.querySelector('zonechangecollection-card').parentname=arr[0].father_name;
+          document.querySelector('zonechangecollection-card').zone=arr[0].zone_name;
+          document.querySelector('zonechangecollection-card').fees=arr[0].fees;
+          localStorage.setItem("curr_sess_studentid",arr[0].admission_no);
+          document.querySelector('zonechangecollection-card').FnEnablePaymentCard();
+
+        }
+        else{
+        if(arr!='no rows'){
+        document.querySelector('zonechangecollection-card').studentid=arr[0].admission_no;
+        document.querySelector('zonechangecollection-card').studentname=arr[0].student_name;
+        document.querySelector('zonechangecollection-card').grade=arr[0].class_for_admission;
+        document.querySelector('zonechangecollection-card').parentname=arr[0].father_name;
+
+        }
+        }
+      },
       fetchzoneService:function(){
         this.fetchzoneurl=sessionStorage.getItem("addrinfo")+"/fetchzone-service";
         var obj={"schoolid":"","prefixid":""};
@@ -595,6 +789,7 @@
         var arr=e.detail.response.returnval;
         document.querySelector('transportfee-schedule-card').zonearr=arr;
         document.querySelector('zonetostudent-card').zonearr=arr;
+        document.querySelector('zonechange-card').zonearr=arr;
       },
       fetchzonefeeService:function(distanceid){
         this.fetchzonefeeurl=sessionStorage.getItem("addrinfo")+"/fetchzonefee-service";
@@ -611,6 +806,8 @@
         if(arr!='no rows'){
         document.querySelector('transportfee-schedule-card').fees=arr[0].fees;
         document.querySelector('zonetostudent-card').fees=arr[0].fees;
+        document.querySelector('zonechange-card').newzonefee=arr[0].fees;
+        document.querySelector('zonechange-card').FnSetZoneFee(arr[0].fees);
         }
       },
       FnAllocateZone:function(studentid,studentname,grade,fees,zone,zoneid,parentname){
@@ -636,8 +833,14 @@
         this.$.allocatezoneajax.generateRequest();
       },
       allocatezoneResponse:function(e){
+        if(localStorage.getItem('curr_sess_page')=='zoneallocation'){
         alert('Zone Allocation Done!!');
         document.querySelector('zonetostudent-card').FnEnablePaymentCard();
+        }
+        if(localStorage.getItem('curr_sess_page')=='zonechange'){
+        alert('Zone Changed Successfully!!');
+        document.querySelector('zonechange-card').FnRefresh();
+        }
         // document.querySelector('zonetostudent-card').FnRefresh();
       },
       inserttransportfeeService:function(arr,insfor){
@@ -1856,6 +2059,8 @@
       fetchtransportfeesResponse1:function(e){
         var feearr=e.detail.response.feesplit;
         var studarr=e.detail.response.studinfo;
+        // alert(JSON.stringify(feearr));
+        // alert(JSON.stringify(studarr));
         if(paidarr!='no rows'){
         localStorage.setItem("curr_sess_paymentpattern",paidarr[0].installment_pattern);
         document.querySelector('zonetostudent-card').FnSetDefaultPattern(paidarr[0].installment_pattern);
@@ -2185,6 +2390,208 @@
         }
         // alert(JSON.stringify(feearr));
         document.querySelector('zonetostudent-card').feearr=feearr;
+        paidarr=[];
+        feearr=[];
+      },
+      searchtransportzonechangefeepaidinfoService1:function(studid,studentname){
+        this.searchtransportzonechangefeepaidinfourl1=sessionStorage.getItem("addrinfo")+"/searchtransportzonechangefeepaidinfo-service1";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studid;
+        obj.studentname=studentname;
+        this.searchtransportzonechangefeepaidinfoparam1=obj;
+        this.$.searchtransportzonechangefeepaidinfoajax1.generateRequest();
+      },
+      searchtransportzonechangefeepaidinfoResponse1:function(e){
+        paidarr=e.detail.response.paidarr;        
+        paidcheque=e.detail.response.paidcheque;
+        // alert(JSON.stringify(paidarr));
+        // alert(JSON.stringify(paidcheque));
+        if(e.detail.response.paidarr!='no rows')
+        localStorage.setItem("curr_sess_paymentpattern",paidarr[0].installment_pattern);
+        this.fetchtransportzonechangefeesService1();
+      },
+      fetchtransportzonechangefeesService1:function(){
+        this.fetchtransportzonechangefeesurl1=sessionStorage.getItem("addrinfo")+"/fetchtransportzonechangefees-service1";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=localStorage.getItem("curr_sess_studentid");
+        obj.studentname=localStorage.getItem("curr_sess_studentname");
+        this.fetchtransportzonechangefeesparam1=obj;
+        this.$.fetchtransportzonechangefeesajax1.generateRequest();
+      },
+      fetchtransportzonechangefeesResponse1:function(e){
+        var zonearr=e.detail.response.zoneinfo;
+        var studarr=e.detail.response.studinfo;
+        // alert(JSON.stringify(zonearr));
+        // alert(JSON.stringify(studarr));
+        if(paidarr!='no rows'){
+        localStorage.setItem("curr_sess_paymentpattern",paidarr[0].installment_pattern);
+        // document.querySelector('zonechangecollection-card').FnSetDefaultPattern(paidarr[0].installment_pattern);
+        }
+        // document.querySelector('zonechangecollection-card').studentname=studarr[0].student_name;
+        document.querySelector('zonechangecollection-card').parentname=studarr[0].father_name;
+        localStorage.setItem("curr_sess_parent",studarr[0].father_name);    
+        document.querySelector('zonechangecollection-card').grade=studarr[0].class_for_admission;
+        localStorage.setItem("curr_sess_grade",studarr[0].class_for_admission);
+        // document.querySelector('zonechangecollection-card').academicyear=studarr[0].academic_year;
+        document.querySelector('zonechangecollection-card').zone=zonearr[0].zone_name;
+        document.querySelector('zonechangecollection-card').fees=zonearr[0].fees;
+        document.querySelector('zonechangecollection-card').totaldiscount=parseInt(localStorage.getItem('curr_sess_ins1discount'))+parseInt(localStorage.getItem('curr_sess_ins1discount'));
+
+        // if(localStorage.getItem("curr_sess_paymentpattern")==2){
+          var feearr=[];
+          if(zonearr.length!=0){
+          document.querySelector('zonechangecollection-card').hiddenaddbtn=false;
+          document.querySelector('zonechangecollection-card').hiddenpayment=false;
+          if(paidarr=="no rows")
+          {
+            document.querySelector('zonechangecollection-card').disableflag=false;
+            var totamt=0;
+              for(var i=0;i<zonearr.length;i++){
+              totamt=parseFloat(totamt)+parseFloat(zonearr[i].fees);
+              }
+              
+              var obj={};
+              var d=new Date();
+              var m=d.getMonth()+1;
+              var dd=d.getDate();
+              var y=d.getFullYear();
+              if(m<10)
+                m="0"+m;
+              if(dd<10)
+                dd="0"+dd;
+              var currdate=m+"/"+dd+"/"+y;
+              obj.installment_date=currdate;
+              obj.installment="Installment1";
+              // obj.amount=totamt;
+              // obj.discountamount=0;
+              obj.discountamount=parseInt(localStorage.getItem('curr_sess_ins1discount'))+parseInt(localStorage.getItem('curr_sess_ins2discount'));
+              // alert(obj.discountamount);
+              obj.actualamount=parseInt(totamt);
+              obj.amount=parseInt(totamt)-parseInt(obj.discountamount);              
+              obj.fineamount=0;
+              obj.hiddencommitinput=true;
+              obj.hiddencommititem=false;
+              obj.paidflag=false;
+              obj.hiddenflag=true;
+              obj.readonlyflag=true;
+              obj.hiddenpayflag=false;
+              feearr.push(obj);
+          }
+          else
+          {
+          feearr.push({'installment':'Installment1'});
+          document.querySelector('zonechangecollection-card').disableflag=true;
+          var collection=[];
+          for(var i=0;i<paidarr.length;i++){
+          if(paidarr[i].install1_status!=""){
+            var obj={};
+            obj.studentid=paidarr[i].student_id;
+            obj.installment="Installment1";
+            obj.modeofpayment=paidarr[i].modeofpayment1;
+            obj.receiveddate=paidarr[i].paid_date1;
+            obj.receiptdate=paidarr[i].receipt_date1;
+            obj.receiptno=paidarr[i].receipt_no1;
+            obj.discountamount=parseInt(localStorage.getItem('curr_sess_ins1discount'))+parseInt(localStorage.getItem('curr_sess_ins2discount'));
+            obj.actualamount=parseInt(paidarr[i].installment_1)+parseInt(obj.discountamount);
+            obj.amount=parseInt(paidarr[i].installment_1)+parseInt(paidarr[i].install1_fine);
+            obj.installstatus=paidarr[i].install1_status;
+            collection.push(obj);
+          }
+          }
+          for(var i=0;i<collection.length;i++){
+          for(var j=0;j<paidcheque.length;j++){
+          if(collection[i].studentid==paidcheque[j].student_id&&collection[i].installment==paidcheque[j].installtype){
+            collection[i].chequeno=paidcheque[j].cheque_no;
+            collection[i].bankname=paidcheque[j].bank_name;
+            collection[i].chequedate=paidcheque[j].cheque_date;
+          }
+          }
+          }
+          for(var i=0;i<feearr.length;i++){
+              var t=0;
+              for(var j=0;j<collection.length;j++){
+              if(collection[j].installment==feearr[i].installment&&(collection[j].installstatus!='cancel'||collection[j].installstatus!='bounce')){
+              t=1;
+              feearr[i].installment=collection[j].installment;
+              feearr[i].amount=collection[j].amount;
+              feearr[i].actualamount=parseInt(collection[j].amount)+parseInt(collection[j].discountamount);
+              feearr[i].receiptdate=collection[j].receiptdate;
+              feearr[i].modeofpayment=collection[j].modeofpayment;
+              feearr[i].chequeno=collection[j].chequeno;
+              feearr[i].bankname=collection[j].bankname;
+              feearr[i].chequedate=collection[j].chequedate;
+              feearr[i].discountamount=collection[j].discountamount;
+              feearr[i].fineamount=0;
+              feearr[i].hiddencommitinput=true;
+              feearr[i].hiddencommititem=false;
+              feearr[i].paidflag=true;
+              feearr[i].hiddenflag=false;
+              feearr[i].readonlyflag=true;
+              feearr[i].hiddenpayflag=true;
+              }
+              if(collection[j].installment==feearr[i].installment&&(collection[j].installstatus=='cancel'||collection[j].installstatus=='bounce')){
+              t=1;
+              feearr[i].installment=collection[j].installment;
+              feearr[i].receiptdate=collection[j].receiptdate;
+              feearr[i].modeofpayment=collection[j].modeofpayment;
+              feearr[i].chequeno=collection[j].chequeno;
+              feearr[i].bankname=collection[j].bankname;
+              feearr[i].chequedate=collection[j].chequedate;
+              feearr[i].discountamount=collection[j].discountamount;
+              if(collection[j].installstatus=='bounce')
+              feearr[i].fineamount=250;
+              if(collection[j].installstatus=='cancel')
+              feearr[i].fineamount=0;
+              feearr[i].amount=parseInt(collection[j].amount)+parseInt(feearr[i].fineamount);
+              feearr[i].actualamount=parseInt(collection[j].actualamount)+parseInt(feearr[i].fineamount);
+              feearr[i].hiddencommitinput=true;
+              feearr[i].hiddencommititem=false;
+              feearr[i].paidflag=false;
+              feearr[i].hiddenflag=true;
+              feearr[i].readonlyflag=true;
+              feearr[i].hiddenpayflag=false;
+              }
+              }
+              if(t==0){
+                feearr.splice(i,1);
+              }
+          }
+          }
+        }
+        // }
+
+        for(var i=0;i<feearr.length;i++){
+            if(feearr[i].installment=='Installment1'){
+            var d=new Date();
+            var mm=(d.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=d.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=d.getFullYear();
+            var dd=dd+"/"+mm+"/"+yy;
+            feearr[i].installment_date=dd;
+            }
+            else{
+            var d=new Date(feearr[i].installment_date);
+            var mm=(d.getMonth()+1);
+            if(mm<10)
+              mm="0"+mm;
+            var dd=d.getDate();
+            if(dd<10)
+              dd="0"+dd;
+            var yy=d.getFullYear();
+            var dd=dd+"/"+mm+"/"+yy;
+            feearr[i].installment_date=dd;
+            }
+        }
+        // alert(JSON.stringify(feearr));
+        document.querySelector('zonechangecollection-card').feearr=feearr;
         paidarr=[];
         feearr=[];
       }
