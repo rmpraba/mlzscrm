@@ -880,12 +880,18 @@
         // alert(JSON.stringify(e.detail.response.returnval));
         var totalamount=0;
         var arr=e.detail.response.todaycoll;
-        var chequearr=e.detail.response.returnval;
+        var chequearr=e.detail.response.chequecoll;
+        var insarr=e.detail.response.returnval;
         // alert(arr.length);
         // alert(chequearr.length);
         if(chequearr.length>0){
           for(var i=0;i<chequearr.length;i++){
             arr.push(chequearr[i]);
+          }
+        }
+        if(insarr.length>0){
+          for (var i = 0; i <insarr.length; i++) {
+            arr.push(insarr[i]);
           }
         }
         if(arr!='no rows'){
