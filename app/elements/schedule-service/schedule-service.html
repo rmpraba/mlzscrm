@@ -510,6 +510,7 @@
         for(var i=0;i<arr.length;i++){
             gradearr.push(arr[i]);
         }
+        document.querySelector('transport-feepaiddue-report').gradearr=gradearr;
         document.querySelector('discount-structure-report').gradearr=gradearr;
         document.querySelector('fee-structure-report').gradearr=gradearr;
         document.querySelector('dailycollection-report').gradearr=gradearr;
@@ -551,6 +552,7 @@
         this.$.fetchacademicyearajax.generateRequest();
       },
       fetchacademicyearResponse:function(e){
+        document.querySelector('transport-feepaiddue-report').academicarr=e.detail.response.returnval;
         document.querySelector('transport-receipt-searchcard').academicarr=e.detail.response.returnval;
         document.querySelector('transportfee-schedule-card').academicarr=e.detail.response.returnval;
         document.querySelector('feetype-schedule-card').academicarr=e.detail.response.returnval;

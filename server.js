@@ -2,16 +2,16 @@
  var mysql      = require('mysql');
  var email   = require("emailjs/email");
  var connection = mysql.createConnection({
-  // host     : 'localhost',
-  // port     : '3306',
-  // user     : 'root',
-  // password : 'admin',
-  // database : 'mlzscrm'
   host     : 'localhost',
-  port     : '37506',
-  user     : 'adminVwbmIka',
-  password : '6RNH4TEavBhh',
+  port     : '3306',
+  user     : 'root',
+  password : 'admin',
   database : 'mlzscrm'
+  // host     : 'localhost',
+  // port     : '37506',
+  // user     : 'adminVwbmIka',
+  // password : '6RNH4TEavBhh',
+  // database : 'mlzscrm'
  }); 
 
 var bodyParser = require('body-parser');
@@ -5394,13 +5394,87 @@ app.post('/updateenqdetails',  urlencodedParser,function (req, res){
       guard_working:req.query.guardworking,
       who_works:req.query.whoworking
     };
+
+    var admnupdate={
+      class_for_admission:req.query.grade,
+      first_name:req.query.firstname,
+      middle_name:req.query.middlename,
+      last_name:req.query.lastname,
+      gender:req.query.gender,
+      dob:req.query.dobdate,
+      father_name:req.query.fathername,
+      mother_name:req.query.mothername,
+      age:req.query.ageofyr,
+      student_name:req.query.enquiryname
+    };
+    var studupdate={
+      class_for_admission:req.query.grade,
+      first_name:req.query.firstname,
+      middle_name:req.query.middlename,
+      last_name:req.query.lastname,
+      gender:req.query.gender,
+      dob:req.query.dobdate,
+      father_name:req.query.fathername,
+      mother_name:req.query.mothername,
+      age:req.query.ageofyr,
+      father_occupation:req.query.dadoccupationinfo,
+      mother_occupation:req.query.motheroccupationinfo,
+      father_mobile:req.query.mob,
+      mother_mobile:req.query.mothermob,
+      father_email:req.query.email,
+      mother_email:req.query.motheremail,
+      guard_mobile_no:req.query.guardianmobile,
+      guardian_name:req.query.guardianname,
+      student_name:req.query.enquiryname
+    };
+
+    var feeupdate={
+      student_name:req.query.enquiryname,
+      grade:req.query.grade
+    }
     
+    var selqur="SELECT admission_no FROM md_admission WHERE school_id='"+req.query.schol+"' and academic_year='"+req.query.academicyear+"' and enquiry_no='"+req.query.enquiryno+"'";
+    var updatequr="UPDATE md_student_paidfee SET ? WHERE school_id='"+req.query.schol+"' and academic_year='"+req.query.academicyear+"' and (admission_no='"+admnno+"' or admission_no='"+req.query.enquiryno+"')";
     var enquiryno={enquiry_no:req.query.enquiryno};
     var schoolid={school_id:req.query.schol};
-
-    connection.query('UPDATE student_enquiry_details SET ? WHERE ? and ?',[response,enquiryno,schoolid],function(err, rows){
+    var acyear={academic_year:req.query.academicyear};
+    console.log('------------------------------------------');
+    console.log(JSON.stringify(enquiryno)+"  "+JSON.stringify(schoolid)+"  "+JSON.stringify(acyear));
+    console.log(selqur);
+    console.log('------------------------------------------');
+    console.log(updatequr);
+    var admnno={};
+    connection.query('UPDATE student_enquiry_details SET ? WHERE ? and ? and ?',[response,enquiryno,schoolid,acyear],function(err, rows){
       if(!err){
-      res.status(200).json({'returnval': 'Updated!!'});
+        connection.query(selqur,function(err, rows){
+        if(rows.length==0)
+          res.status(200).json({'returnval': 'Updated!!'});
+        else{
+          admnno.admissionno=rows[0].admission_no;
+          console.log("admissionno............."+admnno);
+          connection.query('UPDATE md_admission SET ? WHERE ? and ? and ?',[admnupdate,enquiryno,schoolid,acyear],function(err, rows){
+          if(!err){
+          connection.query('UPDATE md_student SET ? WHERE ? and ? and ?',[studupdate,enquiryno,schoolid,acyear],function(err, rows){
+          if(!err){
+          console.log('========='+admnno.admissionno);
+          connection.query("UPDATE md_student_paidfee SET ? WHERE school_id='"+req.query.schol+"' and academic_year='"+req.query.academicyear+"' and (admission_no='"+admnno.admissionno+"' or admission_no='"+req.query.enquiryno+"')",[feeupdate],function(err, rows){
+          if(!err)
+          res.status(200).json({'returnval': 'Updated!!'});
+          else{
+          console.log(err);
+          res.status(200).json({'returnval': 'Unable to update!!'});
+          }
+          });
+          }
+          else
+            console.log(err);
+          });
+          }
+          else
+            console.log(err);
+        });
+        }
+        });
       // if(req.query.discountreferraltype=="1"||req.query.discountreferraltype=="9")
       // {
       //   console.log('---------------------------');
@@ -10680,7 +10754,6 @@ app.post('/transportcancellation-service',  urlencodedParser,function (req, res)
   console.log(queryy);
   console.log(qur);
   
-
   connection.query(queryy,function(err, result){
       if(!err)
       {
@@ -10700,6 +10773,38 @@ app.post('/transportcancellation-service',  urlencodedParser,function (req, res)
   });
 
 });
+
+app.post('/fetchtransportpendingfee-service',  urlencodedParser,function (req, res){
+  if(req.query.grade=="All Grades"){  
+  if(req.query.type=="All")
+  var qur1="select * from transport.student_fee f join transport.student_details d on(f.student_id=d.id) where f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and d.school_id='"+req.query.schoolid+"' and d.academic_year='"+req.query.academicyear+"' ";
+  else
+  var qur1="select * from transport.student_fee f join transport.student_details d on(f.student_id=d.id) where f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and d.school_id='"+req.query.schoolid+"' and d.academic_year='"+req.query.academicyear+"' and d.admission_status='"+req.query.type+"' and f.admission_status='"+req.query.type+"'";
+  }
+  else
+  {
+  if(req.query.type=="All")
+  var qur1="select * from transport.student_fee f join transport.student_details d on(f.student_id=d.id) where f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and d.school_id='"+req.query.schoolid+"' and d.academic_year='"+req.query.academicyear+"' and d.class='"+req.query.grade+"'";
+  else
+  var qur1="select * from transport.student_fee f join transport.student_details d on(f.student_id=d.id) where f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and d.school_id='"+req.query.schoolid+"' and d.academic_year='"+req.query.academicyear+"' and d.class='"+req.query.grade+"' and d.admission_status='"+req.query.type+"' and f.admission_status='"+req.query.type+"'";
+  }
+  console.log('-------------------------------------------');
+  console.log(qur1);
+  
+  connection.query(qur1,function(err, rows){
+      if(!err)
+      {
+        res.status(200).json({'returnval': rows});
+      } 
+      else 
+      {
+          console.log(err);
+          res.status(200).json({'returnval': 'no rows'});
+      }
+  });
+
+});
+
 
 
 function setvalue(){

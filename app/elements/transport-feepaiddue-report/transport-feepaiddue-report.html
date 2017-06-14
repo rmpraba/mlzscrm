@@ -1,0 +1,153 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-feepaiddue-report">
+  <template>
+    <style>
+      .datecard {
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                 <div class="col-md-3" style="margin-top: 0%;">
+                 <paper-dropdown-menu id="transportfeepaiddueacyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="transportfeepaiddueacyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                 </div>
+                 <div class="col-sm-2" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Grade" attr-for-selected="value">
+                  <paper-menu id="transportfeepaidduegrade" class="dropdown-content" required on-iron-select="FnSelectGrade" valueattr="value" >
+                    <template  is="dom-repeat" items="{{gradearr}}" as="item">
+                    <paper-item value="{{item.grade_id}}">{{item.grade_name}}</paper-item>
+                    </template>
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div>  
+                <div class="col-sm-2" style="margin-left: 5%;">
+                <paper-dropdown-menu label="Select Type" attr-for-selected="value">
+                  <paper-menu id="transportfeepaidduetype" class="dropdown-content" required on-iron-select="FnSelectType" valueattr="value" >
+                    <!-- <template  is="dom-repeat" items="{{}}" as="item"> -->
+                    <paper-item value="all">All</paper-item>
+                    <paper-item value="new">New</paper-item>
+                    <paper-item value="promoted">Promoted</paper-item>
+                    <!-- </template> -->
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div>  
+                <div class="col-md-1" style="margin-top: 1%;margin-left: 20%;">
+                <p>Download
+                <a href="#">
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('transportfeepaidduereport', 'Fee Paid & Due Report')"></span>
+                </a>
+                </p>
+                </div> 
+            </div>
+          </div>
+        </div>
+    </div>
+    <div id="transportfeepaidduereport">
+     <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Sno</th><th>Student Id</th><th>Student Name</th><th>Grade</th><th>Type</th><th>Fees</th><th>Installment1 Paid</th><th>Installment2 Paid</th><th>Total Paid</th><th>Pending Amount</th><th>Installment Pattern</th>
+      </tr>
+      </thead>
+      <tbody>
+      <template  is="dom-repeat" items="{{pendingarr}}" as="item">
+        <tr><td>{{item.sno}}</td><td>{{item.studentid}}</td><td>{{item.studentname}}</td><td>{{item.grade}}</td><td>{{item.status}}</td>
+        <td>{{item.fees}}</td><td>{{item.install1}}</td><td>{{item.install2}}</td><td>{{item.paidamount}}</td><td>{{item.pendingamount}}</td><td>{{item.pattern}}</td>
+        </tr>
+      </template>
+      <!-- <tr><th colspan="11" style="text-align: right;">Total Amount: &nbsp;&nbsp;{{totalamount}}</th></tr> -->
+      </tbody>
+    </table>    
+
+    <table style="margin-left: 70%;" hidden$="{{hidecount}}">
+      <tr><th>No of students paid: </th><th>{{paidstud}}</th></tr>
+      <tr><th>Paid Amount: </th><th>{{paidfees}}</th></tr>
+      <tr><th>No of student not paid: </th><th>{{pendingstud}}</th></tr>
+      <tr><th>Pending Amount: </th><th>{{pendingfees}}</th></tr>
+    </table>
+    </div>
+    <transportfee-service id="feereportservice"></transportfee-service>
+  </template>
+  <script type="text/javascript">
+      var tableToExcel = (function() {
+      var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+     return function(table, name) {
+     if (!table.nodeType) table = document.getElementById(table)
+     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+     window.location.href = uri + base64(format(template, ctx))
+     }
+     })()
+  </script>
+  <script>
+  (function() {
+    'use strict';
+    var academicyear;
+    var grade='All Grades';
+    var type='All';
+    Polymer({
+      is: 'transport-feepaiddue-report',
+      ready:function(){
+        this.flag=0;
+        this.hidecount=true;
+      },
+      FnHideView:function(){
+        this.hidecount=false;
+      },
+      FnCallService:function(){
+        var d=new Date(); 
+        var cy=d.getFullYear(); 
+        var ny='';
+        var m=d.getMonth()+1;
+        if(m>4){
+          cy=parseInt(cy)+1;
+          ny=parseInt(cy)+1;
+        }
+        else{
+          cy=parseInt(cy)-1;
+          ny=parseInt(cy)+1;
+        }
+        academicyear="AY-"+cy+"-"+ny;
+      },
+      FnSelectType:function(e){
+        this.flag=1;
+        type=(e.target.selectedItem.textContent).trim();
+        this.$.feereportservice.FnFetchTransportPendingService(academicyear,grade,type);
+      },
+      FnView:function(){
+        this.$.feereportservice.FnFetchTransportPendingService(academicyear,grade,type);
+      },
+      FnRefresh:function(){
+        this.pendingfeearr=[];
+        document.querySelector('#transportfeepaiddueacyear').selected=-1;
+        document.querySelector('#transportfeepaidduegrade').selected=-1;
+        document.querySelector('#transportfeepaidduetype').selected=-1;
+        this.hidecount=true;
+      },
+      FnSelectGrade:function(e){
+        grade=(e.target.selectedItem.textContent).trim();
+        if(this.flag==1)
+        this.$.feereportservice.FnFetchTransportPendingService(academicyear,grade,type);
+      },
+      FnSelectAcademicYear:function(e){
+        academicyear=(e.target.selectedItem.textContent).trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+        if(this.flag==1)
+        this.$.feereportservice.FnFetchTransportPendingService(academicyear,grade,type);
+      }
+    });
+  })();
+  </script>
+</dom-module>

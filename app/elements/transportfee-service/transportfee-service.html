@@ -406,6 +406,16 @@
         on-response="transportcancellationResponse"
         debounce-duration="300"
         >        
+    <iron-ajax
+        method="post"
+        id="fetchtransportpendingfeeajax"
+        url="{{fetchtransportpendingfeeurl}}"
+        params="{{fetchtransportpendingfeeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtransportpendingfeeResponse"
+        debounce-duration="300"
+        > 
         
   </template>
   <script>
@@ -424,6 +434,63 @@
     var paymentarr=[];
     Polymer({
       is: 'transportfee-service',
+      FnFetchTransportPendingService:function(academicyear,grade,type){
+        this.fetchtransportpendingfeeurl=sessionStorage.getItem("addrinfo")+"/fetchtransportpendingfee-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        obj.type=type;
+        this.fetchtransportpendingfeeparam=obj;
+        this.$.fetchtransportpendingfeeajax.generateRequest();
+      },
+      fetchtransportpendingfeeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        var final=[];
+        for(var i=0;i<arr.length;i++){
+           var obj={};
+           obj.sno=i+1;
+           obj.studentid=arr[i].student_id;
+           obj.studentname=arr[i].student_name;
+           obj.grade=arr[i].class;
+           obj.status=arr[i].admission_status;
+           obj.fees=arr[i].fees;
+           var install1=0;
+           var install2=0;
+           if(arr[i].install1_status=="processing"||arr[i].install1_status=="paid")
+           install1=arr[i].installment_1;
+           if(arr[i].install2_status=="processing"||arr[i].install2_status=="paid")
+           install2=arr[i].installment_2;
+           obj.install1=install1;
+           obj.install2=install2;
+           obj.paidamount=parseFloat(install1)+parseFloat(install2);
+           obj.pendingamount=parseFloat(obj.fees)-parseFloat(obj.paidamount);
+           if(arr[i].installment_pattern=="1")
+           obj.pattern="Installment";
+           if(arr[i].installment_pattern=="2")
+           obj.pattern="Lumpsum";
+           final.push(obj);
+        }
+        // alert(JSON.stringify(final));
+        var totalstud=0;
+        var totalfees=0;
+        var pendingfees=0;
+        var pendingstud=0;
+        totalstud=final.length;
+        for(var i=0;i<final.length;i++){
+            totalfees=parseFloat(totalfees)+parseFloat(final[i].paidamount);
+            if(final[i].pendingamount>0){
+            pendingstud=pendingstud+1;
+            pendingfees=parseFloat(pendingfees)+parseFloat(final[i].pendingamount);
+            }
+        }
+        document.querySelector('transport-feepaiddue-report').hidecount=false;
+        document.querySelector('transport-feepaiddue-report').paidstud=totalstud;
+        document.querySelector('transport-feepaiddue-report').paidfees=totalfees;
+        document.querySelector('transport-feepaiddue-report').pendingstud=pendingstud;
+        document.querySelector('transport-feepaiddue-report').pendingfees=pendingfees;
+        document.querySelector('transport-feepaiddue-report').pendingarr=final;
+      },
       FnCancelTransport:function(studentid){
         this.transportcancellationurl=sessionStorage.getItem("addrinfo")+"/transportcancellation-service";
         var obj={"schoolid":""};

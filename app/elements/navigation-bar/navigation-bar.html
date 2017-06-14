@@ -464,6 +464,9 @@
            <li id="transportdailycollection">
             <a href="" aria-hidden="true" on-click="FnTransportDailyCollection">Transport Daily Collection</a>
            </li>
+           <li id="transportfeeduereport">
+            <a href="" aria-hidden="true" on-click="FnTransportFeeDueReport">Transport Fee Paid & Due Report</a>
+           </li>
            <li id="transportpdccollection">
             <a href="" aria-hidden="true" on-click="FnTransportPdcCollection">PDC Collection</a>
            </li>
@@ -1216,10 +1219,16 @@
           document.querySelector('daycollection-report').FnCallService();
       },
       FnTransportDailyCollection:function(){
-          // this.$.scheduleservice.fetchgradeforreportService();
           document.querySelector('app-list').setPage("transportdaily-collection-report","Transport Daily Collection");
           document.querySelector('transportdaily-collection-report').FnRefresh();
           document.querySelector('transportdaily-collection-report').FnCallService();
+      },
+      FnTransportFeeDueReport:function(){
+          this.$.scheduleservice.fetchacademicyearService();
+          this.$.scheduleservice.fetchgradeforreportService();
+          document.querySelector('app-list').setPage("transport-feepaiddue-report","Transport Fee Paid & Due Report");
+          document.querySelector('transport-feepaiddue-report').FnRefresh();
+          document.querySelector('transport-feepaiddue-report').FnCallService();
       },
       FnTransportPdcCollection:function(){
         document.querySelector('app-list').setPage("transport-pdc-report","Transport PDC Collection");
@@ -1570,6 +1579,8 @@
   
       FnSetRoleView:function(arr){
         // alert(JSON.stringify(arr));
+        this.schoolname=localStorage.getItem("schoolname");
+        this.username=localStorage.getItem("employeename");
         for(var i=0;i<arr.length;i++){
           var id=((arr[i].menu_id).replace(/[^a-zA-Z0-9]/g, '')).toLowerCase();
           // alert(id);
@@ -1592,6 +1603,8 @@
           this.hideschoolmenu=true;
           this.hideschoolname=false;
         }
+        this.$.service.getenquirycount();
+        this.$.service.getadmittedcount();
       },
       FnSignout:function(){
         window.location.href="../index.html";
