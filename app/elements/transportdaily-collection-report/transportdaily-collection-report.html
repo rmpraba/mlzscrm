@@ -19,7 +19,6 @@
                 <div class="col-md-2" style="margin-top: 2%;margin-left: -3%;">
                   <transporttodate-icon-pickercard></transporttodate-icon-pickercard>
                 </div>
-            
                 <div class="col-sm-2" style="margin-left: 5%;">
                 <paper-dropdown-menu label="Select Installment Type" attr-for-selected="value">
                   <paper-menu id="transportdaycollectiontype" class="dropdown-content" required on-iron-select="FnSelectType" valueattr="value" >
@@ -51,14 +50,14 @@
       <thead>
       <tr>
         <th>Sno</th><th>Enr No</th><th>Student Name</th><th>Grade</th>
-        <th>Installment Type</th><th>Mode Of Payment</th><th>Cheque No</th><th>Bank Name</th><th>Cheque Date</th><th>Received Date</th><th>Receipt/Ack No</th><th>Amount</th>
+        <th>Installment Type</th><th>Mode Of Payment</th><th>Cheque No</th><th>Bank Name</th><th>Cheque Date</th><th>Received Date</th><th>Receipt/Ack No</th><th>Amount</th><th>Fine Amount</th><th>Total</th>
       </tr>
       </thead>
       <tbody>
       <template  is="dom-repeat" items="{{transportdaycollectionarr}}" as="item">
         <tr><td>{{item.sno}}</td><td>{{item.studentid}}</td><td>{{item.studentname}}</td><td>{{item.grade}}</td>
         <td>{{item.installment}}</td><td>{{item.modeofpayment}}</td><td>{{item.chequeno}}</td><td>{{item.bankname}}</td><td>{{item.chequedate}}</td><td>{{item.receiveddate}}</td>
-        <td>{{item.receiptno}}</td><td>{{item.amount}}</td></tr>
+        <td>{{item.receiptno}}</td><td>{{item.insamount}}</td><td>{{item.fineamount}}</td><td>{{item.amount}}</td></tr>
       </template>
       <tr></tr>
       </tbody>

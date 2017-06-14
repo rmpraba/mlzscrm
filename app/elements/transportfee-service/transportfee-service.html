@@ -1900,10 +1900,8 @@
         var feearr=e.detail.response.feearr;
         var chequesarr=e.detail.response.chequearr;
         var studarr=e.detail.response.studarr;
-
         // alert(JSON.stringify(e.detail.response.feearr));
         // alert(JSON.stringify(e.detail.response.chequearr));
-
         for(var i=0;i<chequesarr.length;i++){
             var d=new Date(chequesarr[i].cheque_date);
             var mm=(d.getMonth()+1);
@@ -1936,7 +1934,9 @@
             obj.modeofpayment=feearr[i].modeofpayment1;
             obj.receiveddate=feearr[i].paid_date1;
             obj.receiptno=feearr[i].receipt_no1;
-            obj.amount=feearr[i].installment_1;
+            obj.insamount=feearr[i].installment_1;
+            obj.fineamount=feearr[i].install1_fine;
+            obj.amount=parseFloat(feearr[i].installment_1)+parseFloat(feearr[i].install1_fine);
             collection.push(obj);
           }
           if(feearr[i].install2_status=="cleared"||feearr[i].install2_status=="paid"||feearr[i].install2_status=="processing"){
@@ -1948,7 +1948,9 @@
             obj.modeofpayment=feearr[i].modeofpayment2;
             obj.receiveddate=feearr[i].paid_date2;
             obj.receiptno=feearr[i].receipt_no2;
-            obj.amount=feearr[i].installment_2;
+            obj.insamount=feearr[i].installment_2;
+            obj.fineamount=feearr[i].install2_fine;
+            obj.amount=parseFloat(feearr[i].installment_2)+parseFloat(feearr[i].install2_fine);
             collection.push(obj);
           }
         }
