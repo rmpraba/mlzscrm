@@ -2,16 +2,16 @@
  var mysql      = require('mysql');
  var email   = require("emailjs/email");
  var connection = mysql.createConnection({
-  host     : 'localhost',
-  port     : '3306',
-  user     : 'root',
-  password : 'admin',
-  database : 'mlzscrm'
   // host     : 'localhost',
-  // port     : '37506',
-  // user     : 'adminVwbmIka',
-  // password : '6RNH4TEavBhh',
+  // port     : '3306',
+  // user     : 'root',
+  // password : 'admin',
   // database : 'mlzscrm'
+  host     : 'localhost',
+  port     : '37506',
+  user     : 'adminVwbmIka',
+  password : '6RNH4TEavBhh',
+  database : 'mlzscrm'
  }); 
 
 var bodyParser = require('body-parser');
@@ -3286,12 +3286,12 @@ app.post('/getadmittedcount',  urlencodedParser,function (req, res){
 /*this function is to get the count of admission cancellation takes placed by grade wise*/
 app.post('/getcancelledcount',  urlencodedParser,function (req, res){
     var qur={"school_id":req.query.schol};
-    var state={"status":req.query.status};
+    var state={"active_status":req.query.status};
     var acyear={"academic_year":req.query.academicyear};
     //console.log('qur');
     console.log('----------------cancelled count-----------------');
     console.log(acyear);
-    connection.query('SELECT *,class,count(*) as total FROM `student_enquiry_details` WHERE ? and ? and ? group by (class)',[qur,state,acyear],
+    connection.query('SELECT *,class_for_admission as class,count(*) as total FROM `md_admission` WHERE ? and ? and ? group by (class_for_admission)',[qur,state,acyear],
     function(err, rows)
     {
     if(!err)
@@ -4808,15 +4808,17 @@ app.post('/insertreturninfo-service',  urlencodedParser,function (req, res){
            
            connection.query("UPDATE receipt_sequence SET withdraw_seq='"+new_ack_no+"'",function(err, result){
             if(result.affectedRows>0){
-            console.log(result.affectedRows+new_ack_no);
-            
+            console.log(result.affectedRows+new_ack_no);           
             connection.query("SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"'  and academic_year='"+req.query.academicyear+"'",function(err, rows){
               admninfo=rows;
             connection.query("UPDATE md_admission SET active_status='Withdrawn' WHERE school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"'  and academic_year='"+req.query.academicyear+"'",function(err, rows){
-             if(!err){
+            if(!err){
             connection.query("UPDATE student_enquiry_details SET status='Withdrawn' WHERE school_id='"+req.query.schoolid+"' and enquiry_no='"+admninfo[0].enquiry_no+"'  and academic_year='"+req.query.academicyear+"'",function(err, result){
-            connection.query("UPDATE md_student_paidfee SET paid_status='Withdrawn',cheque_status='Withdrawn' WHERE school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"' and academic_year='"+req.query.academicyear+"'",function(err, rows){
+            connection.query("UPDATE md_student_paidfee SET paid_status='Withdrawn',cheque_status='Withdrawn' WHERE school_id='"+req.query.schoolid+"' and admission_no='"+req.query.admissionno+"' and academic_year='"+req.query.academicyear+"'",function(err, result){
+            if(!err){
+            console.log('-----------------'+result.affectedRows);
             res.status(200).json({'returnval': 'Done!','info':response,'receiptno':response.ack_no,'admninfo':admninfo});
+            }
             });
             });
             }
@@ -5938,7 +5940,7 @@ console.log(req.query.schoolid);
 
 
 app.post('/fetchmasterpaidfee-service',  urlencodedParser,function (req, res){
-  var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' or enquiry_no like '"+req.query.admissionno+"') and cheque_status not in ('bounced','cancelled')";
+  var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' or enquiry_no like '"+req.query.admissionno+"') and cheque_status in ('paid','inprogress')";
   console.log('-----------------------------------------------');
   console.log(qur);
   console.log('-----------------------------------------------');
@@ -5960,7 +5962,7 @@ console.log(req.query.schoolid);
   "and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' "+ 
   "or enquiry_no like '"+req.query.admissionno+"')) as fathername,(select mother_name from md_admission where school_id='"+req.query.schoolid+"' "+
   "and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' "+
-  "or enquiry_no like '"+req.query.admissionno+"')) as mothername FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' or enquiry_no like '"+req.query.admissionno+"') and cheque_status not in('bounced','cancelled')";
+  "or enquiry_no like '"+req.query.admissionno+"')) as mothername FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no='"+req.query.admissionno+"' or enquiry_no like '"+req.query.admissionno+"') and cheque_status in('paid','inprogress') ";
   console.log('-----------------------------------------------');
   console.log(qur);
   console.log('-----------------------------------------------');
@@ -7287,6 +7289,194 @@ app.post('/fetchallenrolledadmissions-service',  urlencodedParser,function (req,
               }              
             }
           });
+});
+
+app.post('/fetchalltc-service',  urlencodedParser,function (req, res){
+  if(req.query.grade=='All Grades'){
+  if(req.query.type=="All")
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.active_status in ('cancelled') order by a.class_for_admission";
+  else
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.admission_status='"+req.query.type+"' and a.active_status in ('cancelled') order by a.class_for_admission";
+  }
+  else{
+  if(req.query.type=="All")
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.class_for_admission='"+req.query.grade+"' and s.class_for_admission='"+req.query.grade+"' and a.active_status in ('cancelled') order by a.class_for_admission";
+  else
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.class_for_admission='"+req.query.grade+"' and s.class_for_admission='"+req.query.grade+"' and a.admission_status='"+req.query.type+"' and a.active_status in ('cancelled') order by a.class_for_admission";
+  }
+  console.log('------------------------------------------------------');
+  console.log(qur);
+  console.log('------------------------------------------------------');
+  
+  connection.query(qur,function(err, rows){
+      if(!err){
+              if(rows.length>0){
+              res.status(200).json({'returnval': rows});
+              }
+              else{
+              res.status(200).json({'returnval': 'no rows'});
+              }              
+            }
+          });
+});
+
+app.post('/fetchallwithdrawn-service',  urlencodedParser,function (req, res){
+  if(req.query.grade=='All Grades'){
+  if(req.query.type=="All")
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.active_status in ('withdrawn') order by a.class_for_admission";
+  else
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.admission_status='"+req.query.type+"' and a.active_status in ('withdrawn') order by a.class_for_admission";
+  }
+  else{
+  if(req.query.type=="All")
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.class_for_admission='"+req.query.grade+"' and s.class_for_admission='"+req.query.grade+"' and a.active_status in ('withdrawn') order by a.class_for_admission";
+  else
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.class_for_admission='"+req.query.grade+"' and s.class_for_admission='"+req.query.grade+"' and a.admission_status='"+req.query.type+"' and a.active_status in ('withdrawn') order by a.class_for_admission";
+  }
+  console.log('------------------------------------------------------');
+  console.log(qur);
+  console.log('------------------------------------------------------');
+  
+  connection.query(qur,function(err, rows){
+      if(!err){
+              if(rows.length>0){
+              res.status(200).json({'returnval': rows});
+              }
+              else{
+              res.status(200).json({'returnval': 'no rows'});
+              }              
+            }
+          });
+});
+
+app.post('/fetchallrte-service',  urlencodedParser,function (req, res){
+  if(req.query.grade=='All Grades'){
+  if(req.query.type=="All")
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.active_status in ('Admitted') and a.discount_type='3' order by a.class_for_admission";
+  else
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.admission_status='"+req.query.type+"' and a.active_status in ('Admitted') and a.discount_type='3' order by a.class_for_admission";
+  }
+  else{
+  if(req.query.type=="All")
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.class_for_admission='"+req.query.grade+"' and s.class_for_admission='"+req.query.grade+"' and a.active_status in ('Admitted') and a.discount_type='3' order by a.class_for_admission";
+  else
+  var qur="SELECT * FROM md_admission a join md_student s on(s.admission_no=a.admission_no) WHERE a.school_id='"+req.query.schoolid+"' and s.school_id='"+req.query.schoolid+"' and a.academic_year='"+req.query.academicyear+"' and s.academic_year='"+req.query.academicyear+"' and a.class_for_admission='"+req.query.grade+"' and s.class_for_admission='"+req.query.grade+"' and a.admission_status='"+req.query.type+"' and a.active_status in ('Admitted') and a.discount_type='3' order by a.class_for_admission";
+  }
+  console.log('------------------------------------------------------');
+  console.log(qur);
+  console.log('------------------------------------------------------');
+  
+  connection.query(qur,function(err, rows){
+      if(!err){
+              if(rows.length>0){
+              res.status(200).json({'returnval': rows});
+              }
+              else{
+              res.status(200).json({'returnval': 'no rows'});
+              }              
+            }
+          });
+});
+
+
+app.post('/dailyenrollmentdashboard-service',  urlencodedParser,function (req, res){
+  var qur1="SELECT class_for_admission as grade,count(admission_no) as total FROM md_admission where school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and created_on=sysdate() group by class_for_admission";
+  var qur2="SELECT class_for_admission as grade,count(admission_no) as total FROM md_admission where school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and active_status not in('Default','Discontinued') and admission_status='New' group by class_for_admission";
+  var qur3="SELECT class_for_admission as grade,count(admission_no) as total FROM md_admission where school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and active_status in('Withdrawn') and admission_status='New' group by class_for_admission";
+  var qur4="SELECT class_for_admission as grade,count(admission_no) as total FROM md_admission where school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and active_status in('Admitted') and admission_status='New' group by class_for_admission";
+  var qur5="SELECT class_for_admission as grade,count(admission_no) as total FROM md_admission where school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and active_status in('Provision') and admission_status='New' group by class_for_admission";
+  console.log(qur1);
+  console.log(qur2);
+  console.log(qur3);
+  console.log(qur4);
+  console.log(qur5);
+  var afday=[];
+  var noadmn=[];
+  var nowith=[];
+  var totadmn=[];
+  var proadmn=[];
+  connection.query(qur1,function(err, rows){
+      if(!err){
+      afday=rows;
+      connection.query(qur2,function(err, rows){
+      if(!err){
+        noadmn=rows;
+      connection.query(qur3,function(err, rows){
+      if(!err){
+        nowith=rows;
+      connection.query(qur4,function(err, rows){
+      if(!err){
+        totadmn=rows;
+        connection.query(qur5,function(err, rows){
+        if(!err){
+        proadmn=rows;
+        res.status(200).json({'afday':afday,'noadmn':noadmn,'nowith':nowith,'totadmn':totadmn,'proadmn':proadmn}); 
+        }
+        });
+      }
+      });
+      }
+      });
+      }
+      });
+      } 
+      else {
+        console.log(err);
+      }
+  });
+});
+
+app.post('/dailyenrollmentdashboard-service1',  urlencodedParser,function (req, res){
+  var qur1="SELECT class_for_admission as grade,count(admission_no) as total FROM md_admission where school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_status='Promoted' and active_status not in('Discontinued','Default') group by class_for_admission";
+  var qur2="SELECT class_for_admission as grade,count(admission_no) as total FROM md_admission where school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and active_status in('cancelled') and admission_status='Promoted' group by class_for_admission";
+  var qur3="SELECT class_for_admission as grade,count(admission_no) as total FROM md_admission where school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and active_status in('Admitted') and discount_type='3' group by class_for_admission";
+  var qur4="SELECT class_for_admission as grade,count(admission_no) as total FROM md_admission where school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and active_status in('Admitted') and admission_status='Promoted' group by class_for_admission";
+  var qur5="SELECT class_for_admission as grade,count(admission_no) as total FROM md_admission where school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and active_status in('Admitted') and admission_status in('New','Promoted') group by class_for_admission";
+  var qur="SELECT distinct(class_for_admission) as grade FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' order by class_for_admission";
+  console.log(qur);
+  console.log(qur1);
+  console.log(qur2);
+  console.log(qur3);
+  console.log(qur4);
+  console.log(qur5);
+  var totrollover=[];
+  var tc=[];
+  var rte=[];
+  var rolloverstrength=[];
+  var totstrength=[];
+  connection.query(qur1,function(err, rows){
+      if(!err){
+      totrollover=rows;
+      connection.query(qur2,function(err, rows){
+      if(!err){
+        tc=rows;
+      connection.query(qur3,function(err, rows){
+      if(!err){
+        rte=rows;
+      connection.query(qur4,function(err, rows){
+      if(!err){
+        rolloverstrength=rows;
+        connection.query(qur5,function(err, rows){
+        if(!err){
+        totstrength=rows;
+        connection.query(qur,function(err, rows){
+        if(!err){
+        res.status(200).json({'totrollover':totrollover,'tc':tc,'rte':rte,'rolloverstrength':rolloverstrength,'totstrength':totstrength,'grade':rows}); 
+        }
+        });
+        }
+        });
+      }
+      });
+      }
+      });
+      }
+      });
+      } 
+      else {
+        console.log(err);
+      }
+  });
 });
 
 

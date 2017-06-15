@@ -315,6 +315,18 @@
             <li id="enrollmentreport">
             <a href="" aria-hidden="true" on-click="FnEnrollmentreport">Enrollment Report</a>
             </li>
+            <li id="tcreport">
+            <a href="" aria-hidden="true" on-click="FnTCreport">TC Students Report</a>
+            </li>
+            <li id="withdrawnreport">
+            <a href="" aria-hidden="true" on-click="FnWithdrawnreport">Withdrawn Students Report</a>
+            </li>
+            <li id="rtereport">
+            <a href="" aria-hidden="true" on-click="FnRTEreport">RTE Students Report</a>
+            </li>
+            <li id="enrollmentdashboard">
+            <a href="" aria-hidden="true" on-click="FnEnrollmentDashboard">Enrollment Dashboard</a>
+            </li>
             </ul>
         </li>
 
@@ -1576,7 +1588,35 @@
         document.querySelector('enrollment-report').FnRefresh();
         document.querySelector('enrollment-report').callService();
       },
-  
+      FnTCreport:function(){
+        localStorage.setItem('curr_sess_page','');
+        this.$.scheduleservice.fetchgradeforreportService();
+        this.$.scheduleservice.fetchacademicyearService();
+        document.querySelector('app-list').setPage("tc-report","TC Students");
+        document.querySelector('tc-report').FnRefresh();
+        document.querySelector('tc-report').callService();
+      },
+      FnWithdrawnreport:function(){
+        localStorage.setItem('curr_sess_page','');
+        this.$.scheduleservice.fetchgradeforreportService();
+        this.$.scheduleservice.fetchacademicyearService();
+        document.querySelector('app-list').setPage("withdrawal-report","Withdrawn Students");
+        document.querySelector('withdrawal-report').FnRefresh();
+        document.querySelector('withdrawal-report').callService();
+      },
+      FnRTEreport:function(){
+        localStorage.setItem('curr_sess_page','');
+        this.$.scheduleservice.fetchgradeforreportService();
+        this.$.scheduleservice.fetchacademicyearService();
+        document.querySelector('app-list').setPage("rte-report","RTE Students");
+        document.querySelector('rte-report').FnRefresh();
+        document.querySelector('rte-report').callService();
+      },
+      FnEnrollmentDashboard:function(){
+        document.querySelector('app-list').setPage("enrollment-daily-dashboard","Enrollment Daily Dashboard");
+        document.querySelector('enrollment-daily-dashboard').FnRefresh();
+        document.querySelector('enrollment-daily-dashboard').callService();
+      },
       FnSetRoleView:function(arr){
         // alert(JSON.stringify(arr));
         this.schoolname=localStorage.getItem("schoolname");

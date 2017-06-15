@@ -1,0 +1,225 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="dashboard-service">
+  <template>
+    <iron-ajax
+        method="post"
+        id="dailyenrollmentdashboardajax"
+        url="{{dailyenrollmentdashboardurl}}"
+        params="{{dailyenrollmentdashboardparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="dailyenrollmentdashboardResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="dailyenrollmentdashboardajax1"
+        url="{{dailyenrollmentdashboardurl1}}"
+        params="{{dailyenrollmentdashboardparam1}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="dailyenrollmentdashboardResponse1"
+        debounce-duration="300"
+        >
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'dashboard-service',
+      FnFetchDailyEnrollmentDashboardService:function(academicyear){
+        this.dailyenrollmentdashboardurl=sessionStorage.getItem("addrinfo")+"/dailyenrollmentdashboard-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        this.academicyear=academicyear;
+        this.dailyenrollmentdashboardparam=obj;
+        this.$.dailyenrollmentdashboardajax.generateRequest();
+      },
+      dailyenrollmentdashboardResponse:function(e){
+        this.afday=e.detail.response.afday;
+        this.noadmn=e.detail.response.noadmn;
+        this.nowith=e.detail.response.nowith;
+        this.totadmn=e.detail.response.totadmn;
+        this.proadmn=e.detail.response.proadmn;
+        // if(this.totadmn.length>0)
+        this.FnFetchDailyEnrollmentDashboardService1();
+      },
+      FnFetchDailyEnrollmentDashboardService1:function(){
+        this.dailyenrollmentdashboardurl1=sessionStorage.getItem("addrinfo")+"/dailyenrollmentdashboard-service1";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=this.academicyear;
+        this.dailyenrollmentdashboardparam1=obj;
+        this.$.dailyenrollmentdashboardajax1.generateRequest();
+      },
+      dailyenrollmentdashboardResponse1:function(e){
+        this.totrollover=e.detail.response.totrollover;
+        this.tc=e.detail.response.tc;
+        this.rte=e.detail.response.rte;
+        this.rolloverstrength=e.detail.response.rolloverstrength;
+        this.totstrength=e.detail.response.totstrength;
+        this.grade=e.detail.response.grade;
+        // alert(JSON.stringify(this.totrollover));
+        var totafday=0;
+        var totnoadmn=0;
+        var totnowith=0;
+        var tottotadmn=0;
+        var totproadmn=0;
+        var tottotrollover=0;
+        var tottc=0;
+        var totrte=0;
+        var totrolloverstrength=0;
+        var tottotstrength=0;
+        for(var i=0;i<this.grade.length;i++){
+        if(this.afday.length>0){
+        var c1=0;
+        for(var j=0;j<this.afday.length;j++){
+          if(this.grade[i].grade==this.afday[j].grade){
+          c1=1;
+          totafday=parseInt(this.afday[j].total)+parseInt(totafday);
+          this.grade[i].admissionfortheday=this.afday[j].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].admissionfortheday=0;
+        }
+        else{
+          this.grade[i].admissionfortheday=0;
+        }
+        if(this.noadmn.length>0){
+        var c1=0;
+        for(var k=0;k<this.noadmn.length;k++){
+          if(this.grade[i].grade==this.noadmn[k].grade){
+          c1=1;
+          totnoadmn=parseInt(this.noadmn[k].total)+parseInt(totnoadmn);
+          this.grade[i].noofadmission=this.noadmn[k].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].noofadmission=0;
+        }
+        if(this.nowith.length>0){
+        var c1=0;
+        for(var l=0;l<this.nowith.length;l++){
+          if(this.grade[i].grade==this.nowith[l].grade){
+          c1=1;
+          totnowith=parseInt(this.nowith[l].total)+parseInt(totnowith);
+          this.grade[i].noofwithdrawal=this.nowith[l].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].noofwithdrawal=0;
+        }
+        if(this.totadmn.length>0){
+        var c1=0;
+        for(var m=0;m<this.totadmn.length;m++){
+          if(this.grade[i].grade==this.totadmn[m].grade){
+          c1=1;
+          tottotadmn=parseInt(this.totadmn[m].total)+parseInt(tottotadmn);
+          this.grade[i].totaladmission=this.totadmn[m].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].totaladmission=0;
+        }
+        if(this.proadmn.length>0){
+        var c1=0;
+        for(var n=0;n<this.proadmn.length;n++){
+          if(this.grade[i].grade==this.proadmn[n].grade){
+          c1=1;
+          totproadmn=parseInt(this.proadmn[n].total)+parseInt(totproadmn);
+          this.grade[i].provisionaladmission=this.proadmn[n].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].provisionaladmission=0;
+        }
+        else{
+         this.grade[i].provisionaladmission=0; 
+        }
+
+        if(this.totrollover.length>0){
+        var c1=0;
+        for(var a=0;a<this.totrollover.length;a++){
+          if(this.grade[i].grade==this.totrollover[a].grade){
+          c1=1;
+          tottotrollover=parseInt(this.totrollover[a].total)+parseInt(tottotrollover);
+          this.grade[i].totalrollover=this.totrollover[a].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].totalrollover=0;
+        }
+        if(this.tc.length>0){
+        var c1=0;
+        for(var b=0;b<this.tc.length;b++){
+          if(this.grade[i].grade==this.tc[b].grade){
+          c1=1;
+          tottc=parseInt(this.tc[b].total)+parseInt(tottc);
+          this.grade[i].tc=this.tc[b].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].tc=0;
+        }
+        if(this.rte.length>0){
+        var c1=0;
+        for(var c=0;c<this.rte.length;c++){
+          if(this.grade[i].grade==this.rte[c].grade){
+          c1=1;
+          totrte=parseInt(this.rte[c].total)+parseInt(totrte);
+          this.grade[i].rte=this.rte[c].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].rte=0;
+        }
+        if(this.rolloverstrength.length>0){
+        var c1=0;  
+        for(var d=0;d<this.rolloverstrength.length;d++){
+          if(this.grade[i].grade==this.rolloverstrength[d].grade){
+          c1=1;
+          totrolloverstrength=parseInt(this.rolloverstrength[d].total)+parseInt(totrolloverstrength);
+          this.grade[i].rolloverstrength=this.rolloverstrength[d].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].rolloverstrength=0;
+        }
+        if(this.totstrength.length>0){
+        var c1=0;
+        for(var e=0;e<this.totstrength.length;e++){
+          if(this.grade[i].grade==this.totstrength[e].grade){
+          c1=1;
+          tottotstrength=parseInt(this.totstrength[e].total)+parseInt(tottotstrength);
+          this.grade[i].totalstrength=this.totstrength[e].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].totalstrength=0;
+        }
+
+        }
+        // alert(JSON.stringify(this.grade));
+        var obj={};
+        obj.grade="Total";
+        obj.admissionfortheday=totafday;
+        obj.noofadmission=totnoadmn;
+        obj.noofwithdrawal=totnowith;
+        obj.totaladmission=tottotadmn;
+        obj.provisionaladmission=totproadmn;
+        obj.totalrollover=tottotrollover;
+        obj.tc=tottc;
+        obj.rte=totrte;
+        obj.rolloverstrength=totrolloverstrength;
+        obj.totalstrength=tottotstrength;
+        this.grade.push(obj);
+        document.querySelector('enrollment-daily-dashboard').enrollmentdailydashboardarr=this.grade;
+      }
+    });
+  })();
+  </script>
+</dom-module>

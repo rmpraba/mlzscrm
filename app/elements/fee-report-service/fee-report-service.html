@@ -161,6 +161,36 @@
         >
      <iron-ajax
         method="post"
+        id="fetchalltcajax"
+        url="{{fetchalltcurl}}"
+        params="{{fetchalltcparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchalltcResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchallwithdrawnajax"
+        url="{{fetchallwithdrawnurl}}"
+        params="{{fetchallwithdrawnparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallwithdrawnResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchallrteajax"
+        url="{{fetchallrteurl}}"
+        params="{{fetchallrteparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallrteResponse"
+        debounce-duration="300"
+        >  
+     <iron-ajax
+        method="post"
         id="fetchallenrolledstudentsajax"
         url="{{fetchallenrolledstudentsurl}}"
         params="{{fetchallenrolledstudentsparam}}"
@@ -1973,6 +2003,81 @@
         {
         var arr=[];
         document.querySelector('enrollment-report').enrollmentarr=arr;
+        }
+      },
+       FnFetchAllTCService:function(academicyear,grade,type){
+        this.fetchalltcurl=sessionStorage.getItem("addrinfo")+"/fetchalltc-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        obj.type=type;
+        this.fetchalltcparam=obj;
+        this.$.fetchalltcajax.generateRequest();
+      }, 
+      fetchalltcResponse:function(e){
+        if(e.detail.response.returnval!='no rows'){
+        // this.admission=e.detail.response.returnval;
+        var arr=e.detail.response.returnval;
+        for(var i=0;i<arr.length;i++){
+          arr[i].sno=i+1;
+        }
+        document.querySelector('tc-report').tcarr=e.detail.response.returnval;
+        }
+        else
+        {
+        var arr=[];
+        document.querySelector('tc-report').tcarr=arr;
+        }
+      },
+      FnFetchAllWithdrawnService:function(academicyear,grade,type){
+        this.fetchallwithdrawnurl=sessionStorage.getItem("addrinfo")+"/fetchallwithdrawn-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        obj.type=type;
+        this.fetchallwithdrawnparam=obj;
+        this.$.fetchallwithdrawnajax.generateRequest();
+      }, 
+      fetchallwithdrawnResponse:function(e){
+        if(e.detail.response.returnval!='no rows'){
+        // this.admission=e.detail.response.returnval;
+        var arr=e.detail.response.returnval;
+        for(var i=0;i<arr.length;i++){
+          arr[i].sno=i+1;
+        }
+        document.querySelector('withdrawal-report').withdrawnarr=e.detail.response.returnval;
+        }
+        else
+        {
+        var arr=[];
+        document.querySelector('withdrawal-report').withdrawnarr=arr;
+        }
+      },
+       FnFetchAllRTEService:function(academicyear,grade,type){
+        this.fetchallrteurl=sessionStorage.getItem("addrinfo")+"/fetchallrte-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        obj.type=type;
+        this.fetchallrteparam=obj;
+        this.$.fetchallrteajax.generateRequest();
+      }, 
+      fetchallrteResponse:function(e){
+        if(e.detail.response.returnval!='no rows'){
+        // this.admission=e.detail.response.returnval;
+        var arr=e.detail.response.returnval;
+        for(var i=0;i<arr.length;i++){
+          arr[i].sno=i+1;
+        }
+        document.querySelector('rte-report').rtearr=e.detail.response.returnval;
+        }
+        else
+        {
+        var arr=[];
+        document.querySelector('rte-report').rtearr=arr;
         }
       },
       FnFetchAllStudentsService:function(academicyear,grade){
