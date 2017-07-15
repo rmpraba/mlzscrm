@@ -22,6 +22,26 @@
         on-response="dailyenrollmentdashboardResponse1"
         debounce-duration="300"
         >
+    <iron-ajax
+        method="post"
+        id="admissiondashboardajax"
+        url="{{admissiondashboardurl}}"
+        params="{{admissiondashboardparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="admissiondashboardResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="admissiondashboardajax1"
+        url="{{admissiondashboardurl1}}"
+        params="{{admissiondashboardparam1}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="admissiondashboardResponse1"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
@@ -218,6 +238,262 @@
         obj.totalstrength=tottotstrength;
         this.grade.push(obj);
         document.querySelector('enrollment-daily-dashboard').enrollmentdailydashboardarr=this.grade;
+      },
+      FnFetchAdmissionDashboardService:function(academicyear){
+        this.admissiondashboardurl=sessionStorage.getItem("addrinfo")+"/admissiondashboard-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        this.academicyear=academicyear;
+        this.admissiondashboardparam=obj;
+        this.$.admissiondashboardajax.generateRequest();
+      },
+      admissiondashboardResponse:function(e){
+        this.totalnewadmn=e.detail.response.totalnewadmn;
+        this.newadmnwith=e.detail.response.newadmnwith;
+        this.newadmn=e.detail.response.newadmn;
+        this.rtenewwith=e.detail.response.rtenewwith;
+        this.rteadmn=e.detail.response.rteadmn;
+        this.actualnewadmn=e.detail.response.actualnewadmn;
+        // if(this.totadmn.length>0)
+        this.FnFetchAdmissionDashboardService1();
+      },
+      FnFetchAdmissionDashboardService1:function(){
+        this.admissiondashboardurl1=sessionStorage.getItem("addrinfo")+"/admissiondashboard-service1";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=this.academicyear;
+        this.admissiondashboardparam1=obj;
+        this.$.admissiondashboardajax1.generateRequest();
+      },
+      admissiondashboardResponse1:function(e){
+        this.totrollover=e.detail.response.totrollover;
+        this.rollovertc=e.detail.response.rollovertc;
+        this.rollover=e.detail.response.rollover;
+        this.rtetc=e.detail.response.rtetc;
+        this.rte=e.detail.response.rte;
+        this.rolloverstrength=e.detail.response.rolloverstrength;
+        this.totstrength=e.detail.response.totstrength;
+        this.grade=e.detail.response.grade;
+        // alert(JSON.stringify(this.totrollover));
+        var totalnewadmn=0;
+        var newadmnwith=0;
+        var newadmn=0;
+        var rtenewwith=0;
+        var rteadmn=0;
+        var actualnewadmn=0;
+        var totrollover=0;
+        var rollovertc=0;
+        var rollover=0;
+        var rtetc=0;
+        var rte=0;
+        var rolloverstrength=0
+        var totstrength=0;
+        
+        for(var i=0;i<this.grade.length;i++){
+        if(this.totalnewadmn.length>0){
+        var c1=0;
+        for(var j=0;j<this.totalnewadmn.length;j++){
+          if(this.grade[i].grade==this.totalnewadmn[j].grade){
+          c1=1;
+          totalnewadmn=parseInt(this.totalnewadmn[j].total)+parseInt(totalnewadmn);
+          this.grade[i].totalnewadmn=this.totalnewadmn[j].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].totalnewadmn=0;
+        }
+        else{
+          this.grade[i].totalnewadmn=0;
+        }
+
+
+        if(this.newadmnwith.length>0){
+        var c1=0;
+        for(var k=0;k<this.newadmnwith.length;k++){
+          if(this.grade[i].grade==this.newadmnwith[k].grade){
+          c1=1;
+          newadmnwith=parseInt(this.newadmnwith[k].total)+parseInt(newadmnwith);
+          this.grade[i].newadmnwith=this.newadmnwith[k].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].newadmnwith=0;
+        // else
+          // this.grade[i].newadmnwith=0;
+        }
+
+
+        if(this.newadmn.length>0){
+        var c1=0;
+        for(var l=0;l<this.newadmn.length;l++){
+          if(this.grade[i].grade==this.newadmn[l].grade){
+          c1=1;
+          newadmn=parseInt(this.newadmn[l].total)+parseInt(newadmn);
+          this.grade[i].newadmn=this.newadmn[l].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].newadmn=0;
+        }
+
+
+        if(this.rtenewwith.length>0){
+        var c1=0;
+        for(var m=0;m<this.rtenewwith.length;m++){
+          if(this.grade[i].grade==this.rtenewwith[m].grade){
+          c1=1;
+          rtenewwith=parseInt(this.rtenewwith[m].total)+parseInt(rtenewwith);
+          this.grade[i].rtenewwith=this.rtenewwith[m].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].rtenewwith=0;
+        }
+
+        if(this.rteadmn.length>0){
+        var c1=0;
+        for(var n=0;n<this.rteadmn.length;n++){
+          if(this.grade[i].grade==this.rteadmn[n].grade){
+          c1=1;
+          rteadmn=parseInt(this.rteadmn[n].total)+parseInt(rteadmn);
+          this.grade[i].rteadmn=this.rteadmn[n].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].rteadmn=0;
+        }
+        else{
+         this.grade[i].rteadmn=0; 
+        }
+
+        if(this.actualnewadmn.length>0){
+        var c1=0;
+        for(var n=0;n<this.actualnewadmn.length;n++){
+          if(this.grade[i].grade==this.actualnewadmn[n].grade){
+          c1=1;
+          actualnewadmn=parseInt(this.actualnewadmn[n].total)+parseInt(actualnewadmn);
+          this.grade[i].actualnewadmn=this.actualnewadmn[n].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].actualnewadmn=0;
+        }
+        else{
+         this.grade[i].actualnewadmn=0; 
+        }
+
+        if(this.totrollover.length>0){
+        var c1=0;
+        for(var a=0;a<this.totrollover.length;a++){
+          if(this.grade[i].grade==this.totrollover[a].grade){
+          c1=1;
+          totrollover=parseInt(this.totrollover[a].total)+parseInt(totrollover);
+          this.grade[i].totrollover=this.totrollover[a].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].totrollover=0;
+        }
+
+        if(this.rollovertc.length>0){
+        var c1=0;
+        for(var b=0;b<this.rollovertc.length;b++){
+          if(this.grade[i].grade==this.rollovertc[b].grade){
+          c1=1;
+          rollovertc=parseInt(this.rollovertc[b].total)+parseInt(rollovertc);
+          this.grade[i].rollovertc=this.rollovertc[b].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].rollovertc=0;
+        }
+
+
+        if(this.rollover.length>0){
+        var c1=0;
+        for(var c=0;c<this.rollover.length;c++){
+          if(this.grade[i].grade==this.rollover[c].grade){
+          c1=1;
+          rollover=parseInt(this.rollover[c].total)+parseInt(rollover);
+          this.grade[i].rollover=this.rollover[c].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].rollover=0;
+        }
+
+         if(this.rtetc.length>0){
+        var c1=0;
+        for(var b=0;b<this.rtetc.length;b++){
+          if(this.grade[i].grade==this.rtetc[b].grade){
+          c1=1;
+          rtetc=parseInt(this.rtetc[b].total)+parseInt(rtetc);
+          this.grade[i].rtetc=this.rtetc[b].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].rtetc=0;
+        }
+
+
+        if(this.rte.length>0){
+        var c1=0;
+        for(var c=0;c<this.rte.length;c++){
+          if(this.grade[i].grade==this.rte[c].grade){
+          c1=1;
+          rte=parseInt(this.rte[c].total)+parseInt(rte);
+          this.grade[i].rte=this.rte[c].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].rte=0;
+        }
+
+        if(this.rolloverstrength.length>0){
+        var c1=0;  
+        for(var d=0;d<this.rolloverstrength.length;d++){
+          if(this.grade[i].grade==this.rolloverstrength[d].grade){
+          c1=1;
+          rolloverstrength=parseInt(this.rolloverstrength[d].total)+parseInt(rolloverstrength);
+          this.grade[i].rolloverstrength=this.rolloverstrength[d].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].rolloverstrength=0;
+        }
+        if(this.totstrength.length>0){
+        var c1=0;
+        for(var e=0;e<this.totstrength.length;e++){
+          if(this.grade[i].grade==this.totstrength[e].grade){
+          c1=1;
+          totstrength=parseInt(this.totstrength[e].total)+parseInt(totstrength);
+          this.grade[i].totstrength=this.totstrength[e].total;
+          }          
+        }
+        if(c1==0)
+          this.grade[i].totstrength=0;
+        }
+
+        }
+        // alert(JSON.stringify(this.grade));
+        var obj={};
+        obj.grade="Total";
+        obj.newadmn=newadmn;
+        obj.newadmnwith=newadmnwith;
+        obj.totalnewadmn=totalnewadmn;
+        obj.rtenewwith=rtenewwith;
+        obj.rteadmn=rteadmn;
+        obj.actualnewadmn=actualnewadmn;
+        obj.totrollover=totrollover;
+        obj.rollovertc=rollovertc;
+        obj.rollover=rollover;
+        obj.rtetc=rtetc;
+        obj.rte=rte;
+        obj.rolloverstrength=rolloverstrength;
+        obj.totstrength=totstrength;
+        this.grade.push(obj);
+        document.querySelector('enrollment-dashboard-card').enrollmentdashboardarr=this.grade;
       }
     });
   })();

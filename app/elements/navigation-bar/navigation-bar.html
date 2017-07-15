@@ -327,6 +327,9 @@
             <li id="enrollmentdashboard">
             <a href="" aria-hidden="true" on-click="FnEnrollmentDashboard">Enrollment Dashboard</a>
             </li>
+            <li id="admissiondashboard">
+            <a href="" aria-hidden="true" on-click="FnAdmissionDashboard">Dashboard</a>
+            </li>
             </ul>
         </li>
 
@@ -410,6 +413,48 @@
             </ul>
         </li>
 
+        <li id="reportcollectionreport">
+         <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Collection Report<span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">          
+            <li id="reportbouncecollection">
+            <a href="" aria-hidden="true" on-click="FnBounceCollectionReport">Bounce Collection</a>
+            </li>
+            <li id="reportcollection">
+            <a href="" aria-hidden="true" on-click="FnTCCollectionReport">TC Collection</a>
+            </li>
+            <li id="reportwithdrawcollection">
+            <a href="" aria-hidden="true" on-click="FnWithdrawCollectionReport">Withdrawn Collection</a>
+            </li>
+            <li id="reportapplnfeecollection">
+            <a href="" aria-hidden="true" on-click="FnApplnFeeCollectionReport">Application Fee Collection</a>
+            </li>
+            <li id="reportregfeecollection">
+            <a href="" aria-hidden="true" on-click="FnRegFeeCollectionReport">Registration Fee Collection</a>
+            </li>
+            <li id="reportschoolfeecollection">
+            <a href="" aria-hidden="true" on-click="FnSchoolFeeCollectionReport">School Fee Collection</a>
+            </li>
+            <li id="reportlatefeecollection">
+            <a href="" aria-hidden="true" on-click="FnLateFeeCollectionReport">Late Fee Collection</a>
+            </li>
+            <li id="reportadhocfeecollection">
+            <a href="" aria-hidden="true" on-click="FnAdhocFeeCollectionReport">Adhoc Fee Collection</a>
+            </li>
+            <li id="thirdpartycollection">
+            <a href="" aria-hidden="true" on-click="FnTPCollectionReport">Thirdparty Collection</a>
+            </li>
+            <li id="thirdpartypendingcollection">
+            <a href="" aria-hidden="true" on-click="FnTPPendingCollectionReport">Thirdparty Pending Collection</a>
+            </li>
+            <li id="refundcollectionamount">
+            <a href="" aria-hidden="true" on-click="FnRefundCollectionReport">Refund Amount</a>
+            </li>
+            <li id="collectionreconamount">
+            <a href="" aria-hidden="true" on-click="FnCollectionReconReport">Reconciliation Report</a>
+            </li>
+          </ul>
+        </li>
+
         <li id="dailycollectionreport">
           <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Daily Collection Report<span class="fa arrow"></span></a>
           <ul class="nav nav-second-level">          
@@ -424,9 +469,6 @@
             </li>
             <li id="chequecollectionreport">
             <a href="" aria-hidden="true" on-click="FnchequeCollectionReport">Cheque Collection Report</a>
-            </li>
-            <li id="thirdpartycollection">
-            <a href="" aria-hidden="true" on-click="FnTPCollectionReport">Thirdparty Collection</a>
             </li>
             <li id="rtecollection">
             <a href="" aria-hidden="true" on-click="FnRTECollectionReport">RTE Collection</a>
@@ -1311,9 +1353,6 @@
         document.querySelector('exchange-followup').ready();
       },  
       feereports:function(){
-        // document.querySelector('app-list').setPage("fee-reports","Fee Structure Reports");
-        // this.$.reportingservice.getfeedetails();
-       // document.querySelector('fee-reports').ready();
       },
       gettodayfollowups:function(){
         document.querySelector('app-list').setPage("followup-today-report","Today's Follow Up");
@@ -1616,6 +1655,66 @@
         document.querySelector('app-list').setPage("enrollment-daily-dashboard","Enrollment Daily Dashboard");
         document.querySelector('enrollment-daily-dashboard').FnRefresh();
         document.querySelector('enrollment-daily-dashboard').callService();
+      },
+      FnAdmissionDashboard:function(){
+        document.querySelector('app-list').setPage("enrollment-dashboard-card","Enrollment Dashboard");
+        document.querySelector('enrollment-dashboard-card').FnRefresh();
+        document.querySelector('enrollment-dashboard-card').callService();
+      },
+      FnBounceCollectionReport:function(){
+        document.querySelector('app-list').setPage("bounce-collection-report-card","Bounce Collection");
+        document.querySelector('bounce-collection-report-card').FnRefresh();
+        document.querySelector('bounce-collection-report-card').callService();
+      },
+      FnTCCollectionReport:function(){
+        document.querySelector('app-list').setPage("tc-collection-report-card","TC Collection");
+        document.querySelector('tc-collection-report-card').FnRefresh();
+        document.querySelector('tc-collection-report-card').callService();
+      },
+      FnWithdrawCollectionReport:function(){
+        document.querySelector('app-list').setPage("withdraw-collection-report-card","Withdraw Collection");
+        document.querySelector('withdraw-collection-report-card').FnRefresh();
+        document.querySelector('withdraw-collection-report-card').callService();
+      },
+      FnApplnFeeCollectionReport:function(){
+        document.querySelector('app-list').setPage("appln-collection-report-card","Application Fee Collection");
+        document.querySelector('appln-collection-report-card').FnRefresh();
+        document.querySelector('appln-collection-report-card').callService();
+      },
+      FnRegFeeCollectionReport:function(){
+        document.querySelector('app-list').setPage("regfee-collection-report-card","Registration Fee Collection");
+        document.querySelector('regfee-collection-report-card').FnRefresh();
+        document.querySelector('regfee-collection-report-card').callService();
+      },
+      FnSchoolFeeCollectionReport:function(){
+        document.querySelector('app-list').setPage("schoolfee-collection-report-card","School Fee Collection");
+        document.querySelector('schoolfee-collection-report-card').FnRefresh();
+        document.querySelector('schoolfee-collection-report-card').callService();
+      },
+      FnLateFeeCollectionReport:function(){
+        document.querySelector('app-list').setPage("latefee-collection-report-card","Latefee Collection");
+        document.querySelector('latefee-collection-report-card').FnRefresh();
+        document.querySelector('latefee-collection-report-card').callService();
+      },
+      FnAdhocFeeCollectionReport:function(){
+        document.querySelector('app-list').setPage("adhocfee-collection-report-card","Adhoc Fee Collection");
+        document.querySelector('adhocfee-collection-report-card').FnRefresh();
+        document.querySelector('adhocfee-collection-report-card').callService();
+      },
+      FnTPPendingCollectionReport:function(){
+        document.querySelector('app-list').setPage("tppending-collection-report-card","Third Party Pending Collection");
+        document.querySelector('tppending-collection-report-card').FnRefresh();
+        document.querySelector('tppending-collection-report-card').callService();
+      },
+      FnRefundCollectionReport:function(){
+        document.querySelector('app-list').setPage("refund-collection-card","Refund Collection");
+        document.querySelector('refund-collection-card').FnRefresh();
+        document.querySelector('refund-collection-card').callService();
+      },
+      FnCollectionReconReport:function(){
+        document.querySelector('app-list').setPage("collection-recon-report","Collection Reconciliation");
+        document.querySelector('collection-recon-report').FnRefresh();
+        document.querySelector('collection-recon-report').callService();
       },
       FnSetRoleView:function(arr){
         // alert(JSON.stringify(arr));

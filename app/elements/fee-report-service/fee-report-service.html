@@ -1319,6 +1319,8 @@
               totalarr[i].installmentpattern=paidarr[j].installment_pattern;
               totalarr[i].paidthrough=paidarr[j].payment_through;
               pflag++;
+              if(totalarr[i].referral_type=='2')
+                totalarr[i].remarks="Staff's Kid";
               // alert(pflag);
             }
           }

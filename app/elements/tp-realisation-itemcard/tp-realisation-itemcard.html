@@ -35,6 +35,7 @@
         <paper-listbox class="dropdown-content" id="tpselectinstallment">
           <paper-item value="Installment1">Installment1</paper-item>
           <paper-item value="Installment2">Installment2</paper-item>
+          <paper-item value="Installment3">Installment3</paper-item>
         </paper-listbox>
       </paper-dropdown-menu>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     </td>
@@ -71,6 +72,7 @@
       },
       FnDone:function(){
         var diffamt=parseFloat(parseFloat(this.dueamount)-parseFloat(this.refamount)).toFixed(2);
+        if(installment!="")
         this.$.service.processtprealisation(this.admissionno,this.studentname,this.grade,this.dueamount,this.refno,this.refamount,diffamt,this.installment,installment);
       },
       FnRefresh:function(){

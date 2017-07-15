@@ -1,0 +1,900 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="collection-report-service">
+  <template>
+    <iron-ajax
+        method="post"
+        id="fetchbouncecollectionajax"
+        url="{{fetchbouncecollectionurl}}"
+        params="{{fetchbouncecollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchbouncecollectionResponse"
+        debounce-duration="300"
+        > 
+    <iron-ajax
+        method="post"
+        id="fetchtccollectionajax"
+        url="{{fetchtccollectionurl}}"
+        params="{{fetchtccollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtccollectionResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchwithdrawcollectionajax"
+        url="{{fetchwithdrawcollectionurl}}"
+        params="{{fetchwithdrawcollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchwithdrawcollectionResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchapplncollectionajax"
+        url="{{fetchapplncollectionurl}}"
+        params="{{fetchapplncollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchapplncollectionResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchregfeecollectionajax"
+        url="{{fetchregfeecollectionurl}}"
+        params="{{fetchregfeecollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchregfeecollectionResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchschoolfeecollectionajax"
+        url="{{fetchschoolfeecollectionurl}}"
+        params="{{fetchschoolfeecollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchschoolfeecollectionResponse"
+        debounce-duration="300"
+        >
+     <iron-ajax
+        method="post"
+        id="fetchlatefeecollectionajax"
+        url="{{fetchlatefeecollectionurl}}"
+        params="{{fetchlatefeecollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchlatefeecollectionResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchadhocfeecollectionajax"
+        url="{{fetchadhocfeecollectionurl}}"
+        params="{{fetchadhocfeecollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchadhocfeecollectionResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchtppendingcollectionajax"
+        url="{{fetchtppendingcollectionurl}}"
+        params="{{fetchtppendingcollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtppendingcollectionResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchrefundcollectionajax"
+        url="{{fetchrefundcollectionurl}}"
+        params="{{fetchrefundcollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchrefundcollectionResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchcollectionrecondcinfoajax"
+        url="{{fetchcollectionrecondcinfourl}}"
+        params="{{fetchcollectionrecondcinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectionrecondcinfoResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchcollectionrecondueinfoajax"
+        url="{{fetchcollectionrecondueinfourl}}"
+        params="{{fetchcollectionrecondueinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectionrecondueinfoResponse"
+        debounce-duration="300"
+        >
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'collection-report-service',
+      FnFetchCollectionReconService:function(){
+        this.fetchcollectionrecondcinfourl=sessionStorage.getItem("addrinfo")+"/fetchcollectionrecondcinfo-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchcollectionrecondcinfoparam=obj;
+        this.$.fetchcollectionrecondcinfoajax.generateRequest();
+      },
+      fetchcollectionrecondcinfoResponse:function(e){
+        this.dcreconarr=e.detail.response.returnval;
+        // alert(JSON.stringify(this.dcreconarr));
+        this.FnFetchCollectionReconDueService();
+      },
+      FnFetchCollectionReconDueService:function(){
+        this.fetchcollectionrecondueinfourl=sessionStorage.getItem("addrinfo")+"/pendingfeecollectionreport-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        obj.type="All";
+        obj.grade="All Grades";
+        this.fetchcollectionrecondueinfoparam=obj;
+        this.$.fetchcollectionrecondueinfoajax.generateRequest();
+      },
+      fetchcollectionrecondueinfoResponse:function(e){
+        var totalarr=e.detail.response.totalarr;
+        var paidarr=e.detail.response.paidarr;
+        var pendingarr=e.detail.response.pendingarr;
+        var regfee=e.detail.response.regfee;
+        var feesplitup=e.detail.response.feesplitup;
+
+        for(var j=0;j<totalarr.length;j++){
+          var t=0;
+          for(var i=0;i<regfee.length;i++){
+            if(regfee[i].fee_code==totalarr[j].fee_code){
+              t=1;
+              totalarr[j].regfee=regfee[i].total_fee;
+            }
+          }
+          if(t==0)
+            totalarr[j].regfee=0;
+        }
+
+        if(totalarr.length>0){
+        var pflag=0;
+        var npflag=0;
+        for(var i=0;i<totalarr.length;i++)
+        {
+          totalarr[i].sno=(i+1);
+          var paidamount=0;
+          var paidflag=0;
+          var pendingamount=0;
+          var pendingflag=0;
+          var discountamount=0;
+          if(paidarr.length>0){
+          for(var j=0;j<paidarr.length;j++){
+            if(totalarr[i].admission_no==paidarr[j].admission_no)
+            {
+              paidflag=1;
+              paidamount=parseFloat(paidamount)+(parseFloat(paidarr[j].paidamount)-parseFloat(paidarr[j].diffamount));
+              totalarr[i].paid_amount=paidamount;
+              discountamount=parseFloat(discountamount)+parseFloat(paidarr[j].discountamount);
+              totalarr[i].discount_amount=discountamount;
+              if(paidarr[j].installment_pattern=="1")
+                paidarr[j].installment_pattern="Installment";
+              if(paidarr[j].installment_pattern=="3")
+                paidarr[j].installment_pattern="Lumpsum";
+              if(paidarr[j].installment_pattern=="4")
+                paidarr[j].installment_pattern="Commitment Fee with Lumpsum";
+              totalarr[i].installmentpattern=paidarr[j].installment_pattern;
+              totalarr[i].paidthrough=paidarr[j].payment_through;
+              pflag++;
+            }
+          }
+          if(paidflag==0)
+            {
+            paidamount=parseFloat(paidamount)+parseFloat(0);
+            totalarr[i].paid_amount=paidamount;
+            totalarr[i].discount_amount=0;
+            npflag++;
+            }
+          paidamount=0;
+          paidflag=0;
+          discountamount=0;
+          }
+        }
+        }
+        for(var i=0;i<totalarr.length;i++){
+          totalarr[i].fees=parseFloat(totalarr[i].fees)-parseFloat(totalarr[i].regfee);
+          totalarr[i].total_amount=parseFloat(totalarr[i].fees)-parseFloat(totalarr[i].discount_amount);
+          totalarr[i].pending_amount=parseFloat(totalarr[i].total_amount)-parseFloat(totalarr[i].paid_amount);
+        }
+        for(var i=0;i<totalarr.length;i++){
+        for(var j=0;j<feesplitup.length;j++){
+          if(totalarr[i].fee_code==feesplitup[j].fee_code&&totalarr[i].grade_id==feesplitup[j].grade)
+          {
+            if(feesplitup[j].base_fee_type=="Commitment Fee"){
+              totalarr[i].commitmentfee=feesplitup[j].amount;
+              totalarr[i].payablecommitmentfee=feesplitup[j].amount;
+            }
+            if(feesplitup[j].base_fee_type=="Installment1"){
+              totalarr[i].installment1=feesplitup[j].amount;
+              totalarr[i].payableinstallment1=feesplitup[j].amount;
+            }
+            if(feesplitup[j].base_fee_type=="Installment2"){
+              totalarr[i].installment2=feesplitup[j].amount;
+              totalarr[i].payableinstallment2=feesplitup[j].amount;
+            }
+            if(feesplitup[j].base_fee_type=="Installment3"){
+              totalarr[i].installment3=feesplitup[j].amount;
+              totalarr[i].payableinstallment3=feesplitup[j].amount;
+            }
+          }
+        }
+        }
+
+        for(var i=0;i<totalarr.length;i++){
+          if(totalarr[i].paid_amount>0){
+          var commitfee=parseFloat(totalarr[i].commitmentfee)-7000;
+          if(totalarr[i].discount_amount<=commitfee)
+          { 
+            totalarr[i].payablecommitmentfee=parseFloat(commitfee)-parseFloat(totalarr[i].discount_amount)+7000;
+          }
+          else{
+            var tempdiscount=parseFloat(totalarr[i].discount_amount)-(parseFloat(totalarr[i].commitmentfee)-7000);
+            totalarr[i].payablecommitmentfee=7000;
+            var tempdiscount1=0;
+            if(totalarr[i].installment1>=tempdiscount){
+            tempdiscount1=parseFloat(totalarr[i].installment1)-parseFloat(tempdiscount);
+            totalarr[i].payableinstallment1=parseFloat(totalarr[i].installment1)-parseFloat(tempdiscount);
+            }
+            else{
+            tempdiscount1=parseFloat(tempdiscount)-parseFloat(totalarr[i].installment1); 
+            totalarr[i].payableinstallment1=0;
+            totalarr[i].payableinstallment2=parseFloat(totalarr[i].installment2)-parseFloat(tempdiscount1);
+            }
+            
+          }
+          } 
+        }
+
+        for(var i=0;i<totalarr.length;i++){
+          if(totalarr[i].paid_amount>=0){
+          var paidamt=totalarr[i].paid_amount;
+          totalarr[i].paidcommitmentfee=0;
+          totalarr[i].paidinstallment1=0;
+          totalarr[i].paidinstallment2=0;
+          totalarr[i].paidinstallment3=0;
+          if(paidamt>0){
+          if(paidamt<totalarr[i].payablecommitmentfee){
+          totalarr[i].paidcommitmentfee=paidamt;
+          paidamt=0;
+          }
+          else{
+          paidamt=parseFloat(paidamt)-parseFloat(totalarr[i].payablecommitmentfee);
+          totalarr[i].paidcommitmentfee=totalarr[i].payablecommitmentfee;
+          }
+          }
+          if(paidamt>0){
+          if(paidamt<totalarr[i].payableinstallment1){
+          totalarr[i].paidinstallment1=paidamt;
+          paidamt=0;
+          }
+          else{
+          paidamt=parseFloat(paidamt)-parseFloat(totalarr[i].payableinstallment1);
+          totalarr[i].paidinstallment1=totalarr[i].payableinstallment1;
+          }
+          }
+          if(paidamt>0){
+          if(paidamt<totalarr[i].payableinstallment2){
+          totalarr[i].paidinstallment2=paidamt;
+          paidamt=0;
+          }
+          else{
+          paidamt=parseFloat(paidamt)-parseFloat(totalarr[i].payableinstallment2);
+          totalarr[i].paidinstallment2=totalarr[i].payableinstallment2;
+          }
+          }
+          if(paidamt>0){
+          if(paidamt<totalarr[i].payableinstallment3){
+          totalarr[i].paidinstallment3=paidamt;
+          paidamt=0;
+          }
+          else{
+          paidamt=parseFloat(paidamt)-parseFloat(totalarr[i].payableinstallment3);
+          totalarr[i].paidinstallment3=totalarr[i].payableinstallment3;
+          }
+          }
+          }
+        }
+
+        for(var i=0;i<totalarr.length;i++){
+          totalarr[i].duecommitmentfee=parseFloat(totalarr[i].payablecommitmentfee)-parseFloat(totalarr[i].paidcommitmentfee);
+          totalarr[i].dueinstallment1=parseFloat(totalarr[i].payableinstallment1)-parseFloat(totalarr[i].paidinstallment1);
+          totalarr[i].dueinstallment2=parseFloat(totalarr[i].payableinstallment2)-parseFloat(totalarr[i].paidinstallment2);
+          totalarr[i].dueinstallment3=parseFloat(totalarr[i].payableinstallment3)-parseFloat(totalarr[i].paidinstallment3);
+        }
+        var actualamount=0;
+        var discountamount=0;
+        var payableamount=0;
+        var paidamount=0;
+        var pendingamount=0;
+        var duecommitcnt=0;var duecommitamt=0;
+        var dueins1cnt=0;var dueins1amt=0;
+        var dueins2cnt=0;var dueins2amt=0;
+        var dueins3cnt=0;var dueins3amt=0;
+        for(var i=0;i<totalarr.length;i++){
+          actualamount = parseFloat(actualamount)+parseFloat(totalarr[i].fees);
+          discountamount = parseFloat(discountamount)+parseFloat(totalarr[i].discount_amount);
+          payableamount = parseFloat(payableamount)+parseFloat(totalarr[i].total_amount);
+          paidamount = parseFloat(paidamount)+parseFloat(totalarr[i].paid_amount);
+          pendingamount = parseFloat(pendingamount)+parseFloat(totalarr[i].pending_amount);
+          if(totalarr[i].duecommitmentfee>0){
+            duecommitcnt++;
+            duecommitamt=parseFloat(duecommitamt)+parseFloat(totalarr[i].duecommitmentfee);
+          }
+          if(totalarr[i].dueinstallment1>0){
+            dueins1cnt++;
+            dueins1amt=parseFloat(dueins1amt)+parseFloat(totalarr[i].dueinstallment1);
+          }
+          if(totalarr[i].dueinstallment2>0){
+            dueins2cnt++;
+            dueins2amt=parseFloat(dueins2amt)+parseFloat(totalarr[i].dueinstallment2);
+          }
+          if(totalarr[i].dueinstallment3>0){
+            dueins3cnt++;
+            dueins3amt=parseFloat(dueins3amt)+parseFloat(totalarr[i].dueinstallment3);
+          }
+        }
+
+        var fineamount=0;
+        var dcschoolfee=0;
+        var tppending=0;
+        for(var i=0;i<this.dcreconarr.length;i++){
+          if(this.dcreconarr[i].category=="Fine Amount"){
+            fineamount=this.dcreconarr[i].amount;
+          }
+          if(this.dcreconarr[i].category=="School Fee"){
+            dcschoolfee=this.dcreconarr[i].amount;
+          }
+          if(this.dcreconarr[i].category=="TP Pending Amount"){
+            tppending=parseFloat(tppending)+parseFloat(this.dcreconarr[i].amount);
+          }
+        }
+        var duetotal=0;
+        duetotal=parseFloat(paidamount)+parseFloat(fineamount)+parseFloat(tppending);
+        var dcarr=[];
+        for(var i=0;i<this.dcreconarr.length;i++){
+          if(this.dcreconarr[i].category=="Fine Amount"||this.dcreconarr[i].category=="TP Pending Amount"){
+          }
+          else
+            dcarr.push(this.dcreconarr[i]);
+        }
+        document.querySelector('collection-recon-report').FnHideView();
+        document.querySelector('collection-recon-report').dcarr=dcarr;
+        document.querySelector('collection-recon-report').actualamount=actualamount;
+        document.querySelector('collection-recon-report').discountamount=discountamount;
+        document.querySelector('collection-recon-report').payableamount=payableamount;
+        document.querySelector('collection-recon-report').paidamount=paidamount;
+        document.querySelector('collection-recon-report').pendingamount=pendingamount;
+        document.querySelector('collection-recon-report').duecommitcnt=duecommitcnt;
+        document.querySelector('collection-recon-report').duecommitamt=duecommitamt;
+        document.querySelector('collection-recon-report').dueins1cnt=dueins1cnt;
+        document.querySelector('collection-recon-report').dueins1amt=dueins1amt;
+        document.querySelector('collection-recon-report').dueins2cnt=dueins2cnt;
+        document.querySelector('collection-recon-report').dueins2amt=dueins2amt;
+        document.querySelector('collection-recon-report').dueins3cnt=dueins3cnt;
+        document.querySelector('collection-recon-report').dueins3amt=dueins3amt;
+        document.querySelector('collection-recon-report').tppending=tppending;
+        document.querySelector('collection-recon-report').fineamount=fineamount;
+        document.querySelector('collection-recon-report').dcschoolfee=dcschoolfee;
+        document.querySelector('collection-recon-report').duetotal=duetotal;
+        document.querySelector('collection-recon-report').diffamount=parseFloat(dcschoolfee)-parseFloat(duetotal);
+        // if(totalarr.length>0)
+        // {
+        //   document.querySelector('pendingfee-report').pendingfeearr=totalarr;
+        //   document.querySelector('pendingfee-report').paidcount=pflag;
+        //   document.querySelector('pendingfee-report').notpaidcount=npflag;
+        //   document.querySelector('pendingfee-report').totalcount=parseInt(pflag)+parseInt(npflag);
+        //   document.querySelector('pendingfee-report').FnHideView();
+        //   totalarr=[];
+        //   paidarr=[];
+        // }
+        // else
+        // {
+        //   totalarr=[];
+        //   pflag=0;
+        //   npflag=0;
+        //   document.querySelector('pendingfee-report').pendingfeearr=totalarr;
+        //   document.querySelector('pendingfee-report').paidcount=pflag;
+        //   document.querySelector('pendingfee-report').notpaidcount=npflag;
+        //   document.querySelector('pendingfee-report').totalcount=parseInt(pflag)+parseInt(npflag);
+        // }
+      },
+      FnFetchBounceCollectionService:function(){
+        this.fetchbouncecollectionurl=sessionStorage.getItem("addrinfo")+"/fetchbouncecollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchbouncecollectionparam=obj;
+        this.$.fetchbouncecollectionajax.generateRequest();
+      },
+      fetchbouncecollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var total=0;
+        for(var i=0;i<arr.length;i++){
+          arr[i].fine_amount=0
+          total=parseFloat(total)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          arr[i].total=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
+          }
+          else{
+          var d=new Date(arr[i].cheque_date);
+          var d1=d.getDate();
+          var m1=(d.getMonth())+1;
+          var y1=d.getFullYear();
+          if(d1<10)
+            d1='0'+d1;
+          if(m1<10)
+            m1='0'+m1;
+          var dd1=d1+'/'+m1+'/'+y1;
+          arr[i].cheque_date=dd1;
+          }
+          var dd=new Date(arr[i].received_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].received_date=dd2;
+          arr[i].sno=i+1;
+        }
+        document.querySelector('bounce-collection-report-card').bouncecollectionarr=arr;
+        document.querySelector('bounce-collection-report-card').total=total;
+        document.querySelector('bounce-collection-report-card').FnHideView();
+      },
+      FnFetchTCCollectionService:function(){
+        this.fetchtccollectionurl=sessionStorage.getItem("addrinfo")+"/fetchtccollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchtccollectionparam=obj;
+        this.$.fetchtccollectionajax.generateRequest();
+      },
+      fetchtccollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var total=0;
+        for(var i=0;i<arr.length;i++){
+          total=parseFloat(total)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          arr[i].total=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
+          }
+          else{
+          var d=new Date(arr[i].cheque_date);
+          var d1=d.getDate();
+          var m1=(d.getMonth())+1;
+          var y1=d.getFullYear();
+          if(d1<10)
+            d1='0'+d1;
+          if(m1<10)
+            m1='0'+m1;
+          var dd1=d1+'/'+m1+'/'+y1;
+          arr[i].cheque_date=dd1;
+          }
+          var dd=new Date(arr[i].received_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].received_date=dd2;
+          arr[i].sno=i+1;
+        }
+        document.querySelector('tc-collection-report-card').tccollectionarr=arr;
+        document.querySelector('tc-collection-report-card').total=total;
+        document.querySelector('tc-collection-report-card').FnHideView();
+      },
+      FnFetchWithdrawCollectionService:function(){
+        this.fetchwithdrawcollectionurl=sessionStorage.getItem("addrinfo")+"/fetchwithdrawcollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchwithdrawcollectionparam=obj;
+        this.$.fetchwithdrawcollectionajax.generateRequest();
+      },
+      fetchwithdrawcollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var total=0;
+        for(var i=0;i<arr.length;i++){
+          total=parseFloat(total)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          arr[i].total=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
+          }
+          else{
+          var d=new Date(arr[i].cheque_date);
+          var d1=d.getDate();
+          var m1=(d.getMonth())+1;
+          var y1=d.getFullYear();
+          if(d1<10)
+            d1='0'+d1;
+          if(m1<10)
+            m1='0'+m1;
+          var dd1=d1+'/'+m1+'/'+y1;
+          arr[i].cheque_date=dd1;
+          }
+          var dd=new Date(arr[i].received_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].received_date=dd2;
+          arr[i].sno=i+1;
+        }
+        document.querySelector('withdraw-collection-report-card').withdrawcollectionarr=arr;
+        document.querySelector('withdraw-collection-report-card').total=total;
+        document.querySelector('withdraw-collection-report-card').FnHideView();
+      },
+      FnFetchApplnCollectionService:function(){
+        this.fetchapplncollectionurl=sessionStorage.getItem("addrinfo")+"/fetchapplncollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchapplncollectionparam=obj;
+        this.$.fetchapplncollectionajax.generateRequest();
+      },
+      fetchapplncollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var total=0;
+        for(var i=0;i<arr.length;i++){
+          total=parseFloat(total)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          arr[i].total=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
+          }
+          else{
+          var d=new Date(arr[i].cheque_date);
+          var d1=d.getDate();
+          var m1=(d.getMonth())+1;
+          var y1=d.getFullYear();
+          if(d1<10)
+            d1='0'+d1;
+          if(m1<10)
+            m1='0'+m1;
+          var dd1=d1+'/'+m1+'/'+y1;
+          arr[i].cheque_date=dd1;
+          }
+          var dd=new Date(arr[i].received_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].received_date=dd2;
+          arr[i].sno=i+1;
+        }
+        document.querySelector('appln-collection-report-card').applncollectionarr=arr;
+        document.querySelector('appln-collection-report-card').total=total;
+        document.querySelector('appln-collection-report-card').FnHideView();
+      },
+      FnFetchRegfeeCollectionService:function(){
+        this.fetchregfeecollectionurl=sessionStorage.getItem("addrinfo")+"/fetchregfeecollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchregfeecollectionparam=obj;
+        this.$.fetchregfeecollectionajax.generateRequest();
+      },
+      fetchregfeecollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var total=0;
+        for(var i=0;i<arr.length;i++){
+          total=parseFloat(total)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          arr[i].total=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
+          }
+          else{
+          var d=new Date(arr[i].cheque_date);
+          var d1=d.getDate();
+          var m1=(d.getMonth())+1;
+          var y1=d.getFullYear();
+          if(d1<10)
+            d1='0'+d1;
+          if(m1<10)
+            m1='0'+m1;
+          var dd1=d1+'/'+m1+'/'+y1;
+          arr[i].cheque_date=dd1;
+          }
+          var dd=new Date(arr[i].received_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].received_date=dd2;
+          arr[i].sno=i+1;
+        }
+        document.querySelector('regfee-collection-report-card').regfeecollectionarr=arr;
+        document.querySelector('regfee-collection-report-card').total=total;
+        document.querySelector('regfee-collection-report-card').FnHideView();
+      },
+      FnFetchSchoolfeeCollectionService:function(){
+        this.fetchschoolfeecollectionurl=sessionStorage.getItem("addrinfo")+"/fetchschoolfeecollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchschoolfeecollectionparam=obj;
+        this.$.fetchschoolfeecollectionajax.generateRequest();
+      },
+      fetchschoolfeecollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var total=0;
+        for(var i=0;i<arr.length;i++){
+          total=parseFloat(total)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          arr[i].total=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
+          }
+          else{
+          var d=new Date(arr[i].cheque_date);
+          var d1=d.getDate();
+          var m1=(d.getMonth())+1;
+          var y1=d.getFullYear();
+          if(d1<10)
+            d1='0'+d1;
+          if(m1<10)
+            m1='0'+m1;
+          var dd1=d1+'/'+m1+'/'+y1;
+          arr[i].cheque_date=dd1;
+          }
+          var dd=new Date(arr[i].received_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].received_date=dd2;
+          arr[i].sno=i+1;
+        }
+        document.querySelector('schoolfee-collection-report-card').schoolfeecollectionarr=arr;
+        document.querySelector('schoolfee-collection-report-card').total=total;
+        document.querySelector('schoolfee-collection-report-card').FnHideView();
+      },
+      FnFetchLatefeeCollectionService:function(){
+        this.fetchlatefeecollectionurl=sessionStorage.getItem("addrinfo")+"/fetchlatefeecollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchlatefeecollectionparam=obj;
+        this.$.fetchlatefeecollectionajax.generateRequest();
+      },
+      fetchlatefeecollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var total=0;
+        for(var i=0;i<arr.length;i++){
+          total=parseFloat(total)+parseFloat(arr[i].latefee_amount);
+          // arr[i].total=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
+          }
+          else{
+          var d=new Date(arr[i].cheque_date);
+          var d1=d.getDate();
+          var m1=(d.getMonth())+1;
+          var y1=d.getFullYear();
+          if(d1<10)
+            d1='0'+d1;
+          if(m1<10)
+            m1='0'+m1;
+          var dd1=d1+'/'+m1+'/'+y1;
+          arr[i].cheque_date=dd1;
+          }
+          var dd=new Date(arr[i].received_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].received_date=dd2;
+          arr[i].sno=i+1;
+        }
+        document.querySelector('latefee-collection-report-card').latefeecollectionarr=arr;
+        document.querySelector('latefee-collection-report-card').total=total;
+        document.querySelector('latefee-collection-report-card').FnHideView();
+      },
+       FnFetchAdhocfeeCollectionService:function(){
+        this.fetchadhocfeecollectionurl=sessionStorage.getItem("addrinfo")+"/fetchadhocfeecollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchadhocfeecollectionparam=obj;
+        this.$.fetchadhocfeecollectionajax.generateRequest();
+      },
+      fetchadhocfeecollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var total=0;
+        for(var i=0;i<arr.length;i++){
+          total=parseFloat(total)+parseFloat(arr[i].adhoc_discount);
+          // arr[i].total=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
+          }
+          else{
+          var d=new Date(arr[i].cheque_date);
+          var d1=d.getDate();
+          var m1=(d.getMonth())+1;
+          var y1=d.getFullYear();
+          if(d1<10)
+            d1='0'+d1;
+          if(m1<10)
+            m1='0'+m1;
+          var dd1=d1+'/'+m1+'/'+y1;
+          arr[i].cheque_date=dd1;
+          }
+          var dd=new Date(arr[i].received_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].received_date=dd2;
+          arr[i].sno=i+1;
+        }
+        document.querySelector('adhocfee-collection-report-card').adhocfeecollectionarr=arr;
+        document.querySelector('adhocfee-collection-report-card').total=total;
+        document.querySelector('adhocfee-collection-report-card').FnHideView();
+      },
+      FnFetchTPpendingCollectionService:function(){
+        this.fetchtppendingcollectionurl=sessionStorage.getItem("addrinfo")+"/fetchtppendingcollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchtppendingcollectionparam=obj;
+        this.$.fetchtppendingcollectionajax.generateRequest();
+      },
+      fetchtppendingcollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var instotal=0;
+        var receivedtotal=0;
+        var pendingtotal=0;
+        for(var i=0;i<arr.length;i++){
+          instotal=parseFloat(instotal)+parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          arr[i].instotal=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          receivedtotal=parseFloat(receivedtotal)+(parseFloat(arr[i].installment_amount)-parseFloat(arr[i].difference_amount));
+          arr[i].receivedtotal=(parseFloat(arr[i].installment_amount)-parseFloat(arr[i].difference_amount));
+          pendingtotal=parseFloat(pendingtotal)+parseFloat(arr[i].difference_amount);
+          arr[i].pendingtotal=parseFloat(arr[i].difference_amount);
+          // arr[i].total=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          if(arr[i].cheque_no==""||arr[i].cheque_no==null||arr[i].cheque_no=="null"){
+          }
+          else{
+          var d=new Date(arr[i].cheque_date);
+          var d1=d.getDate();
+          var m1=(d.getMonth())+1;
+          var y1=d.getFullYear();
+          if(d1<10)
+            d1='0'+d1;
+          if(m1<10)
+            m1='0'+m1;
+          var dd1=d1+'/'+m1+'/'+y1;
+          arr[i].cheque_date=dd1;
+          }
+          var dd=new Date(arr[i].received_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].received_date=dd2;
+          arr[i].sno=i+1;
+        }
+        document.querySelector('tppending-collection-report-card').tppendingcollectionarr=arr;
+        document.querySelector('tppending-collection-report-card').instotal=instotal;
+        document.querySelector('tppending-collection-report-card').receivedtotal=receivedtotal;
+        document.querySelector('tppending-collection-report-card').pendingtotal=pendingtotal;
+        document.querySelector('tppending-collection-report-card').FnHideView();
+      },
+       FnFetchRefundCollectionService:function(){
+        this.fetchrefundcollectionurl=sessionStorage.getItem("addrinfo")+"/fetchrefundcollection-service";
+        var obj={"schoolid":"","fromdate":"","todate":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        this.fetchrefundcollectionparam=obj;
+        this.$.fetchrefundcollectionajax.generateRequest();
+      },
+      fetchrefundcollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var total=0;
+        for(var i=0;i<arr.length;i++){
+          total=parseFloat(total)+parseFloat(arr[i].returned_amount);
+          var dd=new Date(arr[i].returned_date);
+          var d2=dd.getDate();
+          var m2=(dd.getMonth())+1;
+          var y2=dd.getFullYear();
+          if(d2<10)
+            d2='0'+d2;
+          if(m2<10)
+            m2='0'+m2;
+          var dd2=d2+'/'+m2+'/'+y2;
+          arr[i].returned_date=dd2;
+          arr[i].sno=i+1;
+        }
+        document.querySelector('refund-collection-card').refundcollectionarr=arr;
+        document.querySelector('refund-collection-card').total=total;
+        document.querySelector('refund-collection-card').FnHideView();
+      }
+
+
+    });
+  })();
+  </script>
+</dom-module>

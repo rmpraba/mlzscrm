@@ -1,0 +1,154 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="collection-recon-report">
+  <template>
+    <style>
+      .datecard {
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-1" style="margin-top: 2%;margin-left: 80%;">
+                <p>Download
+                <a href="#">
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('collectionreconreport', 'Collection Report')"></span>
+                </a>
+                </p>
+                </div> 
+            </div>
+          </div>
+        </div>
+    </div>
+    <div id="collectionreconreport" hidden$="{{hidetable}}">
+     <h3>Daily Collection</h3>
+     <table class="table table-hover">
+      <thead>
+       <tr>
+        <th>Category</th><th>Count</th><th>Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+      <template  is="dom-repeat" items="{{dcarr}}" as="item">
+        <tr><td>{{item.category}}</td><td>{{item.totalcount}}</td><td>{{item.amount}}</td></tr>
+      </template>
+      <tr></tr>
+      </tbody>
+    </table>  
+    <hr>
+    <h3>Fee Paid & Due Report</h3>
+    <table class="table table-hover">
+      <thead>
+       <tr>
+        <th>Actual Amount</th><th>Discount Amount</th><th>Payable after Discount</th>
+        <th>Paid Amount</th><th>Pending Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr><td>{{actualamount}}</td><td>{{discountamount}}</td><td>{{payableamount}}</td><td>{{paidamount}}</td><td>{{pendingamount}}</td></tr>
+      <tr></tr>
+      </tbody>
+    </table> 
+    <hr>
+    <h3>Categorywise Fee Due</h3>
+    <table class="table table-hover">
+      <thead>
+       <tr>
+        <th>Installment</th><th>Count</th><th>Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr><td>Commitment Fee</td><td>{{duecommitcnt}}</td><td>{{duecommitamt}}</td></tr>
+        <tr><td>Installment1</td><td>{{dueins1cnt}}</td><td>{{dueins1amt}}</td></tr>
+        <tr><td>Installment2</td><td>{{dueins2cnt}}</td><td>{{dueins2amt}}</td></tr>
+        <tr><td>Installment3</td><td>{{dueins3cnt}}</td><td>{{dueins3amt}}</td></tr>
+      </tbody>
+    </table>
+    <hr>
+    <h3>Daily Collection Vs Due Report</h3>
+    <hr>
+    <h4>Daily Collection</h4>
+    <table class="table table-hover">
+    <thead>
+       <tr>
+        <th>Category</th><th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr><td>School Fee</td><td>{{dcschoolfee}}</td></tr>
+    </tbody>
+    </table>
+    <h4>Due Report</h4>
+    <table class="table table-hover">
+    <thead>
+       <tr>
+        <th>Category</th><th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr><td>Paid Amount</td><td>{{paidamount}}</td></tr>
+    <tr><td>Fine Amount</td><td>{{fineamount}}</td></tr>
+    <tr><td>TP Pending Amount</td><td>{{tppending}}</td></tr>
+    <tr><td>Total Amount</td><td>{{duetotal}}</td></tr>
+    </tbody>
+    </table>
+    <hr>
+    <h3>Difference B/W Daily Collection Vs Due Report</h3>
+    <table class="table table-hover">
+    <thead>
+       <tr>
+        <th>Category</th><th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr><td>Daily Collection(School fee)</td><td>{{dcschoolfee}}</td></tr>
+    <tr><td>Due Report(School fee)</td><td>{{duetotal}}</td></tr>
+    <tr><td>Difference Amount</td><td>{{diffamount}}</td></tr>
+    </tbody>
+    </table>
+    <hr>
+    </div>
+    <collection-report-service id="collectionreportservice"></collection-report-service>
+  </template>
+  
+  <script type="text/javascript">
+      var tableToExcel = (function() {
+      var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+     return function(table, name) {
+     if (!table.nodeType) table = document.getElementById(table)
+     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+     window.location.href = uri + base64(format(template, ctx))
+     }
+     })()
+  </script>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'collection-recon-report',
+      ready:function(){
+        // this.hidetable=true;
+      },
+      FnHideView:function(){
+        this.hidetable=false;
+      },
+      callService:function(){        
+        this.$.collectionreportservice.FnFetchCollectionReconService();
+      },
+      FnView:function(){
+        this.$.collectionreportservice.FnFetchCollectionReconService();
+      },
+      FnRefresh:function(){
+        this.dcarr="";
+        this.hidetable=true;
+      }
+    });
+  })();
+  </script>
+</dom-module>
