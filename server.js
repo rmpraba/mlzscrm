@@ -10338,7 +10338,7 @@ app.post('/fetchtransportpdccollection-service',  urlencodedParser,function (req
 // " modeofpayment2 in ('Cheque','Card Swipe','Transfer') and install2_status "+
 // " in('processing','paid')) and school_id='"+req.query.schoolid+"')";
 var qur2="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and "+
-" (STR_TO_DATE(paid_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(paid_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) "+
+" (STR_TO_DATE(cheque_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(cheque_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) "+
 " and ((cheque_date in(select installment_date from mlzscrm.transport_fee_schedule where "+
 " installment='Installment2' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"')) or (STR_TO_DATE(cheque_date,'%m/%d/%Y')>STR_TO_DATE('"+req.query.currdate+"','%m/%d/%Y'))) and cheque_status in('processing')";
 var feearr=[];
@@ -10998,13 +10998,17 @@ app.post('/fetchtransportpendingfee-service',  urlencodedParser,function (req, r
   else
   var qur1="select * from transport.student_fee f join transport.student_details d on(f.student_id=d.id) where f.school_id='"+req.query.schoolid+"' and f.academic_year='"+req.query.academicyear+"' and d.school_id='"+req.query.schoolid+"' and d.academic_year='"+req.query.academicyear+"' and d.class='"+req.query.grade+"' and d.admission_status='"+req.query.type+"' and f.admission_status='"+req.query.type+"'";
   }
+  var qur2="SELECT * FROM transport.student_fee WHERE status in('changed')";
   console.log('-------------------------------------------');
   console.log(qur1);
-  
+  var arr=[];
   connection.query(qur1,function(err, rows){
       if(!err)
       {
-        res.status(200).json({'returnval': rows});
+        arr=rows;
+        connection.query(qur2,function(err, rows){
+        res.status(200).json({'returnval': arr,'change':rows});
+        });
       } 
       else 
       {

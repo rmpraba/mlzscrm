@@ -446,6 +446,41 @@
       },
       fetchtransportpendingfeeResponse:function(e){
         var arr=e.detail.response.returnval;
+        var change=e.detail.response.change;
+        // alert(arr.length);
+        // alert(change.length);
+        var temp=[];
+        for(var i=0;i<arr.length;i++){
+        for(var j=0;j<change.length;j++){
+         if(arr[i].student_id==change[j].student_id){
+            var obj=arr.splice(i,1);
+            temp.push(obj[0]);
+            break;
+         }
+        }
+        }
+        // alert(arr.length);   
+
+        for(var i=0;i<temp.length;i++){ 
+           for(var j=i+1;j<temp.length;j++){
+            if(temp[i].student_id==temp[j].student_id){
+            // alert(temp[i].student_id+"  "+temp[j].student_id);
+            if(temp[j].install1_status=="processing"||temp[j].install1_status=="paid"){
+            temp[i].installment_2=temp[j].installment_1;
+            temp[i].install2_status=temp[j].install1_status;
+            temp[i].install2_discount=temp[j].install1_discount;
+            temp[i].fees=parseFloat(temp[i].installment_1)+parseFloat(temp[i].installment_2);
+            temp.splice(j,1);
+            j--;
+            }
+            }
+           } 
+        }
+        // alert(temp.length);
+        // alert(JSON.stringify(temp));
+        for(var i=0;i<temp.length;i++){
+            arr.push(temp[i]);
+        }
         var final=[];
         for(var i=0;i<arr.length;i++){
            var obj={};
@@ -454,13 +489,20 @@
            obj.studentname=arr[i].student_name;
            obj.grade=arr[i].class;
            obj.status=arr[i].admission_status;
-           obj.fees=arr[i].fees;
+           // obj.fees=arr[i].fees;
            var install1=0;
            var install2=0;
-           if(arr[i].install1_status=="processing"||arr[i].install1_status=="paid")
+           var ins1discount=0;
+           var ins2discount=0;
+           if(arr[i].install1_status=="processing"||arr[i].install1_status=="paid"){
            install1=arr[i].installment_1;
-           if(arr[i].install2_status=="processing"||arr[i].install2_status=="paid")
+           // ins1discount=arr[i].install1_discount;
+           }
+           if(arr[i].install2_status=="processing"||arr[i].install2_status=="paid"){
            install2=arr[i].installment_2;
+           // ins1discount=arr[i].install2_discount;
+           }
+           obj.fees=parseFloat(arr[i].fees)-(parseFloat(arr[i].install1_discount)+parseFloat(arr[i].install2_discount));
            obj.install1=install1;
            obj.install2=install2;
            obj.paidamount=parseFloat(install1)+parseFloat(install2);
@@ -1031,14 +1073,14 @@
           document.querySelector('transportfee-card').hiddenaddbtn=false;
           document.querySelector('transportfee-card').hiddenpayment=false;
         if(paidarr=="no rows"){
-            alert('no rows');
+            // alert('no rows');
             document.querySelector('transportfee-card').disableflag=false;
             for(var i=0;i<feearr.length;i++){
               if(feearr[i].installment=='Installment1')
               feearr[i].discountamount=localStorage.getItem("curr_sess_ins1discount");
               if(feearr[i].installment=='Installment2')
               feearr[i].discountamount=localStorage.getItem("curr_sess_ins2discount");
-              alert(feearr[i].discountamount);
+              // alert(feearr[i].discountamount);
               feearr[i].amount=parseInt(feearr[i].amount)+parseInt(feearr[i].discountamount);
               feearr[i].fineamount=0;
               feearr[i].hiddencommitinput=true;
