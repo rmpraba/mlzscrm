@@ -10,6 +10,10 @@
     td{
       text-align: left;
     }
+    paper-dialog{
+      width: 25%;
+      height: 30%;
+    }
     </style>
     <div>
       <table class="table table-hover" id="collectionreport">
@@ -20,6 +24,18 @@
       </thead>
       </table>
     </div>
+     <div>
+      <paper-dialog id="bouncewaiveoffdialog" modal>
+        <div>
+        <center>
+          <h4>Want to waiveoff bounce charge??</h4>
+          <br><br>
+          <paper-button on-click="FnWaiveoffYes">Yes</paper-button>
+          <paper-button on-click="FnWaiveoffNo">No</paper-button>
+        </center>
+        </div>
+      </paper-dialog>
+    </div>
   </template>
   <script>
   (function() {
@@ -28,21 +44,36 @@
     var checkedbox="";
     Polymer({
       is: 'transport-cheque-bouncecancel-itemcard',
+      FnWaiveoffYes:function(){
+        this.$.bouncewaiveoffdialog.toggle();
+        this.waiveoff=1;
+        if(document.querySelector('#transportbounce'+this.sno).checked==true)
+        document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,1,this.waiveoff);
+        if(document.querySelector('#transportbounce'+this.sno).checked==false)
+        document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,0,this.waiveoff);
+      },
+      FnWaiveoffNo:function(){
+        this.waiveoff=0;
+        this.$.bouncewaiveoffdialog.toggle();
+        if(document.querySelector('#transportbounce'+this.sno).checked==true)
+        document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,1,this.waiveoff);
+        if(document.querySelector('#transportbounce'+this.sno).checked==false)
+        document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,0,this.waiveoff);
+      },
       FnBounceHandler:function(e){
         chequestatus="bounce";
+        this.$.bouncewaiveoffdialog.toggle();
         // alert(document.querySelector('#transportbounce'+this.sno).checked);
-        if(document.querySelector('#transportbounce'+this.sno).checked==true)
-        document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,1);
-        if(document.querySelector('#transportbounce'+this.sno).checked==false)
-        document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,0);
+        
       },
       FnCancelHandler:function(e){
         chequestatus="cancel";
+        this.waiveoff=1;
         // alert(document.querySelector('#transportcancel'+this.sno).checked);
         if(document.querySelector('#transportcancel'+this.sno).checked==true)
-        document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,1);
+        document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,1,this.waiveoff);
         if(document.querySelector('#transportcancel'+this.sno).checked==false)
-        document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,0);
+        document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,0,this.waiveoff);
       },
       FnRefresh:function(){
 

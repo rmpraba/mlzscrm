@@ -4,12 +4,13 @@
 <dom-module id="transport-cheque-bouncecancel">
   <template>
     <style>
+
     </style>
      <div class="row">
         <div class="well well-sm">
           <div class="row">
             <div class="col-md-12">
-              <!-- <div class="col-md-6"> -->
+              <!-- <dsiv class="col-md-6"> -->
                 <div class="col-md-3" style="margin-top: -1%;">
                    <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchEnquiry"></paper-input>
                    <paper-listbox class="dropdown-content" id="transportchequebouncecancelinput" on-iron-select="FnSelectEnquiry">
@@ -49,6 +50,7 @@
       </thead>
       </table>
     </div>
+   
     <transport-processing-service id="transportprocessingservice"></transport-processing-service>
     
   </template>
@@ -63,16 +65,18 @@
       ready:function(){
         this.querySelector('#transportchequebouncecancelinput').style.visibility='hidden';
       },
+
       FnSetChequeArray:function(arr){
         allchequesarr=arr;
       },
-      FnPushPopCheques:function(sno,chequestatus,flag){
+      FnPushPopCheques:function(sno,chequestatus,flag,waiveoff){
         // alert(sno+"  "+flag)
         if(flag==1)
         {
           for(var i=0;i<allchequesarr.length;i++){
             if(allchequesarr[i].sno==sno){
               allchequesarr[i].status=chequestatus;
+              allchequesarr[i].waiveoff=waiveoff;
               cheques.push(allchequesarr[i]);
             }
           }

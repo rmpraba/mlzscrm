@@ -2,16 +2,16 @@
  var mysql      = require('mysql');
  var email   = require("emailjs/email");
  var connection = mysql.createConnection({
-  // host     : 'localhost',
-  // port     : '3306',
-  // user     : 'root',
-  // password : 'admin',
-  // database : 'mlzscrm'
   host     : 'localhost',
-  port     : '37506',
-  user     : 'adminVwbmIka',
-  password : '6RNH4TEavBhh',
+  port     : '3306',
+  user     : 'root',
+  password : 'admin',
   database : 'mlzscrm'
+  // host     : 'localhost',
+  // port     : '37506',
+  // user     : 'adminVwbmIka',
+  // password : '6RNH4TEavBhh',
+  // database : 'mlzscrm'
  }); 
 var bodyParser = require('body-parser');
 var app = express();
@@ -10337,10 +10337,17 @@ app.post('/fetchtransportpdccollection-service',  urlencodedParser,function (req
 // " (STR_TO_DATE(paid_date2,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) and "+
 // " modeofpayment2 in ('Cheque','Card Swipe','Transfer') and install2_status "+
 // " in('processing','paid')) and school_id='"+req.query.schoolid+"')";
+// var qur2="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and "+
+// " (STR_TO_DATE(cheque_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(cheque_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) "+
+// " and ((cheque_date in(select installment_date from mlzscrm.transport_fee_schedule where "+
+// " installment='Installment2' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"')) or (STR_TO_DATE(cheque_date,'%m/%d/%Y')>STR_TO_DATE('"+req.query.currdate+"','%m/%d/%Y'))) and cheque_status in('processing')";
 var qur2="SELECT * FROM transport.cheque_details WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and "+
 " (STR_TO_DATE(cheque_date,'%m/%d/%Y')>=STR_TO_DATE('"+req.query.fromdate+"','%m/%d/%Y') and STR_TO_DATE(cheque_date,'%m/%d/%Y')<=STR_TO_DATE('"+req.query.todate+"','%m/%d/%Y')) "+
 " and ((cheque_date in(select installment_date from mlzscrm.transport_fee_schedule where "+
-" installment='Installment2' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"')) or (STR_TO_DATE(cheque_date,'%m/%d/%Y')>STR_TO_DATE('"+req.query.currdate+"','%m/%d/%Y'))) and cheque_status in('processing')";
+" installment='Installment2' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"')) or (STR_TO_DATE(cheque_date,'%m/%d/%Y')>(select distinct(installment_date) from mlzscrm.transport_fee_schedule where "+
+" installment='Installment2' and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and schedule_for='All'))) and "+
+" cheque_status in('processing')";
+
 var feearr=[];
 var chequearr=[];
 // console.log('-------------------------------');
@@ -10690,13 +10697,18 @@ app.post('/processtransportbouncecheque-servicee',  urlencodedParser,function (r
 
 
 app.post('/updatetransportchequestatus-service',urlencodedParser,function (req, res){
+  var waiveoff=0;
+  if(req.query.waiveoff==0)
+    waiveoff=250;
+  if(req.query.waiveoff==1)
+    waiveoff=0;
   var queryy1="UPDATE transport.cheque_details SET cheque_status='"+req.query.chequestatus+"',cancel_date='"+req.query.canceldate+"' WHERE school_id='"+req.query.schoolid+"' and "+
   " academic_year='"+req.query.academicyear+"' and installtype='"+req.query.installmenttype+"' and student_id='"+req.query.studentid+"' and name='"+req.query.studentname+"'";
   if(req.query.installmenttype=="Installment1")
-  var queryy2="UPDATE  transport.student_fee SET install1_status='"+req.query.chequestatus+"' WHERE school_id='"+req.query.schoolid+"' and "+
+  var queryy2="UPDATE  transport.student_fee SET install1_status='"+req.query.chequestatus+"',install1_fine='"+waiveoff+"' WHERE school_id='"+req.query.schoolid+"' and "+
   " academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"' and student_name='"+req.query.studentname+"'";
   if(req.query.installmenttype=="Installment2")
-  var queryy2="UPDATE  transport.student_fee SET install2_status='"+req.query.chequestatus+"' WHERE school_id='"+req.query.schoolid+"' and "+
+  var queryy2="UPDATE  transport.student_fee SET install2_status='"+req.query.chequestatus+"',install2_fine='"+waiveoff+"' WHERE school_id='"+req.query.schoolid+"' and "+
   " academic_year='"+req.query.academicyear+"' and student_id='"+req.query.studentid+"' and student_name='"+req.query.studentname+"'";
  
   console.log('-------------------------------------------');

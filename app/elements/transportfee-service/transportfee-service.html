@@ -2230,6 +2230,7 @@
             obj.actualamount=parseInt(paidarr[i].installment_1)+parseInt(paidarr[i].install1_fine);
             obj.amount=parseInt(paidarr[i].installment_1)+parseInt(paidarr[i].install1_fine);
             obj.installstatus=paidarr[i].install1_status;
+            obj.installfine=paidarr[i].install1_fine;
             obj.installdiscount=paidarr[i].install1_discount;
             collection.push(obj);
           }
@@ -2245,6 +2246,7 @@
             obj.actualamount=parseInt(paidarr[i].installment_2)+parseInt(paidarr[i].install2_fine);
             obj.amount=parseInt(paidarr[i].installment_2)+parseInt(paidarr[i].install2_fine);
             obj.installstatus=paidarr[i].install2_status;
+            obj.installfine=paidarr[i].install2_fine;
             obj.installdiscount=paidarr[i].install2_discount;
             collection.push(obj);
           }
@@ -2319,14 +2321,14 @@
               feearr[i].bankname="";
               feearr[i].chequedate="";
               // feearr[i].discountamount=0;
-
               if(collection[j].installstatus=='bounce')
-              feearr[i].fineamount=250;
+              feearr[i].fineamount=collection[j].installfine;
+              // feearr[i].fineamount=;
               if(collection[j].installstatus=='cancel')
               feearr[i].fineamount=0;
               feearr[i].discountamount=collection[j].installdiscount;
-              feearr[i].actualamount=parseInt(collection[j].amount)+parseInt(feearr[i].fineamount)+parseInt(collection[j].installdiscount);
-              feearr[i].amount=parseInt(collection[j].amount)+parseInt(feearr[i].fineamount);              
+              feearr[i].actualamount=parseInt(collection[j].amount)+parseInt(collection[j].installdiscount);
+              feearr[i].amount=parseInt(collection[j].amount);              
               feearr[i].hiddencommitinput=true;
               feearr[i].hiddencommititem=false;
               feearr[i].paidflag=false;
@@ -2391,9 +2393,10 @@
             obj.receiptdate=paidarr[i].receipt_date1;
             obj.receiptno=paidarr[i].receipt_no1;
             obj.discountamount=parseInt(localStorage.getItem('curr_sess_ins1discount'))+parseInt(localStorage.getItem('curr_sess_ins2discount'));
-            obj.actualamount=parseInt(paidarr[i].installment_1)+parseInt(obj.discountamount);
+            obj.actualamount=parseInt(paidarr[i].installment_1)+parseInt(obj.discountamount)+parseInt(paidarr[i].install1_fine);
             obj.amount=parseInt(paidarr[i].installment_1)+parseInt(paidarr[i].install1_fine);
             obj.installstatus=paidarr[i].install1_status;
+            obj.installfine=paidarr[i].install1_fine;
             collection.push(obj);
           }
           // if(paidarr[i].install2_status!=""){
@@ -2452,11 +2455,12 @@
               feearr[i].chequedate=collection[j].chequedate;
               feearr[i].discountamount=collection[j].discountamount;
               if(collection[j].installstatus=='bounce')
-              feearr[i].fineamount=250;
+              // feearr[i].fineamount=250;
+              feearr[i].fineamount=collection[j].installfine;
               if(collection[j].installstatus=='cancel')
               feearr[i].fineamount=0;
-              feearr[i].amount=parseInt(collection[j].amount)+parseInt(feearr[i].fineamount);
-              feearr[i].actualamount=parseInt(collection[j].actualamount)+parseInt(feearr[i].fineamount);
+              feearr[i].amount=parseInt(collection[j].amount);
+              feearr[i].actualamount=parseInt(collection[j].actualamount);
               feearr[i].hiddencommitinput=true;
               feearr[i].hiddencommititem=false;
               feearr[i].paidflag=false;
