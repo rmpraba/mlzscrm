@@ -259,20 +259,35 @@
     var paymentarr=[];
     Polymer({
       is: 'processing-service',
-      FnFetchprocessingchequeService:function(){
+      FnFetchprocessingchequeService:function(admissionno,type){
         this.fetchprocessingchequeurl=sessionStorage.getItem("addrinfo")+"/fetchprocessingcheque-service";
         var obj={"schoolid":"","fromdate":"","todate":""};
         obj.schoolid=localStorage.getItem("schoolid");
         obj.fromdate=localStorage.getItem("localsess_from_date");
         obj.todate=localStorage.getItem("localsess_to_date");
+        obj.type=type;
+        obj.admissionno=admissionno;
         this.fetchprocessingchequeparam=obj;
         this.$.fetchprocessingchequeajax.generateRequest();
       },
       fetchprocessingchequeResponse:function(e){
         var arr=e.detail.response.returnval;
+        var obj={};
+        obj.sno="S.No";
+        obj.admission_no="Enr/Enq No";
+        obj.student_name="Student Name";
+        obj.grade="Grade";
+        obj.installment_type="Installment Type";
+        obj.cheque_no="Cheque No";
+        obj.bank_name="Bank Name";
+        obj.paid_date="Date";
+        obj.installment_amount="Amount";
+        var temp=[];
+        temp.push(obj);
         if(arr.length!='no rows'){
         for(var i=0;i<arr.length;i++){
           arr[i].sno=i+1;
+          temp.push(arr[i]);
         }
         document.querySelector('cheque-realization-card').chequearr=arr;
         document.querySelector('cheque-realization-card').FnSetChequeArray(arr);
@@ -467,13 +482,14 @@
         obj.installmenttype=cheque[i].installment_type; 
         obj.installment=cheque[i].installment; 
         obj.receiveddate=cheque[i].received_date;       
-        obj.paidstatus=cheque[i].paid_status; 
+        obj.paidstatus=cheque[i].status; 
         obj.chequeno=(cheque[i].cheque_no);        
         obj.bankname=cheque[i].bank_name; 
         obj.chequestatus=cheque[i].status; 
         obj.realiseddate=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
         obj.createdby=localStorage.getItem("employeeid");     
-        this.updatechequestatusparam=obj;     
+        this.updatechequestatusparam=obj;
+        // alert(JSON.stringify(obj));     
         this.$.updatechequestatusajax.generateRequest();
         }
       },
@@ -484,6 +500,7 @@
            alert('Cheques are updated!');
            count1=0;
            count2=0;
+           document.querySelector('cheque-realization-card').FnRefresh();
            document.querySelector('chequebounceorcancel-card').FnRefresh();
            // this.FnFetchprocessingchequeService();
         }      

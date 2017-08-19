@@ -2446,7 +2446,7 @@ insertstudenthistoryResponse:function(e){
         document.querySelector('chequebounceorcancel-card').autocompletearr(e.detail.response.returnval);
         document.querySelector('editdelete-cheques-card').autocompletearr(e.detail.response.returnval);
         document.querySelector('searchreceipt-card').autocompletearr(e.detail.response.returnval);
-        // document.querySelector('attachdiscount-card').autocompletearr(e.detail.response.returnval);
+        document.querySelector('cheque-realization-card').autocompletearr(e.detail.response.returnval);
       },
       updateadmissionchecklistService:function(enquiryno,enquiryname,proofarr,seclanguage,thirdlanguage,grade,academicyear,admissionyear,alergy){
         this.deleteproofService(enquiryno,enquiryname,academicyear,admissionyear,grade,proofarr);
