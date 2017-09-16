@@ -438,6 +438,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       on-response="getdiscountsResponse"
       debounce-duration="300"
     > -->
+    <iron-ajax
+        method="post"
+        id="fetchacademicyearajax"
+        url="{{fetchacademicyearurl}}"
+        params="{{fetchacademicyearparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchacademicyearResponse"
+        debounce-duration="300"
+        >
   </template>
   <script>
   (function() {
@@ -491,6 +501,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     var attenderusername;
     Polymer({
       is: 'crm-service',
+      fetchacademicyearService:function(){        
+        this.fetchacademicyearurl=sessionStorage.getItem("addrinfo")+"/fetchacademicyear-service"
+        this.$.fetchacademicyearajax.generateRequest();
+      },
+      fetchacademicyearResponse:function(e){
+        var arr=e.detail.response.returnval;
+        for(var i=0;i<arr.length;i++){
+          if(arr[i].flag==0){
+            localStorage.setItem("curr_sess_academicyear",arr[i].academic_year);
+          }
+        }
+        document.querySelector('enquiry-card').academicarr=e.detail.response.returnval;
+        document.querySelector('enquiry-card').FnSetDefaultYear();
+        // this.getenquirycount(localStorage.getItem("curr_sess_academicyear"));
+        // this.getadmittedcount(localStorage.getItem("curr_sess_academicyear"));
+      },
       getclasses:function(){
       this.getclassesurl=sessionStorage.getItem("addrinfo")+"/getclasses";
         var obj={"schol":""};
@@ -1102,26 +1128,27 @@ attenderusername=attendername;
         var obj={"schol":"","status":""}
         obj.schol=localStorage.getItem("schoolid");
         obj.status="Enquired";
-        var d=new Date();
-          var y=d.getFullYear();
-          var m=d.getMonth()+1;
-          var academicyear="";
+        // var d=new Date();
+        //   var y=d.getFullYear();
+        //   var m=d.getMonth()+1;
+        //   var academicyear="";
           // if(m<4)
           // {
-            academicyear="AY-"+y+"-"+(parseInt(y)+1);            
+            // academicyear="AY-"+y+"-"+(parseInt(y)+1);            
           // }
           // else{
           //   academicyear="AY-"+(parseInt(y)-1)+"-"+y;
           // }
           // alert(academicyear);
-          sessionStorage.setItem("curr_sess_academicyear",academicyear);
-        obj.academicyear=academicyear;
+          // sessionStorage.setItem("curr_sess_academicyear",academicyear);
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         this.getenquirycountparam=obj;
        //alert(JSON.stringify(obj));
         this.$.getenquirycountajax.generateRequest();
      },
      getenquirycountResponse:function(e){
       var result=e.detail.response.returnval;
+      // alert(JSON.stringify(result));
       document.querySelector('enquiry-card').gradewisearr=result;
      },
       getadmittedcount:function(){
@@ -1129,26 +1156,27 @@ attenderusername=attendername;
         var obj={"schol":"","status":""}
         obj.schol=localStorage.getItem("schoolid");
         obj.status="Admitted";
-        var d=new Date();
-          var y=d.getFullYear();
-          var m=d.getMonth()+1;
-          var academicyear="";
+        // var d=new Date();
+        //   var y=d.getFullYear();
+        //   var m=d.getMonth()+1;
+        //   var academicyear="";
           // if(m<=4)
           // {
           //   academicyear="AY-"+(parseInt(y)-1)+"-"+y;
           // }
           // else{
-            academicyear="AY-"+y+"-"+(parseInt(y)+1);
+            // academicyear="AY-"+y+"-"+(parseInt(y)+1);
           // }
           // alert(academicyear);
-          sessionStorage.setItem("curr_sess_academicyear",academicyear);
-        obj.academicyear=academicyear;
+          // sessionStorage.setItem("curr_sess_academicyear",academicyear);
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         this.getadmittedcountparam=obj;
        //alert(JSON.stringify(obj));
         this.$.getadmittedcountajax.generateRequest();
      },
      getadmittedcountResponse:function(e){
       var result=e.detail.response.returnval;
+      // alert(JSON.stringify(result));
       document.querySelector('enquiry-card').gradewiseadmissionarr=result;
      },
      getprospectno:function(){

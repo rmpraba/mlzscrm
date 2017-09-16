@@ -1175,9 +1175,10 @@
       enquiry:function()
       {
         localStorage.setItem('curr_sess_page','');
-        this.$.service.getenquirycount();
-        this.$.service.getadmittedcount();
-        document.querySelector('detailed-enquiry-form').country();
+        document.querySelector("enquiry-card").ready();
+        // this.$.service.getenquirycount();
+        // this.$.service.getadmittedcount();
+        // document.querySelector('detailed-enquiry-form').country();
         document.querySelector('app-list').setPage("enquiry");
       },
       Master:function()
@@ -1231,9 +1232,7 @@
       Fnenqform:function(){
           document.querySelector('detailed-enquiry-form').Fnclear();
           document.querySelector('detailed-enquiry-form').ready();
-      },
-      
-
+      },     
       FnDiscount:function()
       {
         localStorage.setItem('curr_sess_page','');
@@ -1257,10 +1256,8 @@
       },     
        FnInstallment:function()
       {
-
         document.querySelector('app-list').setPage("installment-master-ui-card","Installment Date");
-        //document.querySelector('installment-master-ui-card').ready();
-          
+        //document.querySelector('installment-master-ui-card').ready();   
       },
       Fnmasteranalysis:function(){
           document.querySelector('app-list').setPage("master-enquiry-analysis","Master Walk-in Analysis");
