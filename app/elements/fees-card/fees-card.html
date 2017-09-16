@@ -55,12 +55,12 @@
                    </template>
                    </paper-listbox>
           </div>
-          <div class="col-md-5" style="margin-top: 5%;">
+          <div class="col-md-5" style="margin-top: 5%;" hidden>
           <paper-checkbox id="schoolfeecurrentyear" on-change="FnCurrentHandler" style="margin-left: 5%;">Current Year</paper-checkbox>
           <paper-checkbox id="schoolfeenextyear" on-change="FnNextHandler" checked style="margin-left: 5%;">Next Year</paper-checkbox>
           </div>
 
-          <div class="col-md-3" style="margin-top: 4.5%;margin-left: -15%;">
+          <div class="col-md-3" style="margin-top: 4.5%;margin-left: 15%;">
             <datepicker-icon-card></datepicker-icon-card>
           </div>
 
@@ -276,22 +276,22 @@
           // var y2=y+1;  
           // academicyear="AY-"+y1+"-"+y2;
           // }
-          var academicyear=""; 
-          var date=new Date();
-          var y=date.getFullYear();  
-          var m=date.getMonth();
-          var d=date.getDate(); 
-          if(m<4){ 
-          var y1=(y-1)+1;
-          var y2=y+1;  
-          academicyear="AY-"+y1+"-"+y2;
-          } 
-          else{
-          var y1=y;
-          var y2=y+1;  
-          academicyear="AY-"+y1+"-"+y2;
-          }
-          localStorage.setItem("curr_sess_academicyear",academicyear); 
+          // var academicyear=""; 
+          // var date=new Date();
+          // var y=date.getFullYear();  
+          // var m=date.getMonth();
+          // var d=date.getDate(); 
+          // if(m<4){ 
+          // var y1=(y-1)+1;
+          // var y2=y+1;  
+          // academicyear="AY-"+y1+"-"+y2;
+          // } 
+          // else{
+          // var y1=y;
+          // var y2=y+1;  
+          // academicyear="AY-"+y1+"-"+y2;
+          // }
+          // localStorage.setItem("curr_sess_academicyear",academicyear); 
           this.hidechangeinspattern=true;
           this.hidelatefeecheckbox=false;
           this.hidelatefeeinput=true;
@@ -628,6 +628,7 @@
         localStorage.setItem("curr_sess_latefeecollection","no");
         this.hidedefaulterlabel=true;
         this.hidecommitinstallment=false;
+        localStorage.setItem("curr_sess_academicyear","");
       },
       FnRefresh1:function(){
         document.querySelector('#structureselfmode').checked=true;
@@ -675,6 +676,7 @@
         localStorage.setItem("curr_sess_latefeecollection","no");
         this.hidedefaulterlabel=true;
         this.hidecommitinstallment=false;
+        localStorage.setItem("curr_sess_academicyear","");
       },
       generalHandler:function(e){
         if(document.querySelector("#structuregeneral1").checked==true)

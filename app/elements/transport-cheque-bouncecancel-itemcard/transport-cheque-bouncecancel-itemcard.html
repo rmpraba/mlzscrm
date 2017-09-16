@@ -62,7 +62,17 @@
       },
       FnBounceHandler:function(e){
         chequestatus="bounce";
+        if(localStorage.getItem("roleid")=="ROLE106"){
         this.$.bouncewaiveoffdialog.toggle();
+        }
+        else
+        {
+        this.waiveoff=0;
+        if(document.querySelector('#transportbounce'+this.sno).checked==true)
+        document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,1,this.waiveoff);
+        if(document.querySelector('#transportbounce'+this.sno).checked==false)
+        document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,0,this.waiveoff);
+        } 
         // alert(document.querySelector('#transportbounce'+this.sno).checked);
         
       },

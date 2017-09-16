@@ -53,11 +53,11 @@
           <enquiry-datepicker showdate="{{enquireddate}}"></enquiry-datepicker>
         </div>
         <div class="col-sm-3" style='margin-top: 1%;'>
-          <paper-checkbox id="nextacademicyear" class="checkbox" on-change="nextyearhandler"> Next Year</paper-checkbox>
+          <paper-checkbox id="thismidyear" class="checkbox" on-change="midyearhandler"> Current Year/Mid Term</paper-checkbox>
         </div>
         <div class="col-sm-3" style='margin-top: 1%;'>
-          <paper-checkbox id="thismidyear" class="checkbox" on-change="midyearhandler"> Mid Term</paper-checkbox>
-        </div>
+          <paper-checkbox id="nextacademicyear" class="checkbox" on-change="nextyearhandler"> Next Year</paper-checkbox>
+        </div>        
       </div>
       <div class="list-group col-sm-12 panel-body form-category">
         <div class="col-sm-4 enquiry-input">
@@ -501,7 +501,7 @@
         var month=dt.getMonth()+1;
         yr1=(dt.getFullYear()-1)-2000;
         yr2=(dt.getFullYear())-2000;
-        yearsxz='AY-'+(dt.getFullYear()-1)+'-'+(dt.getFullYear());
+        yearsxz='AY-'+(dt.getFullYear())+'-'+(dt.getFullYear()+1);
         this.academicyear=yearsxz;
       } else {
         enrolltype=null;
@@ -513,7 +513,7 @@
       var dt=new Date();
       yr1=(dt.getFullYear()+0)-2000;
       yr2=(dt.getFullYear()+1)-2000;
-      yearsxz='AY-'+(dt.getFullYear()+0)+'-'+(dt.getFullYear()+1);
+      yearsxz='AY-'+(dt.getFullYear()+1)+'-'+(dt.getFullYear()+2);
       this.academicyear=yearsxz;
     },
     nextyearhandler:function(e){
@@ -523,7 +523,7 @@
         var dt=new Date();
         yr1=(dt.getFullYear()+0)-2000;
         yr2=(dt.getFullYear()+1)-2000;
-        yearsxz='AY-'+(dt.getFullYear()+0)+'-'+(dt.getFullYear()+1);
+        yearsxz='AY-'+(dt.getFullYear()+1)+'-'+(dt.getFullYear()+2);
         this.academicyear=yearsxz;
       }else{
         enrolltype=null;
@@ -1034,7 +1034,7 @@
         this.getvalues();
       }
       else{
-      this.$.preapps.getenquiryno();
+      this.$.preapps.getenquiryno(enrolltype);
       if(guardianwork == "Yes"){
           parent_or_guardian_work = "guardian";
       } else {
@@ -1366,7 +1366,7 @@
       var dt=new Date();
       yr1=(dt.getFullYear()+0)-2000;
       yr2=(dt.getFullYear()+1)-2000;
-      yearsxz='AY-'+(dt.getFullYear()+0)+'-'+(dt.getFullYear()+1);
+      yearsxz='AY-'+(dt.getFullYear()+1)+'-'+(dt.getFullYear()+2);
       this.academicyear=yearsxz;
       document.querySelector('enquiry-datepicker').ready();
       document.querySelector('dateofbirth-datepicker').ready();

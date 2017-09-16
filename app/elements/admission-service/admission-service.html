@@ -1287,6 +1287,7 @@ insertstudenthistoryResponse:function(e){
      },
      searchfeeadmissionpaidinfoResponse:function(e){
         paidfeearr=e.detail.response.returnval;
+        localStorage.setItem("curr_sess_academicyear",e.detail.response.academicyear);
         if(paidfeearr!='no rows'){
             document.querySelector('fees-card').hidechangeinspattern=false;
             localStorage.setItem("curr_sess_alreadypaidflag",1);

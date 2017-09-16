@@ -497,8 +497,13 @@
         }
         
      },
-     getenquiryno:function(){
+     getenquiryno:function(enrolltype){
       this.getenquirynourl=sessionStorage.getItem("addrinfo")+"/getenquiryno";
+        var dt=new Date();
+        if(enrolltype=="fullyear")
+        this.enqprefix='ENQ'+((dt.getFullYear()+1).toString()).substring(2)+((dt.getFullYear()+2).toString()).substring(2);
+        if(enrolltype=="midyear")
+        this.enqprefix='ENQ'+((dt.getFullYear()).toString()).substring(2)+((dt.getFullYear()+1).toString()).substring(2);
         var obj={"schol":""};
         obj.schol=localStorage.getItem("schoolid");
         this.getenquirynoparam=obj;
@@ -507,7 +512,7 @@
      getenquirynoResponse:function(e){
       seqno=e.detail.response.returnval[0].enquiry_no;
       seqno=seqno+1;
-      var enquiryif="ENQ1718"+seqno;
+      var enquiryif=this.enqprefix+seqno;
       document.querySelector('pre-apps').enquiry_number=enquiryif;
       /*var today = new Date(); var yyyy = today.getFullYear();
       var academicyr=yyyy+'-'+(yyyy+1);

@@ -1621,8 +1621,18 @@ app.post('/fetchenquiryinfo',  urlencodedParser,function (req, res){
 
 // Fetching admission paid info
 app.post('/fetchexistingadmissionpaidinfo',  urlencodedParser,function (req, res){
-    var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no = '"+req.query.admissionno+"' or enquiry_no='"+req.query.admissionno+"') and installment not in ('Registration fee','Application fee') and cheque_status not in ('cancelled')";
-   // console.log(qur);
+    var fetchqur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and (admission_no='"+req.query.admissionno+"' or enquiry_no='"+req.query.admissionno+"') ";
+    console.log('-----------fetch academicyear for already paid scenario-----------');
+    console.log(fetchqur);
+    console.log('------------------------------------------------------------------');
+    connection.query(fetchqur,function(err, rows){
+    if(!err){
+    if(rows.length>0){      
+    var academicyear=rows[0].academic_year;
+    var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+academicyear+"' and (admission_no = '"+req.query.admissionno+"' or enquiry_no='"+req.query.admissionno+"') and installment not in ('Registration fee','Application fee') and cheque_status not in ('cancelled')";
+    console.log('-----------query after academicyear-----------');
+    console.log(qur);
+    console.log('------------------------------------------------------------------');
     connection.query(qur,
     function(err, rows)
     {
@@ -1630,17 +1640,22 @@ app.post('/fetchexistingadmissionpaidinfo',  urlencodedParser,function (req, res
     {
     if(rows.length>0)
     {
-      res.status(200).json({'returnval': rows});
+      res.status(200).json({'returnval': rows,'academicyear':academicyear});
     }
     else
     {
       console.log(err);
-      res.status(200).json({'returnval': 'no rows'});
+      res.status(200).json({'returnval': 'no rows','academicyear':academicyear});
     }
   }
   else{
      console.log(err);
   }
+});
+  }
+}
+else
+ console.log(err);
 });
 });
 
@@ -2617,10 +2632,21 @@ app.post('/fetchregfeediscount-service',  urlencodedParser,function (req, res){
 
 // Fetching admission paid info
 app.post('/fetchexistingadmissionregpaidinfo',  urlencodedParser,function (req, res){
-    var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and (admission_no = '"+req.query.admissionno+"' or enquiry_no='"+req.query.admissionno+"') and installment='"+req.query.feetype+"'";
-  //  console.log(qur);
-    connection.query(qur,
-    function(err, rows)
+    
+    var fetchqur1="SELECT * FROM student_enquiry_details WHERE school_id='"+req.query.schoolid+"' and enquiry_no='"+req.query.admissionno+"' ";
+    var fetchqur2="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and (admission_no='"+req.query.admissionno+"' or enquiry_no='"+req.query.admissionno+"') ";
+    console.log('-------------Console for alreadypaid scenario----------------');
+    console.log(fetchqur1);
+    console.log(fetchqur2);
+    connection.query(fetchqur1,function(err, rows){
+    if(!err){
+    if(rows.length>0){      
+    var academicyear=rows[0].academic_year
+    var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+academicyear+"' and (admission_no = '"+req.query.admissionno+"' or enquiry_no='"+req.query.admissionno+"') and installment='"+req.query.feetype+"'";
+    console.log('----------console after fetching academicyear-------------');
+    console.log(qur);
+    console.log('----------------------------------------------------------');
+    connection.query(qur,function(err, rows)
     {
     if(!err)
     {
@@ -2638,10 +2664,43 @@ app.post('/fetchexistingadmissionregpaidinfo',  urlencodedParser,function (req, 
      console.log(err);
   }
 });
+  }
+  else{
+    connection.query(fetchqur2,function(err, rows){
+    if(!err){
+    if(rows.length>0){  
+    var academicyear=rows[0].academic_year
+    var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+academicyear+"' and (admission_no = '"+req.query.admissionno+"' or enquiry_no='"+req.query.admissionno+"') and installment='"+req.query.feetype+"'";
+    console.log('----------console after fetching academicyear-------------');
+    console.log(qur);
+    console.log('----------------------------------------------------------');
+    connection.query(qur,function(err, rows)
+    {
+    if(!err)
+    {
+    if(rows.length>0)
+    {
+      res.status(200).json({'returnval': rows});
+    }
+    else
+    {
+      console.log(err);
+      res.status(200).json({'returnval': 'no rows'});
+    }
+  }
+  else{
+     console.log(err);
+  }
+  });
+    }
+  }
 });
-
-
-
+  }
+}
+else
+console.log(err);
+});
+});
 
 // Fetching fees splitup
 app.post('/fetchnoofinstallment',  urlencodedParser,function (req, res){
@@ -4883,11 +4942,11 @@ app.post('/updatechequestatus-service',  urlencodedParser,function (req, res){
   
   var masterupdate="UPDATE md_student_paidfee SET paid_status='inprogress' , cheque_status='"+req.query.chequestatus+"' WHERE (admission_no='"+req.query.admissionno+"' or admission_no='"+req.query.enquiryno+"') "+
   " and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment='"+req.query.installment+"' and "+
-  " cheque_no='"+req.query.chequeno+"' and bank_name='"+req.query.bankname+"' and paid_status='"+req.query.paidstatus+"'";
+  " cheque_no='"+req.query.chequeno+"' and bank_name='"+req.query.bankname+"' and paid_status='inprogress'";
 
   var chequeupdate="UPDATE tr_cheque_details SET paid_status='inprogress',cheque_status='"+req.query.chequestatus+"' WHERE (admission_no='"+req.query.admissionno+"' or admission_no='"+req.query.enquiryno+"') "+
   " and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment='"+req.query.installment+"' and "+
-  " cheque_no='"+req.query.chequeno+"' and bank_name='"+req.query.bankname+"' and cheque_status='"+req.query.paidstatus+"'";
+  " cheque_no='"+req.query.chequeno+"' and bank_name='"+req.query.bankname+"' and cheque_status='inprogress'";
 
 
   console.log('----------------------------------------------');
@@ -4928,7 +4987,7 @@ app.post('/updatechequestatus-service',  urlencodedParser,function (req, res){
     var fine=rows[0].fine_amount;
     var masterupdate="UPDATE md_student_paidfee SET fine_amount='"+rows[0].fine_amount+"',bounce_date='"+req.query.realiseddate+"',realised_date='"+req.query.realiseddate+"',paid_status='inprogress',cheque_status='"+req.query.chequestatus+"' WHERE (admission_no='"+req.query.admissionno+"' or admission_no='"+req.query.enquiryno+"') "+
     " and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment='"+req.query.installment+"' and "+
-    " cheque_no='"+req.query.chequeno+"' and bank_name='"+req.query.bankname+"' and paid_status='"+req.query.paidstatus+"'";
+    " cheque_no='"+req.query.chequeno+"' and bank_name='"+req.query.bankname+"' ";
 
    var chequeupdate="UPDATE tr_cheque_details SET realised_date='"+req.query.realiseddate+"',paid_status='inprogress',cheque_status='"+req.query.chequestatus+"' WHERE (admission_no='"+req.query.admissionno+"' or admission_no='"+req.query.enquiryno+"') "+
     " and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment='"+req.query.installment+"' and "+
@@ -4950,7 +5009,7 @@ app.post('/updatechequestatus-service',  urlencodedParser,function (req, res){
    else if(req.query.chequestatus=="cancelled"){
    var masterupdate="DELETE FROM md_student_paidfee WHERE (admission_no='"+req.query.admissionno+"' or admission_no='"+req.query.enquiryno+"') "+
     " and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment='"+req.query.installment+"' and "+
-    " cheque_no='"+req.query.chequeno+"' and bank_name='"+req.query.bankname+"' and paid_status='"+req.query.paidstatus+"'";
+    " cheque_no='"+req.query.chequeno+"' and bank_name='"+req.query.bankname+"' ";
 
    var chequeupdate="DELETE FROM tr_cheque_details WHERE (admission_no='"+req.query.admissionno+"' or admission_no='"+req.query.enquiryno+"') "+
     " and school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and grade='"+req.query.grade+"' and installment='"+req.query.installment+"' and "+
@@ -6943,7 +7002,6 @@ app.post('/admissionsrequired',  urlencodedParser,function (req, res){
        }
      });
 });
-
 
 app.post('/fetchallstudentenquirysearch-service',  urlencodedParser,function (req, res){
   var qur="SELECT distinct(enquiry_no),enquiry_name FROM student_enquiry_details where school_id='"+req.query.schoolid+"' and status='Enquired'";

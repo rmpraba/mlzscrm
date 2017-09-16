@@ -197,6 +197,7 @@
         // alert(JSON.stringify(e.detail.response.returnval));
         var enqarr=e.detail.response.returnval;
         document.querySelector('prospectousfee-card').academicyear=enqarr[0].academic_year;
+        localStorage.setItem("curr_sess_academicyear",enqarr[0].academic_year);
         document.querySelector('prospectousfee-card').enquiredclass=enqarr[0].class;
         document.querySelector('prospectousfee-card').studentname=enqarr[0].enquiry_name;
         document.querySelector('prospectousfee-card').parentname=enqarr[0].father_name;
@@ -318,13 +319,13 @@
         var arr=e.detail.response.returnval;
         // alert('admission info..........'+JSON.stringify(arr));
         if(arr!='no rows'){
-        document.querySelector('registerationfee-card').acyear=arr[0].academic_year;
+        document.querySelector('registerationfee-card').acyear=arr[0].academic_year;        
         document.querySelector('registerationfee-card').academicyear=arr[0].admission_year;
         document.querySelector('registerationfee-card').enquiredclass=arr[0].class_for_admission;
         document.querySelector('registerationfee-card').studentname=arr[0].student_name;
         document.querySelector('registerationfee-card').parentname=arr[0].father_name;
         document.querySelector('registerationfee-card').dob=arr[0].dob;
-        // localStorage.setItem("curr_sess_academicyear",arr[0].academic_year);
+        localStorage.setItem("curr_sess_academicyear",arr[0].academic_year);
         localStorage.setItem("curr_sess_admissionyear",arr[0].admission_year);
         localStorage.setItem("curr_sess_grade",arr[0].class_for_admission);
         localStorage.setItem("curr_sess_studentname",arr[0].student_name);

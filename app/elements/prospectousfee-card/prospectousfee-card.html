@@ -47,16 +47,15 @@
                    </template>
                    </paper-listbox>
         </div>
-        <div class="col-md-6" style="margin-top: 5%;">
+        <div class="col-md-6" style="margin-top: 5%;" hidden>
         <paper-checkbox id="applnfeecurrentyear" on-change="FnCurrentHandler" style="margin-left: 5%;">Current Year</paper-checkbox>
         <paper-checkbox checked id="applnfeenextyear" on-change="FnNextHandler" style="margin-left: 5%;">Next Year</paper-checkbox>
         </div>
 
-        <div class="col-md-3" style="margin-top: 4.5%;margin-left: -15%;">
+        <div class="col-md-3" style="margin-top: 4.5%;margin-left: 8%;">
             <datepicker-icon-card></datepicker-icon-card>
         </div>
      </div>
-
 
      <div class="list-group col-sm-12 panel-body form-category">
       <div class="col-sm-5 enquiry-input" hidden>
@@ -136,10 +135,10 @@
         localStorage.setItem("curr_sess_waiveoff",0);
         localStorage.setItem("curr_sess_fees",0);
           var academicyear=""; 
-          var date=new Date();
-          var y=date.getFullYear();  
-          var m=date.getMonth();
-          var d=date.getDate(); 
+          // var date=new Date();
+          // var y=date.getFullYear();  
+          // var m=date.getMonth();
+          // var d=date.getDate(); 
           // if(m<4){ 
           // var y1=y-1;
           // var y2=y;  
@@ -150,24 +149,23 @@
           // var y2=y+1;  
           // academicyear="AY-"+y1+"-"+y2;
           // }
-          var academicyear=""; 
-          var date=new Date();
-          var y=date.getFullYear();  
-          var m=date.getMonth();
-          var d=date.getDate(); 
-          if(m<4){ 
-          var y1=(y-1)+1;
-          var y2=y+1;  
-          academicyear="AY-"+y1+"-"+y2;
-          } 
-          else{
-          var y1=y;
-          var y2=y+1;  
-          academicyear="AY-"+y1+"-"+y2;
-          }
+          // var academicyear=""; 
+          // var date=new Date();
+          // var y=date.getFullYear();  
+          // var m=date.getMonth();
+          // var d=date.getDate(); 
+          // if(m<4){ 
+          // var y1=(y-1)+1;
+          // var y2=y+1;  
+          // academicyear="AY-"+y1+"-"+y2;
+          // } 
+          // else{
+          // var y1=y;
+          // var y2=y+1;  
+          // academicyear="AY-"+y1+"-"+y2;
+          // }
           // localStorage.setItem("curr_sess_academicyear",academicyear);
-          localStorage.setItem("curr_sess_academicyear",academicyear); 
-
+          // localStorage.setItem("curr_sess_academicyear",academicyear);
       },  
       FnCurrentHandler:function(e){
         if(document.querySelector('#applnfeecurrentyear').checked==true)
@@ -213,6 +211,7 @@
           var y=date.getFullYear();  
           var m=date.getMonth();
           var d=date.getDate(); 
+          academicyear="AY-"+(y1+1)+"-"+(y2+2);
           // if(m<4){ 
           // var y1=(y-1)+1;
           // var y2=y+1;  
@@ -223,16 +222,16 @@
           // var y2=y+1+1;  
           // academicyear="AY-"+y1+"-"+y2;
           // }
-          if(m<4){ 
-          var y1=(y-1)+1;
-          var y2=y+1;  
-          academicyear="AY-"+y1+"-"+y2;
-          } 
-          else{
-          var y1=y+1;
-          var y2=y+1+1;  
-          academicyear="AY-"+y1+"-"+y2;
-          }
+          // if(m<4){ 
+          // var y1=(y-1)+1;
+          // var y2=y+1;  
+          // academicyear="AY-"+y1+"-"+y2;
+          // } 
+          // else{
+          // var y1=y+1;
+          // var y2=y+1+1;  
+          // academicyear="AY-"+y1+"-"+y2;
+          // }
           localStorage.setItem("curr_sess_academicyear",academicyear);
           this.$.appregfeeservice.searchfeeadmissionpaidinfoService(localStorage.getItem("curr_sess_enquiryno"));
           this.$.appregfeeservice.searchprospectenquiryinfo(localStorage.getItem("curr_sess_enquiryno"));
@@ -275,7 +274,6 @@
       FnHiddenPayment:function(){
         this.hiddenpayment=false;
       },
-      
       FnSetfee:function(installmentarr){
         installment=installmentarr;
         // alert(JSON.stringify(installment));
@@ -334,13 +332,14 @@
         document.querySelector('#applnfeenextyear').checked=true;
         document.querySelector('#applnfeecurrentyear').checked=false;
         document.querySelector('datepicker-icon-card').ready();
+        localStorage.setItem("curr_sess_academicyear","");
       },
       callService:function(){
         this.$.appregfeeservice.fetchallstudentenquirysearchService();
       },
       autocompletearr:function(autocompletearr)
       {
-         item=autocompletearr;
+        item=autocompletearr;
       },
       FnSearchEnquiryy:function(e){
       if(e.keyCode==13|| e.keyCode==40)

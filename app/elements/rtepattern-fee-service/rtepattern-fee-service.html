@@ -107,6 +107,7 @@
      },
      searchfeeadmissionpaidinfoResponse:function(e){
         paidfeearr=e.detail.response.returnval;
+        localStorage.setItem("curr_sess_academicyear",e.detail.response.academicyear);
         // alert(JSON.stringify(paidfeearr));
         if(paidfeearr!='no rows'){
             var mode=paidfeearr[0].payment_through;
