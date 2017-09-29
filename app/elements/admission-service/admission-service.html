@@ -1289,18 +1289,21 @@ insertstudenthistoryResponse:function(e){
         paidfeearr=e.detail.response.returnval;
         localStorage.setItem("curr_sess_academicyear",e.detail.response.academicyear);
         if(paidfeearr!='no rows'){
+            if(localStorage.getItem("curr_sess_feetypepaymentflag")==paidfeearr[0].paymenttype_flag){
             document.querySelector('fees-card').hidechangeinspattern=false;
             localStorage.setItem("curr_sess_alreadypaidflag",1);
             // alert(localStorage.getItem("curr_sess_installmentpatternchange"));
             if(localStorage.getItem("curr_sess_installmentpatternchange")!='true')
             {
             // alert('coming'+paidfeearr[0].installment_pattern);
-
             var mode=paidfeearr[0].payment_through;
             localStorage.setItem("curr_sess_installmentpattern",paidfeearr[0].installment_pattern);
             var pattern=paidfeearr[0].installment_pattern;
             document.querySelector('fees-card').FnSetPaidPattern(mode,pattern);
             document.querySelector('fees-card').FnSetDisableFlag(true);
+            }
+            else
+            alert("It is not collected under this type!!");
             }
             this.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
         }
@@ -1769,6 +1772,7 @@ insertstudenthistoryResponse:function(e){
                 // alert(arr[i].base_fee_type+"  "+arr[i].fee_type+"  "+discountarr[j].fee_type);
                 if(localStorage.getItem("curr_sess_alreadypaidflag")==0){
                 if(arr[i].base_fee_type=="Commitment Fee"){ 
+                    // alert("In commit fee");
                     // alert(arr[i].fee_type+" "+discountarr[j].fee_type);
                     if(arr[i].fee_type==discountarr[j].fee_type){  
                       if(arr[i].amount>0&&discountarr[j].amount>0) {
@@ -1815,24 +1819,23 @@ insertstudenthistoryResponse:function(e){
                 }
 
                 else{
-                    // alert(arr[i].fee_type+"  "+discountarr[j].amount);
+               
                     if(arr[i].fee_type==discountarr[j].fee_type&&discountarr[j].amount>0){
-                        // alert('if...'+discountarr[j].amount);
-
+                        
                       for(var n=0;n<inscount.length;n++){
                         if(inscount[n].fee_type==arr[i].fee_type){
                             noofinstallment=inscount[n].count;
                         }
                       }
-
+                      
                        if(arr[i].amount>0&&(i!=(parseInt(arr.length)))){
                        flag=1;
                        arr[i].actualamount=parseFloat(arr[i].amount);
                        if(noofinstallment>1){
                         var discountamt=(Math.ceil(Math.abs(parseFloat(
-                         parseFloat(discountarr[j].amount)/(parseInt(noofinstallment))-parseInt(arr[i].amount))/1000))*1000).toFixed(2);
+                        parseFloat(discountarr[j].amount)/(parseInt(noofinstallment))-parseInt(arr[i].amount))/1000))*1000).toFixed(2);
                         arr[i].amount=parseFloat(parseFloat(arr[i].amount)-(Math.ceil(Math.abs(parseFloat(
-                         parseFloat(discountarr[j].amount)/(parseInt(noofinstallment))-parseInt(arr[i].amount))/1000))*1000)).toFixed(2);
+                        parseFloat(discountarr[j].amount)/(parseInt(noofinstallment))-parseInt(arr[i].amount))/1000))*1000)).toFixed(2);
                        discountarr[j].amount=parseFloat(parseFloat(discountarr[j].amount)-parseFloat(discountamt)).toFixed(2);
                        }
                        else
@@ -2116,8 +2119,11 @@ insertstudenthistoryResponse:function(e){
                         arr[i].actualamount=paidfeearr[j].actual_amount;
                         arr[i].discountamount=paidfeearr[j].discount_amount;
                         arr[i].installmentamount=paidfeearr[j].installment_amount;
-                        arr[i].fineamount=parseFloat(paidfeearr[j].fine_amount);
+                        if(localStorage.getItem("curr_sess_finewaiveoff_flag")==1)
+                            paidfeearr[j].fine_amount=0;
+                       arr[i].fineamount=parseFloat(paidfeearr[j].fine_amount);
                        arr[i].installmentamount=parseFloat(arr[i].installmentamount)+parseFloat(paidfeearr[j].fine_amount);
+                       
                        arr[i].hiddencommitinput=true;
                        arr[i].hiddencommititem=false;
                        arr[i].paidflag=false;

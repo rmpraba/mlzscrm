@@ -76,14 +76,17 @@
    <paper-checkbox style="margin-top: 2%;margin-left: -13%;" id="{{installmentid}}"  value="{{studname}}" class="checkbox" disabled$="{{paidflag}}" checked on-change="payinstall"></paper-checkbox>
    <paper-item hidden>{{installment}}</paper-item>
    <paper-item id="ins">{{installmenttype}}</paper-item>
-   <paper-input id="actamt" style="margin-top: -1%;" value="{{actualamount}}"></paper-input>
-   <paper-input id="disamt" style="margin-top: -1%;" value="{{discountamount}}"></paper-input>
-   <paper-input id="amt" style="margin-top: -1%;" value="{{amount}}"></paper-input>
-   <paper-item id="paymentmode" hidden$="{{hiddenflag}}">{{modeofpayment}}</paper-item>
-   <paper-item id="chequeno" hidden$="{{hiddenflag}}">{{chequeno}}</paper-item>
-   <paper-item id="bankname" hidden$="{{hiddenflag}}">{{bankname}}</paper-item>
-   <paper-item id="paiddate" hidden$="{{hiddenflag}}">{{chequedate}}</paper-item>
-   <paper-item id="receiptdate" hidden$="{{hiddenflag}}">{{receiptdate}}</paper-item>
+   <paper-input hidden$="{{hiddenpayflag}}" id="actamt" style="margin-top: -1%;" value="{{actualamount}}"></paper-input>
+   <paper-input  hidden$="{{hiddenpayflag}}" id="disamt" style="margin-top: -1%;" value="{{discountamount}}"></paper-input>
+   <paper-input hidden$="{{hiddenpayflag}}" id="amt" style="margin-top: -1%;" value="{{amount}}"></paper-input>
+   <paper-item style="margin-left: 2%;width: 8%;" id="actualamount" hidden$="{{hiddenflag}}">{{actualamount}}</paper-item>
+   <paper-item style="margin-left: 3%;width: 8%;" id="discountamount" hidden$="{{hiddenflag}}">{{discountamount}}</paper-item>
+   <paper-item style="margin-left: 3%;width: 8%;" id="installmentamount" hidden$="{{hiddenflag}}">{{installmentamount}}</paper-item>
+   <paper-item style="margin-left: 4%;width: 8%;" id="paymentmode" hidden$="{{hiddenflag}}">{{modeofpayment}}</paper-item>
+   <paper-item style="margin-left: 7%;width: 8%;" id="chequeno" hidden$="{{hiddenflag}}">{{chequeno}}</paper-item>
+   <paper-item style="margin-left: 3%;width: 10%;" id="bankname" hidden$="{{hiddenflag}}">{{bankname}}</paper-item>
+   <paper-item style="margin-left: 1%;width: 8%;" id="chequedate" hidden$="{{hiddenflag}}">{{chequedate}}</paper-item>
+   <paper-item style="margin-left: 2%;width: 8%;" id="receiptdate" hidden$="{{hiddenflag}}">{{receiptdate}}</paper-item>
 
     <paper-dropdown-menu disabled$="{{enable}}" hidden$="{{hiddenpayflag}}" id="{{installmentdate}}"   label="---Select Mode---">
           <paper-menu class="dropdown-content" id="installmentid" on-iron-select="FnPaymentMode" valueattr="value" >
@@ -104,9 +107,9 @@
    <paper-input id="paiddate" hidden$="{{hiddeninputflag}}" value="{{chequedate}}"></paper-input>
    <paper-input id="receiptdate" hidden$="{{hiddeninputflag}}" value="{{receiptdate}}"></paper-input>
    
-  <span class="panel-icon" style="margin-top: 1.5%;right: 0%;position: absolute;" disabled$="{{paidflag}}" hidden$="{{hiddenflag}}"><a href="" on-click="FnEditPayment" disabled$="{{paidflag}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></span>
+  <!-- <span class="panel-icon" style="margin-top: 1.5%;right: 0%;position: absolute;" disabled$="{{paidflag}}" hidden$="{{hiddenflag}}"><a href="" on-click="FnEditPayment" disabled$="{{paidflag}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></span>
   <span class="panel-icon" style="margin-top: 1.5%;right: 0%;position: absolute;" hidden$="{{hiddeninputflag}}"><a href="" on-click="FnSavePayment"><i class="fa fa-save" aria-hidden="true"></i></a>
-  </span>
+  </span> -->
   </div>
 
     <paper-dialog id="chequeinfo" modal>

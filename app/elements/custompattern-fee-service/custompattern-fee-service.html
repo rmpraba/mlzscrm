@@ -108,13 +108,25 @@
      searchfeeadmissionpaidinfoResponse:function(e){
         paidfeearr=e.detail.response.returnval;
         localStorage.setItem("curr_sess_academicyear",e.detail.response.academicyear);
-        if(paidfeearr!='no rows'){
+        var paidamount=0;
+        localStorage.setItem("curr_sess_paidamount",paidamount);
+        if(paidfeearr!='no rows'){          
+            if(localStorage.getItem("curr_sess_feetypepaymentflag")==paidfeearr[0].paymenttype_flag){ 
+            for(var i=0;i<paidfeearr.length;i++){
+            paidamount=parseFloat(paidamount)+parseFloat(paidfeearr[i].installment_amount);
+            }
+            localStorage.setItem("curr_sess_paidamount",paidamount);
             var mode=paidfeearr[0].payment_through;
             localStorage.setItem("curr_sess_installmentpattern",paidfeearr[0].installment_pattern);
             var pattern=paidfeearr[0].installment_pattern;
             document.querySelector('custompattern-fee-card').FnSetPaidPattern(mode,pattern);
             document.querySelector('custompattern-fee-card').FnSetDisableFlag(true);
+            document.querySelector('custompattern-fee-card').FnHiddenPayment();
+            document.querySelector('custompattern-fee-card').FnShowAlreadyPaidBlock(paidfeearr);
             this.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
+            }
+            else
+            alert("It is not collected under this type!!");
         }
         else{
             document.querySelector('custompattern-fee-card').FnSetDisableFlag();
@@ -330,12 +342,14 @@
         var payableamount=parseFloat(totalpayableamount)-(parseFloat(discountpercentamt));
         document.querySelector('custompattern-fee-card').totaldiscount=discountamt;
         localStorage.setItem("curr_sess_totaldiscount",discountamt);
-        document.querySelector('custompattern-fee-card').totalpayableamount=totalpayableamount;
+        // document.querySelector('custompattern-fee-card').totalpayableamount=totalpayableamount;
         localStorage.setItem("curr_sess_payablefees",totalpayableamount);
         document.querySelector('custompattern-fee-card').discountpercent=discountpercent+"%";
-        document.querySelector('custompattern-fee-card').payableamount=payableamount;
+        document.querySelector('custompattern-fee-card').totalpayableamount=payableamount;
         var totaldiscount=parseFloat(discountamt)+(parseFloat(discountpercentamt));
         document.querySelector('custompattern-fee-card').totdiscount=totaldiscount;
+        document.querySelector('custompattern-fee-card').paidamount=localStorage.getItem("curr_sess_paidamount");
+        document.querySelector('custompattern-fee-card').payableamount=parseFloat(payableamount)-parseFloat(localStorage.getItem("curr_sess_paidamount"));
         localStorage.setItem("curr_sess_discountpercent",discountpercent);
         localStorage.setItem("curr_sess_payablediscount",totaldiscount);
         localStorage.setItem("curr_sess_payableamount",payableamount);

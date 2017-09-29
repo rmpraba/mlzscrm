@@ -706,6 +706,7 @@
         obj.schol=localStorage.getItem("schoolid");
         obj.fngrade=grade;
         obj.fnstatus=status;
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         this.getenqdetailsparam=obj;
         //alert(JSON.stringify(obj));
         this.$.getenqdetailsajax.generateRequest();
@@ -714,7 +715,7 @@
 
       getenqdetailsResponse:function(e){
        var res=e.detail.response.returnval;
-       //alert(JSON.stringify(res));
+       // alert(JSON.stringify(res));
        var requery=[];
               for(var i=0;i<res.length;i++)
               {

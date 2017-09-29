@@ -214,7 +214,7 @@
             <span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
               <li id="enquiryform">
-              <a href="" on-click="Fnpreapp">Enquiry Form</a>
+              <a href="" data-toggle="modal" data-target="#pre-apps" on-click="Fnpreapp">Enquiry Form</a>
               </li>
               <!-- <li id="updateenquiry">
               <a href="" on-click="Fnpreappupdate">Update Enquiry</a>
@@ -341,6 +341,9 @@
               </li>
               <li id="registrationfee">
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggleregisterationfee" on-click="FnRegister">Registration Fee</a>
+              </li>
+              <li id="cautiondeposit">
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglecautiondeposit" on-click="FnCautionDeposit">Caution Deposit</a>
               </li>
               <li id="schoolfee">
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglefeepayment"  on-click="FnKit">School Fee</a>
@@ -575,6 +578,24 @@
       </div>
     </div>
   </nav>
+  <div class="modal fade bd-example-modal-lg" id="pre-apps" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Enquiry Form
+            </h4>
+          </div>
+          <div class="modal-body">
+            <!-- <zonetostudent-card></zonetostudent-card> -->
+            <pre-apps></pre-apps>
+          </div>
+        </div>
+      </div>
+ </div>
 
  <div class="modal fade bd-example-modal-lg" id="togglezoneallocation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
@@ -788,6 +809,24 @@
           </div>
           <div class="modal-body">
             <registerationfee-card></registerationfee-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="togglecautiondeposit" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" id ="fee-dialog">
+        <div class="modal-content" id="fee-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+             Caution Deposit
+            </h4>
+          </div>
+          <div class="modal-body">
+            <caution-deposit-card></caution-deposit-card>
           </div>
         </div>
       </div>
@@ -1099,6 +1138,16 @@
         document.querySelector('registerationfee-card').ready();
         // this.FnRefresh();
       },
+      FnCautionDeposit:function(e){
+      // alert(e.target.text);
+      localStorage.setItem('curr_sess_page','');
+        localStorage.setItem("curr_sess_feetypepayment","Caution deposit");
+        localStorage.setItem("curr_sess_feetypepaymentflag","1");
+        document.querySelector('caution-deposit-card').callService();
+        document.querySelector('caution-deposit-card').FnRefresh();
+        document.querySelector('caution-deposit-card').ready();
+        // this.FnRefresh();
+      },
       FnDiscountschedule:function(e){
         localStorage.setItem('curr_sess_page','');
         document.querySelector('discount-master-card').FnRefresh();
@@ -1218,7 +1267,7 @@
       Fnpreapp:function(){
         localStorage.setItem('curr_sess_page','');
         localStorage.setItem("curr_sess_enquiryupdateflag",0);
-        document.querySelector('app-list').setPage("pre-apps","Enquiry Form");
+        // document.querySelector('app-list').setPage("pre-apps","Enquiry Form");
         document.querySelector('pre-apps').ready();
         document.querySelector('pre-apps').callnextyearhandler();
         document.querySelector('pre-apps').FnClear();        
@@ -1370,7 +1419,6 @@
         this.$.scheduleservice.fetchgradeService();
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchadmissionyearService();
-
       },
       FnAddDiscount:function(){
         localStorage.setItem('curr_sess_page','');

@@ -518,10 +518,15 @@
       },
       fetchreceiptResponse:function(e){
         // alert(JSON.stringify(e.detail.response.returnval));
+        // alert(localStorage.getItem("curr_sess_parentname"));
         var arr=e.detail.response.returnval;
         if(arr.length>0)
         {
           // alert(arr[0].fathername);
+          if(arr[0].fathername==null||arr[0].fathername==""){
+            localStorage.setItem("curr_sess_parentname",arr[0].fathername1);
+          }
+          else
           localStorage.setItem("curr_sess_parentname",arr[0].fathername);
           document.querySelector('feereceipt-outcard').Fnsetinfo();
           paymentarr=arr;
@@ -622,6 +627,8 @@
             obj.hidecashparticular=false;
             obj.hidechequeparticular=true;
             obj.hidetransferparticular=true;
+            obj.hidelatefeecashparticular=true;
+            obj.hidelatefeechequeparticular=true;
             obj.hidesplit=true;
             cashtotal=parseFloat(parseFloat(paymentarr[i].installment_amount)+parseFloat(cashtotal)+parseFloat(paymentarr[i].fine_amount)).toFixed(2);
             cashparticular.push({"slno":cashno,"installment":paymentarr[i].installment_type,"installmentamount":paymentarr[i].installment_amount,"feetype":paymentarr[i].fees});

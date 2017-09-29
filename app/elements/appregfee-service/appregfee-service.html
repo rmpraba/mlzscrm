@@ -201,6 +201,12 @@
         document.querySelector('prospectousfee-card').enquiredclass=enqarr[0].class;
         document.querySelector('prospectousfee-card').studentname=enqarr[0].enquiry_name;
         document.querySelector('prospectousfee-card').parentname=enqarr[0].father_name;
+        if(enqarr[0].father_name==""||enqarr[0].father_name==null){
+        localStorage.setItem("curr_sess_parentname",enqarr[0].mother_name);
+        }
+        else
+        localStorage.setItem("curr_sess_parentname",enqarr[0].father_name);
+        
         localStorage.setItem("curr_sess_admissionstatus","New");
         // localStorage.setItem("curr_sess_academicyear",enqarr[0].academic_year);
         localStorage.setItem("curr_sess_grade",enqarr[0].class);
@@ -319,12 +325,22 @@
         var arr=e.detail.response.returnval;
         // alert('admission info..........'+JSON.stringify(arr));
         if(arr!='no rows'){
+        if(localStorage.getItem("curr_sess_feetypepayment")=="Registration fee"){
         document.querySelector('registerationfee-card').acyear=arr[0].academic_year;        
         document.querySelector('registerationfee-card').academicyear=arr[0].admission_year;
         document.querySelector('registerationfee-card').enquiredclass=arr[0].class_for_admission;
         document.querySelector('registerationfee-card').studentname=arr[0].student_name;
         document.querySelector('registerationfee-card').parentname=arr[0].father_name;
         document.querySelector('registerationfee-card').dob=arr[0].dob;
+        }
+        if(localStorage.getItem("curr_sess_feetypepayment")=="Caution deposit"){
+        document.querySelector('caution-deposit-card').acyear=arr[0].academic_year;        
+        document.querySelector('caution-deposit-card').academicyear=arr[0].admission_year;
+        document.querySelector('caution-deposit-card').enquiredclass=arr[0].class_for_admission;
+        document.querySelector('caution-deposit-card').studentname=arr[0].student_name;
+        document.querySelector('caution-deposit-card').parentname=arr[0].father_name;
+        document.querySelector('caution-deposit-card').dob=arr[0].dob;
+        }
         localStorage.setItem("curr_sess_academicyear",arr[0].academic_year);
         localStorage.setItem("curr_sess_admissionyear",arr[0].admission_year);
         localStorage.setItem("curr_sess_grade",arr[0].class_for_admission);
@@ -332,8 +348,7 @@
         localStorage.setItem("curr_sess_parentname",arr[0].father_name);
         localStorage.setItem("curr_sess_admissiontype",arr[0].admission_type);
         localStorage.setItem("curr_sess_discounttype",arr[0].discount_type);
-        this.callfetchfeesService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));
-        
+        this.callfetchfeesService(localStorage.getItem("curr_sess_academicyear"),localStorage.getItem("curr_sess_admissionyear"),localStorage.getItem("curr_sess_grade"));        
         }
      },
      callfetchfeesService:function(academicyear,admissionyear,grade){
@@ -372,6 +387,7 @@
         obj.grade=grade; 
         obj.admissiontype=admissiontype; 
         obj.discounttype=discounttype; 
+        obj.feetype=localStorage.getItem("curr_sess_feetypepayment");
         // alert('feecode...'+localStorage.getItem("curr_sess_feecode"));
         obj.feecode=localStorage.getItem("curr_sess_feecode");
         obj.schoolid=localStorage.getItem("schoolid");     
@@ -382,11 +398,17 @@
         var arr=e.detail.response.returnval; 
         // alert(JSON.stringify(arr));
         if(arr!='no rows'){
-        document.querySelector('registerationfee-card').totalfees=arr[0].total_fee;         
+        if(localStorage.getItem("curr_sess_feetypepayment")=="Registration fee"){
+        document.querySelector('registerationfee-card').totalfees=arr[0].total_fee;
+        }
+        if(localStorage.getItem("curr_sess_feetypepayment")=="Caution deposit"){ 
+        document.querySelector('caution-deposit-card').totalfees=arr[0].total_fee;        
+        }
         localStorage.setItem('curr_sess_totalamount',arr[0].total_fee);    
         }
         else{
         document.querySelector('registerationfee-card').totalfees=0;         
+        document.querySelector('caution-deposit-card').totalfees=0;         
         localStorage.setItem('curr_sess_totalamount',0); 
         }
       },
@@ -398,6 +420,7 @@
         obj.grade=grade; 
         obj.admissiontype=admissiontype; 
         obj.discounttype=discounttype; 
+        obj.feetype=localStorage.getItem("curr_sess_feetypepayment");
         var dt=new Date();
         var d=dt.getDate();
         var m=(dt.getMonth()+1);
@@ -415,8 +438,14 @@
         var discountarr=e.detail.response.returnval;
         // alert(JSON.stringify(discountarr));
         if(discountarr!='no rows'){
+        if(localStorage.getItem("curr_sess_feetypepayment")=="Registration fee"){
         document.querySelector('registerationfee-card').totaldiscount=discountarr[0].amount;
         document.querySelector('registerationfee-card').payableamount=parseFloat(parseFloat(localStorage.getItem('curr_sess_totalamount'))-parseFloat(discountarr[0].amount)).toFixed(2);
+        }
+        if(localStorage.getItem("curr_sess_feetypepayment")=="Caution deposit"){
+        document.querySelector('caution-deposit-card').totaldiscount=discountarr[0].amount;
+        document.querySelector('caution-deposit-card').payableamount=parseFloat(parseFloat(localStorage.getItem('curr_sess_totalamount'))-parseFloat(discountarr[0].amount)).toFixed(2);
+        }
         var arr=[];
         var obj={"installment":"","installmenttype":"","amount":"","installmentdate":""};
         obj.installment=localStorage.getItem("curr_sess_feetypepayment");
@@ -425,8 +454,14 @@
         obj.payableamount=parseFloat(parseFloat(localStorage.getItem('curr_sess_totalamount'))-parseFloat(discountarr[0].amount)).toFixed(2);
         }
         else{
+        if(localStorage.getItem("curr_sess_feetypepayment")=="Registration fee"){
         document.querySelector('registerationfee-card').totaldiscount=0;
         document.querySelector('registerationfee-card').payableamount=parseFloat(parseFloat(localStorage.getItem('curr_sess_totalamount'))-parseFloat(0)).toFixed(2);
+        }
+        if(localStorage.getItem("curr_sess_feetypepayment")=="Caution deposit"){
+        document.querySelector('caution-deposit-card').totaldiscount=0;
+        document.querySelector('caution-deposit-card').payableamount=parseFloat(parseFloat(localStorage.getItem('curr_sess_totalamount'))-parseFloat(0)).toFixed(2);
+        }
         var arr=[];
         var obj={"installment":"","installmenttype":"","amount":"","installmentdate":""};
         obj.installment=localStorage.getItem("curr_sess_feetypepayment");
@@ -440,7 +475,12 @@
         obj.fee_type=localStorage.getItem("curr_sess_feetypepayment");
         arr.push(obj);
         if(paidfeearr!='no rows'){
+            if(localStorage.getItem("curr_sess_feetypepayment")=="Registration fee"){
             document.querySelector('registerationfee-card').hiddentitleflag=false;
+            }
+            if(localStorage.getItem("curr_sess_feetypepayment")=="Caution deposit"){
+            document.querySelector('caution-deposit-card').hiddentitleflag=false;
+            }
             for(var i=0;i<arr.length;i++){
                 var f=0;
                 for(var j=0;j<paidfeearr.length;j++){
@@ -470,7 +510,12 @@
             }
         }
         else{
+        if(localStorage.getItem("curr_sess_feetypepayment")=="Registration fee"){
         document.querySelector('registerationfee-card').hiddentitleflag=true;
+        }
+        if(localStorage.getItem("curr_sess_feetypepayment")=="Caution deposit"){
+        document.querySelector('caution-deposit-card').hiddentitleflag=true;
+        }
         for(var i=0;i<arr.length;i++){
                    arr[i].fineamount=0;
                    arr[i].paidflag=false;
@@ -487,8 +532,14 @@
             alert('No Fee Found!!');
         }
         else{
+        if(localStorage.getItem("curr_sess_feetypepayment")=="Registration fee"){
         document.querySelector('registerationfee-card').feearr=arr; 
         document.querySelector('registerationfee-card').FnHiddenPayment(); 
+        }
+        if(localStorage.getItem("curr_sess_feetypepayment")=="Caution deposit"){
+        document.querySelector('caution-deposit-card').feearr=arr; 
+        document.querySelector('caution-deposit-card').FnHiddenPayment();
+        } 
         } 
         paidfeearr=[];
         arr=[]; 
@@ -562,6 +613,7 @@
       fetchallstudentadmissionsearchResponse:function(e){
         // alert(JSON.stringify(e.detail.response.returnval));
         document.querySelector('registerationfee-card').autocompletearr(e.detail.response.returnval);
+        document.querySelector('caution-deposit-card').autocompletearr(e.detail.response.returnval);
         document.querySelector('fees-card').autocompletearr(e.detail.response.returnval);
         document.querySelector('custompattern-fee-card').autocompletearr(e.detail.response.returnval);
         document.querySelector('attachdiscount-card').autocompletearr(e.detail.response.returnval);

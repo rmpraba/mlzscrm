@@ -79,20 +79,23 @@
         <div class="col-sm-2 enquiry-input">
           <paper-input  readonly label="Total Fees" value="{{totalfees}}"></paper-input>
         </div>
-        <div class="col-sm-2 enquiry-input">          
+        <div class="col-sm-1 enquiry-input">          
           <paper-input readonly label="Standard Discount" value="{{totaldiscount}}"></paper-input>
-        </div>
-        <div class="col-sm-2 enquiry-input">          
-          <paper-input readonly label="Total Payable Amount" value="{{totalpayableamount}}"></paper-input>
-        </div>
-        <div class="col-sm-2 enquiry-input">
+        </div>        
+        <div class="col-sm-1 enquiry-input">
           <paper-input  readonly label="Discount Percentage" value="{{discountpercent}}"></paper-input>
         </div>
         <div class="col-sm-2 enquiry-input">
           <paper-input  readonly label="Total discount" value="{{totdiscount}}"></paper-input>
         </div>
         <div class="col-sm-2 enquiry-input">          
-          <paper-input readonly label="{{payablepaidflag}}" value="{{payableamount}}"></paper-input>
+          <paper-input readonly label="Total Payable Amount" value="{{totalpayableamount}}"></paper-input>
+        </div>
+        <div class="col-sm-2 enquiry-input">          
+          <paper-input readonly label="Paid Amount" value="{{paidamount}}"></paper-input>
+        </div>
+        <div class="col-sm-2 enquiry-input">          
+          <paper-input readonly label="Payable Amount" value="{{payableamount}}"></paper-input>
         </div>
       </div>
       <div class="form-group-heading">
@@ -176,7 +179,11 @@
           </paper-dropdown-menu>
         </div>   
       </div>
-    
+      <!-- <div class="form-group-heading" hidden$="{{hiddenpaidstructure}}">
+        <h4>Paid structure</h4>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category" hidden$="{{hiddenpaidstructure}}">
+      </div> -->
       <div class="form-group-heading" hidden$="{{hiddenpayment}}">
         <h4>Payment</h4>
       </div>
@@ -185,7 +192,7 @@
                     <div style="width: 13%;margin-left: 2%;">Installment</div>
                     <div style="width: 9%;margin-left: 1%;">Actual Amount</div>
                     <div style="width: 6%;margin-left: 2%;">Discount</div>
-                    <div style="width: 10%;margin-left:2%;">Payable Amount</div>                    
+                    <div style="width: 10%;margin-left:2%;">Payable Amount</div>                  
                     <div style="margin-left:2%; width: 12%;">Mode of Payment</div>
                     <div style="margin-left:2%; width: 7%;" hidden$="{{hiddentitleflag}}">Cheque No</div>
                     <div style="margin-left:2%; width: 7%;" hidden$="{{hiddentitleflag}}">Bank Name</div>
@@ -194,7 +201,7 @@
             </div>
             <div style="margin-left:12%;" hidden$="{{hiddeninstallment}}"> 
               <template  is="dom-repeat" items="{{feearr}}" as="view">
-              <custompattern-installment-card installmentid="{{view.installmentid}}" installment="{{view.installment}}" installmenttype="{{view.installmenttype}}" installmentdate="{{view.installmentdate}}" receiptdate="{{view.receiptdate}}" hiddenpayflag="{{view.hiddenpayflag}}" paidflag="{{view.paidflag}}" readonlyflag="{{view.readonlyflag}}" hiddenflag="{{view.hiddenflag}}" hiddencommitinput="{{view.hiddencommitinput}}" hiddencommititem="{{view.hiddencommititem}}"></custompattern-installment-card>
+              <custompattern-installment-card installmentid="{{view.installmentid}}" installment="{{view.installment}}" installmenttype="{{view.installmenttype}}" installmentdate="{{view.installmentdate}}" receiptdate="{{view.receiptdate}}" hiddenpayflag="{{view.hiddenpayflag}}" paidflag="{{view.paidflag}}" readonlyflag="{{view.readonlyflag}}" hiddenflag="{{view.hiddenflag}}" hiddencommitinput="{{view.hiddencommitinput}}" hiddencommititem="{{view.hiddencommititem}}" actualamount="{{view.actualamount}}" discountamount="{{view.discountamount}}" installmentamount="{{view.installmentamount}}" chequeno="{{view.chequeno}}" bankname="{{view.bankname}}" chequedate="{{view.chequedate}}" modeofpayment="{{view.modeofpayment}}"></custompattern-installment-card>
               </template>
             </div>
             <div>
@@ -236,6 +243,7 @@
       var selectedinstallment="";
       var installmentcount=0;
       var temp=[];
+      var paidarr=[];
     Polymer({
       is: 'custompattern-fee-card',
       ready:function(){
@@ -278,10 +286,52 @@
           localStorage.setItem("curr_sess_adhocreason","");
         // document.querySelector('#structuregeneral1').checked=true;
       },
+      FnShowAlreadyPaidBlock:function(arr){
+        this.paidarr=arr;
+        
+        for(var i=0;i<this.paidarr.length;i++){
+          var obj={};
+          obj.installmentid=this.paidarr[i].installment;
+          obj.installmenttype=this.paidarr[i].installment_type;
+          obj.installment=this.paidarr[i].installment;
+          obj.installmentdate=this.paidarr[i].installment_date;
+          obj.receiptdate=this.paidarr[i].paid_date;
+          obj.actualamount=this.paidarr[i].actual_amount;
+          obj.discountamount=this.paidarr[i].discount_amount;
+          obj.installmentamount=this.paidarr[i].installment_amount;
+          obj.hiddencommitinput=true;
+          obj.hiddencommititem=true;
+          obj.paidflag=true;
+          obj.hiddenflag=false;
+          obj.readonlyflag=false;
+          obj.hiddenpayflag=true;
+          obj.chequeno=this.paidarr[i].cheque_no;
+          obj.chequedate=this.paidarr[i].cheque_date;
+          obj.bankname=this.paidarr[i].bank_name; 
+          obj.receiptdate=this.paidarr[i].receipt_date; 
+          obj.modeofpayment=this.paidarr[i].mode_of_payment;
+          paidarr.push(obj);
+        }
+        // alert(JSON.stringify(temp));
+        this.feearr=paidarr;
+      },
       FnAddInstallment:function(){
           installmentcount++;          
           var insarr=[];    
           // alert(installment.length);
+          if(this.payableamount<=0){
+            alert("Payment Completed!!");
+          }
+          else if(selectedinstallment==null||selectedinstallment==""){
+            alert("Please select valid installmenttype!!");
+          }
+          else{
+          if(paidarr.length>0)
+          {
+            for(var i=0;i<paidarr.length;i++){
+              temp.push(paidarr[i]);
+            }
+          }
           if(installment.length>0){
           for(var i=0;i<installment.length;i++){
           var obj={};
@@ -330,8 +380,10 @@
           this.hiddeninstallment=false;
           this.hiddenpayment=false;
           // alert(JSON.stringify(temp));
+
           this.feearr=temp;
           temp=[];
+        }
       },  
       FnCurrentHandler:function(e){
         this.FnRefresh1();
@@ -427,6 +479,7 @@
       document.querySelector('custompattern-installment-card').FnRefresh();
       },
      FnRefresh:function(){
+      paidarr=[];
       localStorage.setItem("curr_sess_adhocdiscount",0);
         this.payablepaidflag="Payable Amount";
         document.querySelector('#structureselfmode').checked=true;
@@ -451,6 +504,7 @@
         this.enquiryarr=[];
         this.payableamount="";
         this.discountamount="";
+        this.paidamount="";
         this.hiddenpayment=true;
         document.querySelector("#customgeneral1").checked=false;
         document.querySelector("#customlumpsumcommit1").checked=false;
@@ -484,7 +538,7 @@
         this.discountpercent="";
         document.querySelector('#insrequirement').checked=false;
         this.disableflag=false;
-        this.value="";
+        // this.value="";
         this.itemArray=[];
         this.flag=0;        
         installment=[];
@@ -503,7 +557,9 @@
         this.enquiryarr=[];
         this.payableamount="";
         this.discountamount="";
+        this.paidamount="";
         this.hiddenpayment=true;
+        paidarr=[];
         document.querySelector("#customlumpsumcommit1").checked=false;
         document.querySelector("#customlumpsum1").checked=false;
         document.querySelector('#customfeesearch').selected=-1;
@@ -732,6 +788,8 @@
     document.querySelector('#custominstallment').selected=-1;
     document.querySelector('datepicker-icon-card').ready();
     this.feearr=[];
+    paidarr=[];
+    this.FnRefresh1();
     this.$.admissionservice.searchfeeadmissionpaidinfoService(enquiry_no);
     },
     Fnhidecommitinstallment:function(flag){

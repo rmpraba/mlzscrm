@@ -227,8 +227,10 @@
         // document.querySelector('fees-card').FnSetfee(installmentarr); 
           if(localStorage.getItem("curr_sess_feetypepayment")=="Registration fee")
           document.querySelector('registerationfee-card').FnSetfee(installmentarr); 
-            else if(localStorage.getItem("curr_sess_feetypepayment")=="Application fee")
-            document.querySelector('prospectousfee-card').FnSetfee(installmentarr); 
+          else if(localStorage.getItem("curr_sess_feetypepayment")=="Application fee")
+          document.querySelector('prospectousfee-card').FnSetfee(installmentarr); 
+          else if(localStorage.getItem("curr_sess_feetypepayment")=="Caution deposit")
+          document.querySelector('caution-deposit-card').FnSetfee(installmentarr);
       }
     });
   })();

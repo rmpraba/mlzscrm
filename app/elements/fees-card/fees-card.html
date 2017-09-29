@@ -130,6 +130,7 @@
             <div class="col-sm-12 enquiry-input" hidden$="{{hidechangeinspattern}}">
             <span><paper-checkbox class="col-sm-3" id="inspatternchangeyes" readonly class="checkbox" on-change="inspatternyesHandler" >Yes</paper-checkbox></span>
             <span><paper-checkbox class="col-sm-3" id="inspatternchangeno" readonly class="checkbox" on-change="inspatternnoHandler" >No</paper-checkbox></span>
+            <span><paper-checkbox class="col-sm-4" id="feescardbouncewaiveoff"  class="checkbox" on-change="FnWaiveoffHandler" >Waiveoff Bounce Charge</paper-checkbox></span>
             </div>
       </div>
 
@@ -579,7 +580,7 @@
         document.querySelector('#waiveoff').checked=false;
       },
       FnRefresh:function(){
-
+        localStorage.setItem("curr_sess_finewaiveoff_flag",0);
         this.payablepaidflag="Payable Amount";
         document.querySelector('#structureselfmode').checked=true;
         document.querySelector('#structurethirdpartymode').checked=false;
@@ -629,8 +630,11 @@
         this.hidedefaulterlabel=true;
         this.hidecommitinstallment=false;
         localStorage.setItem("curr_sess_academicyear","");
+        document.querySelector('#feescardbouncewaiveoff').checked=false;
       },
       FnRefresh1:function(){
+        localStorage.setItem("curr_sess_finewaiveoff_flag",0);
+        document.querySelector('#feescardbouncewaiveoff').checked=false;
         document.querySelector('#structureselfmode').checked=true;
         document.querySelector('#structurethirdpartymode').checked=false;
         this.payablepaidflag="Payable Amount";
@@ -878,6 +882,8 @@
     localStorage.setItem("curr_sess_installmentpattern",1);
     document.querySelector('datepicker-icon-card').ready();
     this.hidedefaulterlabel=true;
+    document.querySelector('#feescardbouncewaiveoff').checked=false;
+    localStorage.setItem("curr_sess_finewaiveoff_flag",0);
     // this.$.processingservice.fetchchequeforeditordelete(admission_no);
     // localStorage.setItem("curr_sess_enquiryno",enquiry_no);
     // localStorage.setItem("curr_sess_enquiryname",enquiry_name);
@@ -944,6 +950,13 @@
       // }
       this.disableflag=flag;
       // this.hiddenaddbtn=flag; 
+    },
+    FnWaiveoffHandler:function(){
+      if(document.querySelector('#feescardbouncewaiveoff').checked==true)
+      localStorage.setItem("curr_sess_finewaiveoff_flag",1);
+      else
+      localStorage.setItem("curr_sess_finewaiveoff_flag",0);
+      this.$.admissionservice.searchfeeadmissionpaidinfoService(localStorage.getItem("curr_sess_enquiryno"));
     }
 
     });
