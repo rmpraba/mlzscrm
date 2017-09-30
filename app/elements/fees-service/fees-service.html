@@ -866,8 +866,10 @@
                 obj.hidecurrreceipt=true;
                 obj.hidelatefeecashparticular=true;
                 obj.hidelatefeechequeparticular=true;
-                if(obj.installment="Application fee")
+                if(obj.installment=="Application fee"||obj.installment=="Registration fee"||obj.installment=="Caution deposit")
                     obj.hidesplit=true;
+                else
+                    obj.hidesplit=false;
                 if(cashcnt==0)
                     feereceiptarr.push(obj);
                 cashcnt++;
@@ -910,8 +912,10 @@
                 obj.hidecurrreceipt=true;
                 obj.hidelatefeecashparticular=true;
                 obj.hidelatefeechequeparticular=true;
-                if(obj.installment="Application fee")
+                if(obj.installment=="Application fee"||obj.installment=="Registration fee"||obj.installment=="Caution deposit")
                     obj.hidesplit=true;
+                else
+                    obj.hidesplit=false;
                 if(tpcnt==0)
                     feereceiptarr.push(obj);
                 tpcnt++;
@@ -952,8 +956,10 @@
                 obj.hidecurrreceipt=false;
                 obj.hidelatefeecashparticular=true;
                 obj.hidelatefeechequeparticular=true;
-                if(obj.installment="Application fee")
+                if(obj.installment=="Application fee"||obj.installment=="Registration fee"||obj.installment=="Caution deposit")
                     obj.hidesplit=true;
+                else
+                    obj.hidesplit=false;
                 if(currchequecnt==0)
                     feereceiptarr.push(obj);
                 currchequecnt++;
@@ -992,8 +998,10 @@
                 obj.hidecurrreceipt=true;
                 obj.hidelatefeecashparticular=true;
                 obj.hidelatefeechequeparticular=true;
-                if(obj.installment="Application fee")
+                if(obj.installment=="Application fee"||obj.installment=="Registration fee"||obj.installment=="Caution deposit")
                     obj.hidesplit=true;
+                else
+                    obj.hidesplit=false;
                 if(chequecnt==0)
                     feereceiptarr.push(obj);
                 chequecnt++;
@@ -1034,8 +1042,10 @@
                 obj.hidecurrreceipt=true;
                 obj.hidelatefeecashparticular=true;
                 obj.hidelatefeechequeparticular=true;
-                if(obj.installment="Application fee")
+                if(obj.installment=="Application fee"||obj.installment=="Registration fee"||obj.installment=="Caution deposit")
                     obj.hidesplit=true;
+                else
+                    obj.hidesplit=false;
                 if(transfercnt==0)
                     feereceiptarr.push(obj);
                 transfercnt++;
