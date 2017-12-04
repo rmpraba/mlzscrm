@@ -28,10 +28,8 @@
   <script>
   (function() {
     'use strict';
-
     Polymer({
       is: 'custom-datepicker-card',
-
       ready:function()
       {
         this.showdate=moment(new Date()).format('L');       
@@ -42,24 +40,26 @@
       },
       FnDismissDialog:function(e)
       {
-        if (e.detail.confirmed)
+        if (e.detail.confirmed==true)
         {
           var pickdate=moment(this.$.picker.date).format('L');
           var dd1=new Date();
           dd1.setTime(dd1.getTime() +(dd1.getTimezoneOffset()+330)*60*1000);
           var dd2=new Date(pickdate);
           dd2.setTime(dd2.getTime() +(dd2.getTimezoneOffset()+330)*60*1000);
-
           var days=parseInt((dd1 - dd2) / (1000 * 60 * 60 * 24));
-          // alert(dd1+'   '+dd2+'   '+days);
-
-          if(days>=0){
+          // alert(days);
+          if(days>0){
+          alert("Please choose future date!");
+          document.querySelector('followup-student-detail').customdateclear()
           document.querySelector('followup-listitem-card').customdateclear();
           }
           else{
-          var dt =new Date(moment(this.$.picker.date).format('L'));
-          dt.setTime(dt.getTime() +(dt.getTimezoneOffset()+330)*60*1000);
-          this.showdate=dt.getFullYear()+'-'+(dt.getMonth()+1)+'-'+dt.getDate();
+          // var dt =new Date(moment(this.$.picker.date).format('L'));
+          // dt.setTime(dt.getTime() +(dt.getTimezoneOffset()+330)*60*1000);
+          this.showdate=moment(this.$.picker.date).format('L');
+          // this.showdate=dt.getDate()+'-'+(dt.getMonth()+1)+'-'+dt.getFullYear();
+          document.querySelector('followup-student-detail').customgetdate(this.showdate);
            document.querySelector('followup-listitem-card').customgetdate(this.showdate);
           }
         }
@@ -67,7 +67,6 @@
       FnClear:function(){
         this.showdate = "";
       }
-
     });
   })();
   </script>

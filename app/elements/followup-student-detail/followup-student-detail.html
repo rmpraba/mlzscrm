@@ -8,7 +8,7 @@
   <style >
     #statusdialog{
             margin-left: -30%;
-                top: 33%;
+            top: 33%;
       }
   </style>
     <div class="row enquiry-form">
@@ -38,7 +38,7 @@
               <div style="font-size: larger; text-align: center; font-weight: bolder;">FollowUp Schedule - {{schedule}}</div> 
               <div style="text-align: right; margin-right: 5%; padding: 1%;">Status : <a href="" class="glyphicon glyphicon-pencil" on-click="changestatus">{{fnstatus}}</a></div>
               </div>
-<div class="list-group col-sm-12 panel-body form-category">
+     <div class="list-group col-sm-12 panel-body form-category">
       <table class="table table-striped" >
         <thead>
         <tr class="list-group col-sm-14 panel-body form-category">
@@ -56,7 +56,7 @@
           <checkbox-card id={{view.followup_no}} status={{view.followup_status}}></checkbox-card>
           </div>
           <div class="list-group col-sm-10"> -->
-            <followup-listitem-card scheduledate="{{view.schedule_date}}" nextdate="{{view.next_followup_date}}" value="{{view.followup_comments}}" callstatus="{{view.followup_status}}" confidencelvl="{{view.confidence_level}}" followupno="{{view.followup_no}}" fid="{{view.schedule_id}}" enquiryid="{{view.enquiry_id}}" sno="{{view.slno}}" scheid="{{view.schedule}}" disableyes="{{view.disableyes}}" disableno="{{view.disableno}}" yesbox="{{view.yesbox}}" nobox="{{view.nobox}}" notcompleted="{{view.notcompleted}}" viewdetail="{{view.viewdetail}}" dates="{{view.dates}}" reschedule="{{view.reschedule}}"></followup-listitem-card>
+            <followup-listitem-card followupflag="{{followupflag}}" scheduledate="{{view.schedule_date}}" nextdate="{{view.next_followup_date}}" pickernextdate="{{view.next_followup_date}}" value="{{view.followup_comments}}" callstatus="{{view.followup_status}}" confidencelvl="{{view.confidence_level}}" followupno="{{view.followup_no}}" fid="{{view.schedule_id}}" enquiryid="{{view.enquiry_id}}" sno="{{view.slno}}" scheid="{{view.schedule}}" disableyes="{{view.disableyes}}" disableno="{{view.disableno}}" yesbox="{{view.yesbox}}" nobox="{{view.nobox}}" notcompleted="{{view.notcompleted}}" viewdetail="{{view.viewdetail}}" dates="{{view.dates}}" reschedule="{{view.reschedule}}"></followup-listitem-card>
             <!-- </div> -->
       </template>
     </div>
@@ -131,36 +131,32 @@
           <paper-button on-click="detailclose">Close</paper-button>
         </div>
       </paper-dialog>
-
       <paper-dialog id="statusdialog" class="paper-date-picker-dialog">
-        <paper-dropdown-menu label="Change Status" >
-              <paper-menu id="statuschange" class="dropdown-content" on-iron-select="Fnchangestatus" valueattr="value" >
-                <paper-item >Closed</paper-item>
+            <paper-dropdown-menu label="Change Status" >
+              <paper-menu id="statuschange" class="dropdown-content" on-iron-select="Fnchangestatus" valueattr="value" data-dismiss="modal">
+                <paper-item >Close</paper-item>
                 <paper-item >Re-Schedule</paper-item>
                 <paper-item >Not Interested</paper-item>
               </paper-menu>
             </paper-dropdown-menu>
       </paper-dialog>
-
-<paper-item hidden>{{lastdate}}</paper-item>
+    <paper-item hidden>{{lastdate}}</paper-item>
     <!-- Modal -->
      <paper-dialog id="dialog4" class="paper-date-picker-dialog">
       <div class="content">
             <h2>Select your option..</h2>
             <paper-radio-group>
-              <paper-radio-button id="todaydate" on-click="Fntodaydate">Today.</paper-radio-button>
-              <paper-radio-button id="customdate" on-click="Fncustomdate">Custom Date.</paper-radio-button>
+              <paper-radio-button id="todaydate" on-click="Fntodaydate">Today</paper-radio-button>
+              <paper-radio-button id="customdate" on-click="Fncustomdate">Custom Date</paper-radio-button>
             </paper-radio-group>
-              
-                  <custom-datepicker-card id="custdate"></custom-datepicker-card>
-      </div>
-        <div class="buttons">
+     <custom-datepicker-card id="custdate"></custom-datepicker-card>
+     </div>
+     <div class="buttons">
           <paper-button id="followdisk4" style="background-color: silver;" class="btn glyphicon glyphicon-floppy-disk" raised on-click="savecustomdate">Save</paper-button>
           <paper-button raised style="background-color: silver;" on-click="FnDismissDialog4">Cancel</paper-button>
-        </div>
-      </paper-dialog>
-
-        <followup-service id="followupservice"></followup-service>
+     </div>
+     </paper-dialog>
+     <follow-up-service id="followupservice"></follow-up-service>
   </template>
   <script>
   (function() {
@@ -180,8 +176,7 @@
     Polymer({
       is: 'followup-student-detail',
       ready:function(){
-        this.subject=true;
-
+          this.subject=true;
           var dt=new Date();
           today=sessionStorage.getItem("todaydate");
       },
@@ -216,22 +211,29 @@
       Fnchangestatus:function(e){
         var statuszx=(e.target.selectedItem.textContent).trim();
         //alert(statuszx);
+        this.$.statusdialog.toggle();
+        document.querySelector("#statuschange").selected=-1;
+        if(statuszx=="Close")
+          statuszx="Closed";
         if(statuszx=='Re-Schedule'){
-            this.$.dialog4.open();
+        this.$.dialog4.open();
         this.$.custdate.hidden=true;
         }
         else{
-          this.$.followupservice.FnChangestatus(this.followupid,statuszx,this.enqno);
+          this.$.followupservice.FnChangestatus(this.followupid,statuszx,this.enqno,this.schedule);
         }
-      document.querySelector('#statusdialog').close();
+      // document.querySelector('#statusdialog').close();
       },
-
       Fntodaydate:function(){
-            takedate="todaydate";
+            // takedate="todaydate";
             //alert(takedate);
+            var date=new Date();
+            takedate=(date.getMonth()+1)+"-"+date.getDate()+"-"+date.getFullYear();
+            this.$.customdate.checked=false;
             this.$.custdate.hidden=true;
       },
       Fncustomdate:function(){
+            this.$.todaydate.checked=false;
             this.$.custdate.hidden=false;
       },
       customdateclear:function(){
@@ -244,13 +246,17 @@
       },
       savecustomdate:function(){
         //alert(this.confidencelvl+'  '+this.fid+'  '+takedate);
-         this.$.followupservice.Fnreschedule(this.currconfidence,this.followid,takedate);
+         // this.$.followupservice.Fnreschedule(this.currconfidence,this.followid,takedate);
+         this.$.followupservice.Fnreschedule(this.currconfidence,this.followid,takedate,this.schedule);
          this.$.dialog4.close();
       },
       FnDismissDialog4:function(){
         todaydate=null;
         this.$.custdate.hidden=true;
         this.$.dialog4.close();
+      },
+      FnUpdateSchedule:function(schedule){
+        this.schedule=schedule;
       }
     });
   })();

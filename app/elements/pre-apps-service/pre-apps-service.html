@@ -266,6 +266,7 @@
         >
   </iron-ajax>
       <followup-service id="followupservice"></followup-service>
+      <follow-up-service id="followup"></follow-up-service>
   </template>
   <script>
   (function() {
@@ -494,8 +495,7 @@
         var result=e.detail.response.returnval;
         if(result == 'inserted'){
           this.updateenquiryno();
-        }
-        
+        }        
      },
      getenquiryno:function(enrolltype){
       this.getenquirynourl=sessionStorage.getItem("addrinfo")+"/getenquiryno";
@@ -533,7 +533,8 @@
           alert('Submitted!');
           document.querySelector('pre-apps').FnClear();
           document.querySelector('pre-apps').ready();  
-          this.$.followupservice.GenerateFollowups(enquiryiddz,attendantname);
+          // this.$.followupservice.GenerateFollowups(enquiryiddz,attendantname);
+          this.$.followup.GenerateFollowups(enquiryiddz,attendantname);
         } else {
           alert('Form Submission intertupted!');
         }

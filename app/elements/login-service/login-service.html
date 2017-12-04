@@ -45,6 +45,7 @@
         addr=e.detail.response.address;
         // alert(addr);
         sessionStorage.setItem("addrinfo",addr);
+        localStorage.setItem("curr_sess_academicyear",e.detail.response.academicyear);
         //alert(JSON.stringify(e.detail.response.address));
       },
       Fn_login_userlogin:function(username,password){ 
@@ -97,9 +98,7 @@
           localStorage.setItem("schoolid",schoolid);
           localStorage.setItem("roleid",roleid);
           localStorage.setItem("employeeid",employeeid);
-          localStorage.setItem("schooladdress",address);
-
-        
+          localStorage.setItem("schooladdress",address);        
         //alert(school+'   '+role+'    '+employeename+'    '+roleid);
         document.querySelector('CRM-app').setPage("applist");
         document.querySelector('app-list').setPage("enquiry","Enquiry");

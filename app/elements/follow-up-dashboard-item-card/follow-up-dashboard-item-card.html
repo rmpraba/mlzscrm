@@ -10,24 +10,22 @@
     </style>
     <div class="list-group list-group-item enquiry-list-item">
     <div hidden>{{status}}</div>
-        <h5>{{grade}}</h5>
-        <div class="col-sm-3">
-          <a href="" class="enquired" on-click="getfollowupdetails" aria-hidden="true" data-toggle="modal" data-target="#followupdet">{{enquirygrade}}</a>
-        </div>
+    <div hidden>{{academicyear}}</div>
+      <h5>{{grade}}</h5>
+      <div class="col-sm-3">
+        <a href="" class="enquired" on-click="getfollowupdetails" aria-hidden="true" data-toggle="modal" data-target="#followupdet">{{enquirygrade}}</a>
       </div>
-
-      <followup-service id="followupservice"></followup-service>
-
+    </div>
+    <follow-up-service id="followupservice"></follow-up-service>
   </template>
   <script>
-  (function() {
+  (function(){
     'use strict';
-
     Polymer({
-      is: 'follow-up-dashboard-item-card',
-      getfollowupdetails:function(){
-        this.$.followupservice.getfollowupstudents(this.grade,this.status);       
-      },
+    is: 'follow-up-dashboard-item-card',
+    getfollowupdetails:function(){
+    this.$.followupservice.getfollowupstudents(this.grade,this.status,this.academicyear);     
+    }
     });
   })();
   </script>

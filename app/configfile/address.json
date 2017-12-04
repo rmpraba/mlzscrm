@@ -1,3 +1,4 @@
 {
-	"address":"http://localhost:8086"
+	"address":"http://localhost:8086",
+	"academicyear":"AY-2017-2018"
 }

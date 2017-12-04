@@ -1,0 +1,824 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="follow-up-service">
+  <template>
+    <iron-ajax
+      method="post"
+      id="masterfollowupinfoajax"
+      url="{{masterfollowupinfourl}}"
+      params="{{masterfollowupinfoparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="masterfollowupinfoResponse"
+      debounce-duration="300"/>
+    <iron-ajax
+        method="post"
+        id="updatefollowajax"
+        url="{{updatefollowurl}}"
+        params="{{updatefollowparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updatefollowResponse"
+        debounce-duration="300"/>
+    <iron-ajax
+        method="post"
+        id="updatefollowdetailajax"
+        url="{{updatefollowdetailurl}}"
+        params="{{updatefollowdetailparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updatefollowdetailResponse"
+        debounce-duration="300"/>
+   <iron-ajax
+        method="post"
+        id="getopenfollowupcountajax"
+        url="{{getopenfollowupcounturl}}"
+        params="{{getopenfollowupcountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getopenfollowupcountResponse"
+        debounce-duration="300"/>
+  <iron-ajax
+        method="post"
+        id="getprocessfollowupcountajax"
+        url="{{getprocessfollowupcounturl}}"
+        params="{{getprocessfollowupcountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getprocessfollowupcountResponse"
+        debounce-duration="300"/>
+  <iron-ajax
+        method="post"
+        id="getclosedfollowupcountajax"
+        url="{{getclosedfollowupcounturl}}"
+        params="{{getclosedfollowupcountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getclosedfollowupcountResponse"
+        debounce-duration="300"/>
+  <iron-ajax
+        method="post"
+        id="getnifollowupcountajax"
+        url="{{getnifollowupcounturl}}"
+        params="{{getnifollowupcountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getnifollowupcountResponse"
+        debounce-duration="300"/>
+  <iron-ajax
+        method="post"
+        id="getexhaustfollowupcountajax"
+        url="{{getexhaustfollowupcounturl}}"
+        params="{{getexhaustfollowupcountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getexhaustfollowupcountResponse"
+        debounce-duration="300"/>
+    <iron-ajax
+      method="post"
+      id="getfollowupstudentsajax"
+      url="{{getfollowupstudentsurl}}"
+      params="{{getfollowupstudentsparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="getfollowupstudentsResponse"
+      debounce-duration="300"/>
+    <iron-ajax
+      method="post"
+      id="viewdetailajax"
+      url="{{viewdetailurl}}"
+      params="{{viewdetailparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="viewdetailResponse"
+      debounce-duration="300"/>
+    <iron-ajax
+        method="post"
+        id="getlistdetailsajax"
+        url="{{getlistdetailsurl}}"
+        params="{{getlistdetailsparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getlistdetailsResponse"
+        debounce-duration="300"/>
+    <iron-ajax
+        method="post"
+        id="scheduledatesajax"
+        url="{{scheduledatesurl}}"
+        params="{{scheduledatesparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="scheduledatesResponse"
+        debounce-duration="300"/>
+    <iron-ajax
+        method="post"
+        id="updatefollowupscheduleajax"
+        url="{{updatefollowupscheduleurl}}"
+        params="{{updatefollowupscheduleparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updatefollowupscheduleResponse"
+        debounce-duration="300"/>
+    <iron-ajax
+        method="post"
+        id="updatefollowupdetailsajax"
+        url="{{updatefollowupdetailsurl}}"
+        params="{{updatefollowupdetailsparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updatefollowupdetailsResponse"
+        debounce-duration="300"/>
+    <iron-ajax
+        method="post"
+        id="updatefollowupconfidencelvlajax"
+        url="{{updatefollowupconfidencelvlurl}}"
+        params="{{updatefollowupconfidencelvlparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updatefollowupconfidencelvlResponse"
+        debounce-duration="300"/>
+     <iron-ajax
+        method="post"
+        id="detailshowajax"
+        url="{{detailshowurl}}"
+        params="{{detailshowparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="detailshowResponse"
+        debounce-duration="300"/> 
+    <iron-ajax
+        method="post"
+        id="updateschedulestatusajax"
+        url="{{updateschedulestatusurl}}"
+        params="{{updateschedulestatusparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updateschedulestatusResponse"
+        debounce-duration="300"
+        />
+    <iron-ajax
+        method="post"
+        id="fetchfollowupmasterajax"
+        url="{{fetchfollowupmasterurl}}"
+        params="{{fetchfollowupmasterparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfollowupmasterResponse"
+        debounce-duration="300"
+        />
+    <iron-ajax
+        method="post"
+        id="insertfollowupmasterajax"
+        url="{{insertfollowupmasterurl}}"
+        params="{{insertfollowupmasterparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="insertfollowupmasterResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="updatefollowdetailajax1"
+        url="{{updatefollowdetailurl1}}"
+        params="{{updatefollowdetailparam1}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updatefollowdetailResponse1"
+        debounce-duration="300"/>
+    <iron-ajax
+        method="post"
+        id="checkupcomingfollowupajax"
+        url="{{checkupcomingfollowupurl}}"
+        params="{{checkupcomingfollowupparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="checkupcomingfollowupResponse"
+        debounce-duration="300"/>
+        <iron-ajax
+        method="post"
+        id="FnChangestatusajax"
+        url="{{FnChangestatusurl}}"
+        params="{{FnChangestatusparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="FnChangestatusResponse"
+        debounce-duration="300"
+        >
+  </template>
+
+  <script>
+  (function() {
+    'use strict';
+    var enquiryid,enquiryattender;
+    var resultarr=[];
+    var followupdatearr=[];
+    var scheduleno=0;
+    var count1=0;
+    var count2=0;
+    var followenqid="";
+    // var result=[];
+    Polymer({
+      is: 'follow-up-service',
+      FnCheckUpcomingFollowup:function(followupid,scheduleid,followupno){
+        this.checkupcomingfollowupurl=sessionStorage.getItem("addrinfo")+"/checkupcomingfollowup-service";
+        var obj={"schol":""}
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.followupid=followupid;
+        obj.scheduleid=scheduleid;
+        obj.followupno=followupno;
+        this.checkupcomingfollowupparam=obj;
+        this.$.checkupcomingfollowupajax.generateRequest();
+      },
+      checkupcomingfollowupResponse:function(e){
+        var arr=e.detail.response.returnval;
+        if(arr.length>0){
+        alert('Please complete the previous followup!!');
+        document.querySelector('followup-listitem-card').FnCheckFollowup(true);
+        }
+        else
+        document.querySelector('followup-listitem-card').FnCheckFollowup(false);
+      },
+      GenerateFollowups:function(enquiryidd,attndusername){
+        enquiryid=enquiryidd;
+        enquiryattender=attndusername;
+        this.masterfollowupinfourl=sessionStorage.getItem("addrinfo")+"/masterfollowupinfo";
+        var obj={"schol":""}
+        obj.schol=localStorage.getItem("schoolid");
+        this.masterfollowupinfoparam=obj;
+        this.$.masterfollowupinfoajax.generateRequest();
+      },
+      masterfollowupinfoResponse:function(e){
+            resultarr=e.detail.response.returnval;
+            var currdate=new Date();
+            var interval=resultarr[0].no_of_days;
+            scheduleno=resultarr[0].schedule_no;
+            var tempinterval=interval;
+            var startdate="";
+            var enddate="";
+            for(var i=0;i<resultarr[0].no_of_calls;i++){
+            var followup=new Date(); 
+            followup.setDate(followup.getDate() + parseInt(tempinterval));   
+            var obj={}
+            obj.followupno=i+1;
+            obj.date=followup.getDate()+"-"+(followup.getMonth()+1)+"-"+followup.getFullYear();
+            if(i==0)
+              startdate=obj.date;
+            if(i==parseInt(resultarr[0].no_of_calls)-1)
+              enddate=obj.date;
+            followupdatearr.push(obj);
+            tempinterval=tempinterval+resultarr[0].no_of_days;
+            }
+        this.updatefollowurl=sessionStorage.getItem("addrinfo")+"/updatefollow";
+        var obj={"schol":"","id":"","enquiryno":"","schedule":"","currconfidence":"","schedulestatus":"","scheduleflag":"","noofdays":"","noofschedule":"","upcomingdate":"","lastscheduleon":"","createdby":"","createdon":"","followername":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.id='';
+        obj.enquiryno=enquiryid;
+        obj.schedule=scheduleno;
+        obj.currconfidence="TBD";
+        obj.schedulestatus="Open";
+        obj.scheduleflag=1;
+        obj.noofdays=resultarr[0].no_of_days;
+        obj.noofschedule=resultarr[0].no_of_calls;
+        obj.upcomingdate=startdate;
+        obj.lastscheduleon=enddate;
+        obj.createdby=localStorage.getItem("employeeid");
+        obj.createdon=sessionStorage.getItem("todaydate");
+        obj.followername=enquiryattender;
+        this.updatefollowparam=obj;
+        this.$.updatefollowajax.generateRequest();
+      },
+      updatefollowResponse:function(e){
+      // alert(e.detail.response.returnval);
+      if(e.detail.response.returnval=='success'){
+        count1=followupdatearr.length;
+        // alert(JSON.stringify(followupdatearr));
+        this.updatefollowdetailurl=sessionStorage.getItem("addrinfo")+"/updatefollowdetail";
+        for(var j=0;j<(followupdatearr.length);j++){
+        var obj={"schol":"","id":"","enquiryid":"","followupno":"","followupdate":"","nextfolowup":"","schedule":"","flag":"","createdon":"","createdby":""}
+          obj.schol=localStorage.getItem("schoolid");
+          obj.id=e.detail.response.followupno;
+          obj.enquiryid=enquiryid;
+          obj.followupno=followupdatearr[j].followupno;
+          obj.followupdate=followupdatearr[j].date;
+          if(j<(followupdatearr.length-1)){
+          obj.nextfolowup=followupdatearr[j+1].date;
+          }
+          else{
+          obj.nextfolowup=""; 
+          }
+          obj.flag='F';
+          obj.schedule=scheduleno;
+          obj.createdby=localStorage.getItem("employeeid");
+          obj.createdon=sessionStorage.getItem("todaydate");
+          this.updatefollowdetailparam=obj;
+          this.$.updatefollowdetailajax.generateRequest();
+          }
+          }
+          else{
+          alert('Interrupted');
+          }
+      },
+      updatefollowdetailResponse:function(e){
+        // alert(count1+"  "+count2);
+        if(e.detail.response.returnval=='success'){
+          count2++;
+          if(count1==count2){
+            alert('The follwup schedule is updated successfully');
+            document.querySelector('followup-student-detail').FnUpdateSchedule(scheduleno);
+          }
+        }
+        else{
+            alert('Interrupted');
+        }
+      },
+      getfollowupcount:function(){
+        var dt=new Date();
+        this.getopenfollowupcounturl=sessionStorage.getItem("addrinfo")+"/getfollowupcount";
+        var obj={"schol":"","status":""}
+        obj.status="Open";
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.getopenfollowupcountparam=obj;
+        //alert(JSON.stringify(obj));
+        this.$.getopenfollowupcountajax.generateRequest();
+        this.getclosedfollowupcounturl=sessionStorage.getItem("addrinfo")+"/getfollowupcount";
+        var obj={"schol":"","status":""}
+        obj.status="Closed";
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.getclosedfollowupcountparam=obj;
+        //alert(JSON.stringify(obj));
+        this.$.getclosedfollowupcountajax.generateRequest();
+
+        this.getnifollowupcounturl=sessionStorage.getItem("addrinfo")+"/getfollowupcount";
+        var obj={"schol":"","status":""}
+        obj.status="Not Interested";
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.getnifollowupcountparam=obj;
+        //alert(JSON.stringify(obj));
+        this.$.getnifollowupcountajax.generateRequest();
+
+        this.getprocessfollowupcounturl=sessionStorage.getItem("addrinfo")+"/getfollowupcount";
+        var obj={"schol":"","status":""}
+        obj.status="Inprogress";
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.getprocessfollowupcountparam=obj;
+        //alert(JSON.stringify(obj));
+        this.$.getprocessfollowupcountajax.generateRequest();
+
+        this.getexhaustfollowupcounturl=sessionStorage.getItem("addrinfo")+"/getfollowupcount";
+        var obj={"schol":"","status":""}
+        obj.status="Exhausted";
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.getexhaustfollowupcountparam=obj;
+        //alert(JSON.stringify(obj));
+        this.$.getexhaustfollowupcountajax.generateRequest();
+     },
+     getopenfollowupcountResponse:function(e){
+      var res=e.detail.response.returnval;
+      // alert(JSON.stringify(res));
+      document.querySelector('followup-dashboard').openarr=res;
+     },
+     getclosedfollowupcountResponse:function(e){
+      var res=e.detail.response.returnval;
+      // alert(JSON.stringify(res));
+      document.querySelector('followup-dashboard').closearr=res;
+     },
+     getnifollowupcountResponse:function(e){
+      var res=e.detail.response.returnval;
+      // alert(JSON.stringify(res));
+      document.querySelector('followup-dashboard').niarr=res;
+     },
+     getprocessfollowupcountResponse:function(e){
+      var res=e.detail.response.returnval;
+      // alert(JSON.stringify(res));
+      document.querySelector('followup-dashboard').processarr=res;
+     },
+     getexhaustfollowupcountResponse:function(e){
+      var res=e.detail.response.returnval;
+      // alert(JSON.stringify(res));
+      document.querySelector('followup-dashboard').exhaustedarr=res;
+     },
+     getfollowupstudents:function(grade,status,academicyear){
+        localStorage.setItem("grade_list",grade);
+        localStorage.setItem("open_list",status);
+        this.getfollowupstudentsurl=sessionStorage.getItem("addrinfo")+"/getfollowupstudents";
+        var obj={"schol":"","fngrade":"","fnstatus":"","user":""};
+        obj.schol=localStorage.getItem("schoolid");
+        obj.fngrade=grade;
+        obj.fnstatus=status;
+        obj.academicyear=academicyear;
+        obj.user=localStorage.getItem("employeeid");
+        this.getfollowupstudentsparam=obj;
+        this.$.getfollowupstudentsajax.generateRequest();
+      },
+      getfollowupstudentsResponse:function(e){
+       var res=e.detail.response.returnval;
+       var requery=[];
+              for(var i=0;i<res.length;i++){
+              // var dsta=new Date(res[i].upcoming_date);
+              var obj={"enquiry_id":"","enquiry_name":"","upcoming_date":"","current_confidence_level":"","schedule_flag":"","schedule_status":"","id":""};
+                    obj.enquiry_id=res[i].enquiry_id;
+                    obj.enquiry_name=res[i].enquiry_name;
+                    // obj.upcoming_date=dsta.getFullYear()+'-'+(dsta.getMonth()+1)+'-'+dsta.getDate();
+                    obj.upcoming_date=res[i].upcoming_date;
+                    obj.current_confidence_level=res[i].current_confidence_level;
+                    obj.schedule_flag=res[i].schedule_flag;
+                    obj.schedule_status=res[i].schedule_status;
+                    obj.id=res[i].id;
+                    requery.push(obj);              
+                }
+      document.querySelector('app-list').setPage("followup-details","Followup Student List");
+      document.querySelector('followup-details').followuparr=requery;
+      },
+      viewdetail:function(id,status,followid){
+        followenqid=id;
+        this.viewdetailurl=sessionStorage.getItem("addrinfo")+"/viewdetail";
+        var obj={"schol":"","id":"","fid":"","fstatus":""};
+        obj.schol=localStorage.getItem("schoolid");
+        obj.id=id;
+        obj.fid=followid;
+        obj.fstatus=status;
+        this.viewdetailparam=obj;
+        this.$.viewdetailajax.generateRequest();
+      },
+      viewdetailResponse:function(e){
+        var res=e.detail.response.returnval;
+        // alert(JSON.stringify(res));
+        var stz=new Date(res[0].created_on);
+        var parentid,guardianid;
+        document.querySelector('followup-student-detail').enqno=res[0].enquiry_no;
+        document.querySelector('followup-student-detail').followupid=res[0].id;
+        document.querySelector('followup-student-detail').name=res[0].enquiry_name;
+        document.querySelector('followup-student-detail').grade=res[0].class;
+        document.querySelector('followup-student-detail').enquiredon=stz.getDate()+'-'+(stz.getMonth()+1)+'-'+stz.getFullYear();
+        document.querySelector('followup-student-detail').parentname=res[0].father_name;
+        document.querySelector('followup-student-detail').mobno=res[0].father_mob;
+        document.querySelector('followup-student-detail').guardianname=res[0].guardian_name;
+        document.querySelector('followup-student-detail').gmobno=res[0].guardian_mobile;
+        document.querySelector('followup-student-detail').lastdate=res[0].last_schedule_date;
+        document.querySelector('followup-student-detail').schedule=res[0].schedule_no;
+        document.querySelector('followup-student-detail').fnstatus=res[0].schedule_Status;
+        document.querySelector('followup-student-detail').currconfidence=res[0].current_confidence_level;
+        document.querySelector('followup-student-detail').followid=res[0].id;
+        if((res[0].father_name=="")||(res[0].father_name==null)){
+          parentid=true;
+        }else{
+          parentid=false;
+        }
+        if((res[0].guardian_name=="")||(res[0].guardian_name==null)){
+          guardianid=true;
+        }else{
+          guardianid=false;
+        }
+        document.querySelector('followup-student-detail').testdetails(res[0].enquiry_no,parentid,guardianid);
+        this.getlistdetails(res[0].enquiry_no,res[0].id,res[0].schedule_no);
+      },
+      getlistdetails:function(enquiryid,followypid,schedule){
+        localStorage.setItem("curr_enquiry_id",enquiryid);
+        localStorage.setItem("curr_followup_id",followypid);
+        localStorage.setItem("curr_schedule_no",schedule);
+        this.getlistdetailsurl=sessionStorage.getItem("addrinfo")+"/getlistdetails";
+        var obj={"schol":"","id":"","fid":"","flag":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.id=enquiryid;
+        obj.fid=followypid;
+        obj.flag=schedule;
+        this.getlistdetailsparam=obj;
+        this.$.getlistdetailsajax.generateRequest();
+      },
+      getlistdetailsResponse:function(e){
+        var resultarrS=[];
+        var datearr=[];
+        var result=e.detail.response.returnval;
+        // alert(JSON.stringify(result.length));
+         for(var i=0;i<result.length;i++){          
+          // var sche=new Date(result[i].schedule_date);
+          // var next=new Date(result[i].next_followup_date);
+          // alert(sche+"  "+next);
+          var obj={"school_id":"","schedule_id":"","enquiry_id":"","followup_no":"","schedule_date":"","confidence_level":"","followup_comments":"","next_followup_date":"","schedule":"","created_on":"","created_by":"","actual_date":"","followup_status":"","slno":""};
+            obj.slno=result[i].followup_no;
+            obj.school_id=result[i].school_id;
+            obj.schedule_id=result[i].schedule_id;
+            obj.enquiry_id=result[i].enquiry_id;
+            obj.followup_no=result[i].followup_no;
+            obj.schedule_date=result[i].schedule_date;
+            obj.next_followup_date=result[i].next_followup_date;
+            // obj.schedule_date=sche.getDate()+'-'+(sche.getMonth()+1)+'-'+sche.getFullYear();
+            obj.confidence_level=result[i].confidence_level;
+            obj.followup_comments=result[i].followup_comments;
+            // obj.next_followup_date=next.getDate()+'-'+(next.getMonth()+1)+'-'+next.getFullYear();
+            obj.schedule=result[i].schedule;
+            obj.created_on=result[i].created_on;
+            obj.created_by=result[i].created_by;
+            obj.actual_date=result[i].actual_date;
+            obj.followup_status=result[i].followup_status;
+            if(result[i].followup_status=="Yes"){
+              obj.disableyes=true;
+              obj.disableno=true;
+              obj.yesbox=true;
+              obj.nobox=false;
+              obj.notcompleted=true;
+              obj.viewdetail=false;
+            }
+            else if(result[i].followup_status=="No"){
+              obj.disableyes=true;
+              obj.disableno=true;
+              obj.yesbox=false;
+              obj.nobox=true;
+              obj.notcompleted=true;
+              obj.viewdetail=false;
+            }
+            else{
+              obj.disableyes=false;
+              obj.disableno=false;
+              obj.yesbox=false;
+              obj.nobox=false;
+              obj.notcompleted=false;
+              obj.viewdetail=true;
+            }   
+          // alert(obj.next_followup_date+"   "+obj.next_followup_date); 
+          if((obj.next_followup_date=='NaN-NaN-NaN')||(obj.next_followup_date=='0000-00-00 00:00:00')||obj.next_followup_date==''){
+           obj.dates=true;
+           obj.reschedule=false;
+           }
+           else{
+           obj.dates=false;
+           obj.reschedule=true; 
+           }          
+           resultarrS.push(obj);
+        }         
+        // alert(JSON.stringify(resultarrS));
+        document.querySelector('followup-student-detail').followupdetailarr=resultarrS;
+        this.scheduledatesurl=sessionStorage.getItem("addrinfo")+"/scheduledates";
+        var obj2={"schol":"","folowid":""};
+        obj2.schol=localStorage.getItem("schoolid");
+        obj2.folowid=result[0].schedule_id;
+        this.scheduledatesparam=obj2;
+        this.$.scheduledatesajax.generateRequest();
+      },
+      scheduledatesResponse:function(e){
+        var restultarrz=e.detail.response.returnval;
+        if(restultarrz.length>0){
+        document.querySelector('followup-listitem-card').fndatez(restultarrz);
+        }
+      },
+      updatefollowupschedule:function(upcomingdate,lastschdate,followupid,scheduleid,arr,fnfid,fnscheduledate,fnfollowupno,fncurrentdate,fnnextdate,fncomments,fncallstatus,fnconfidencelvl){
+        this.followupid=fnfid;
+        this.scheduledate=fnscheduledate;
+        this.followupno=fnfollowupno;
+        this.currentdate=fncurrentdate;
+        this.nextdate=fnnextdate;
+        this.comments=fncomments;
+        this.callstatus=fncallstatus;
+        this.confidencelvl=fnconfidencelvl;
+        this.updatefollowupscheduleurl=sessionStorage.getItem("addrinfo")+"/updatefollowupschedule-service";
+        count1=0;
+        count2=0;
+        count1=arr.length;
+        for(var i=0;i<arr.length;i++){
+        var obj={};
+        obj.schol=localStorage.getItem("schoolid");
+        obj.followupid=followupid;
+        obj.scheduleid=scheduleid;
+        obj.enquiryid=arr[i].enquiry_id;
+        obj.scheduledate=arr[i].schedule_date;
+        obj.nextfollowupdate=arr[i].next_followup_date;
+        obj.followupno=arr[i].followup_no;
+        obj.upcomingdate=upcomingdate;
+        obj.lastscheduledate=lastschdate;
+        obj.user=localStorage.getItem("employeeid");
+        // alert(JSON.stringify(obj))
+        this.updatefollowupscheduleparam=obj;
+        this.$.updatefollowupscheduleajax.generateRequest();
+        }
+      },
+      updatefollowupscheduleResponse:function(e){
+        count2++;
+        if(count1==count2){
+          alert('Schedule Updated!!');
+          // this.getlistdetails( localStorage.getItem("curr_enquiry_id"),
+        // localStorage.getItem("curr_followup_id"),
+        // localStorage.getItem("curr_schedule_no"));
+          this.updatefolowup(this.followupid,this.scheduledate,this.followupno,
+          this.currentdate,this.nextdate,this.comments,this.callstatus,this.confidencelvl);
+        }
+      },
+      updatefolowup:function(fnfid,fnscheduledate,fnfollowupno,fncurrentdate,fnnextdate,fncomments,fncallstatus,fnconfidencelvl){
+        // var dts=new Date(fnnextdate);
+        // this.upconfidencelvl=fnconfidencelvl;
+        // this.upfollowupid=fnfid;
+        // this.upfollowno=fnfollowupno;
+        // this.upnextdate=dts.getFullYear()+'-'+(dts.getMonth()+1)+'-'+dts.getDate();
+        this.updatefollowupdetailsurl=sessionStorage.getItem("addrinfo")+"/updatefollowupdetails";
+        var obj={"schol":"","fid":"","scheduledate":"","followupno":"","currentdate":"","nextdate":"","comments":"","callstatus":"","confidencelvl":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.fid=fnfid;
+        obj.scheduledate=fnscheduledate;
+        obj.followupno=fnfollowupno;
+        obj.currentdate=fncurrentdate;
+        obj.nextdate=fnnextdate;
+        obj.comments=fncomments;
+        obj.callstatus=fncallstatus;
+        obj.confidencelvl=fnconfidencelvl;
+        this.updatefollowupdetailsparam=obj;
+        // alert(JSON.stringify(obj));
+        this.$.updatefollowupdetailsajax.generateRequest();        
+      },
+      updatefollowupdetailsResponse:function(e){
+        if(e.detail.response.returnval=='success'){
+        this.updatefollowupconfidencelvlurl=sessionStorage.getItem("addrinfo")+"/updatefollowupconfidencelvl";
+        var obj={"schol":"","fid":"","enquiry":"","confidencelvl":"","fnstatus":"","fnfollowupno":"","fnupcoming":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.fid=this.followupid;
+        obj.confidencelvl=this.confidencelvl;
+        obj.fnstatus="Inprogress";
+        obj.fnfollowupno=(parseInt(this.followupno)+1);
+        obj.fnupcoming=this.nextdate;
+        this.updatefollowupconfidencelvlparam=obj;
+       //alert(JSON.stringify(obj));
+        this.$.updatefollowupconfidencelvlajax.generateRequest();
+        }
+        else{
+          alert('Process Interupted');
+        }
+      },
+      updatefollowupconfidencelvlResponse:function(e){
+      if(e.detail.response.returnval=='success'){
+      alert('Current followup detail is submitted');
+      document.querySelector('followup-listitem-card').Fnclear();
+      document.querySelector('followup-student-detail').followupflag=(parseInt(this.followupno)+1);
+      this.getlistdetails(localStorage.getItem("curr_enquiry_id"),localStorage.getItem("curr_followup_id"),localStorage.getItem("curr_schedule_no"));
+      }
+      else{
+          alert('Submission Failed');
+      }
+    },
+    viewdetailshow:function(fnfid,fnfno,fncall){
+          this.detailshowurl=sessionStorage.getItem("addrinfo")+"/detailshow";
+        var obj={"schol":"","call":"","fno":"","fid":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.call=fncall;
+        obj.fno=fnfno;
+        obj.fid=fnfid;
+        this.detailshowparam=obj;
+       //alert(JSON.stringify(obj));
+        this.$.detailshowajax.generateRequest();
+      },
+      detailshowResponse:function(e){
+        var res=e.detail.response.returnval;
+        //alert(JSON.stringify(res));
+        document.querySelector('followup-listitem-card').showdetaildialog(res);
+      },
+      Fnreschedule:function(confidenceleve,followupid,datetaken,scheduleno){
+        this.updateschedulestatusurl=sessionStorage.getItem("addrinfo")+"/updateschedulestatus";
+        this.followupid=followupid;
+        this.scheduleno=scheduleno;
+        this.confidencelevel=confidenceleve;
+        this.newdate=datetaken;
+        var obj={"schol":"","fid":"","user":"","today":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.fid=followupid;
+        obj.user=localStorage.getItem("employeeid");
+        obj.scheduleno=scheduleno;
+        var d=new Date();
+        obj.today=d.getDate()+"-"+(d.getMonth()+1)+"-"+d.getFullYear();
+        this.updateschedulestatusparam=obj;
+        this.$.updateschedulestatusajax.generateRequest();
+      },
+      updateschedulestatusResponse:function(e){
+        // alert(e.detail.response.returnval);
+        if(e.detail.response.returnval=='success'){
+            this.fetchfollowupmasterurl=sessionStorage.getItem("addrinfo")+"/fetchfollowupmaster";
+            var obj={"schol":"","fid":"","enquiry":""}
+            obj.schol=localStorage.getItem("schoolid");
+            obj.fid=this.followupid;
+            obj.scheduleno=this.scheduleno;
+            this.fetchfollowupmasterparam=obj;
+            this.$.fetchfollowupmasterajax.generateRequest();
+        }      
+      },
+      fetchfollowupmasterResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        if((e.detail.response.returnval).length>0){
+          this.newscheduleno=e.detail.response.returnval[0].schedule_no;
+          this.enquiryid=e.detail.response.returnval[0].enquiry_id;
+          this.resultarray=e.detail.response.returnval;          
+            var tempinterval=0;
+            var startdate="";
+            var enddate="";
+            // alert(JSON.stringify(this.resultarray));
+            this.followupdatearr=[];
+            // alert(this.resultarray[0].no_of_schedules);
+            var followup=new Date(this.newdate); 
+            for(var i=0;i<parseInt(this.resultarray[0].no_of_schedules);i++){            
+            // alert(followup);
+            if(i==0)
+              followup.setDate(followup.getDate());
+            else
+              followup.setDate(followup.getDate() + parseInt(tempinterval));   
+            var obj={}
+            obj.followupno=i+1;
+            obj.date=followup.getDate()+"-"+(followup.getMonth()+1)+"-"+followup.getFullYear();
+            if(i==0)
+              startdate=obj.date;
+            if(i==parseInt(this.resultarray[0].no_of_schedules)-1)
+              enddate=obj.date;
+            this.followupdatearr.push(obj);
+            // alert(JSON.stringify(obj));
+            tempinterval=parseInt(this.resultarray[0].no_of_days);
+            }
+
+        this.insertfollowupmasterurl=sessionStorage.getItem("addrinfo")+"/updatefollow";
+        var obj={};
+        obj.schol=localStorage.getItem("schoolid");
+        obj.enquiryno=this.enquiryid;
+        obj.schedule=parseInt(this.newscheduleno)+1;
+        obj.currconfidence=this.confidencelevel;
+        obj.schedulestatus="Inprogress";
+        obj.scheduleflag=1;
+        obj.noofdays=this.resultarray[0].no_of_days;
+        obj.noofschedule=this.resultarray[0].no_of_schedules;
+        obj.upcomingdate=startdate;
+        obj.lastscheduleon=enddate;
+        obj.createdby=localStorage.getItem("employeeid");
+        var d=new Date();
+        obj.createdon=d.getDate()+"-"+(d.getMonth()+1)+"-"+d.getFullYear();
+        obj.followername=localStorage.getItem("employeeid");
+        this.insertfollowupmasterparam=obj;
+        this.$.insertfollowupmasterajax.generateRequest();             
+        }
+      },
+      insertfollowupmasterResponse:function(e){
+        // alert(e.detail.response.returnval)
+        if(e.detail.response.returnval=='success'){
+        count1=0;
+        count2=0;
+        count1=this.followupdatearr.length;
+        // alert(JSON.stringify(this.followupdatearr));,
+        this.followupid=e.detail.response.followupno;
+        this.updatefollowdetailurl1=sessionStorage.getItem("addrinfo")+"/updatefollowdetail";
+        for(var j=0;j<(this.followupdatearr.length);j++){
+        var obj={"schol":"","id":"","enquiryid":"","followupno":"","followupdate":"","nextfolowup":"","schedule":"","flag":"","createdon":"","createdby":""}
+          obj.schol=localStorage.getItem("schoolid");
+          obj.id=e.detail.response.followupno;
+          obj.enquiryid=this.enquiryid;
+          obj.followupno=j+1;
+          obj.followupdate=this.followupdatearr[j].date;
+          if(j<(this.followupdatearr.length-1)){
+          obj.nextfolowup=this.followupdatearr[j+1].date;
+          }
+          else{
+          obj.nextfolowup=""; 
+          }
+          obj.flag='F';
+          obj.schedule=parseInt(this.newscheduleno)+1;
+          obj.followupno=j+1;
+          obj.createdby=localStorage.getItem("employeeid");
+          var d=new Date();
+          obj.createdon=d.getDate()+"-"+(d.getMonth()+1)+"-"+d.getFullYear();
+          this.updatefollowdetailparam1=obj;
+          this.$.updatefollowdetailajax1.generateRequest();
+          }      
+          }
+          else{
+            alert('Interrupted');
+          }        
+        },
+        updatefollowdetailResponse1:function(e){
+          count2++;
+          if(count1==count2){
+          alert("Followup rescheduled successfully!!");
+          document.querySelector('followup-listitem-card').Fnclear();
+          this.getlistdetails(this.enquiryid,this.followupid,(parseInt(this.newscheduleno)+1));
+          document.querySelector('followup-student-detail').FnUpdateSchedule((parseInt(this.newscheduleno)+1));
+          }
+        },
+        FnChangestatus:function(fid,status,enqid,scheduleno){
+        var dt=new Date();
+         this.FnChangestatusurl=sessionStorage.getItem("addrinfo")+"/FnChangestatus";
+              var obj={"schol":"","followupid":"","today":"","user":"","fnstatus":"","fnenqid":""}
+              obj.schol=localStorage.getItem("schoolid");
+              obj.followupid=fid;
+              obj.today=sessionStorage.getItem("todaydate");
+              obj.user=localStorage.getItem("employeeid");
+              obj.fnstatus=status;
+              obj.fnenqid=enqid;
+              obj.scheduleno=scheduleno;
+              this.FnChangestatusparam=obj;
+              this.$.FnChangestatusajax.generateRequest();
+      },
+      FnChangestatusResponse:function(e){
+        if(e.detail.response.returnval=="success"){
+        alert("Updated");
+        this.getfollowupcount();
+        document.querySelector('app-list').setPage("follow-up","Dashboard");
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>

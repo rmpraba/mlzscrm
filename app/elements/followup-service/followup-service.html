@@ -1,5 +1,4 @@
 
-
 <link rel="import" href="..\..\bower_components/polymer/polymer.html">
 
 <dom-module id="followup-service">
@@ -503,7 +502,7 @@
               datesarr.push(obj);
               temp=temp+resultarr[0].no_of_days;
           }
-      //alert(JSON.stringify(datesarr));
+      // alert(JSON.stringify(datesarr));
           generateid=Math.floor(100000 + Math.random() * 900000);
 
           newdate.setDate(newdate.getDate()+resultarr[0].no_of_days);
@@ -525,7 +524,7 @@
         obj.createdon=sessionStorage.getItem("todaydate");
         obj.followername=usernameattend;
         this.updatefollowparam=obj;
-        //alert(JSON.stringify(obj));
+        // alert(JSON.stringify(obj));
         this.$.updatefollowajax.generateRequest();
       },
 
@@ -590,6 +589,7 @@
         var obj={"schol":"","status":""}
         obj.status="Open";
         obj.schol=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         this.getopenfollowupcountparam=obj;
         //alert(JSON.stringify(obj));
         this.$.getopenfollowupcountajax.generateRequest();
@@ -597,6 +597,7 @@
         var obj={"schol":"","status":""}
         obj.status="Closed";
         obj.schol=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         this.getclosedfollowupcountparam=obj;
         //alert(JSON.stringify(obj));
         this.$.getclosedfollowupcountajax.generateRequest();
@@ -605,6 +606,7 @@
         var obj={"schol":"","status":""}
         obj.status="Inprogress";
         obj.schol=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         this.getprocessfollowupcountparam=obj;
         //alert(JSON.stringify(obj));
         this.$.getprocessfollowupcountajax.generateRequest();
@@ -613,6 +615,7 @@
         var obj={"schol":"","status":""}
         obj.status="Exhausted";
         obj.schol=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
         this.getexhaustfollowupcountparam=obj;
         //alert(JSON.stringify(obj));
         this.$.getexhaustfollowupcountajax.generateRequest();
@@ -666,7 +669,7 @@
 
       document.querySelector('followup-dashboard').arrtbd=res;
      },
-     getfollowupstudents:function(grade,status){
+     getfollowupstudents:function(grade,status,academicyear){
         localStorage.setItem("grade_list",grade);
         localStorage.setItem("open_list",status);
         this.getfollowupstudentsurl=sessionStorage.getItem("addrinfo")+"/getfollowupstudents";
@@ -674,6 +677,7 @@
         obj.schol=localStorage.getItem("schoolid");
         obj.fngrade=grade;
         obj.fnstatus=status;
+        obj.academicyear=academicyear;
         obj.user=localStorage.getItem("employeeid");
         this.getfollowupstudentsparam=obj;
         //alert(JSON.stringify(obj));
@@ -780,7 +784,6 @@
       },
       viewdetailResponse:function(e){
         var res=e.detail.response.returnval;
-        //alert(JSON.stringify(res));
         var stz=new Date(res[0].created_on);
         var parentid,guardianid;
         document.querySelector('followup-student-detail').enqno=res[0].enquiry_no;
@@ -932,6 +935,7 @@ document.querySelector('followup-student-detail').followid=res[0].id;
          }
          // alert(JSON.stringify(resultarrS));
          // alert(document.querySelector('followup-student-detail'));
+        // document.querySelector('followup-details-items').FnShowDialog();
         document.querySelector('followup-student-detail').followupdetailarr=resultarrS;
         //document.querySelector('followup-listitem-card').ready();
 
@@ -993,11 +997,15 @@ document.querySelector('followup-student-detail').followid=res[0].id;
       updatefollowupconfidencelvlResponse:function(e){
           if(e.detail.response.returnval=='success'){
             alert('Current followup detail is submitted');
+            // alert('ok');
             document.querySelector('followup-listitem-card').Fnclear();
-      this.getfollowupcount();
-      this.getfollowupstudents(localStorage.getItem("grade_list"),localStorage.getItem("open_list"));
+            // alert('ok');
+      // this.getfollowupcount();
+      // alert('ok');
+      // this.getfollowupstudents(localStorage.getItem("grade_list"),localStorage.getItem("open_list"));
+      // alert('ok');
       this.getlistdetails(localStorage.getItem("curr_enquiry_id"),localStorage.getItem("curr_followup_id"),localStorage.getItem("curr_schedule_no"));
-
+      // alert('ok');
       }
       else{
           alert('Submission Failed');
@@ -1228,8 +1236,10 @@ newdate.setDate(newdate.getDate()+resultarray[0].no_of_days);
               obj.fnstatus=status;
               obj.fnenqid=enqid;
               this.FnChangestatusparam=obj;
-             //alert(JSON.stringify(obj));
               this.$.FnChangestatusajax.generateRequest();
+      },
+      FnChangestatusResponse:function(e){
+        alert("Updated");
       },
       insertnewfollowup:function(fnsum,fnscheid,fnfid,fnnewdate,fnnextdate){
              this.insertfollowuprowurl=sessionStorage.getItem("addrinfo")+"/insertfollowuprow";

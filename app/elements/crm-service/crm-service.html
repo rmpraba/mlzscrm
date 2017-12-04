@@ -514,6 +514,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         document.querySelector('enquiry-card').academicarr=e.detail.response.returnval;
         document.querySelector('enquiry-card').FnSetDefaultYear();
+        document.querySelector('followup-dashboard').academicarr=e.detail.response.returnval;
+        document.querySelector('followup-dashboard').FnSetDefaultYear();
         // this.getenquirycount(localStorage.getItem("curr_sess_academicyear"));
         // this.getadmittedcount(localStorage.getItem("curr_sess_academicyear"));
       },
@@ -1406,7 +1408,7 @@ attenderusername=attendername;
       },
       walkinanalysisdayResponse:function(e){
         walkinanalysisday=e.detail.response.returnval;
-        alert(JSON.stringify(walkinanalysisday));
+        // alert(JSON.stringify(walkinanalysisday));
         this.walkinanasysisyaerandmonth();
       },
       walkinanasysisyaerandmonth:function(){

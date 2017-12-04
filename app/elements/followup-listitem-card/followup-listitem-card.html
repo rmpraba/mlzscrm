@@ -14,8 +14,7 @@
       #dialog3{
             margin-left: -25%;
                 top: 30%;
-      }
-     
+      }     
     </style>
     <div>
     <table class="table table-stdiped" style="    margin-bottom: -2%;" >
@@ -45,17 +44,14 @@
           <paper-input id="dates" label="Date" error-message="needs next followup date!" readonly required value="{{nextdate}}" hidden$="{{dates}}"></paper-input>
           <div id="reschedule" style=" padding-top: 16%; padding-left: 33%;  margin-left: -28%;" hidden$="{{reschedule}}">
           <paper-button raised style="background-color: silver;" class="button" on-click="Rescheduling" >Reschedule</paper-button></div>
-          </div>
-        
-          
+          </div>   
           </td>
             <!-- <div id="confidencelabel">{{confidencelvl}}</div> -->
-          
           <td class="col-sm-3" style="text-align:center; padding-top: 6%;"><div hidden$="{{viewdetail}}"><a href="" on-click="fnviewdetailshow">view details</a></div>
           <div hidden$="{{notcompleted}}">Still not completed</div></td>
         </tr>
         </tbody>
-        <div hidden>{{callstatus}}/{{confidencelvl}}/{{followupno}}/{{fid}}/{{nextdate}}/{{scheid}}</div>
+        <div hidden>{{followupflag}}{{callstatus}}/{{confidencelvl}}/{{followupno}}/{{fid}}/{{nextdate}}/{{scheid}}</div>
       </table>
       </div>
        <paper-dialog id="dialog1" class="paper-date-picker-dialog">
@@ -65,7 +61,6 @@
           <paper-button raised on-click="FnDismissDialog1">OK</paper-button>
         </div>
       </paper-dialog>
-
       <paper-dialog id="dialog2" class="paper-date-picker-dialog">
       <div class="content">
       <div>Confidence Level : 
@@ -82,8 +77,8 @@
             </paper-dropdown-menu>
         </div>
             <iron-autogrow-textarea id="followbox1" placeholder="Please type your comments here..." error-message="needs comments!" required value="{{value}}"></iron-autogrow-textarea>
-              <datepicker-followup-card scheduledon="{{scheduledate}}" showdate="{{nextdate}}"></datepicker-followup-card>
-      </div>
+            <datepicker-followup-card scheduledon="{{scheduledate}}" showdate="{{nextdate}}"></datepicker-followup-card>
+        </div>
         <div class="buttons">
           <paper-button id="followdisk2" style="background-color: silver;" class="btn glyphicon glyphicon-floppy-disk" raised on-click="FollowUp">Save</paper-button>
           <paper-button raised style="background-color: silver;" on-click="FnDismissDialog2">Cancel</paper-button>
@@ -119,25 +114,20 @@
       
      <div hidden>{{scheduledate}}/{{nextdate}}</div>
 
-
      <paper-dialog id="dialog4" class="paper-date-picker-dialog">
       <div class="content">
             <h2>Select your option..</h2>
             <paper-radio-group>
-              <paper-radio-button id="todaydate" on-click="Fntodaydate">Today.</paper-radio-button>
-              <paper-radio-button id="customdate" on-click="Fncustomdate">Custom Date.</paper-radio-button>
-            </paper-radio-group>
-              
+              <paper-radio-button id="todaydate" on-click="Fntodaydate">From Today</paper-radio-button>
+              <paper-radio-button id="customdate" on-click="Fncustomdate">Custom Date</paper-radio-button>
+            </paper-radio-group>              
             <custom-datepicker-card id="custdate"></custom-datepicker-card>
       </div>
-        <div class="buttons">
+      <div class="buttons">
           <paper-button id="followdisk4" style="background-color: silver;" class="btn glyphicon glyphicon-floppy-disk" raised on-click="savecustomdate">Save</paper-button>
           <paper-button raised style="background-color: silver;" on-click="FnDismissDialog4">Cancel</paper-button>
-        </div>
+      </div>
       </paper-dialog>
-
-
-
       <paper-dialog id="dialogdetailshow" class="paper-date-picker-dialog">
       <div class="content">
           <table>
@@ -162,9 +152,7 @@
           <paper-button raised style="background-color: silver;" on-click="closedetaildialog">Close</paper-button>
         </div>
       </paper-dialog>
-
-
-      <followup-service id="followupservice"></followup-service>
+      <follow-up-service id="followupservice"></follow-up-service>
   </template>
   <script>
   (function() {
@@ -182,10 +170,8 @@
     var takedate;
     var nextdatsd;
     var flagz;
-
     Polymer({
       is: 'followup-listitem-card',
-
       ready:function(){
         confidencelvl="TBD";
         currentdate=sessionStorage.getItem("todaydate");
@@ -219,7 +205,14 @@
           callstatus="Yes";
           flwno=this.sno;
           document.getElementById('callno'+this.followupno).checked=false;
+          // this.$.followupservice.FnCheckUpcomingFollowup(this.fid,this.scheid,flwno);
+          if(this.followupflag==flwno)
           this.$.dialog2.open();
+          else
+          {
+            alert("Please complete previous followup!!");
+            document.getElementById('callyes'+this.followupno).checked=false;
+          }
         }
         else{
           callstatus=null;
@@ -230,10 +223,32 @@
           callstatus="No";
           flwno=this.sno;
           document.getElementById('callyes'+this.followupno).checked=false;
+          if(this.followupflag==flwno)
           this.$.dialog3.open();
+          else
+          {
+            alert("Please complete previous followup!!");
+            document.getElementById('callno'+this.followupno).checked=false;
+          }
+          // this.$.followupservice.FnCheckUpcomingFollowup(this.fid,this.scheid,flwno);
+          // this.$.dialog3.open();
         }
         else{
           callstatus=null;
+        }
+      },
+      FnCheckFollowup:function(flag){
+        if(flag==true){
+        if(callstatus=="Yes")
+          this.$.dialog2.open();
+        if(callstatus=="No")
+          this.$.dialog3.open();
+        }
+        if(flag==false){
+          if(callstatus=="Yes")
+          document.getElementById('callyes'+this.followupno).checked=false;
+          if(callstatus=="No")
+          document.getElementById('callno'+this.followupno).checked=false;
         }
       },
       FnConfidenceLevel:function(e){
@@ -261,46 +276,111 @@
           flagz=1;  
         }      
       },
-      FollowUp:function(){
-        var selected=new Date(this.scheduledate);
-        var nextdatez=localStorage.getItem("localsess_nextfollowup_date");
-        var sdat=new Date(nextdatez);
-        var res=parseInt(sdat-selected);
-        // alert(res);
-        if(res==0){
-          alert('Kindly, select different date, The date which you have selected same with the current scheduledate ... ');
-          this.showdate='';
+      updateFollowupSchedule:function(date,followupno,nextdate){
+        // alert(JSON.stringify(checkdates));
+        // alert(checkdates[0].no_of_days);
+        var interval=0;
+        var upcomingdate="";
+        var lastscheduledate="";
+        var nextfollowupdate="";
+        for(var i = 0; i < checkdates.length; i++) {
+           if(checkdates[i].followup_no==followupno){
+              for(var j=i;j<checkdates.length;j++){
+                // alert(interval);
+                if(i==j){
+                date.setDate(date.getDate());                 
+                checkdates[j].schedule_date=date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
+                nextdate.setDate(nextdate.getDate()); 
+                checkdates[j].next_followup_date=nextdate.getDate()+"-"+(nextdate.getMonth()+1)+"-"+nextdate.getFullYear();
+                upcomingdate=checkdates[j].next_followup_date;
+                }
+                else{
+                nextdate.setDate(nextdate.getDate());                 
+                checkdates[j].schedule_date=nextdate.getDate()+"-"+(nextdate.getMonth()+1)+"-"+nextdate.getFullYear();                 
+                interval=parseInt(checkdates[0].no_of_days);
+                if(j!=parseInt(checkdates.length)-1){
+                nextdate.setDate(nextdate.getDate() + parseInt(interval)); 
+                checkdates[j].next_followup_date=nextdate.getDate()+"-"+(nextdate.getMonth()+1)+"-"+nextdate.getFullYear();
+                }
+                else{
+                  checkdates[j].next_followup_date=''; 
+                }
+                lastscheduledate=checkdates[j].schedule_date;
+               }
+              }
+           }
         }
-        else if(res<0){
-          alert('Please choose the future date!!');
-          this.showdate='';
-        }
-        else{
-          vnextdate=new Date(nextdatez);
-          this.nextdate=nextdatez;
-          flagz=1;  
-        }
-        if(this.value==""||confidencelvl==null){
-          this.$.followbox1.validate();
-          this.$.followbox2.validate();
-          if(confidencelvl==null||confidencelvl==""){
-            alert('Please select the Confidence level of this followup');
-          }
-        }
-        else{
-          if(flagz==1){
-            this.datesdiff();
-            this.$.followupservice.updatefolowup(this.fid,this.scheduledate,this.followupno,currentdate,nextdatsd,this.value,callstatus,confidencelvl,this.sno);  
-            this.$.dialog2.close();
-            this.$.dialog3.close();
-            document.getElementById('followbox1').value="";
-            document.getElementById('followbox2').value="";
-            this.value="";
-          }         
-        }
+        // if(this.$.dialog2.open==true)
+        if(callstatus=="Yes")
+        this.$.dialog2.toggle();
+        // if(this.$.dialog2.open==true)
+        if(callstatus=="No")
+        this.$.dialog3.toggle();
+        this.$.followupservice.updatefollowupschedule(upcomingdate,lastscheduledate,this.fid,this.scheid,checkdates,this.fid,this.scheduledate,this.followupno,currentdate,upcomingdate,this.value,callstatus,confidencelvl,this.sno);
         
+        // for(var i = 0; i < checkdates.length; i++) {
+        //   alert(checkdates[i].schedule_date+"  "+checkdates[i].next_followup_date);
+        // }
       },
-      
+      // updateFollowupDetail:function(){
+      //   this.$.followupservice.updatefolowup(this.fid,this.scheduledate,this.followupno,currentdate,nextdatsd,this.value,callstatus,confidencelvl,this.sno); 
+      // },
+      FollowUp:function(){
+        var currdate=new Date();
+        var schdate=new Date(this.scheduledate);
+        var nextfollowupdate=new Date(localStorage.getItem("localsess_nextfollowup_date"));
+        // alert("currdate..."+currdate+"  schdate..."+schdate+" nextfollowupdate..."+nextfollowupdate);
+        var CDSDdiff=parseInt(schdate-currdate);
+        this.updateFollowupSchedule(currdate,flwno,nextfollowupdate);
+        // alert(CDSDdiff);
+        // if(CDSDdiff==0){
+        // }
+        // else if(CDSDdiff<0){ 
+        // }
+        // else if(CDSDdiff>0){
+        // }
+        // alert(JSON.stringify(checkdates));
+        // for(var j=0;j<checkdates.length;j++){           
+            // var et=checkdates[j].schedule_date;
+        // }
+        // var selected=new Date(this.scheduledate);
+        // var nextdatez=localStorage.getItem("localsess_nextfollowup_date");
+        // var sdat=new Date(nextdatez);
+        // var res=parseInt(sdat-selected);
+        // alert("i'm selected: "+sdat+"  scheduled: "+selected);
+        // alert(res);
+        // if(res==0){
+        //   alert('Kindly, select different date, The date which you have selected same with the current scheduledate ... ');
+        //   this.showdate='';
+        // }
+        // else if(res<0){
+        //   // alert('Please choose the future date!!');
+        //   // this.showdate='';
+        // }
+        // else{
+        //   vnextdate=new Date(nextdatez);
+        //   this.nextdate=nextdatez;
+        //   flagz=1;  
+        // }
+        // if(this.value==""||confidencelvl==null){
+        //   this.$.followbox1.validate();
+        //   this.$.followbox2.validate();
+        //   if(confidencelvl==null||confidencelvl==""){
+        //     alert('Please select the Confidence level of this followup');
+        //   }
+        // }
+        // else{
+        //   if(flagz==1){
+        //     this.datesdiff();
+        //     this.$.followupservice.updatefolowup(this.fid,this.scheduledate,this.followupno,currentdate,nextdatsd,this.value,callstatus,confidencelvl,this.sno);  
+        //     this.$.dialog2.close();
+        //     this.$.dialog3.close();
+        //     document.getElementById('followbox1').value="";
+        //     document.getElementById('followbox2').value="";
+        //     this.value="";
+        //   }         
+        // }        
+      },      
       dialogfollowup:function(){
         document.getElementById('dialog1').open();
       },
@@ -312,23 +392,22 @@
         var dt=new Date(pickdate);
        var datesx=dt.getDate()+'/'+(dt.getMonth()+1)+'/'+dt.getFullYear();
        this.nextdate=datesx;
-
-        document.getElementById('dialog1').close();
+       document.getElementById('dialog1').close();
       },
       Rescheduling:function(){
         this.$.dialog4.open();
         this.$.custdate.hidden=true;
-      },
-      
+      },      
       FnDismissDialog2:function(){
-         document.getElementById('dialog2').close();
+          document.getElementById('dialog2').close();
           document.querySelector('#confidencelevel').selected=-1;
           document.getElementById('followbox1').value="";
           this.value="";
+          // this.nextdate=upcomingdate;
           document.getElementById('callyes'+this.followupno).checked=false;
           this.$.dialog2.close();
       },
-       Fncallstatusdrop:function(e){
+      Fncallstatusdrop:function(e){
         callpickstatus=(e.target.selectedItem.textContent).trim();
         nextdatsd=this.nextdate;
         this.value=(e.target.selectedItem.textContent).trim();
@@ -337,19 +416,22 @@
         document.querySelector('#callstatusdrop').selected=-1;
         document.getElementById('followbox2').value="";
         this.value="";
-         document.getElementById('callno'+this.followupno).checked=false;
-          this.$.dialog3.close();
+        // this.nextdate=upcomingdate;
+        document.getElementById('callno'+this.followupno).checked=false;
+        this.$.dialog3.close();
       },
       fnviewdetailshow:function(){
         //alert(this.fid+'  '+this.followupno+'   '+this.callstatus);
         this.$.followupservice.viewdetailshow(this.fid,this.followupno,this.callstatus);
       },
       Fntodaydate:function(){
-            takedate="todaydate";
-            //alert(takedate);
+            var date=new Date();
+            takedate=(date.getMonth()+1)+"-"+date.getDate()+"-"+date.getFullYear();
+            this.$.customdate.checked=false;
             this.$.custdate.hidden=true;
       },
       Fncustomdate:function(){
+            this.$.todaydate.checked=false;
             this.$.custdate.hidden=false;
       },
       customdateclear:function(){
@@ -359,7 +441,8 @@
           takedate=datzxc;
       },
       savecustomdate:function(){
-         this.$.followupservice.Fnreschedule(this.confidencelvl,this.fid,takedate);
+        // alert(takedates);
+         this.$.followupservice.Fnreschedule(this.confidencelvl,this.fid,takedate,this.scheid);
          this.$.dialog4.close();
       },
       FnDismissDialog4:function(){
@@ -450,19 +533,19 @@
         this.actualdate="";
         this.confidencegiven="";
         this.comments="";
-        confidencelvl
-        callstatus=null;
-        vnextdate=null;
-        currentdate=null;
-        callpickstatus=null;
+        confidencelvl="";
+        callstatus="";
+        vnextdate="";
+        currentdate="";
+        callpickstatus="";
         checkdates=[];
-        folwno=null;
-        ckdt1=null;
-        ckdt2=null;
-        sum=null;
-        takedate=null;
-        nextdatsd=null;
-        flagz=null;
+        folwno="";
+        ckdt1="";
+        ckdt2="";
+        sum="";
+        takedate="";
+        nextdatsd="";
+        flagz="";
       }
       
     });

@@ -5,7 +5,57 @@
 
 <dom-module id="followup-dashboard">
   <template>
-  <div class="col-sm-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-phone" aria-hidden="true"></i> Followup
+        <span class="pull-right" style="margin-top: -3%;">
+          <span >
+          <paper-dropdown-menu on-iron-select="FnSelectAcademicyear">
+            <paper-listbox class="dropdown-content" id="followupdashboardacyear" attr-for-selected="value" selected="{{selectedval}}">
+            <template  is="dom-repeat" items="{{academicarr}}" as="item">
+              <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+            </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+          </span>
+          <!-- <span class="panel-icon"><a href=""><i class="fa fa-plus" aria-hidden="true" data-toggle="modal" data-target="#DashboardEnquiry"></i></a></span> -->
+        </span>
+    </div>
+    <div class="panel-body">
+      <div class="list-group">
+        <div class="col-sm-2">Open</div>
+        <div class="col-sm-2">In progress</div>
+        <div class="col-sm-2">Closed</div>
+        <div class="col-sm-2">Not Intrested</div>
+        <div class="col-sm-2">Exhausted</div>
+      </div>
+     <div class="col-sm-2">
+      <template  is="dom-repeat" items="{{openarr}}" as="view">
+        <follow-up-dashboard-item-card grade="{{view.class}}" enquirygrade="{{view.total}}" status="{{view.schedule_status}}" academicyear="{{view.academic_year}}"></follow-up-dashboard-item-card>
+      </template>
+     </div>
+     <div class="col-sm-2">
+      <template  is="dom-repeat" items="{{processarr}}" as="view">
+        <follow-up-dashboard-item-card grade="{{view.class}}" enquirygrade="{{view.total}}" status="{{view.schedule_status}}" academicyear="{{view.academic_year}}"></follow-up-dashboard-item-card>
+      </template>
+     </div>
+     <div class="col-sm-2">
+      <template  is="dom-repeat" items="{{closearr}}" as="view">
+        <follow-up-dashboard-item-card grade="{{view.class}}" enquirygrade="{{view.total}}" status="{{view.schedule_status}}" academicyear="{{view.academic_year}}"></follow-up-dashboard-item-card>
+      </template>
+     </div>
+     <div class="col-sm-2">
+      <template  is="dom-repeat" items="{{niarr}}" as="view">
+        <follow-up-dashboard-item-card grade="{{view.class}}" enquirygrade="{{view.total}}" status="{{view.schedule_status}}" academicyear="{{view.academic_year}}"></follow-up-dashboard-item-card>
+      </template>
+     </div>
+     <div class="col-sm-2">
+     <template  is="dom-repeat" items="{{exhaustedarr}}" as="view">
+       <follow-up-dashboard-item-card grade="{{view.class}}" enquirygrade="{{view.total}}" status="{{view.schedule_status}}" academicyear="{{view.academic_year}}"></follow-up-dashboard-item-card>
+     </template>
+     </div>
+    </div>
+  <!-- <div class="col-sm-12">
     <table class="table table-hover col-sm-8" style="width: 55% !important;" >
       <thead>
       <tr>
@@ -40,7 +90,7 @@
       </td>
       </tr>
       </tbody>
-    </table>
+    </table> -->
    <!--  <table class="table table-hover col-sm-4 col-sm-offset-1" style="width: 35% !important;" >
     <thead>
       <tr>
@@ -100,8 +150,9 @@
       </tr>
       </tbody>
     </table> -->
-    </div>
+    <!-- </div> -->
     <crm-service id="service"></crm-service>
+    <follow-up-service id="followupservice"></follow-up-service>
   </template>
   <script>
   (function() {
@@ -110,7 +161,16 @@
     Polymer({
       is: 'followup-dashboard',
       ready:function(){
-        
+        this.$.service.fetchacademicyearService();
+      },
+      FnSetDefaultYear:function(){
+        this.selectedval=localStorage.getItem("curr_sess_academicyear");
+        this.$.followupservice.getfollowupcount();
+      },
+      FnSelectAcademicyear:function(e){
+        var academicyear=(e.target.selectedItem.textContent).trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+        this.$.followupservice.getfollowupcount();
       }
     });
   })();
