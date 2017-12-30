@@ -111,7 +111,7 @@
         var paidamount=0;
         localStorage.setItem("curr_sess_paidamount",paidamount);
         if(paidfeearr!='no rows'){          
-            if(localStorage.getItem("curr_sess_feetypepaymentflag")==paidfeearr[0].paymenttype_flag){ 
+            // if(localStorage.getItem("curr_sess_feetypepaymentflag")==paidfeearr[0].paymenttype_flag){ 
             for(var i=0;i<paidfeearr.length;i++){
             paidamount=parseFloat(paidamount)+parseFloat(paidfeearr[i].installment_amount);
             }
@@ -124,9 +124,9 @@
             document.querySelector('custompattern-fee-card').FnHiddenPayment();
             document.querySelector('custompattern-fee-card').FnShowAlreadyPaidBlock(paidfeearr);
             this.searchfeeadmissioninfoService(localStorage.getItem("curr_sess_enquiryno"));
-            }
-            else
-            alert("It is not collected under this type!!");
+            // }
+            // else
+            // alert("It is not collected under this type!!");
         }
         else{
             document.querySelector('custompattern-fee-card').FnSetDisableFlag();

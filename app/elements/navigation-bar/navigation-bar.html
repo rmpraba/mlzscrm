@@ -1223,6 +1223,7 @@
         document.querySelector('rtefee-card').callService();
       },
       FnCustomfee:function(e){
+        localStorage.setItem("curr_sess_installmentpatternchange",true);
         localStorage.setItem('curr_sess_page','');
         localStorage.setItem("curr_sess_feetypepayment","Custom fee");
         localStorage.setItem("curr_sess_feetypepaymentflag","1");

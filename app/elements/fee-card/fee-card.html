@@ -150,12 +150,10 @@
     Polymer({
       is: 'fee-card',
       FnSearchEnquiry:function(){
-        this.$.admissionservice.callSearchadmnenquiryService(this.enquiryno);
-        
+        this.$.admissionservice.callSearchadmnenquiryService(this.enquiryno);        
       },
       FnSearchAdmission:function(){z
-        this.$.admissionservice.callSearchadmissionService(this.admissionno);
-        
+        this.$.admissionservice.callSearchadmissionService(this.admissionno);        
       },
       FnToggleProspect:function(){
         localStorage.setItem("curr_sess_feecomponent",'pros_fee');

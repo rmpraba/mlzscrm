@@ -2,11 +2,19 @@
  var mysql      = require('mysql');
  var email   = require("emailjs/email");
  var connection = mysql.createConnection({
-  host     : 'localhost',
-  port     : '3306',
-  user     : 'root',
-  password : 'admin',
-  database : 'mlzscrm'
+  host:"mysmis.cpldg3whrhyv.ap-south-1.rds.amazonaws.com",
+  database:"mlzscrm",
+  port:'3306',
+  user:"mysmis",
+  password:"mysmispass",
+  reconnect:true,
+  data_source_provider:"rds",
+  type:"mysql"
+  // host     : 'localhost',
+  // port     : '3306',
+  // user     : 'root',
+  // password : 'admin',
+  // database : 'mlzscrm'
   // host     : 'localhost',
   // port     : '37506',
   // user     : 'adminVwbmIka',
@@ -1629,7 +1637,7 @@ app.post('/fetchexistingadmissionpaidinfo',  urlencodedParser,function (req, res
     if(!err){
     if(rows.length>0){      
     var academicyear=rows[0].academic_year;
-    var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+academicyear+"' and (admission_no = '"+req.query.admissionno+"' or enquiry_no='"+req.query.admissionno+"') and installment not in ('Registration fee','Application fee','Caution deposit') and cheque_status not in ('cancelled')";
+    var qur="SELECT * FROM md_student_paidfee WHERE school_id='"+req.query.schoolid+"' and academic_year='"+academicyear+"' and (admission_no = '"+req.query.admissionno+"' or enquiry_no='"+req.query.admissionno+"') and installment not in ('Registration fee','Application fee','Caution deposit') and cheque_status not in ('cancelled','bounced')";
     console.log('-----------query after academicyear-----------');
     console.log(qur);
     console.log('------------------------------------------------------------------');
