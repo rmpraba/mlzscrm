@@ -2,11 +2,12 @@
  var mysql      = require('mysql');
  var email   = require("emailjs/email");
  var connection = mysql.createConnection({
-  host:"mysmis.cpldg3whrhyv.ap-south-1.rds.amazonaws.com",
+  
+  host:"smis.cpldg3whrhyv.ap-south-1.rds.amazonaws.com",
   database:"mlzscrm",
   port:'3306',
-  user:"mysmis",
-  password:"mysmispass",
+  user:"smis",
+  password:"smispass",
   reconnect:true,
   data_source_provider:"rds",
   type:"mysql"
@@ -30,6 +31,291 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 app.get('/', function (req, res) {
    res.sendFile("app/index.html" );
 });
+
+app.post('/smiscrm-logincheck',  urlencodedParser,function (req, res){
+  var checkqur="SELECT * FROM md_register WHERE id='"+req.body.emp_id+"' AND password='"+req.body.emp_pass+"' AND school_id='"+req.body.school_id+"'";
+  var checkqur1="SELECT * FROM md_register WHERE id='"+req.body.emp_id+"' AND password='"+req.body.emp_pass+"' AND device_id!='"+req.body.reg_id+"' AND school_id='"+req.body.school_id+"'";
+  var updatequr="UPDATE md_register SET device_id='"+req.body.reg_id+"' WHERE id='"+req.body.emp_id+"' AND password='"+req.body.emp_pass+"' AND school_id='"+req.body.school_id+"'";
+  var deletequr="DELETE FROM md_register WHERE WHERE id='"+req.body.emp_id+"' AND password='"+req.body.emp_pass+"' AND school_id='"+req.body.school_id+"'";
+  connection.query(checkqur,function(err, rows){
+    if(!err){
+      if(rows.length>0){
+       connection.query(updatequr,function(err, result){
+          if(result.affectedRows>0){
+            res.status(200).json({'returnval': 'Updated'});
+          }
+          else
+          {
+            connection.query(deletequr,function(err, result){
+              if(result.affectedRows>0){
+                res.status(200).json({'returnval': 'Deleted'});
+              }
+            });
+          }
+        });
+      }
+    }
+  });
+
+});
+
+app.post('/smiscrm-login',  urlencodedParser,function (req, res){
+
+  var qur="SELECT * FROM md_employee WHERE employee_id='"+req.body.emp_id+"' AND password='"+req.body.emp_pass+"'";
+  var insertqur="INSERT INTO md_register SET ?";
+  var school_id="";
+  var role="";
+  var emp_name="";
+  var param={
+    school_id:'',
+    id:req.body.emp_id,
+    password:req.body.emp_pass,
+    device_id:req.body.reg_id,
+    role:''
+  };
+
+  connection.query(qur,function(err, rows){
+    if(!err){
+      if(rows.length>0){
+        school_id=rows[0].school_id;
+        role=rows[0].role_id;
+        emp_name=rows[0].employee_name;
+        param.school_id=rows[0].school_id;
+        param.role=rows[0].role_id;
+      connection.query("SELECT * FROM md_register WHERE id='"+req.body.emp_id+"' AND password='"+req.body.emp_pass+"' AND school_id='"+school_id+"' ",function(err, rows){        
+      if(!err){
+       if(rows.length==0){
+        connection.query(insertqur,[param],function(err, rows){
+        if(!err)
+        res.status(200).json({'returnval': 'Success','schoolid':school_id,'empname':emp_name,'emprole':role});
+        else
+        res.status(200).json({'returnval': err});
+        });
+      }
+      else{
+        connection.query("UPDATE md_register SET device_id='"+req.body.reg_id+"' WHERE id='"+req.body.emp_id+"' AND password='"+req.body.emp_pass+"' AND school_id='"+school_id+"'",function(err, rows){        
+        if(!err)
+        res.status(200).json({'returnval': 'Exist','schoolid':school_id,'empname':emp_name,'emprole':role});
+        else
+        res.status(200).json({'returnval': err});
+        });
+      }
+      }
+      else
+        res.status(200).json({'returnval': 'invalid'});
+      });
+      } 
+      else {
+        res.status(200).json({'returnval': 'invalid'});
+      }
+    }
+    else{
+      console.log('hi');
+      console.log(err);
+      console.log('hi2');
+    }
+  });
+});
+
+app.post('/smiscrm-getfollowupcount',  urlencodedParser,function (req, res){
+
+    //console.log('qur');
+    var arr=[];
+    connection.query("SELECT p.schedule_status, f.class, COUNT( * ) AS total FROM   student_enquiry_details AS f join followup as p WHERE f.school_id =  '"+req.body.schoolid+"' and f.academic_year =  '"+req.body.academicyear+"' and p.school_id =  '"+req.body.schoolid+"' AND p.schedule_status=  '"+req.body.status+"' AND f.enquiry_no = p.enquiry_id and f.status='Enquired' GROUP BY class ORDER BY (class)",
+    function(err, rows)
+    {
+    if(!err)
+    {
+    if(rows.length>0)
+    {
+      //console.log(rows);
+      res.status(200).json(rows);
+    }
+    else
+    {
+      console.log(err);
+      res.status(200).json(arr);
+    }
+  }
+  else{
+     console.log(err);
+  }
+});
+});
+
+app.post('/smiscrm-getfollowupstudents',  urlencodedParser,function (req, res)
+ {
+   var school={"school_id":req.body.schoolid};
+   var academicyear={"school_id":req.body.academicyear};
+   var grade={"class":req.body.grade};
+   var status={"status":req.body.status};
+
+   var checkstatus=req.body.status;
+   if((checkstatus=='Closed')||(checkstatus=='Exhausted')){
+        var qur = "SELECT f.enquiry_id,f.schedule_flag,s.enquiry_name,f.schedule_status,f.id,f.current_confidence_level,f.upcoming_date FROM followup f join student_enquiry_details s on f.enquiry_id=s.enquiry_no WHERE f.schedule_status='"+req.body.status+"' and s.class='"+req.body.grade+"' and s.academic_year='"+req.body.academicyear+"' and s.school_id = '"+req.body.schoolid+"' and f.followed_by='"+req.body.user+"' and s.status='Enquired' ORDER BY (upcoming_date) DESC";
+   }
+   else{
+        var qur = "SELECT f.enquiry_id,f.schedule_flag,s.enquiry_name,f.schedule_status,f.id,f.current_confidence_level,f.upcoming_date FROM followup f join student_enquiry_details s on f.enquiry_id=s.enquiry_no WHERE f.schedule_status='"+req.body.status+"' and s.class='"+req.body.grade+"' and s.academic_year='"+req.body.academicyear+"' and s.school_id = '"+req.body.schoolid+"' and f.followed_by='"+req.body.user+"' and s.status='Enquired'  ORDER BY (upcoming_date)";
+   }
+   console.log(qur);
+   var arr=[];
+   connection.query(qur,
+     function(err, rows)
+     {
+       if(!err)
+       {
+         //console.log(rows);
+         res.status(200).json(rows);
+       }
+       else
+       {
+         console.log(err);
+         res.status(200).json(arr);
+       }
+
+     });
+ });
+
+app.post('/smiscrm-viewdetail',  urlencodedParser,function (req, res)
+ {
+   var school={"school_id":req.body.schoolid};
+   var id={"enquiry_no":req.body.enquiryno};
+   var qur = "select f.enquiry_id,f.current_confidence_level,f.id,f.schedule_no,f.last_schedule_date,f.schedule_Status,d.enquiry_no,d.enquiry_name,d.class,d.created_on,d.father_name,d.father_mob,d.guardian_mobile,d.guardian_name from followup as f Join student_enquiry_details d on d.enquiry_no=f.enquiry_id where f.id='"+req.body.followupid+"' and f.enquiry_id='"+req.body.enquiryno+"' and f.school_id='"+req.body.schoolid+"' and f.schedule_status='"+req.body.status+"' and d.academic_year='"+req.body.academicyear+"'";
+   var arr=[];
+   connection.query(qur,
+     function(err, rows)
+     {
+       if(!err)
+       {
+         res.status(200).json(rows);
+       }
+       else
+       {
+         console.log(err);
+         res.status(200).json(arr);
+       }
+     });
+ });
+
+app.post('/smiscrm-getlistdetails',  urlencodedParser,function (req, res){
+    var school={"school_id":req.body.schoolid};
+    var flwpid={"schedule_id":req.body.followupid};
+    var scheduleno={"schedule":req.body.schduleno};
+    var qur="SELECT * FROM followupdetail WHERE school_id='"+req.body.schoolid+"' and schedule_id='"+req.body.followupid+"' and schedule='"+req.body.scheduleno+"' and followup_status!='Cancelled' ORDER BY(str_to_date(schedule_date,'%Y-%m-%d'))";
+    var arr=[];
+    connection.query(qur,function(err, rows)
+    {
+    if(!err)
+    {
+    if(rows.length>0)
+    {
+     // console.log(rows);
+      res.status(200).json(rows);
+    }
+    else
+    {
+      console.log(err);
+      res.status(200).json(arr);
+    }
+  }
+  else{
+     console.log(err);
+  }
+});
+});
+
+/*this function is used to update the followup details of the current followup*/
+ app.post('/smiscrm-updatefollowupdetails',  urlencodedParser,function (req, res)
+{
+  var school={"school_id":req.body.schoolid};
+  var scheduledon={"schedule_date":req.body.scheduleddate};
+  var followupid={"schedule_id":req.body.followupid};
+  var no={"followup_no":req.body.followupno};
+  var schedule={"schedule":req.body.scheduleid};
+  var collection={"actual_date":req.body.currdate,"schedule_date":req.body.currdate,"next_followup_date":req.body.nextdate,"followup_comments":req.body.comments,"followup_status":req.body.callstatus,"confidence_level":req.body.confidencelevel};
+    connection.query('update followupdetail set ? where ? and ? and ? and ?',[collection,school,followupid,no,schedule],
+    function(err, rows)
+    {
+    if(!err)
+    {
+      console.log('updated');
+      res.status(200).json({'returnval': 'Success'});
+    }
+    else
+    {
+      console.log(err);
+      res.status(200).json({'returnval': 'invalid'});
+    }
+});
+});
+
+
+app.post('/smiscrm-updatefollowupschedule-service',  urlencodedParser,function (req, res){
+  var followupno=req.body.followupno;
+  var nextdate=new Date(req.body.nextdate);
+  var date=new Date(req.body.currdate);
+  var qur2="update followupdetail set schedule_date=DATE_FORMAT(DATE_ADD(STR_TO_DATE('"+req.body.nextdate+"','%d-%m-%Y'),INTERVAL start_interval DAY),'%d-%m-%Y'), "+
+  " next_followup_date=DATE_FORMAT(DATE_ADD(STR_TO_DATE('"+req.body.nextdate+"','%d-%m-%Y'),INTERVAL end_interval DAY),'%d-%m-%Y') where followup_status='F' and "+
+  " enquiry_id='"+req.body.enquiryid+"' AND school_id='"+req.body.schoolid+"' AND schedule_id='"+req.body.followupid+"' AND schedule='"+req.body.scheduleid+"'";
+         connection.query(qur2,function(err, result)
+         {
+          //console.log(rows);
+          if(!err){
+          if(result.affectedRows>0){            
+           res.status(200).json({'returnval': 'Success'});
+          }
+          }
+          else{
+            console.log(err);
+            res.status(200).json({'returnval':err});
+          }
+         });
+});
+
+ /*this function is used to update the followup of the current followup*/
+ app.post('/smiscrm-updatefollowupconfidencelvl',  urlencodedParser,function (req, res)
+{
+
+  var school={"school_id":req.body.schoolid};
+  var followupid={"id":req.body.followupid};
+  var scheduleno={"schedule_no":req.body.scheduleid};
+  var qur="SELECT * FROM followupdetail WHERE school_id='"+req.body.schoolid+"' AND schedule_id='"+req.body.followupid+"' AND enquiry_id='"+req.body.enquiryid+"' AND schedule='"+req.body.scheduleid+"' order by followup_no desc";
+  connection.query("SELECT * FROM followupdetail WHERE school_id='"+req.body.schoolid+"' AND schedule_id='"+req.body.followupid+"' AND enquiry_id='"+req.body.enquiryid+"' AND schedule='"+req.body.scheduleid+"' order by followup_no desc",function(err, rows)
+    {
+    if(!err){ 
+    if(rows.length>0){ 
+    var lastdate=rows[0].schedule_date;
+
+    var confidence={"last_schedule_date":lastdate,"current_confidence_level":req.body.confidencelevel,"schedule_status":'Inprogress',"schedule_flag":req.body.followupno,"upcoming_date":req.body.nextdate};
+    res.status(200).json({'returnval': lastdate+"......"+confidence+"..."+school+"..."+followupid+"..."+scheduleno});
+    connection.query('update followup set ? where ? and ? and ?',[confidence,school,followupid,scheduleno],
+    function(err, rows)
+    {
+    if(!err)
+    {
+      console.log('updated1');
+          res.status(200).json({'returnval': 'Success'});
+    }
+    else
+    {
+      console.log(err);
+      res.status(200).json({'returnval': err});
+    }
+
+    });
+  }
+  else
+    res.status(200).json({'returnval': 'no rows'+qur});
+}
+else
+    {
+      console.log(err);
+      res.status(200).json({'returnval': 'Out......'+err});
+    }
+});
+});
+
+
 
 app.post('/loginpage',  urlencodedParser,function (req, res)
 {
@@ -3445,14 +3731,16 @@ app.post('/updatefollowdetail',  urlencodedParser,function (req, res)
     "schedule":req.query.schedule,
     "followup_status":req.query.flag,
     "created_by":req.query.createdby,
-    "created_on":req.query.createdon
+    "created_on":req.query.createdon,
+    "start_interval":req.query.startinterval,
+    "end_interval":req.query.endinterval
    };
     connection.query('insert into followupdetail set ? ',[collection],function(err, rows)
     {
     if(!err)
     {
       //console.log('inserted');
-      res.status(200).json({'returnval': 'success'});
+      res.status(200).json({'returnval': 'success','ret':req.query.startinterval+req.query.endinterval});
     }
     else
     {
@@ -7381,13 +7669,13 @@ app.post('/fetchstructureallstudent-service',  urlencodedParser,function (req, r
   console.log('ady..'+req.query.admissionyear);
   console.log('acy..'+req.query.academicyear);
   if(req.query.admissionyear=='All'&&req.query.grade=='All Grades')
-  var qur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"'";
+  var qur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and active_status in('Admitted','Default')";
   else if(req.query.admissionyear=='All'&&req.query.grade!='All Grades')
-  var qur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and class_for_admission='"+req.query.grade+"'"; 
+  var qur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and class_for_admission='"+req.query.grade+"' and active_status in('Admitted','Default')"; 
   else if(req.query.admissionyear!='All'&&req.query.grade=='All Grades')
-  var qur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_year='"+req.query.admissionyear+"'";
+  var qur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_year='"+req.query.admissionyear+"' and active_status in('Admitted','Default')";
   else
-  var qur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_year='"+req.query.admissionyear+"' and class_for_admission='"+req.query.grade+"'";  
+  var qur="SELECT * FROM md_admission WHERE school_id='"+req.query.schoolid+"' and academic_year='"+req.query.academicyear+"' and admission_year='"+req.query.admissionyear+"' and class_for_admission='"+req.query.grade+"' and active_status in('Admitted','Default')";  
   console.log('------------------------------------------------------');
   console.log(qur);
   console.log('------------------------------------------------------');

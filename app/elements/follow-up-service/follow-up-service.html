@@ -255,16 +255,20 @@
             var tempinterval=interval;
             var startdate="";
             var enddate="";
+            var interval_count=0;
             for(var i=0;i<resultarr[0].no_of_calls;i++){
             var followup=new Date(); 
             followup.setDate(followup.getDate() + parseInt(tempinterval));   
-            var obj={}
+            var obj={};
             obj.followupno=i+1;
             obj.date=followup.getDate()+"-"+(followup.getMonth()+1)+"-"+followup.getFullYear();
             if(i==0)
               startdate=obj.date;
             if(i==parseInt(resultarr[0].no_of_calls)-1)
               enddate=obj.date;
+            obj.startinterval=interval_count;
+            interval_count=parseInt(interval_count)+parseInt(interval);
+            obj.endinterval=interval_count;
             followupdatearr.push(obj);
             tempinterval=tempinterval+resultarr[0].no_of_days;
             }
@@ -306,6 +310,8 @@
           else{
           obj.nextfolowup=""; 
           }
+          obj.startinterval=followupdatearr[j].startinterval;
+          obj.endinterval=followupdatearr[j].endinterval;
           obj.flag='F';
           obj.schedule=scheduleno;
           obj.createdby=localStorage.getItem("employeeid");
@@ -319,12 +325,15 @@
           }
       },
       updatefollowdetailResponse:function(e){
-        // alert(count1+"  "+count2);
+        // alert(e.detail.response.ret);
         if(e.detail.response.returnval=='success'){
           count2++;
           if(count1==count2){
             alert('The follwup schedule is updated successfully');
             document.querySelector('followup-student-detail').FnUpdateSchedule(scheduleno);
+            resultarr=[];
+            followupdatearr=[];
+            count1=0;count2=0;
           }
         }
         else{
