@@ -1,0 +1,370 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-paymentinfo-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      } 
+      .paymenttype{
+        @apply(--layout-horizontal);
+        margin-top: 2%;
+      }
+      transport-collection-paymenttype-card{
+        margin-left: 3%;
+      }   
+      .inscard{
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        margin-left: 3%;
+        margin-bottom: 2%;
+        margin-top: 2%;
+        border-style: groove;
+      }  
+      paper-dialog{
+            border-radius: 5px;
+          }
+          .topcard{
+            @apply(--layout-horizontal);
+          }
+      /*transport-collection-payment-installment-card{
+        margin-left: 2%;
+      }*/
+    </style>
+    <div hidden>{{studentid}}{{studentname}}{{admissionno}}{{academicyear}}{{admissionyear}}{{gradeid}}{{gradename}}{{feecode}}{{admissionstatus}}</div>
+    <div>
+    <div class="row" hidden$="{{hidefeepaiddueblock}}">
+    <div class="well well-sm">
+    <table hidden$="{{hidefeepaiddueblock}}" width="100%">
+    <tr><th>Total Amount</th><th>Discount Amount</th><th>Fine Amount</th><th>Paid Amount</th><th>Due Amount</th></tr>
+    <tr valign="bottom"><td>{{totalamount}}</td><td>{{discountamount}}</td><td>{{fineamount}}</td><td>{{paidamount}}</td><td>{{dueamount}}</td></tr>
+    </table>
+    </div>
+    </div>
+    <div class="row" hidden$="{{hideaddpaymentheader}}">
+    <div class="well well-sm">
+    <table hidden$="{{hideaddpaymentheader}}" width="100%">
+    <tr>
+      <th><h4>Add Payment Info</h4></th>
+      <td>
+      <div class="paymenttype" hidden$="{{hidepaymenttype}}">
+      <template is="dom-repeat" items="{{paymenttypearr}}" as="item">
+      <transport-collection-paymenttype-card paymenttypeid="{{item.payment_typeid}}" paymenttypename="{{item.payment_typename}}" checked="{{item.checked}}" readonly="{{item.readonly}}"></transport-collection-paymenttype-card>
+      </template>
+      </div></td>
+      <th style="text-align: right;"><span class="panel-icon"><a href=""><i class="fa fa-plus fa-lg" aria-hidden="true" on-click="FnAddPayment"></i></a></span></th>
+    </tr>
+    <!-- <tr>
+    <th></th>
+    <th style="text-align: center;" hidden$="{{hideinstallmentblock}}">
+    <div class="inscard" hidden$="{{hideinstallmentblock}}">
+    <template is="dom-repeat" items="{{installmentarr}}" as="item">
+      <transport-collection-payment-installment-card installment="{{item.installment}}"></transport-collection-payment-installment-card>
+    </template>
+    </div>
+    </th>
+    <th></th>
+    </tr> -->
+    </table>
+    </div>
+    </div>
+    <div class="row" hidden$="{{hidepaidpayment}}">
+    <div class="well well-sm">
+    <div class="row">
+    <div class="col-md-12">
+    <div>
+    <transport-collection-payment-history-card paymenthistoryarr="{{paymenthistoryarr}}"></transport-collection-payment-history-card>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="row" hidden$="{{hidepaymentfeeentry}}">
+    <div class="well well-sm">
+    <div class="row">
+    <div class="col-md-12">
+    <div>
+    <transport-collection-fee-entry-card installmentdate="{{installmentdate}}" transactiondate="{{transactiondate}}" paymentmodearr="{{paymentmodearr}}" installmentarr="{{installmentarr}}"></transport-collection-fee-entry-card>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </center>
+    </div>  
+    <div class="row" hidden$="{{hidepaymentfeeedit}}">
+    <div class="well well-sm">
+    <div class="row">
+    <div class="col-md-12">
+    <div>
+    <transport-collection-fee-edit-card></transport-collection-fee-edit-card>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </center>
+    </div>  
+    <paper-dialog id="collectionfeeentryfeetypedialog" style="width: 35%;" modal>
+    <!-- <h2>Select Fee Type!</h2> -->
+    <div class="topcard" style="width: 100%;">
+    <div style="width: 90%;"><h2>Select Fee Type!</h2></div>
+    <div style="width: 10%;text-align: right;margin-top: -2%;"><paper-icon-button style="color: grey;"  icon="icons:close" on-click="FnCancel"></paper-icon-button>   </div> 
+    </div>
+    <div class="submode">
+    <template  is="dom-repeat" items="{{feetypearr}}" as="item">
+    <transport-collection-paymentfeetype-card commontype="{{item.commontype}}" feetype="{{item.fee_type}}" type="{{item.type}}"></transport-collection-paymentfeetype-card>
+    </template>
+    </div>
+    <div class="buttons">
+    <paper-button on-click="FnOk" class="btn btn-primary center">Ok</paper-button>
+    <!-- <paper-button on-click="FnCancel">Cancel</paper-button> -->
+    </div>
+    </paper-dialog>  
+    <paper-dialog id="collectionfeeentryconfirmationdialog" style="width: 30%;">
+    <!-- <center> -->
+    <div class="topcard" style="width: 100%;">
+    <div style="width: 90%;"><h2>Do you want to save!</h2></div>
+    <div style="width: 10%;text-align: right;margin-top: -2%;"><paper-icon-button style="color: grey;"  icon="icons:close" on-click="FnSaveNo"></paper-icon-button></div> 
+    </div>
+    <br>
+    <!-- <h2>Do you want to save!</h2> -->
+    <!-- <br><br> -->
+    <div class="buttons">
+    <paper-button on-click="FnSaveYes" class="btn btn-primary center">Yes</paper-button>
+    <!-- <paper-button on-click="FnSaveNo" class="btn btn-primary center">No</paper-button> -->
+    </div>
+    </paper-dialog>  
+    <paper-dialog id="collectionfeeentrycompletedialog" style="width: 30%;">
+    <center>
+    <h2>{{message}}</h2>
+    <br>
+    <div class="buttons">
+    <paper-button on-click="FnCompletionDialog" class="btn btn-primary center">Ok</paper-button>
+    </div>
+    </center>
+    </paper-dialog> 
+    <!-- <paper-dialog id="transportcollectioninstallmenttypedialog" style="width: 35%;" modal>
+    <h2>Select Installment!</h2>
+    <div class="inscard" hidden$="{{hideinstallmentblock}}">
+    <template is="dom-repeat" items="{{installmentarr}}" as="item">
+      <transport-collection-payment-installment-card installment="{{item.installment}}"></transport-collection-payment-installment-card>
+    </template>
+    </div>
+    <div class="buttons">
+    <paper-button on-click="FnInstallmentOk">Ok</paper-button>
+    <paper-button on-click="FnInstallmentCancel">Cancel</paper-button>
+    </div>
+    </paper-dialog>  -->
+    <div hidden>{{paymenttype}}{{paymentfeetype}}</div>
+    <transport-fee-collection-service id="feecollectionservice"></transport-fee-collection-service>  
+  </template>
+  <script>
+  (function() {
+    'use strict';    
+    Polymer({
+      is: 'transport-collection-paymentinfo-card',
+      ready:function(){
+        this.hidepaidpayment=true;
+        this.hideaddpayment=true;
+        this.hidefeepaiddueblock=true;        
+        this.hidepaymenttype=true;
+        this.hidepaymentfeeentry=true;
+        this.hidesavepaymenttype=true;
+        this.hideaddpaymentheader=false;
+        this.hidepaymentfeeedit=true;
+        this.hideinstallmentblock=true;
+      },
+      FnAddPayment:function(){
+        this.hidepaidpayment=true;
+        this.hideaddpayment=false;
+        this.hidepaymentfeeedit=true;
+        this.hidepaymenttype=true;
+        this.feetypearr=[];
+        this.paymenttypearr=[];
+        this.paymentmodearr=[];
+        this.hidepaymentfeeentry=true;
+        this.hidepaymentfeeedit=true;
+        this.installmentarr=[];
+        this.paymenttype="";
+        this.paymentfeetype="";
+        document.querySelector('transport-collection-fee-entry-card').FnRefresh();
+        // document.querySelector('transport-collection-paymentfeetype-card').FnRefresh();
+        // document.querySelector('transport-collection-paymenttype-card').FnRefresh();
+        // document.querySelector('transport-collection-payment-installment-card').FnRefresh();
+        // document.querySelector('transport-collection-paymentsubmode-card').FnRefresh();
+        this.$.feecollectionservice.fetchcollectionfeetypetocollect(this.academicyear);
+        
+        // this.$.feecollectionservice.fetchcollectionpaymentinstallment();
+      },
+      FnRefresh:function(){
+        this.hidepaidpayment=true;
+        this.hideaddpayment=true; 
+        this.feetypearr="";
+        this.paymenttypearr="";
+        this.hideaddpaymentheader=false;
+        this.hidepaymentfeeedit=true;
+        this.hideinstallmentblock=true;
+        this.ready();
+        this.paymenttype="";
+        this.paymentfeetype=""; 
+        document.querySelector('transport-collection-fee-entry-card').installmenttypename=""; 
+        document.querySelector('transport-collection-paymenttype-card').FnRefresh();
+        document.querySelector('transport-collection-fee-entry-card').FnRefresh();
+        document.querySelector('transport-collection-paymentfeetype-card').FnRefresh();
+      },
+      FnSetInstallmenttype(typeid,typename){
+        // alert(typeid+"  "+typename);
+        this.installmenttypeid=typeid;
+        this.installmenttypename=typename;
+        this.hidepaymentfeeentry=false;
+        this.hidesavepaymenttype=false; 
+        this.hidepaymentfeeedit=true;  
+        document.querySelector('transport-collection-fee-entry-card').FnRefresh();
+        this.$.feecollectionservice.fetchfeenetrycollectionfeetypeinstallmentamount(this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.studentname,this.feetype,this.installmenttypename);
+      },
+      FnSetPaymenttype:function(typeid,typename){
+        // alert(typeid+" "+typename);
+        // alert(this.paymenttype+"  "+this.paymentfeetype);
+        if(typeid==2&&this.paymentfeetype!='Zonechange Fee'){
+          // alert('in');
+          document.querySelector("transport-fee-collection-home-card").FnRefreshInstallment();
+          document.querySelector("transport-collection-fee-entry-card").hideinstallmentblock=false;
+          document.querySelector('transport-collection-fee-entry-card').installmenttypename="";   
+          this.$.feecollectionservice.fetchcollectionpaymentinstallment(typeid,this.feetype);
+        }
+        else{
+          // alert(typename);
+          document.querySelector("transport-fee-collection-home-card").FnRefreshInstallment();
+          if(this.paymentfeetype=='Zonechange Fee'){
+          typename=this.paymentfeetype;
+          }
+          this.installmenttypeid=typename;
+          this.installmenttypename=typename;          
+          document.querySelector("transport-collection-fee-entry-card").hideinstallmentblock=true; 
+          this.$.feecollectionservice.fetchfeenetrycollectionfeetypeinstallmentamount(this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.studentname,this.feetype,typename);
+        }
+        this.typeid=typeid;
+        this.typename=typename;
+        document.querySelector('transport-collection-fee-entry-card').FnRefresh();
+        this.hidepaymentfeeentry=false;
+        this.hidesavepaymenttype=false; 
+        this.hidepaymentfeeedit=true;    
+      },
+      FnSetPaymentFeetype:function(type,feetype){
+        // alert(type+"  "+feetype);
+        this.paymenttype=type;
+        this.paymentfeetype=feetype;
+        // if(type=="One Time"){
+        //   this.hidepaymenttype=true;
+        //   this.hidepaymentfeeentry=false;
+        //   this.hidesavepaymenttype=false;
+        //   this.hidepaymentfeeedit=true;
+        // }
+        // else{
+        //   this.hidepaymenttype=false;
+        //   this.hidepaymentfeeentry=true;  
+        //   this.hidepaymentfeeedit=true;
+        // }
+        // this.feetype=feetype;
+        // alert(feetype);        
+      },
+      // FnToggleInstallment:function(){
+      //   // alert('yes');
+      //   this.$.transportcollectioninstallmenttypedialog.toggle();
+      // },
+      // FnInstallmentOk:function(){
+      //   this.$.transportcollectioninstallmenttypedialog.toggle();
+      //   this.$.feecollectionservice.fetchfeenetrycollectionfeetypeinstallmentamount(this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.studentname,this.feetype,this.installmenttypeid);
+      // },
+      // FnInstallmentCancel:function(){
+      //   this.$.transportcollectioninstallmenttypedialog.toggle();
+      // },
+      FnOk:function(){
+        // alert(this.paymentfeetype);
+        if(this.paymentfeetype==""||this.paymentfeetype==null)
+        {
+          alert('Please choose valid fee type!');
+        }
+        else{
+        if(this.paymenttype=="One Time"){
+          this.hidepaymenttype=true;
+          this.hidepaymentfeeentry=false;
+          this.hidesavepaymenttype=false;
+          this.hidepaymentfeeedit=true;
+        }
+        else{
+          this.hidepaymenttype=false;
+          this.hidepaymentfeeentry=true;  
+          this.hidepaymentfeeedit=true;
+        }
+        this.feetype=this.paymentfeetype;
+        this.$.collectionfeeentryfeetypedialog.toggle();
+        this.$.feecollectionservice.fetchcollectionpaymenttype(this.academicyear,this.admissionno);
+        this.$.feecollectionservice.fetchcollectionpaymentmode();
+        }
+        // this.$.feecollectionservice.fetchfeenetrycollectionfeetypeamount(this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.studentname,this.feetype);
+      },
+      FnCancel:function(){
+        this.$.collectionfeeentryfeetypedialog.toggle();
+      },
+      FnToggle:function(){
+        this.$.collectionfeeentryfeetypedialog.toggle();
+      },
+      FnSetPaymentInfo(paymentmodename,amount,receiptno,dateofpayment,dueamount,transactionno,transactionname,transactiondate,subtypeid,installmentdate){
+        // alert(paymentmodename+"  "+amount+"  "+receiptno+"  "+dateofpayment+"  "+dueamount+"  "+transactionno+"  "+transactionname+"  "+transactiondate);
+        this.paymentmodename=paymentmodename;
+        this.amount=amount;
+        this.receiptno=receiptno;
+        this.dateofpayment=dateofpayment;
+        this.dueamount=dueamount;
+        this.transactionno=transactionno;
+        this.transactionname=transactionname;
+        this.transactiondate=transactiondate;
+        this.subtypeid=subtypeid;
+        this.installmentdate=installmentdate;
+        // alert(this.installmentdate);
+        this.$.collectionfeeentryconfirmationdialog.toggle();
+      },
+      FnSaveYes:function(){
+        this.$.collectionfeeentryconfirmationdialog.toggle();
+        this.$.feecollectionservice.FnMakePaymentService(this.studentname,this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.feecode,this.typeid,this.typename,this.paymenttype,this.paymentfeetype,this.paymentmodename,this.amount,this.receiptno,this.dateofpayment,this.dueamount,this.transactionno,this.transactionname,this.transactiondate,this.admissionstatus,this.subtypeid,this.installmenttypename,this.installmentdate);
+      },
+      FnSaveNo:function(){
+        this.$.collectionfeeentryconfirmationdialog.toggle();
+      },
+      FnToggleDialog:function(){
+        this.$.collectionfeeentrycompletedialog.toggle();        
+      },
+      FnCompletionDialog:function(){        
+        // this.$.collectionfeeentrycompletedialog.toggle();
+        document.querySelector('transport-fee-collection-home-card').FnPaymentInfo();
+        // this.$.feecollectionservice.fetchfeecollectionpaymentinfoService(this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.admissionno);
+        this.hidepaidpayment=true;
+        this.hideaddpayment=true;
+        this.hidefeepaiddueblock=true;        
+        this.hidepaymenttype=true;
+        this.hidepaymentfeeentry=true;
+        this.hidesavepaymenttype=true;
+        this.hidepaymentfeeedit=true;
+        this.ready();
+        this.FnRefresh();
+        document.querySelector('transport-collection-paymenttype-card').FnRefresh();
+        document.querySelector('transport-collection-fee-entry-card').FnRefresh();
+        document.querySelector('transport-collection-paymentfeetype-card').FnRefresh();
+        document.querySelector('transport-collection-payment-installment-card').FnRefresh();
+      },
+      FnEditPayment:function(academicyear,admissionno,transactionno,feetype,amount,dop,paymentmode,ptno,transactionname,transactiondate,receiptno,status,paymenttype,installment){
+        this.hidepaymentfeeedit=false;
+        this.hideaddpaymentheader=false;
+        this.hidepaidpayment=true;
+        this.hideaddpayment=true;
+        this.hidefeepaiddueblock=false;        
+        this.hidepaymenttype=true;
+        this.hidepaymentfeeentry=true;
+        this.hidesavepaymenttype=true;      
+      }
+    });
+  })();
+  </script>
+</dom-module>

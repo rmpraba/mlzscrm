@@ -1,0 +1,42 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-feeinfo-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .card{
+        width: 100%;
+        margin-top: 3%;
+      }
+    </style>
+    <div class="card">
+
+    <table class="table table-striped" >
+        <tr><th>Zone:</th><td>{{zone}}</td><th>Total fee:</th><td>{{totalfee}}</td>
+        <th></th><td></td><th></th><td></td></tr>
+    </table>
+    
+    <table class="table table-hover" style="margin-top: 2%;">
+    <tr><th>Installment</th><th>Amount</th><th>Installment Date</th></tr>
+    <template is="dom-repeat" items="{{feeinfoarr}}" as="item">      
+        <tr><td>{{item.installment}}</td><td>{{item.amount}}</td><td>{{item.installment_date}}</td></tr>           
+    </template>
+    </table>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'transport-collection-feeinfo-card',
+      FnRefresh:function(){
+        this.zone="";
+        this.totalfee="";
+        this.feeinfoarr=[];
+      }
+    });
+  })();
+  </script>
+</dom-module>

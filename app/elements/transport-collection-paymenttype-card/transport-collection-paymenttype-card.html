@@ -1,0 +1,59 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-paymenttype-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .ccard{
+        width:  20%;
+      }
+      paper-radio-button{
+        margin-left: 3%;
+      }
+    </style>
+    <div class="ccard">
+      <paper-radio-button disabled="{{readonly}}" checked="{{checked}}" id="cptc{{paymenttypeid}}" on-change="FnSelecttype">{{paymenttypename}}</paper-radio-button>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var typeid="",typename="";
+    Polymer({
+      is: 'transport-collection-paymenttype-card',
+      attached:function(){
+        typeid="";
+        typename="";
+      },
+      FnSelecttype:function(e){
+        if(typename==""){
+        if(document.querySelector('#cptc'+this.paymenttypeid).checked==true){
+          typename=this.paymenttypename;
+          typeid=this.paymenttypeid;
+        }
+        }
+        else{
+          if(typeid!=this.paymenttypeid){
+            document.querySelector('#cptc'+typeid).checked=false;
+            if(document.querySelector('#cptc'+this.paymenttypeid).checked==true){
+             typename=this.paymenttypename;
+             typeid=this.paymenttypeid;
+            }
+          }
+          else{
+            typeid="";
+            typename="";
+          }
+        }
+        document.querySelector('transport-collection-paymentinfo-card').FnSetPaymenttype(typeid,typename);
+      },
+      FnRefresh:function(){
+        typeid="";
+        typename="";
+      }
+    });
+  })();
+  </script>
+</dom-module>

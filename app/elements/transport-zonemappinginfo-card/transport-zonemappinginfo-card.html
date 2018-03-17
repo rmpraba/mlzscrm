@@ -1,0 +1,108 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-zonemappinginfo-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .card{
+        margin-top: 1%;
+      }
+      paper-menu{
+        width: 150px;
+      }
+    </style>    
+    <!-- <div style="text-align: right;">
+      <paper-button class="btn btn-primary" on-click="FnAction">{{label}}</paper-button>
+    </div> -->
+    <div hidden>{{startdate}}{{enddate}}{{studentname}}{{academicyear}}</div>
+    <!-- <div style="text-align: right;"><paper-button class="btn btn-primary" on-click="FnAction">{{label}}</paper-button></div> -->
+    <div class="card">        
+      <table class="table table-hover">
+        <tr hidden$="{{hidemap}}"><th>Zone Mapping</th><td colspan="2" style="text-align: right;"><paper-button class="btn btn-primary" on-click="FnAction">Map Zone</paper-button></td></tr>
+        <tr hidden$="{{hidechange}}"><th>Zone Change/Cancel</th><td colspan="2" style="text-align: right;"><paper-button class="btn btn-primary" on-click="FnActionChange">Change Zone</paper-button><paper-button class="btn btn-primary" on-click="FnActionCancel">Cancel Zone</paper-button></td></tr>
+        <tr><th>Student Id</th>
+        <td>{{studentid}}</td><td></td></tr>
+        <tr><th>Grade</th>
+        <td colspan="2">{{grade}}</tr>
+        <tr><th>Parent Name:</th>
+        <td colspan="2">{{parentname}}</tr>
+        <tr><th>Zone</th>
+        <td colspan="2"><paper-dropdown-menu label="Zone" disabled="{{disablezone}}">
+            <paper-menu id="zoneallocationzone" class="dropdown-content" required on-iron-select="FnSelectZone" attr-for-selected="value" selected="{{selectedzone}}">
+              <template  is="dom-repeat" items="{{zonearr}}" as="item">
+              <paper-item value="{{item.distance_id}}">{{item.zone_name}}</paper-item>
+              </template>
+            </paper-menu>
+        </paper-dropdown-menu>
+        <a href="#" hidden$="{{hidetick}}">
+          <span class="glyphicon glyphicon-ok-circle" style="color: green;"></span>
+          Zone Changed
+        </a>
+        </td></tr>
+        <tr><th>Fees</th>
+        <td colspan="2">{{fees}}</td></tr>        
+      </table>
+    </div>
+    <transportfee-service id="transportfeeservice"></transportfee-service>
+    <transport-fee-collection-service id="service"></transport-fee-collection-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'transport-zonemappinginfo-card',   
+      ready:function(){
+        this.hidetick=true;
+        this.hidemap=false;
+        this.hidechange=true;
+      } ,  
+      FnSelectZone:function(e){
+        this.zonename = e.target.selectedItem.textContent.trim();
+        this.zoneid = e.target.selectedItem.value.trim();
+        this.$.service.fetchtransportzonefeeService(this.zoneid,this.studentid);
+      },
+      FnAction:function(){
+        // if(this.label=="Save"){
+          if(this.zoneid==null||this.zoneid==""){
+            alert('Please select the zone!!');
+          }
+          else{
+            this.$.service.FnAllocateZone(this.studentid,this.studentname,this.grade,this.fees,this.zonename,this.zoneid,this.parentname,this.startdate,this.enddate);
+          }
+        // }
+        // if(this.label=="Modify"){
+        //   this.disablezone=false;
+        //   this.label="Save";
+        // }
+      },
+      FnSetSelectedZone:function(zoneid){
+        this.zoneid=zoneid;
+      },
+      FnActionChange:function(){
+        localStorage.setItem('curr_sess_page','zonechange');
+        document.querySelector('transport-fee-collection-home-card').page="zonechange-card";
+        document.querySelector('zonechange-card').studentid=this.studentid;
+        document.querySelector('zonechange-card').studentname=this.studentname;
+        document.querySelector('zonechange-card').academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.$.transportfeeservice.fetchzoneService(localStorage.getItem("curr_sess_academicyear"));
+        this.$.service.fetchStudentInfoForZoneChange(this.studentid,this.studentname);
+      },
+      FnActionCancel:function(){
+        this.$.service.cancelzoneService(this.studentid,this.studentname);
+      },
+      FnRefresh:function(){
+        this.hidetick=true;
+        document.querySelector('#zoneallocationzone').selected=-1;
+        this.studentid="";
+        this.grade="";
+        this.parentname="";
+        this.fees="";
+        this.hidemap=false;
+        this.hidechange=true;
+      }
+    });
+  })();
+  </script>
+</dom-module>

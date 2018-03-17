@@ -572,8 +572,15 @@
         this.$.fetchschoolajax.generateRequest();
       },
       fetchschoolResponse:function(e){
-        document.querySelector('navigation-bar').schoolarr=e.detail.response.returnval;
+        // document.querySelector('navigation-bar').schoolarr=e.detail.response.returnval;
+        // document.querySelector('transportfee-schedule-card').schoolarr=e.detail.response.returnval;
+        var schoolarr=e.detail.response.returnval;
+        // alert(JSON.stringify(schoolarr));
+        // document.querySelector('navigation-bar').selectedschool=schoolarr[0].id;
+        // alert(schoolarr[0].id);
+        // localStorage.setItem("schoolid",schoolarr[0].id);
         document.querySelector('transportfee-schedule-card').schoolarr=e.detail.response.returnval;
+        document.querySelector('zonedistance-card').schoolarr=e.detail.response.returnval;
       },
       attachdiscount:function(studentid,installment,amount,reason){
         this.attachtransportdiscounturl=sessionStorage.getItem("addrinfo")+"/attachtransportdiscount-service";
@@ -692,11 +699,11 @@
         else
             alert('Problem in updation!!');
       },
-      FnInsertnewstudentService:function(enrollmentno,firstname,middlename,lastname,grade,fathername,mothername,fathermobile,mothermobile,fatheremail,motheremail,address,city,pincode){
+      FnInsertnewstudentService:function(academicyear,enrollmentno,firstname,middlename,lastname,grade,fathername,mothername,fathermobile,mothermobile,fatheremail,motheremail,address,city,pincode){
         this.insertnewstudenturl=sessionStorage.getItem("addrinfo")+"/insertnewstudent-service";
         var obj={"schoolid":"","prefixid":""};
         obj.schoolid=localStorage.getItem("schoolid");
-        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.academicyear=academicyear;
         obj.enrollmentno=enrollmentno;
         obj.firstname=firstname;
         obj.middlename=middlename;
@@ -886,11 +893,11 @@
         }
         }
       },
-      fetchzoneService:function(){
+      fetchzoneService:function(academicyear){
         this.fetchzoneurl=sessionStorage.getItem("addrinfo")+"/fetchzone-service";
         var obj={"schoolid":"","prefixid":""};
         obj.schoolid=localStorage.getItem("schoolid");
-        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.academicyear=academicyear;
         this.fetchzoneparam=obj;
         this.$.fetchzoneajax.generateRequest();
       },
@@ -900,11 +907,11 @@
         document.querySelector('zonetostudent-card').zonearr=arr;
         document.querySelector('zonechange-card').zonearr=arr;
       },
-      fetchzonefeeService:function(distanceid){
+      fetchzonefeeService:function(academicyear,distanceid){
         this.fetchzonefeeurl=sessionStorage.getItem("addrinfo")+"/fetchzonefee-service";
         var obj={"schoolid":"","prefixid":""};
         obj.schoolid=localStorage.getItem("schoolid");
-        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.academicyear=academicyear;
         obj.distanceid=distanceid;
         this.fetchzonefeeparam=obj;
         this.$.fetchzonefeeajax.generateRequest();

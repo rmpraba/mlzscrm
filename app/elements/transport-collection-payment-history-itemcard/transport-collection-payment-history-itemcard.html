@@ -1,0 +1,36 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-payment-history-itemcard">
+  <template>
+    <style>
+    .btn{
+        @apply(--layout-horizontal);
+    }
+    </style>
+    <div hidden>{{academicyear}}{{admissionno}}{{sno}}{{transactionno}}{{feetype}}
+      {{amount}}{{dateofpayment}}{{paymentmode}}
+      {{paymenttransactionno}}{{transactionname}}{{transactiondate}}
+      {{receiptno}}{{status}}{{paymenttype}}{{installment}}</div>
+    <div class="btn" hidden$="{{hideicon}}">
+      <span class="panel-icon"><a href=""><i class="fa fa-edit fa-lg" aria-hidden="true" on-click="FnEditPayment"></i></a></span>
+      <span class="panel-icon"><a href=""><i class="fa fa-trash-o fa-lg" aria-hidden="true" on-click="FnDeletePayment"></i></a></span>
+    </div>
+    <transport-fee-collection-service id="feecollectionservice"></transport-fee-collection-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'transport-collection-payment-history-itemcard',
+      FnEditPayment:function(){
+        document.querySelector('transport-collection-paymentinfo-card').FnEditPayment(this.academicyear,this.admissionno,this.transactionno,this.feetype,this.amount,this.dop,this.paymentmode,this.paymenttransactionno,this.transactionname,this.transactiondate,this.receiptno,this.status,this.paymenttype,this.installment);
+        document.querySelector('transport-collection-fee-edit-card').FnSetEditInfo(this.academicyear,this.admissionno,this.transactionno,this.feetype,this.amount,this.dateofpayment,this.paymentmode,this.paymenttransactionno,this.transactionname,this.transactiondate,this.receiptno,this.status,this.paymenttype,this.installment);
+      },
+      FnDeletePayment:function(){
+        this.$.feecollectionservice.deletecollectionpaymentService(this.admissionno,this.transactionno,this.feetype,this.academicyear,this.installment);
+      }
+    });
+  })();
+  </script>
+</dom-module>

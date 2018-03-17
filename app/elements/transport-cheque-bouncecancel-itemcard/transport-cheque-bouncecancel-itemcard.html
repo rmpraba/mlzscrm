@@ -61,27 +61,30 @@
         document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,0,this.waiveoff);
       },
       FnBounceHandler:function(e){
-        chequestatus="bounce";
+        // alert(document.querySelector('#transportbounce'+this.sno).checked);
+        chequestatus="bounced";
         if(localStorage.getItem("roleid")=="ROLE106"){
         this.$.bouncewaiveoffdialog.toggle();
         }
         else
         {
         this.waiveoff=0;
-        if(document.querySelector('#transportbounce'+this.sno).checked==true)
+        if(document.querySelector('#transportbounce'+this.sno).checked==true){
+        document.querySelector('#transportcancel'+this.sno).checked=false;
         document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,1,this.waiveoff);
+        }
         if(document.querySelector('#transportbounce'+this.sno).checked==false)
         document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,0,this.waiveoff);
-        } 
-        // alert(document.querySelector('#transportbounce'+this.sno).checked);
-        
+        }         
       },
       FnCancelHandler:function(e){
-        chequestatus="cancel";
+        chequestatus="cancelled";
         this.waiveoff=1;
         // alert(document.querySelector('#transportcancel'+this.sno).checked);
-        if(document.querySelector('#transportcancel'+this.sno).checked==true)
+        if(document.querySelector('#transportcancel'+this.sno).checked==true){
+        document.querySelector('#transportbounce'+this.sno).checked=false;
         document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,1,this.waiveoff);
+        }
         if(document.querySelector('#transportcancel'+this.sno).checked==false)
         document.querySelector('transport-cheque-bouncecancel').FnPushPopCheques(this.sno,chequestatus,0,this.waiveoff);
       },

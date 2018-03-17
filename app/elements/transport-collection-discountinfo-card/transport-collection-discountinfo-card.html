@@ -1,0 +1,110 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-discountinfo-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }  
+      paper-input{
+        width: 70%;
+      }    
+    </style>
+    <div hidden>{{studentname}}{{admissionno}}{{academicyear}}{{admissionyear}}{{gradeid}}{{gradename}}</div>
+    <div>
+    <table class="table table-striped">
+      <th colspan="17"><h4>Discount Availed</h4></th>
+      <th style="text-align: right;"><span class="panel-icon"><a href=""><i class="fa fa-plus" aria-hidden="true" on-click="FnAddDiscount"></i></a></span>
+      </th>
+    </table>
+    <table class="table table-hover" hidden$="{{hideavaileddiscount}}">
+    <tr><th>Availed Installment</th><th>Discount Amount</th><th>Availed Date</th><th>Reason</th></tr>
+    <template  is="dom-repeat" items="{{discountinfoarr}}" as="item">
+    <tr><td>{{item.availed_installment}}</td><td>{{item.discount_amount}}</td><td>{{item.availed_date}}</td><td>{{item.reason}}</td></tr>
+    </template>
+    </table>
+    <center>
+    <div class="row" hidden$="{{hideadddiscount}}">
+    <div class="well well-sm">
+    <div class="row">
+    <div class="col-md-12">
+    <table cellpadding="5" width="80%">
+      <tr>
+        <th>Installment: </th>
+        <th>
+          <paper-dropdown-menu label="Select Installment" attr-for-selected="value" style="margin-top: -5%;">
+            <paper-menu id="transportcollectionattachdiscounttype" class="dropdown-content" required on-iron-select="FnSelectInstallment" valueattr="value" >
+              <template  is="dom-repeat" items="{{discountarr}}" as="item">
+              <paper-item value="{{item.fee_type}}">{{item.installment}}</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+        </th>
+        </tr>
+        <tr>
+        <th>Amount: </th>
+        <th><paper-input label="Discount Amount" value="{{discountamount}}"></paper-input></th>
+        <th>Reason: </th>
+        <th><paper-input label="Reason" value="{{reason}}"></paper-input></th>
+        <td hidden$="{{hideafterinfo}}">
+          <paper-button class="btn btn-primary left" on-click="FnAdd">Add</paper-button>
+        </td>     
+      </tr>
+    </table>
+    </div>
+    </div>
+    </div>
+    </div>
+    </center>
+    </div>
+    <transport-fee-collection-service id="feecollectionservice"></transport-fee-collection-service>  
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var discounttype,feetype;
+    Polymer({
+      is: 'transport-collection-discountinfo-card',
+      ready:function(){
+        this.hideavaileddiscount=false;
+        this.hideadddiscount=true;
+        this.hideafterinfo=true;
+      },
+      FnAddDiscount:function(){
+        this.hideavaileddiscount=true;
+        this.hideadddiscount=false;
+        this.hideafterinfo=true;
+      },
+      FnSelectInstallment:function(e){
+        discounttype=(e.target.selectedItem.textContent).trim(); 
+        feetype=(e.target.selectedItem.value).trim();  
+        this.hideafterinfo=false;
+      },
+      FnAdd:function(){   
+      if(discounttype==null||discounttype=="")
+      alert("Please choose discount type!");
+      else if(this.discountamount<=0||this.discountamount=="")
+      alert("Please enter valid amount!");     
+      else
+        this.$.feecollectionservice.collectionattachdiscountService(this.academicyear,this.admissionno,this.studentname,this.gradename,discounttype,this.discountamount,this.reason,feetype);
+      },
+      FnEnableDiscountInfo:function(){
+        this.hideafterinfo=false;
+      },
+      FnRefresh:function(){
+        discounttype="";
+        this.hideavaileddiscount=false;
+        this.hideadddiscount=true;
+        this.hideafterinfo=true;
+        this.otherdiscountamount="";
+        this.otherdiscounttype="";
+        this.discountamount="";
+        this.discountinfoarr=[];
+        this.reason="";
+        feetype="";
+        document.querySelector('#transportcollectionattachdiscounttype').selected="-1";
+      }
+    });
+  })();
+  </script>
+</dom-module>

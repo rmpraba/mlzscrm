@@ -1,0 +1,57 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-payment-installment-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .ccard{
+        width:  100%;
+      }
+    </style>
+    <div class="ccard">
+      <paper-radio-button id="tcpic{{installmentid}}" on-change="FnSelecttype">{{installment}}</paper-radio-button>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var typeid="",typename="";
+    Polymer({
+      is: 'transport-collection-payment-installment-card',
+      attached:function(){
+        typeid="";
+        typename="";
+      },
+      FnSelecttype:function(e){
+        if(typename==""){
+        if(document.querySelector('#tcpic'+this.installmentid).checked==true){
+          typename=this.installment;
+          typeid=this.installmentid;
+        }
+        }
+        else{
+          if(typeid!=this.installment){
+            document.querySelector('#tcpic'+typeid).checked=false;
+            if(document.querySelector('#tcpic'+this.installmentid).checked==true){
+             typename=this.installment;
+             typeid=this.installmentid;
+            }
+          }
+          else{
+            typeid="";
+            typename="";
+          }
+        }
+        document.querySelector('transport-collection-paymentinfo-card').FnSetInstallmenttype(typeid,typename);
+        document.querySelector('transport-collection-fee-entry-card').FnSetInstallmenttype(typeid,typename);           
+      },
+      FnRefresh:function(){
+        typeid="";
+        typename="";
+      }
+    });
+  })();
+  </script>
+</dom-module>

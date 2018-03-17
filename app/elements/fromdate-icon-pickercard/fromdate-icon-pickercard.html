@@ -68,6 +68,7 @@
       },
       FnClear:function(){
         this.showdate = moment(new Date()).format('L');
+        localStorage.setItem("localsess_from_date",this.showdate);
       },
       FnSetDate:function(value){
         this.showdate=moment(new Date(value)).format('L');

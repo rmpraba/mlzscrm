@@ -1,0 +1,64 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-paymentfeetype-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      paper-radio-button{
+        margin-left: 3%;
+        margin-top: 3%;
+      }
+    </style>
+    <div hidden>{{type}}</div>
+    <div class="ccard">
+      <paper-radio-button id="cpfc{{commontype}}" on-change="FnSelecttype">{{feetype}}</paper-radio-button>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var typee="",feetypee="",common="";
+    Polymer({
+      is: 'transport-collection-paymentfeetype-card',
+      attached:function(){
+        typee="";
+        feetypee="";
+        common="";      },
+      FnSelecttype:function(e){
+        // alert(this.commontype+" "+this.feetype);
+        if(feetypee==""){
+        if(document.querySelector('#cpfc'+this.commontype).checked==true){
+          common=this.commontype;
+          feetypee=this.feetype;
+          typee=this.type;
+        }
+        }
+        else{
+          if(common!=this.commontype){
+            document.querySelector('#cpfc'+common).checked=false;
+            if(document.querySelector('#cpfc'+this.commontype).checked==true){
+             common=this.commontype;
+             feetypee=this.feetype;
+             typee=this.type;
+            }
+          }
+          else{
+            common="";
+            typee="";
+            feetypee="";
+          }
+        }
+        document.querySelector('transport-collection-paymentinfo-card').FnSetPaymentFeetype(typee,feetypee);
+        document.querySelector('transport-fee-collection-home-card').FnSetPaymentFeetype(typee,feetypee);
+      },
+      FnRefresh:function(){
+        typee="";
+        feetypee="";
+        common="";
+      }
+    });
+  })();
+  </script>
+</dom-module>

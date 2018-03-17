@@ -1,0 +1,273 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+   
+<dom-module id="zonedistance-card">
+  <template>
+    <style>
+      .card {
+        margin:5% 0 0 21%;
+      }
+      .field{
+        margin-left: 30%;
+      }
+      .fields{
+        width: 37%;
+        padding: 0 0.25% 0 0%;
+      }
+      .card .fields paper-input{
+        width:95%;
+      }
+      .card .field paper-input{
+        width:70%;
+      }     
+      .button{
+        margin:2% 0 0 27%;
+      }
+      .btn11
+      {
+        margin-top: 6%;
+        margin-left: 28%;
+      }
+      paper-dropdown-menu
+      {
+        /*width: 50%;*/
+      }
+      label
+      {
+        font-size: 19px;
+      }
+      .card
+      {
+        width:57%;
+        height:350px;
+        background-color: white; 
+        box-shadow: 0 0 3px 3px rgb(184, 209, 249); -moz-box-shadow: 0 0 3px 3px rgb(184, 209, 249); -webkit-box-shadow: 0 0 3px 3px rgb(184, 209, 249); -o-box-shadow: 0 0 3px 3px rgb(184, 209, 249); 
+      }   
+    </style>
+    <paper-input hidden value={{zoneid}}></paper-input>
+    <paper-item hidden>{{distanceid}}</paper-item>
+    <div class="row enquiry-form">
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-4 enquiry-inpt">
+            <paper-dropdown-menu label="Select School" attr-for-selected="value">
+            <paper-menu id="zonecreationschool" class="dropdown-content" required on-iron-select="FnSelectSchool" valueattr="value" >
+              <template  is="dom-repeat" items="{{schoolarr}}" as="item">
+              <paper-item value="{{item.id}}">{{item.name}}</paper-item>
+              </template>
+            </paper-menu>
+            </paper-dropdown-menu>
+        </div>
+        <div class="col-md-4">
+                 <paper-dropdown-menu id="zzonechangeacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="zonecreationacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                </div>
+        <div class="col-sm-4">
+        <paper-dropdown-menu id="newzone" label="Select Zone">
+          <paper-menu id="newzoneiddz" class="dropdown-content" on-iron-select="fnselectnewzone" attr-for-selected="value" required>
+                 <paper-item value="zone1">1</paper-item>
+                 <paper-item value="zone2">2</paper-item>
+                 <paper-item value="zone3">3</paper-item>
+                 <paper-item value="zone4">4</paper-item>
+                 <paper-item value="zone5">5</paper-item>
+                 <paper-item value="zone6">6</paper-item>
+                 <paper-item value="zone7">7</paper-item>
+                 <paper-item value="zone8">8</paper-item>
+                 <paper-item value="zone9">9</paper-item>
+                 <paper-item value="zone10">10</paper-item>
+          </paper-menu>
+        </paper-dropdown-menu>
+        </div>
+        
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+        <div class="col-sm-4">
+        <paper-dropdown-menu id="minidistance" label="Select Minimum Distance">
+          <paper-menu id="newmindistz" class="dropdown-content" on-iron-select="fnselectmindistance" selected="{{mindistz}}" attr-for-selected="value" >
+              <template  is="dom-repeat" items="{{mindesarrr}}" as="view">
+                <paper-item value="{{view.id}}">{{view.id}}</paper-item>
+              </template>
+          </paper-menu>
+        </paper-dropdown-menu>
+        </div>
+        <div class="col-sm-4">
+        <paper-dropdown-menu id="macxidistance" label="Select Maximum Distance">
+          <paper-menu id="newmaxdistz" class="dropdown-content" on-iron-select="fnselectmaxdistance"  selected="{{maxdistz}}" attr-for-selected="value" required>
+             <template  is="dom-repeat" items="{{maxdesarrr}}" as="view">
+                <paper-item value="{{view.maxid}}">{{view.maxid}}</paper-item>
+              </template>    
+          </paper-menu>
+        </paper-dropdown-menu>
+        </div>
+        <div class="col-sm-4">
+          <paper-input label="Enter Fee" value="{{fee}}" id="feez" allowed-pattern="[0-9]" required error-message="needs Fee!"></paper-input>
+        </div>
+      </div>
+      <div class="list-group col-sm-12 panel-body form-category">
+      <div class="col-sm-4" style="margin-left: 45%;">
+      <paper-button class="btn btn-primary center" on-click="fnsubmit">Submit</paper-button>
+      </div>
+      </div>
+    </div>
+    <!-- <div class="card">
+    <div class="field">
+        <label><b>{{schoolname}}</b></label>
+    </div>
+    <paper-input hidden value={{zoneid}}></paper-input>
+      <div class="drop-down" style="margin-left: 30%;">  
+        <paper-dropdown-menu id="newzone" label="Select Zone">
+          <paper-menu id="newzoneiddz" class="dropdown-content" on-iron-select="fnselectnewzone" attr-for-selected="value" required>
+                 <paper-item value="zone1">1</paper-item>
+                 <paper-item value="zone2">2</paper-item>
+                 <paper-item value="zone3">3</paper-item>
+                 <paper-item value="zone4">4</paper-item>
+                 <paper-item value="zone5">5</paper-item>
+                 <paper-item value="zone6">6</paper-item>
+                 <paper-item value="zone7">7</paper-item>
+                 <paper-item value="zone8">8</paper-item>
+                 <paper-item value="zone9">9</paper-item>
+                 <paper-item value="zone10">10</paper-item>
+          </paper-menu>
+        </paper-dropdown-menu>
+      </div>
+    <div class="drop-down" style="margin-left: 30%;">   
+       <paper-dropdown-menu id="minidistance" label="Select Minimum Distance">
+          <paper-menu id="newmindistz" class="dropdown-content" on-iron-select="fnselectmindistance" selected="{{mindistz}}" attr-for-selected="value" >
+              <template  is="dom-repeat" items="{{mindesarrr}}" as="view">
+                <paper-item value="{{view.id}}">{{view.id}}</paper-item>
+              </template>
+          </paper-menu>
+     </paper-dropdown-menu>
+    </div>
+      <div class="drop-down" style="margin-left: 30%;">  
+        <paper-dropdown-menu id="macxidistance" label="Select Maximum Distance">
+          <paper-menu id="newmaxdistz" class="dropdown-content" on-iron-select="fnselectmaxdistance"  selected="{{maxdistz}}" attr-for-selected="value" required>
+             <template  is="dom-repeat" items="{{maxdesarrr}}" as="view">
+                <paper-item value="{{view.maxid}}">{{view.maxid}}</paper-item>
+              </template>    
+          </paper-menu>
+        </paper-dropdown-menu>
+      </div>  
+      <paper-item hidden>{{distanceid}}</paper-item>
+      <div class="fields" style="margin-left: 30%;">
+          <paper-input label="Enter Fee" value="{{fee}}" id="feez" allowed-pattern="[0-9]" required error-message="needs Fee!"></paper-input>
+      </div>
+      <div class="btn1">
+        <paper-button id="button" class="button" on-click="fnsubmit">Submit</paper-button>
+      </div>
+    </div> -->
+    <transport-fee-collection-service id="service"></transport-fee-collection-service>
+    <transportfee-service id="service1"></transportfee-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var zonename="";
+    var mindistance="";
+    var maxdistance="";
+    var academicyear="";
+   Polymer({
+      is: 'zonedistance-card',
+      ready:function()
+      {
+      },
+      callService:function(){
+        this.$.service1.fetchschoolService();        
+      },
+      FnSelectSchool:function(e){
+        var schoolname=e.target.selectedItem.textContent.trim();
+        var schoolid=e.target.selectedItem.value.trim();
+        localStorage.setItem("schoolname",schoolname);
+        localStorage.setItem("schoolid",schoolid);
+        this.$.service.fetchzonedistance();
+        this.$.service.zoneminmax();
+        this.$.service.fetchdistanceseq();
+        this.$.service.fetchzoneseq();
+        this.fee=""; 
+        document.querySelector('#zonecreationacademicyear').selected=-1;
+        document.querySelector('#newzoneiddz').selected=-1;
+        document.querySelector('#newmindistz').selected=-1;
+        document.querySelector('#newmaxdistz').selected=-1;
+      },
+      FnSelectAcademicYear:function(e){
+        academicyear=(e.target.selectedItem.textContent).trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+        this.fee=""; 
+        document.querySelector('#newzoneiddz').selected=-1;
+        document.querySelector('#newmindistz').selected=-1;
+        document.querySelector('#newmaxdistz').selected=-1;
+      },
+      fnclear:function()
+      {
+        this.fee=""; 
+        document.querySelector('#newzoneiddz').selected=-1;
+        document.querySelector('#newmindistz').selected=-1;
+        document.querySelector('#newmaxdistz').selected=-1;
+        document.querySelector('#zonecreationacademicyear').selected=-1;
+        document.querySelector('#zonecreationschool').selected=-1;
+      },
+      fnselectnewzone:function(e)
+      { 
+        zonename="Zone"+" "+e.target.selectedItem.textContent.trim();
+        this.$.service.fetchzone1(zonename);
+      },
+      fnselectmindistance:function(e)
+      {
+        mindistance=e.target.selectedItem.textContent.trim();
+      },
+      fnselectmaxdistance:function(e)
+      {
+        maxdistance=e.target.selectedItem.textContent.trim(); 
+        if(parseInt(maxdistance)< parseInt(mindistance))
+        {
+          alert("Please Select the Maximum value");
+          this.$.feez.disabled=true;
+        }
+        else
+        {
+          this.$.feez.disabled=false;
+        }
+      },
+      fnsubmit:function()
+      {
+        if(this.fee==" "|| this.fee==null)
+        {
+          alert("Please Enter All Fields");
+          this.$.fee.validate();
+        }
+        else
+        {
+        // alert(this.distanceidd);
+        this.$.service.fnnewdistance(this.distanceidd,mindistance,maxdistance,this.fee,zonename,this.zoneidd);
+        this.fnclear();
+        }   
+     },
+     fnmindist:function(e)
+     {
+      this.mindistz=e[0].min;
+     },
+     fnmaxdist:function(e)
+     {
+      this.maxdistz=e[0].max;
+     },
+     fnrefresh:function()
+     {
+        this.fee="";
+        document.querySelector('#newmindistz').selected=-1;
+        document.querySelector('#newmaxdistz').selected=-1;
+     },
+     fndistanceidseqq:function(e)
+     {
+        this.distanceidd=e;
+     },
+     fnzoneidseqq:function(e)
+     {
+        this.zoneidd=e;
+     }    
+    });
+  })();
+  </script>
+</dom-module>

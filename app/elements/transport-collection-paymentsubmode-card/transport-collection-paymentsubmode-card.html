@@ -1,0 +1,52 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-paymentsubmode-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+/*      paper-radio-button{
+        margin-left: 3%;
+      }*/
+    </style>
+    <div>
+      <paper-radio-button id="cpsc{{subtypeid}}" on-change="FnSelecttype">{{subtype}}</paper-radio-button>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var typeid="",typename="";
+    Polymer({
+      is: 'transport-collection-paymentsubmode-card',
+      attached:function(){
+        typeid="";
+        typename="";
+      },
+      FnSelecttype:function(e){
+        if(typename==""){
+        if(document.querySelector('#cpsc'+this.subtypeid).checked==true){
+          typename=this.subtypename;
+          typeid=this.subtypeid;
+        }
+        }
+        else{
+          if(typeid!=this.subtypeid){
+            document.querySelector('#cpsc'+typeid).checked=false;
+            if(document.querySelector('#cpsc'+this.subtypeid).checked==true){
+             typename=this.subtypename;
+             typeid=this.subtypeid;
+            }
+          }
+          else{
+            typeid="";
+            typename="";
+          }
+        }
+        document.querySelector('transport-collection-fee-entry-card').FnSetPaymentmodetype(typeid,typename);
+      }
+    });
+  })();
+  </script>
+</dom-module>

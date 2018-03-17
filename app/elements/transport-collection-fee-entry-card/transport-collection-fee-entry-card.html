@@ -1,0 +1,269 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-fee-entry-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .ccard,.inscard{
+        @apply(--layout-horizontal);
+      }
+      .submode{
+       @apply(--layout-horizontal); 
+      }
+      collection-paymentsubmode-card{
+        margin-left: 3%;
+      }
+      .inscard{
+        width: 100%;
+      }
+      transport-collection-payment-installment-card{
+        margin-left: 3%;
+      }
+      transport-collection-paymentsubmode-card{
+        margin-left: 3%;
+      }
+      paper-dialog{
+            border-radius: 5px;
+          }
+          .topcard{
+            @apply(--layout-horizontal);
+          }
+    </style>
+    <div class="ccard" width="100%">
+    <div style="margin-left: 5%;width: 85%;">
+    <table class="table" hidden$="{{hideinstallmentblock}}">
+    <!-- <thead> -->
+    <tr><th>Select Installment</th><th style="text-align: left;padding-left: -10%;">
+    <div class="inscard">
+      <template is="dom-repeat" items="{{installmentarr}}" as="item">
+      <transport-collection-payment-installment-card installment="{{item.installment}}" installmentid="{{item.installmentid}}"></transport-collection-payment-installment-card>
+      </template>
+    </div>
+    </th></tr>
+    <!-- </thead> -->
+    </table>
+    </div>
+    <div style="text-align: right; margin-right: 0%;" class="buttonpanel" hidden$="{{hidesavepaymenttype}}">
+      <paper-button on-click="FnSavePayment" class="btn btn-primary center">Save</paper-button>
+    </div>
+    </div>
+    <div class="ccard" width="100%">
+    <div style="margin-left: 5%;width: 40%;">
+      <table class="table table-hover">
+        <tr><th>Payment mode</th><td width="8%"></td>
+        <td>
+          <paper-dropdown-menu required auto-validate  error-message="Please Select Mode!" label="Select your payment mode here" on-iron-select="FnSelectMode" id="ccollectionfeeentrymodee" >
+            <paper-listbox class="dropdown-content" id="collectionfeeentrymodee" >
+            <template  is="dom-repeat" items="{{paymentmodearr}}" as="item">
+              <paper-item value="{{item.payment_modeid}}">{{item.payment_modename}}</paper-item>
+            </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </td>
+        </tr>
+        <tr><th>Amount</th><td width="8%"></td><td><paper-input pattern="[0-9]*" value="{{amount}}" auto-validate  id="feamt" required error-message="Please Enter Amount!"></paper-input></td></tr>
+        <!-- <tr><th>Receipt Number</th><td width="8%"></td><td>{{receiptno}}</paper-input></td></tr> -->
+        <tr><th>Date of payment</th><td width="8%"></td><td><p hidden>{{dateofpayment}}</p><collection-receipt-datepicker></collection-receipt-datepicker></td></tr>
+        <tr><th>Due Amount</th><td width="8%"></td><td>{{dueamount}}</td></tr>
+      </table>
+    </div>
+    <br>
+    <div  style="margin-left: 5%;width: 40%;">
+      <table class="table table-hover" hidden$="{{hideadditionalinfo}}">
+        <tr><th>Cheque/Transaction #</th><td width="8%"></td>
+        <td><paper-input required id="fetransno" auto-validate  value="{{transactionno}}" error-message="Please Enter Cheque/Transaction # !"></paper-input>
+        </td>
+        </tr>
+        <tr><th>Bank Name</th><td width="8%"></td><td><paper-input error-message="Please Enter Bank Name!" auto-validate  id="febankname" required value="{{transactionname}}"></paper-input></td></tr>
+        <tr><th>Cheque/Transaction Date</th><td width="8%"></td><td><p hidden>{{transactiondate}}</p><collection-receipt-transaction-datepicker showdate="{{transactiondate}}"></collection-receipt-transaction-datepicker></td></tr>
+      </table>
+    </div>
+    
+      
+      <!-- <span class="panel-icon"><a href=""><i class="fa fa-save fa-lg" aria-hidden="true" on-click="FnSavePayment"></i></a></span> -->
+      <!-- <span class="panel-icon"><a href=""><i class="fa fa-edit fa-lg" aria-hidden="true" on-click="FnDeletePayment"></i></a></span> -->
+      </div>
+    
+    </div>
+    <paper-dialog id="collectionfeeentrymodedialog" style="width: 30%;">
+    <!-- <h2>Select Mode</h2> -->
+    <div class="topcard" style="width: 100%;">
+    <div style="width: 90%;"><h2>Select Cheque Type!</h2></div>
+    <div style="width: 10%;text-align: right;margin-top: -2%;"><paper-icon-button style="color: grey;"  icon="icons:close" on-click="FnCancel"></paper-icon-button></div> 
+    </div>
+    <div class="submode">
+    <template  is="dom-repeat" items="{{paymentsubmodearr}}" as="item">
+    <transport-collection-paymentsubmode-card subtype="{{item.sub_type}}" subtypeid="{{item.sub_typeid}}"></transport-collection-paymentsubmode-card>
+    </template>
+    </div>
+    <br>
+    <div class="buttons">
+    <paper-button on-click="FnOk" class="btn btn-primary center">Ok</paper-button>
+    <!-- <paper-button on-click="FnCancel" class="btn btn-primary center">Cancel</paper-button> -->
+    </div>
+    </paper-dialog>
+    <div hidden>{{installmenttypename}}{{installmentdate}}</div>
+    <transport-fee-collection-service id="feecollectionservice"></transport-fee-collection-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'transport-collection-fee-entry-card',
+      ready:function(){
+        this.hideadditionalinfo=true;
+        var d=new Date();
+        var dd=d.getDate();
+        if(dd<10)
+          dd="0"+dd;
+        var mm=(d.getMonth()+1);
+        if(mm<10)
+          mm="0"+mm;
+        var yy=d.getFullYear();
+        var currdate=dd+"/"+mm+"/"+yy;
+        this.transactiondate=currdate;
+        this.dateofpayment=currdate;
+      },
+      FnSetTransactiondate:function(date){
+        // this.transactiondate=date;
+        // document.querySelector('collection-receipt-transaction-datepicker').showdate=date;
+      },
+      FnSetInstallmenttype:function(typeid,typename){
+        // alert(typeid+" "+typename);
+        this.installmenttypeid=typeid;
+        this.installmenttypename=typename;
+        document.querySelector('transport-collection-paymentinfo-card').FnSetInstallmenttype(typeid,typename);
+        // this.$.feecollectionservice.fetchfeenetrycollectionfeetypeinstallmentamount(this.admissionno,localStorage.getItem("curr_sess_academicyear"),this.admissionyear,this.gradeid,this.gradename,this.studentname,this.feetype,this.installmenttypename);
+      },
+      FnSelectMode:function(e){
+        if((this.installmenttypename==""||this.installmenttypename==null)&&this.hideinstallmentblock==false){
+          document.querySelector('#collectionfeeentrymodee').selected=-1;
+          alert('Please select the installment!');
+        }
+        else{
+        this.$.ccollectionfeeentrymodee.invalid=false;
+        this.modeid=(e.target.selectedItem.value).trim();
+        this.modename=(e.target.selectedItem.textContent).trim();
+        this.$.feecollectionservice.fetchcollectionpaymentsubmode(this.modeid,this.modename);
+        }
+      },
+      FnToggleModes:function(){
+        this.flag=0;
+        this.$.collectionfeeentrymodedialog.toggle();
+      },
+      FnOk:function(){
+        // alert(this.subtypeid);
+        if(this.flag==0)
+          alert('Please choose valid type!!');
+        else
+        this.$.collectionfeeentrymodedialog.toggle();
+      },
+      FnCancel:function(){
+        document.querySelector('#collectionfeeentrymodee').selected=-1;
+        this.$.collectionfeeentrymodedialog.toggle();
+      },
+      FnSetPaymentmodetype:function(typeid,typename){
+        // alert(typeid+"  "+typename);
+        var d=new Date();
+        this.flag=1;
+        this.subtypeid=typeid;
+        if(this.subtypeid=="1"){
+          // this.transactiondate=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+        var dd=d.getDate();
+        var mm=(d.getMonth()+1);
+        if(dd<10)
+          dd="0"+dd;
+        var mm=(d.getMonth()+1);
+        if(mm<10)
+          mm="0"+mm;
+          document.querySelector('transport-collection-fee-entry-card').transactiondate=
+          dd+"/"+mm+"/"+d.getFullYear();
+        }
+        else{
+          document.querySelector('transport-collection-fee-entry-card').transactiondate=
+          this.installmentdate;
+        }
+      },
+      FnSetInfo:function(info_flag,sub_typeid){
+        if(info_flag=="1")
+          this.hideadditionalinfo=false
+        else
+          this.hideadditionalinfo=true;
+        this.subtypeid=sub_typeid;
+        var d=new Date();
+        if(this.subtypeid=="1"){
+          // this.transactiondate=(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+        var dd=d.getDate();
+        var mm=(d.getMonth()+1);
+        if(dd<10)
+          dd="0"+dd;
+        var mm=(d.getMonth()+1);
+        if(mm<10)
+          mm="0"+mm;
+          document.querySelector('transport-collection-fee-entry-card').transactiondate=
+          dd+"/"+mm+"/"+d.getFullYear();
+        }
+        else{
+          document.querySelector('transport-collection-fee-entry-card').transactiondate=
+          this.installmentdate;
+        }
+      },
+      FnSavePayment:function(){
+        // alert(this.modename+"-"+this.amount+"-"+this.transactionno+"-"+this.bankname);
+        if(this.modename==null||this.modename=="")
+          this.$.ccollectionfeeentrymodee.validate();
+        else if(this.amount==null||this.amount=="")
+          this.$.feamt.validate();
+        else{
+        if(this.hideadditionalinfo==false)
+        {
+        if(this.transactionno==null||this.transactionno=="")
+          this.$.fetransno.validate();
+        else if(this.transactionname==null||this.transactionname=="")
+          this.$.febankname.validate();  
+        else{
+          // alert('hi');
+        if(parseFloat(this.amount)<=parseFloat(this.dueamount))
+        document.querySelector('transport-collection-paymentinfo-card').FnSetPaymentInfo(this.modename,this.amount,this.receiptno,this.dateofpayment,this.dueamount,this.transactionno,this.transactionname,this.transactiondate,this.subtypeid,this.installmentdate);
+        else
+        {
+          this.amount="";
+          alert("Please check the amount!");
+        }    
+        }  
+        }
+        else{
+        if(parseFloat(this.amount)<=parseFloat(this.dueamount))
+        document.querySelector('transport-collection-paymentinfo-card').FnSetPaymentInfo(this.modename,this.amount,this.receiptno,this.dateofpayment,this.dueamount,this.transactionno,this.transactionname,this.transactiondate,this.subtypeid,this.installmentdate);
+        else
+        {
+          this.amount="";
+          alert("Please check the amount!");
+        }
+        }
+        }
+      },
+      FnRefresh:function(){
+        document.querySelector('#collectionfeeentrymodee').selected=-1;
+        this.receiptno="";
+        this.dateofpayment="";
+        this.dueamount="";
+        this.hideadditionalinfo=true;
+        this.transactionno="";
+        this.transactionname="";
+        this.transactiondate="";
+        this.amount="";
+        this.subtypeid="";
+        this.modename="";
+        this.paymentsubmodearr=[];
+        // this.installmenttypename="";
+        // this.hidesavepaymenttype=true;
+        this.ready();
+      }
+    });
+  })();
+  </script>
+</dom-module>

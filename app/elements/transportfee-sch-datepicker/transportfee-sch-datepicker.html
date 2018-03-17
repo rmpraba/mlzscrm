@@ -8,8 +8,6 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 
-
-
 <dom-module id="transportfee-sch-datepicker">
 <style>
   paper-input{
@@ -44,8 +42,18 @@
       is: 'transportfee-sch-datepicker',
       ready:function()
       {
-        this.showdate=moment(new Date()).format('L');
-        localStorage.setItem("localsess_transportfeesch_date",this.showdate);       
+        // this.showdate=moment(new Date()).format('L');
+        this.showdate=moment(new Date()).format('DD/MM/YYYY');
+        var d=new Date();
+        var mm=(d.getMonth()+1);
+        if(mm<10)
+          mm="0"+mm;
+        var dd=d.getDate();
+        if(dd<10)
+          dd="0"+dd;
+        var yy=d.getFullYear();
+        var dat=dd+"/"+mm+"/"+yy;
+        localStorage.setItem("localsess_transportfeesch_date",dat);       
       },
       FnShowDialog:function(){
         this.date=new Date();
@@ -55,19 +63,28 @@
       {
         if (e.detail.confirmed)
         {
-          var pickdate=moment(this.$.picker.date).format('L');
+          var pickdate=moment(this.$.picker.date).format('DD/MM/YYYY');
           var dd1=new Date();
           var dd2=new Date(pickdate);
           var days=parseInt((dd1 - dd2) / (1000 * 60 * 60 * 24));
-          this.showdate = moment(this.$.picker.date).format('L');
-          localStorage.setItem("localsess_transportfeesch_date",this.showdate);
+          this.showdate = moment(this.$.picker.date).format('DD/MM/YYYY');
+          var d=new Date(this.$.picker.date);
+          var mm=(d.getMonth()+1);
+          if(mm<10)
+          mm="0"+mm;
+          var dd=d.getDate();
+          if(dd<10)
+          dd="0"+dd;
+          var yy=d.getFullYear();
+          var dat=dd+"/"+mm+"/"+yy;
+          localStorage.setItem("localsess_transportfeesch_date",dat);
         }
       },
       FnClear:function(){
-        this.showdate = moment(new Date()).format('L');
+        this.showdate = moment(new Date()).format('DD/MM/YYYY');
       },
       FnSetDate:function(value){        
-        this.showdate=moment(new Date(value)).format('L');
+        this.showdate=moment(new Date(value)).format('DD/MM/YYYY');
       }
     });
   </script>

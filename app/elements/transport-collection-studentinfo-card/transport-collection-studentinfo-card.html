@@ -1,0 +1,33 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-studentinfo-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .card{
+        margin-top: 3%;
+      }
+    </style>
+    <div class="card">
+    <template is="dom-repeat" items="{{studentinfoarr}}" as="item">
+      <table class="table table-hover">
+        <tr><th>Student name:</th><td>{{item.student_name}}</td><th>Student Id:</th><td>{{item.admission_no}}</td></tr>
+        <tr><th>Grade:</th><td>{{item.class_for_admission}}</td><th>DOB:</th><td>{{item.dob}}</td></tr>
+        <tr><th>Father name:</th><td>{{item.father_name}}</td><th>Mother name:</th><td>{{item.mother_name}}</td></tr>
+        <tr><th>Father mobile:</th><td>{{item.father_mobile}}</td><th>Mother mobile:</th><td>{{item.mother_mobile}}</td></tr>
+        <tr><th>Father email:</th><td>{{item.father_email}}</td><th>Mother email:</th><td>{{item.mother_email}}</td></tr>        
+      </table>
+    </template>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'transport-collection-studentinfo-card',
+    });
+  })();
+  </script>
+</dom-module>

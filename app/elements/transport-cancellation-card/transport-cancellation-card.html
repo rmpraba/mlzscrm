@@ -18,38 +18,49 @@
   paper-dropdown-menu{
     width: 80%;
   }
+  tr{
+   max-height: 35px !important;
+   height: 35px !important;
+  }
 </style>
-
-<div class="row enquiry-form">
-      <div class="list-group col-sm-12 panel-body form-category">
-      <div class="col-md-3">
-       <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchStudent"></paper-input>
-       <paper-listbox class="dropdown-content" id="transportcancellationinput" on-iron-select="FnSelectStudent">
-          <template is="dom-repeat" items="{{itemArray}}" as="item">
-            <paper-item value="{{item.admission_no}}">{{item.itemdes}}</paper-item>
-          </template>
-       </paper-listbox>
-      </div>
-      <div class="col-sm-3 enquiry-input">
-       <paper-input id="transportcancellationid" label="Student Id" value="{{studentid}}"></paper-input>
-      </div>
-      </div>
-      <div class="list-group col-sm12 panel-body form-category"> 
-        <div class="col-sm-3 enquiry-input">
-        <paper-input id="transportcancellationgrade" label="Grade" value="{{grade}}"></paper-input>
-        </div>      
-        <div class="col-sm-3 enquiry-input">
-          <paper-input id="transportcancellationzone" label="Zone" value="{{zone}}"></paper-input>
+<div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                 <div class="col-md-3" style="margin-top: -1%;">
+                 <paper-dropdown-menu id="ttransportcancellationacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="transportcancellationacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                </div>
+                <div class="col-md-4" style="margin-top: -1%;">
+                   <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchStudent"></paper-input>
+                   <paper-listbox class="dropdown-content" id="transportcancellationinput" on-iron-select="FnSelectStudent">
+                   <template is="dom-repeat" items="{{itemArray}}" as="item">
+                   <paper-item value="{{item.admission_no}}">{{item.itemdes}}</paper-item>
+                   </template>
+                   </paper-listbox>
+                </div> 
+                <div class="col-md-2" style="margin-top: 2%;margin-left: 20%;">
+                <paper-button on-click="FnSubmit" class="btn btn-primary center">Cancel</paper-button>             
+                </div>
+            </div>
+          </div>
         </div>
-        </div> 
-      <div class="list-group col-sm12 panel-body form-category"> 
-        <div class="col-sm-4 enquiry-input" style="margin-left: 40%;">
-        <paper-button on-click="FnSubmit" class="btn btn-primary center">Submit</paper-button>
-        <paper-button on-click="FnCancel" class="btn btn-primary center">Cancel</paper-button>
-        </div>
-      </div>
-</div>
-<transportfee-service id="service"></transportfee-service>
+    </div>
+    <div class="card" hidden$="{{hidestudentinfo}}">
+    <div class="list-group col-sm-12 panel-body form-category">
+    <table style="width:60%;" class="table table-hover" hidden$="{{hidestudentinfo}}">
+    <tr><th>Student Id</th><td>{{studentid}}</td><th>Student Name</th><td>{{studentname}}</td></tr>
+    <tr><th>Grade</th><td>{{grade}}</td><th>Zone</th><td>{{zone}}</td></tr>
+    </table>
+    </div>
+    </div>
+    <transport-fee-collection-service id="service"></transport-fee-collection-service>
+<!-- <transportfee-service id="service"></transportfee-service> -->
 </template>
 
 <script>
@@ -58,35 +69,25 @@
   var zoneid="";
   var zonename="";
   var installment=[];
-Polymer({
+  var academicyear="";
+  Polymer({
     is: "transport-cancellation-card",
       ready: function() 
       {
-        localStorage.setItem("curr_sess_paymentpattern",1);
         this.value="";
         this.$.transportcancellationinput.style.visibility='hidden';
-          var academicyear=""; 
-          var date=new Date();
-          var y=date.getFullYear();  
-          var m=date.getMonth();
-          var d=date.getDate(); 
-          if(m<4){ 
-          var y1=(y-1)+1;
-          var y2=y+1;  
-          academicyear="AY-"+y1+"-"+y2;
-          } 
-          else{
-          var y1=y;
-          var y2=y+1;  
-          academicyear="AY-"+y1+"-"+y2;
-          }
-          localStorage.setItem("curr_sess_academicyear",academicyear);
+        this.hidestudentinfo=true;
       },
       FnSubmit:function(){
         this.$.service.FnCancelTransport(this.studentid);
       },
       FnCancel:function(){
         this.FnRefresh();
+      },
+      FnSelectAcademicYear:function(e){
+        academicyear=e.target.selectedItem.textContent.trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+        this.callService();
       },
       callService:function(){
         this.$.service.fetchstudentforcancellationService();
@@ -169,13 +170,14 @@ Polymer({
     this.itemArray=[];
     document.querySelector('#transportcancellationinput').selected=-1;
     this.value=studentname;
-    localStorage.setItem("curr_sess_ins1discount",0);
-    localStorage.setItem("curr_sess_ins2discount",0);
+    // localStorage.setItem("curr_sess_ins1discount",0);
+    // localStorage.setItem("curr_sess_ins2discount",0);
     this.$.service.fetchstudinfoforcancellation(studentid,studentname);
     },
     FnRefresh:function(){
+      document.querySelector('#transportcancellationacademicyear').selected=-1;
       document.querySelector('#transportcancellationinput').selected=-1;
-      document.querySelector('#transportcancellationzone').selected=-1;
+      // document.querySelector('#transportcancellationzone').selected=-1;
       this.querySelector('#transportcancellationinput').style.visibility='hidden';
       this.itemArray=[];
       this.value="";
@@ -188,13 +190,15 @@ Polymer({
       zonename="";
       this.feearr="";
       this.zone="";
-      localStorage.setItem("curr_sess_paymentpattern",1);
-      localStorage.setItem("curr_sess_ins1discount",0);
-      localStorage.setItem("curr_sess_ins2discount",0);
+      this.hidestudentinfo=true;
+      // localStorage.setItem("curr_sess_paymentpattern",1);
+      // localStorage.setItem("curr_sess_ins1discount",0);
+      // localStorage.setItem("curr_sess_ins2discount",0);
     },
     FnRefresh1:function(){
+      // document.querySelector('#transportcancellationacademicyear').selected=-1;
       document.querySelector('#transportcancellationinput').selected=-1;
-      document.querySelector('#transportcancellationzone').selected=-1;
+      // document.querySelector('#transportcancellationzone').selected=-1;
       this.querySelector('#transportcancellationinput').style.visibility='hidden';
       this.studentid="";
       this.parentname="";
@@ -204,9 +208,9 @@ Polymer({
       zonename="";
       this.feearr="";
       this.zone="";
-      localStorage.setItem("curr_sess_paymentpattern",1);
-      localStorage.setItem("curr_sess_ins1discount",0);
-      localStorage.setItem("curr_sess_ins2discount",0);
+      // localStorage.setItem("curr_sess_paymentpattern",1);
+      // localStorage.setItem("curr_sess_ins1discount",0);
+      // localStorage.setItem("curr_sess_ins2discount",0);
     }
   });
 })();

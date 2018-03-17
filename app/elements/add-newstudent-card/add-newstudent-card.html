@@ -8,8 +8,7 @@
       :host {
         display: block;
       }
-    </style>
-    
+    </style>    
     <div class="row enquiry-form">
       <div class="list-group col-sm-12 panel-body form-category">
         <div class="col-sm-3">
@@ -26,8 +25,15 @@
         </div>
       </div>
       <div class="list-group col-sm-12 panel-body form-category">
-        <div class="col-sm-3" style="margin-top: -1%;">
-        <transportdateofbirth-datepicker></transportdateofbirth-datepicker>
+        <div class="col-sm-3">
+        <paper-dropdown-menu id="ttransportaddstudacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+          <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="transportaddstudacademicyear" attr-for-selected="value">
+            <template  is="dom-repeat" items="{{academicarr}}" as="item">
+              <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+            </template>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <!-- <transportdateofbirth-datepicker></transportdateofbirth-datepicker> -->
         </div>
         <div class="col-sm-3">
         <paper-dropdown-menu label="Select Grade" on-iron-select="FnSelectGrade">
@@ -89,9 +95,13 @@
     var gradeid="";
     Polymer({
       is: 'add-newstudent-card',
+      FnSelectAcademicYear:function(e){
+        this.academicyear=e.target.selectedItem.textContent.trim();
+        localStorage.setItem("curr_sess_academicyear",this.academicyear);
+      },
       FnSelectGrade:function(e){
         grade=e.target.selectedItem.textContent.trim();
-        gardeid=e.target.selectedItem.value;
+        // gardeid=e.target.selectedItem.value;
       },
       FnSubmit:function(){
         if(this.enrollmentno==""||this.enrollmentno==null||this.firstname==""||this.firstname==null||grade==""){
@@ -103,7 +113,7 @@
             alert('Please select the grade!!');
         }
         else{
-          this.$.service.FnInsertnewstudentService(this.enrollmentno,this.firstname,this.middlename,this.lastname,grade,this.fathername,this.mothername,this.fathermobile,this.mothermobile,this.fatheremail,this.motheremail,this.address,this.city,this.pincode);
+          this.$.service.FnInsertnewstudentService(this.academicyear,this.enrollmentno,this.firstname,this.middlename,this.lastname,grade,this.fathername,this.mothername,this.fathermobile,this.mothermobile,this.fatheremail,this.motheremail,this.address,this.city,this.pincode);
         }
       },
       FnCancel:function(){
@@ -121,8 +131,9 @@
         this.address="";
         this.city="";
         this.pincode="";
+        document.querySelector('#transportaddstudacademicyear').selected=-1;
         document.querySelector('#addnewstudgrade').selected=-1;
-        document.querySelector('dateofbirth-datepicker').ready();
+        // document.querySelector('dateofbirth-datepicker').ready();
       },
       FnRefresh:function(){
         this.enrollmentno="";
@@ -139,8 +150,9 @@
         this.address="";
         this.city="";
         this.pincode="";
+        document.querySelector('#transportaddstudacademicyear').selected=-1;
         document.querySelector('#addnewstudgrade').selected=-1;
-        document.querySelector('dateofbirth-datepicker').ready();
+        // document.querySelector('dateofbirth-datepicker').ready();
       }
     });
   })();

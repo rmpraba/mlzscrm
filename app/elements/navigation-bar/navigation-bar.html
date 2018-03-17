@@ -270,8 +270,12 @@
         </li>
 
         <li id="transportfeestructure">
-            <a id="transportfeestructure" href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>Transport Fee Structure</a>
+            <!-- <a id="transportfeestructure" href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>Transport Fee Structure</a> -->
+            <a id="transportfeestructure" href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>Transport Structure</a>
             <ul class="nav nav-second-level">
+              <li id="transportzonecreation">
+                <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportzonecreation" on-click="FnTransportZoneCreation">Zone Creation</a>
+              </li>
               <li id="transportfeeschedule">
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportfeeschedule" on-click="FnTransportfeeschedule">Transport Fee Schedule</a>
               </li>
@@ -337,7 +341,7 @@
             <a id="feepayment" href="#" aria-hidden="true" data-toggle="modal" on-click="FnFeePayment"><i class="fa fa-money fa-fw"></i> Fee Payment<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
               <li id="feecollection">
-              <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglefeecollection" on-click="FnFeeCollection">Fee Collection</a>
+              <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglefeecollection" on-click="FnFeeCollection" hidden>Fee Collection</a>
               </li>
               <li id="applicationfee">
               <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggleprospectousfee" on-click="FnProspect">Application Fee</a>
@@ -470,7 +474,7 @@
             <li id="daycollection">
             <a href="" aria-hidden="true" on-click="FnDetaildaycollection">Day Collection</a>
             </li>
-            <li id="dailyincome">
+            <li id="dailyincome" hidden>
             <a href="" aria-hidden="true" on-click="FnDailyincomeReport">Daily Income</a>
             </li>
             <li id="chequecollectionreport">
@@ -494,19 +498,22 @@
         <li id="transportprocess">
           <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Transport Process<span class="fa arrow"></span></a>
           <ul class="nav nav-second-level">
-           <li id="zoneallocation">
+           <li id="transportzonefeecollection">
+            <a href="" aria-hidden="true" on-click="FnTransportCollection">Zone Allocation</a>
+           </li> 
+           <li id="zoneallocation" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezoneallocation" on-click="FnZoneAllocation">Zone Allocation</a>
            </li> 
-           <li id="zonechange">
+           <li id="zonechange" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonechange" on-click="FnZoneChange">Zone Change</a>
            </li>
-           <li id="zonechangecollection">
+           <li id="zonechangecollection" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonechangecollection" on-click="FnZoneChangeCollection">Zone Change Collection</a>
            </li>
-           <li id="zonecancellation">
+           <li id="zonecancellation" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonecancellation" on-click="FnZoneCancellation">Zone Cancellation</a>
            </li>
-           <li id="transportdiscount">
+           <li id="transportdiscount" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportdiscount" on-click="FnTransportDiscount">Transport Discount</a>
            </li>
            <li id="transportchequecancelorbounce">
@@ -515,10 +522,10 @@
            <li id="addstudent">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggleaddstudent" on-click="FnAddStudent">Add Student</a>
            </li> 
-           <li id="transportsearchreceipt">
+           <li id="transportsearchreceipt" hidden>
             <a href="" aria-hidden="true" on-click="FnTransportSearchReceipt">Search Receipt</a>
            </li> 
-           <li id="transportchequeeditdelete">
+           <li id="transportchequeeditdelete" hidden>
             <a href="" aria-hidden="true" on-click="FnTransportChequeEditDelete">Cheque Edit/Delete</a>
            </li> 
            <li id="transportdailycollection">
@@ -636,7 +643,7 @@
       </div>
  </div>
 
- <div class="modal fade bd-example-modal-lg" id="togglezonechange" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<!--  <div class="modal fade bd-example-modal-lg" id="togglezonechange" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
         <div class="modal-content" id="fee-content">
           <div class="modal-header">
@@ -652,7 +659,26 @@
           </div>
         </div>
       </div>
- </div>
+ </div> -->
+
+ <div class="modal fade bd-example-modal-lg" id="toggletransportzonecreation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Transport Zone Creation
+            </h4>
+          </div>
+          <div class="modal-body">
+            <zonedistance-card></zonedistance-card>
+          </div>
+        </div>
+      </div>
+  </div>
+
 
  <div class="modal fade bd-example-modal-lg" id="toggleaddstudent" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
@@ -1061,7 +1087,7 @@
     <schedule-service id="scheduleservice"></schedule-service>
     <reporting-service id="reportingservice"></reporting-service>
     <user-service id="userservice"></user-service>
-    <transportfee-service id="transportfeeservice"></transportfeetransportfee-service>
+    <transportfee-service id="transportfeeservice"></transportfee-service>
   </template>
   <script>
   (function() {
@@ -1084,6 +1110,7 @@
         this.hidemasterreportmenu=true;
         this.hidereportmenu=true;
         localStorage.setItem('curr_sess_page','');
+
       },
       // FnFeeCollection:function(){
       //   document.querySelector('app-list').setPage("fee-card","Fee Collection");
@@ -1095,6 +1122,9 @@
         var schoolid=e.target.selectedItem.value.trim();
         localStorage.setItem("schoolname",schoolname);
         localStorage.setItem("schoolid",schoolid);
+        this.$.service.getenquirycount();
+        this.$.service.getadmittedcount();
+        document.querySelector('app-list').setPage("enquiry","Enquiry");
       },
       FnCreateUser:function(){
         localStorage.setItem('curr_sess_page','');
@@ -1136,6 +1166,21 @@
         localStorage.setItem('curr_sess_page','');
         document.querySelector('transportfee-schedule-card').FnRefresh();
         document.querySelector('transportfee-schedule-card').callService();
+        this.$.scheduleservice.fetchacademicyearService();
+      },
+       FnTransportCollection:function(e){
+        localStorage.setItem('curr_sess_page','zoneallocation');
+        document.querySelector('app-list').setPage("transport-fee-collection-home-card","Transport Collection");
+        this.$.scheduleservice.fetchacademicyearService();
+        // document.querySelector('transport-fee-collection-home-card').callService();
+        document.querySelector('transport-fee-collection-home-card').FnRefresh();
+        document.querySelector('transport-fee-collection-home-card').ready();
+      },
+       FnTransportZoneCreation:function(e){
+        localStorage.setItem('curr_sess_page','');
+        document.querySelector('zonedistance-card').fnrefresh();
+        document.querySelector('zonedistance-card').fnclear();
+        document.querySelector('zonedistance-card').callService();
         this.$.scheduleservice.fetchacademicyearService();
       },
       FnTransportFee:function(e){
@@ -1345,9 +1390,12 @@
           document.querySelector('daycollection-report').FnCallService();
       },
       FnTransportDailyCollection:function(){
-          document.querySelector('app-list').setPage("transportdaily-collection-report","Transport Daily Collection");
-          document.querySelector('transportdaily-collection-report').FnRefresh();
-          document.querySelector('transportdaily-collection-report').FnCallService();
+          // document.querySelector('app-list').setPage("transportdaily-collection-report","Transport Daily Collection");
+          // document.querySelector('transportdaily-collection-report').FnRefresh();
+          // document.querySelector('transportdaily-collection-report').FnCallService();
+          document.querySelector('app-list').setPage("transport-daily-collection-report","Transport Daily Collection");
+          document.querySelector('transport-daily-collection-report').FnRefresh();
+          document.querySelector('transport-daily-collection-report').FnCallService();
       },
       FnTransportFeeDueReport:function(){
           this.$.scheduleservice.fetchacademicyearService();
@@ -1357,14 +1405,20 @@
           document.querySelector('transport-feepaiddue-report').FnCallService();
       },
       FnTransportPdcCollection:function(){
-        document.querySelector('app-list').setPage("transport-pdc-report","Transport PDC Collection");
-        document.querySelector('transport-pdc-report').FnRefresh();
-        document.querySelector('transport-pdc-report').FnCallService();
+        // document.querySelector('app-list').setPage("transport-pdc-report","Transport PDC Collection");
+        // document.querySelector('transport-pdc-report').FnRefresh();
+        // document.querySelector('transport-pdc-report').FnCallService();
+        document.querySelector('app-list').setPage("transport-pdc-collection-report","Transport PDC Collection");
+        document.querySelector('transport-pdc-collection-report').FnRefresh();
+        document.querySelector('transport-pdc-collection-report').FnCallService();
       },
       FnTransportCollectionDashboard:function(){
-        document.querySelector('app-list').setPage("transport-dashboard","transport-dashboard");
-        // document.querySelector('transport-dashboard').FnRefresh();
-        document.querySelector('transport-dashboard').FnCallService();
+        // document.querySelector('app-list').setPage("transport-dashboard","transport-dashboard");
+        // // document.querySelector('transport-dashboard').FnRefresh();
+        // document.querySelector('transport-dashboard').FnCallService();
+        document.querySelector('app-list').setPage("transport-dashboard","Transport Collection Dashboard");
+        document.querySelector('transport-dashboard').FnRefresh();
+        this.$.scheduleservice.fetchacademicyearService();
       },
       FnDetaildaycollection:function(){
           this.$.scheduleservice.fetchgradeforreportService();
@@ -1475,7 +1529,10 @@
       },
       FnZoneChange:function(){
         localStorage.setItem('curr_sess_page','zonechange');
-        document.querySelector('zonechange-card').callService();
+        // document.querySelector('zonechange-card').callService();
+        document.querySelector('app-list').setPage("zonechange-card","Zone Change");
+        // document.querySelector('zonechange-card').callService();
+        this.$.scheduleservice.fetchacademicyearService();     
         this.$.transportfeeservice.fetchzoneService();
         document.querySelector('zonechange-card').ready();
         document.querySelector('zonechange-card').FnRefresh();
@@ -1489,14 +1546,16 @@
       FnZoneCancellation:function(){
         localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("zone-cancellation-card","Zone Cancellation");
-        document.querySelector('zone-cancellation-card').callService();
+        // document.querySelector('zone-cancellation-card').callService();
+        this.$.scheduleservice.fetchacademicyearService();
         document.querySelector('zone-cancellation-card').ready();
         document.querySelector('zone-cancellation-card').FnRefresh();
       },
       FnTransportCancellation:function(){
         localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("transport-cancellation-card","Transport Cancellation");
-        document.querySelector('transport-cancellation-card').callService();
+        // document.querySelector('transport-cancellation-card').callService();
+        this.$.scheduleservice.fetchacademicyearService();
         document.querySelector('transport-cancellation-card').ready();
         document.querySelector('transport-cancellation-card').FnRefresh();
       },
@@ -1517,6 +1576,7 @@
         localStorage.setItem('curr_sess_page','');
         this.$.transportfeeservice.fetchgradeService();
         // this.$.transportfeeservice.fetchsectionService();
+        this.$.scheduleservice.fetchacademicyearService();
         document.querySelector('add-newstudent-card').FnRefresh();
       },
       FnTransportSearchReceipt:function(){

@@ -13,7 +13,7 @@
           <div class="row">
             <div class="col-md-12">
                  <div class="col-md-3" style="margin-top: 0%;">
-                 <paper-dropdown-menu id="transportfeepaiddueacyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                 <paper-dropdown-menu id="ttransportfeepaiddueacyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
                   <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="transportfeepaiddueacyear" attr-for-selected="value">
                   <template  is="dom-repeat" items="{{academicarr}}" as="item">
                   <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
@@ -44,7 +44,7 @@
                 <div class="col-md-1" style="margin-top: 1%;margin-left: 20%;">
                 <p>Download
                 <a href="#">
-                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('transportfeepaidduereport', 'Fee Paid & Due Report')"></span>
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="duereportexportToExcel()"></span>
                 </a>
                 </p>
                 </div> 
@@ -52,32 +52,86 @@
           </div>
         </div>
     </div>
-    <div id="transportfeepaidduereport">
-     <table class="table table-hover">
+    <div>
+     <table class="table table-hover" width="100%" id="transportfeepaidduereport">
       <thead>
       <tr>
-        <th>Sno</th><th>Student Id</th><th>Student Name</th><th>Grade</th><th>Type</th><th>Fees</th><th>Installment1 Paid</th><th>Installment2 Paid</th><th>Total Paid</th><th>Pending Amount</th><th>Installment Pattern</th>
+        <th>Sno</th><th>Student Id</th><th>Student Name</th><th>Grade</th><th>Type</th><th>Zone</th><th>Fees</th><th>Fine Amount</th><th>Discount</th><th colspan$="{{colspan}}" style="text-align: center;width: {{width}}%;">Paid Amount</th><th>Total Paid</th><th>Pending Amount</th><th>Installment Pattern</th>
       </tr>
       </thead>
       <tbody>
       <template  is="dom-repeat" items="{{pendingarr}}" as="item">
         <tr><td>{{item.sno}}</td><td>{{item.studentid}}</td><td>{{item.studentname}}</td><td>{{item.grade}}</td><td>{{item.status}}</td>
-        <td>{{item.fees}}</td><td>{{item.install1}}</td><td>{{item.install2}}</td><td>{{item.paidamount}}</td><td>{{item.pendingamount}}</td><td>{{item.pattern}}</td>
+        <td>{{item.zone}}</td><td>{{item.fees}}</td><td>{{item.fineamount}}</td><td>{{item.discount}}</td>
+        <template is="dom-repeat" items="{{item.paidamount}}" as="i">
+          <td colspan$="{{i.colspan}}" width$="{{i.width}}">{{i.installment}}</td>
+        </template>
+        <td>{{item.totalpaid}}</td><td>{{item.pendingamount}}</td><td>{{item.pattern}}</td>
         </tr>
       </template>
-      <!-- <tr><th colspan="11" style="text-align: right;">Total Amount: &nbsp;&nbsp;{{totalamount}}</th></tr> -->
+      <tr><th colspan="14" style="text-align: right;">No of students paid: </th><th colspan="1">{{paidstud}}</th></tr>
+      <tr><th colspan="14" style="text-align: right;">Paid Amount: </th><th colspan="1">{{paidfees}}</th></tr>
+      <tr><th colspan="14" style="text-align: right;">No of student not paid: </th><th colspan="1">{{pendingstud}}</th></tr>
+      <tr><th colspan="14" style="text-align: right;">Pending Amount: </th><th colspan="1">{{pendingfees}}</th></tr>
       </tbody>
-    </table>    
-
-    <table style="margin-left: 70%;" hidden$="{{hidecount}}">
+    </table>   
+    <!-- <table style="margin-left: 70%;" hidden$="{{hidecount}}">
       <tr><th>No of students paid: </th><th>{{paidstud}}</th></tr>
       <tr><th>Paid Amount: </th><th>{{paidfees}}</th></tr>
       <tr><th>No of student not paid: </th><th>{{pendingstud}}</th></tr>
       <tr><th>Pending Amount: </th><th>{{pendingfees}}</th></tr>
-    </table>
+    </table> -->
     </div>
-    <transportfee-service id="feereportservice"></transportfee-service>
+    <transport-fee-collection-service id="feereportservice"></transport-fee-collection-service>
+    <!-- <transportfee-service id="feereportservice"></transportfee-service> -->
   </template>
+   <script type="text/javascript">
+var exportname="";
+function duereportexportToExcel(){
+var htmls = "";
+//alert("2");
+var tab_text = '<table border="1px" style="font-size:17px" ">';
+    var textRange; 
+    var j = 0;
+    var tab = document.getElementById('transportfeepaidduereport'); // id of table
+    var lines = tab.rows.length;
+
+    // the first headline of the table
+    if (lines > 0) {
+        tab_text = tab_text + '<tr bgcolor="#DFDFDF">' + tab.rows[0].innerHTML + '</tr>';
+    }
+
+    // table data lines, loop starting from 1
+    for (j = 1 ; j < lines; j++) {     
+        tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+    }
+
+    tab_text = tab_text + "</table>";
+   
+    var uri = 'data:application/vnd.ms-excel;base64,';
+            var template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'; 
+            var base64 = function(s) {
+                return window.btoa(unescape(encodeURIComponent(s)))
+            };
+
+            var format = function(s, c) {
+                return s.replace(/{(\w+)}/g, function(m, p) {
+                    return c[p];
+                })
+            };
+
+         htmls = tab_text
+
+            var ctx = {
+                worksheet : exportname || 'Worksheet',
+                table : htmls
+            }
+        var link = document.createElement("a");
+            link.download = exportname;
+            link.href = uri + base64(format(template, ctx));
+            link.click();
+    }
+  </script>
   <script type="text/javascript">
       var tableToExcel = (function() {
       var uri = 'data:application/vnd.ms-excel;base64,'
@@ -94,7 +148,7 @@
   <script>
   (function() {
     'use strict';
-    var academicyear;
+    var academicyear="";
     var grade='All Grades';
     var type='All';
     Polymer({
@@ -107,19 +161,20 @@
         this.hidecount=false;
       },
       FnCallService:function(){
-        var d=new Date(); 
-        var cy=d.getFullYear(); 
-        var ny='';
-        var m=d.getMonth()+1;
-        if(m>4){
-          cy=parseInt(cy)+1;
-          ny=parseInt(cy)+1;
-        }
-        else{
-          cy=parseInt(cy)-1;
-          ny=parseInt(cy)+1;
-        }
-        academicyear="AY-"+cy+"-"+ny;
+        // var d=new Date(); 
+        // var cy=d.getFullYear(); 
+        // var ny='';
+        // var m=d.getMonth()+1;
+        // if(m>4){
+        //   cy=parseInt(cy)+1;
+        //   ny=parseInt(cy)+1;
+        // }
+        // else{
+        //   cy=parseInt(cy)-1;
+        //   ny=parseInt(cy)+1;
+        // }
+        // academicyear="AY-"+cy+"-"+ny;
+        exportname="Fee Piad & Due Rpeort";
       },
       FnSelectType:function(e){
         this.flag=1;
@@ -130,11 +185,14 @@
         this.$.feereportservice.FnFetchTransportPendingService(academicyear,grade,type);
       },
       FnRefresh:function(){
-        this.pendingfeearr=[];
+        this.pendingarr=[];
         document.querySelector('#transportfeepaiddueacyear').selected=-1;
         document.querySelector('#transportfeepaidduegrade').selected=-1;
         document.querySelector('#transportfeepaidduetype').selected=-1;
         this.hidecount=true;
+        academicyear="";
+        grade='';
+        type='';
       },
       FnSelectGrade:function(e){
         grade=(e.target.selectedItem.textContent).trim();

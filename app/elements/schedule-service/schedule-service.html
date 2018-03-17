@@ -555,6 +555,15 @@
         this.$.fetchacademicyearajax.generateRequest();
       },
       fetchacademicyearResponse:function(e){
+        // document.querySelector('application-fee-card').academicarr=e.detail.response.returnval;
+        // document.querySelector('fee-collection-home-card').academicarr=e.detail.response.returnval;
+        document.querySelector('add-newstudent-card').academicarr=e.detail.response.returnval;
+        document.querySelector('zonedistance-card').academicarr=e.detail.response.returnval;
+        document.querySelector('zonechange-card').academicarr=e.detail.response.returnval;
+        document.querySelector('zone-cancellation-card').academicarr=e.detail.response.returnval;
+        document.querySelector('transport-cancellation-card').academicarr=e.detail.response.returnval;
+        document.querySelector('transport-dashboard').academicarr=e.detail.response.returnval;
+        document.querySelector('transport-fee-collection-home-card').academicarr=e.detail.response.returnval;
         document.querySelector('transport-feepaiddue-report').academicarr=e.detail.response.returnval;
         document.querySelector('transport-receipt-searchcard').academicarr=e.detail.response.returnval;
         document.querySelector('transportfee-schedule-card').academicarr=e.detail.response.returnval;

@@ -113,7 +113,6 @@
         localStorage.setItem("schoolname",schoolname);
         localStorage.setItem("schoolid",schoolid);
         this.$.transportfeeservice.fetchallstudentforzoneService();
-        this.$.transportfeeservice.fetchzoneService();
       },
       FnToggleDialog:function(){
         this.$.transportfeeschdialog.toggle();
@@ -225,11 +224,16 @@
     },
       FnSelectAcademicYear:function(e){
         academicyear=(e.target.selectedItem.textContent).trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+        this.zonearr=[];
+        this.fees="";
+        this.$.transportfeeservice.fetchzoneService(academicyear);
       },
       FnSelectZone:function(e){
         zonename=(e.target.selectedItem.textContent).trim();
         distanceid=(e.target.selectedItem.value).trim();
-        this.$.transportfeeservice.fetchzonefeeService(distanceid);
+        this.fees="";
+        this.$.transportfeeservice.fetchzonefeeService(academicyear,distanceid);
       },
       FnSelectInstallment:function(e){
         installment=(e.target.selectedItem.textContent).trim();

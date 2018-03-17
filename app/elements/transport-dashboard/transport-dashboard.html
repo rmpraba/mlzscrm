@@ -12,10 +12,19 @@
         <div class="well well-sm">
           <div class="row">
             <div class="col-md-12">
-                <div class="col-md-1" style="margin-top: 1%;margin-left: 80%;">
+                <div class="col-md-3" style="margin-top: 0%;">
+                 <paper-dropdown-menu id="ttransportdashboardacyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="transportdashboardacyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                 </div>
+                <div class="col-md-1" style="margin-top: 1%;margin-left: 55%;">
                 <p>Download
                 <a href="#">
-                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="tableToExcel('transportdailydashboard', 'Transport Collection Dashboard')"></span>
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="transportdashboardexportToExcel()"></span>
                 </a>
                 </p>
                 </div> 
@@ -23,8 +32,8 @@
           </div>
         </div>
     </div>
-    <div id="transportdailydashboard" hidden="{{hidetable}}">
-     <table border="1" style="border-collapse: collapse;border: 1px grey;width: 100%;">
+    <div  hidden="{{hidetable}}">
+     <table  class="table table-hover" style="width: 100%;" id="transportdailydashboard">
       <thead>
       <tr>
         <th>School Name</th><th>Type</th><th>Today's Count</th><th>Today's Collection</th><th>Total Count</th><th>Total Collection</th>
@@ -38,8 +47,56 @@
     </table>    
 
     </div>
-    <transport-processing-service id="transportprocessingservice"></transport-processing-service>
+    <!-- <transport-processing-service id="transportprocessingservice"></transport-processing-service> -->
+    <transport-fee-collection-service id="transportprocessingservice"></transport-fee-collection-service>
   </template>
+  <script type="text/javascript">
+var exportname="";
+function transportdashboardexportToExcel(){
+var htmls = "";
+//alert("2");
+var tab_text = '<table border="1px" style="font-size:17px" ">';
+    var textRange; 
+    var j = 0;
+    var tab = document.getElementById('transportdailydashboard'); // id of table
+    var lines = tab.rows.length;
+
+    // the first headline of the table
+    if (lines > 0) {
+        tab_text = tab_text + '<tr bgcolor="#DFDFDF">' + tab.rows[0].innerHTML + '</tr>';
+    }
+
+    // table data lines, loop starting from 1
+    for (j = 1 ; j < lines; j++) {     
+        tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+    }
+
+    tab_text = tab_text + "</table>";
+   
+    var uri = 'data:application/vnd.ms-excel;base64,';
+            var template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'; 
+            var base64 = function(s) {
+                return window.btoa(unescape(encodeURIComponent(s)))
+            };
+
+            var format = function(s, c) {
+                return s.replace(/{(\w+)}/g, function(m, p) {
+                    return c[p];
+                })
+            };
+
+         htmls = tab_text
+
+            var ctx = {
+                worksheet : exportname || 'Worksheet',
+                table : htmls
+            }
+        var link = document.createElement("a");
+            link.download = exportname;
+            link.href = uri + base64(format(template, ctx));
+            link.click();
+    }
+  </script>
   <script type="text/javascript">
       var tableToExcel = (function() {
       var uri = 'data:application/vnd.ms-excel;base64,'
@@ -62,28 +119,21 @@
       ready:function(){
         this.hidetable=true;
       },
+      FnSelectAcademicYear:function(e) {
+        academicyear=(e.target.selectedItem.textContent).trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+        this.FnCallService();
+      },
       FnCallService:function(){
-        var d=new Date(); 
-        var cy=d.getFullYear(); 
-        var ny='';
-        var m=d.getMonth()+1;
-        if(m>4){
-          cy=parseInt(cy);
-          ny=parseInt(cy)+1;
-        }
-        else{
-          cy=parseInt(cy)-1;
-          ny=parseInt(cy)+1;
-        }
-        academicyear="AY-"+cy+"-"+ny;
-        // alert(academicyear);
+        exportname="Transport Collection Dashboard";
         this.$.transportprocessingservice.FnFetchDailycollectionDashboardService(academicyear);
       },
       FnShowTable:function(){
         this.hidetable=false;
       },
       FnRefresh:function(){
-        // document.querySelector('#dailydashboardacademicyear').selected=-1;
+        document.querySelector('#transportdashboardacyear').selected=-1;
+        this.hidetable=true;
       }
     });
   })();

@@ -1,4 +1,5 @@
 {
 	"address":"http://localhost:8086",
-	"academicyear":"AY-2017-2018"
+	"currentacademicyear":"AY-2017-2018",
+	"nextacademicyear":"AY-2018-2019"
 }

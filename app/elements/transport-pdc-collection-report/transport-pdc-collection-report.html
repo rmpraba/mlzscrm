@@ -1,0 +1,182 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-pdc-collection-report">
+  <template>
+    <style>
+      .datecard {
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <div class="col-md-6"> -->
+              <div class="col-md-2" style="margin-top: 2%;">
+                  <transportfromdate-icon-pickercard></transportfromdate-icon-pickercard>
+                </div>
+                <div class="col-md-2" style="margin-top: 2%;margin-left: -3%;">
+                  <transporttodate-icon-pickercard></transporttodate-icon-pickercard>
+                </div>              
+                <div class="col-sm-2" style="margin-left: 5%;" hidden>
+                <paper-dropdown-menu label="Select Type" attr-for-selected="value">
+                  <paper-menu id="transportpdccollectiontype" class="dropdown-content" required on-iron-select="FnSelectType" valueattr="value" >
+                    <!-- <template  is="dom-repeat" items="{{}}" as="item"> -->
+                    <paper-item value="all">All</paper-item>
+                    <paper-item value="new">New</paper-item>
+                    <paper-item value="promoted">Promoted</paper-item>
+                    <!-- </template> -->
+                  </paper-menu>
+                </paper-dropdown-menu> 
+                </div> 
+                <div class="col-md-1" style="margin-top: 2.5%;margin-left: 5%;">
+                  <paper-button style="height:30px;text-transform: none;" on-click="FnView" class="btn btn-primary">View</paper-button>
+                </div>
+                <div class="col-md-1" style="margin-top: 2%;margin-left: 10%;">
+                <p>Download
+                <a href="#">
+                <span disabled="{{disabledownload}}" class="glyphicon glyphicon-download-alt" onclick="pdcreportexportToExcel()"></span>
+                </a>
+                </p>
+                </div>                 
+              <!-- </div> -->
+            </div>
+          </div>
+        </div>
+    </div>
+    <div>
+     <table class="table table-hover" id="transportpdccollectionreport">
+      <thead>
+      <tr>
+        <th>Sno</th><th>Enr/Enq No</th><th>Student Name</th><th>Grade</th>
+        <th>Type</th><th>Installment Type</th><th>Mode Of Payment</th><th>Cheque No</th><th>Bank Name</th><th>Cheque Date</th><th>Received Date</th><th>Receipt/Ack No</th><th>Actual Amount</th><th>Fine Amount</th><th>Total Amount</th>
+      </tr>
+      </thead>
+      <tbody>
+      <template  is="dom-repeat" items="{{daycollectionarr}}" as="item">
+        <tr><td>{{item.sno}}</td><td>{{item.student_id}}</td><td>{{item.student_name}}</td><td>{{item.grade}}</td><td>{{item.admission_status}}</td><td>{{item.installment}}</td><td>{{item.mode_of_payment}}</td><td>{{item.cheque_no}}</td><td>{{item.bank_name}}</td><td>{{item.cheque_date}}</td><td>{{item.paid_date}}</td>
+        <td>{{item.receipt_no}}</td><td>{{item.installment_amount}}</td><td>{{item.fine_amount}}</td><td>{{item.total}}</td></tr>
+      </template>
+      <tr></tr>
+      </tbody>
+      <template  is="dom-repeat" items="{{daysplitarr}}" as="item">
+      <tr hidden$="{{hidetotal}}">
+      <th colspan="14" style="text-align: right;">Total amount from {{item.mode_of_payment}}: &nbsp;&nbsp;</th><th>{{item.total}}</th>
+      </tr>
+      </template>
+    </table>  
+  <!--   <table>
+    <template  is="dom-repeat" items="{{daysplitarr}}" as="item">
+    <tr hidden$="{{hidetotal}}">
+      <th colspan="8" style="text-align: right;">Total amount from {{item.mode_of_payment}}: &nbsp;&nbsp;</th><th>{{item.total}}</th>
+    </tr>
+    </template>
+    </table>  -->  
+    </div>
+    <transport-fee-collection-service id="feereportservice"></transport-fee-collection-service>
+  </template>
+  <script type="text/javascript">
+var exportname="";
+function pdcreportexportToExcel(){
+var htmls = "";
+//alert("2");
+var tab_text = '<table border="1px" style="font-size:17px" ">';
+    var textRange; 
+    var j = 0;
+    var tab = document.getElementById('transportpdccollectionreport'); // id of table
+    var lines = tab.rows.length;
+
+    // the first headline of the table
+    if (lines > 0) {
+        tab_text = tab_text + '<tr bgcolor="#DFDFDF">' + tab.rows[0].innerHTML + '</tr>';
+    }
+
+    // table data lines, loop starting from 1
+    for (j = 1 ; j < lines; j++) {     
+        tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+    }
+
+    tab_text = tab_text + "</table>";
+   
+    var uri = 'data:application/vnd.ms-excel;base64,';
+            var template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'; 
+            var base64 = function(s) {
+                return window.btoa(unescape(encodeURIComponent(s)))
+            };
+
+            var format = function(s, c) {
+                return s.replace(/{(\w+)}/g, function(m, p) {
+                    return c[p];
+                })
+            };
+
+         htmls = tab_text
+
+            var ctx = {
+                worksheet : exportname || 'Worksheet',
+                table : htmls
+            }
+        var link = document.createElement("a");
+            link.download = exportname;
+            link.href = uri + base64(format(template, ctx));
+            link.click();
+    }
+  </script>
+  <script type="text/javascript">
+      var tableToExcel = (function() {
+      var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+     return function(table, name) {
+     if (!table.nodeType) table = document.getElementById(table)
+     var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+     window.location.href = uri + base64(format(template, ctx))
+     }
+     })()
+  </script>
+  <script>
+  (function() {
+    'use strict';
+    // var grade="All Grades";
+    var type="All";
+    Polymer({
+      is: 'transport-pdc-collection-report',
+      ready:function(){
+        this.hidetotal=true;
+      },
+      FnHideView:function(){
+        this.hidetotal=false;
+      },
+      FnCallService:function(){        
+        exportname="PDC Collection Report";
+        this.$.feereportservice.FnFetchPDCCollectionService();
+      },
+      FnView:function(){
+        this.$.feereportservice.FnFetchPDCCollectionService();
+      },
+      // FnSelectGrade:function(e){
+      //   grade=(e.target.selectedItem.textContent).trim();
+      //   if(this.flag==1)
+      //    this.$.feereportservice.FnFetchPDCCollectionService(); 
+      // },
+      FnRefresh:function(){
+        // document.querySelector('#transportdaycollectiongrade').selected=-1;
+        // document.querySelector('#reportfiltertype').selected=-1;
+        this.daycollectionarr="";
+        document.querySelector('transportfromdate-icon-pickercard').ready();
+        // document.querySelector('todate-icon-pickercard').ready();
+        this.hidetotal=true;
+        document.querySelector('#transportpdccollectiontype').selected=-1;
+        type="";
+      },
+      FnSelectType:function(e){
+        this.flag=1;
+        type=(e.target.selectedItem.textContent).trim();
+        this.$.feereportservice.FnFetchPDCCollectionService();
+      }
+    });
+  })();
+  </script>
+</dom-module>

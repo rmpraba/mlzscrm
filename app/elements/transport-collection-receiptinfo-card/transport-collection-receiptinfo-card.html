@@ -1,0 +1,32 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-receiptinfo-card">
+  <template>
+    <style></style>
+    <div>
+    <table border="1" style="border-collapse: collapse;border-color: #e0dade;">
+      <template is="dom-repeat" items="{{paymenthistoryarr}}" as="item">
+      <tr style="{{item.fontsize}}"><td>{{item.sno}}</td><td>{{item.transactionno}}</td><td>{{item.feetype}}</td><td>{{item.amount}}</td><td>{{item.dop}}</td><td>{{item.paymentmode}}</td><td>{{item.ptno}}</td><td>{{item.transactionname}}</td><td>{{item.transactiondate}}</td><td>{{item.receiptno}}</td><td>{{item.status}}</td><td>{{item.paymenttype}}</td><td>
+      <transport-collection-receiptinfo-item-card gradename="{{gradename}}" academicyear="{{academicyear}}" admissionyear="{{admissionyear}}"
+        admissionstatus="{{admissionstatus}}" fathername="{{fathername}}" mothername="{{mothername}}" parentname="{{parentname}}" gradeid="{{gradeid}}" admissionno="{{admissionno}}" studentname="{{studentname}}" hideicon="{{item.hideicon}}" academicyear="{{item.academicyear}}" admissionno="{{item.admissionno}}" sno="{item.sno}" transactionno="{{item.transactionno}}" feetype="{{item.feetype}}" amount="{{item.amount}}" dateofpayment="{{item.dop}}" paymentmode="{{item.paymentmode}}" paymenttransactionno="{{item.ptno}}" transactionname="{{item.transactionname}}" transactiondate="{{item.transactiondate}}" receiptno="{{item.receiptno}}" status="{{item.status}}" paymenttype="{{item.paymenttype}}" receipttype="{{item.receipttype}}" receiptlabel="{{item.receiptlabel}}" fineamount="{{item.fineamount}}" hidecashblock="{{item.hidecashblock}}" hidechequeblock="{{item.hidechequeblock}}" hidereferenceblock="{{item.hidereferenceblock}}" installmentfeetype="{{item.installmentfeetype}}"></transport-collection-receiptinfo-item-card>
+      </td>
+      </tr>
+      </template>
+    </table>
+    </div>
+    <transport-collection-receiptinfo-print-card receiptarr="{{receiptarr}}"></transport-collection-receiptinfo-print-card>
+  </template>
+  </table>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'transport-collection-receiptinfo-card',
+      FnRefresh:function(){
+        this.paymenthistoryarr=[];
+        this.receiptarr=[];
+      }
+    });
+  })();
+  </script>
+</dom-module>

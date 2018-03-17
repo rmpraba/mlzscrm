@@ -1,0 +1,71 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-receiptinfo-item-card">
+  <template>
+    <style>
+    .btn{
+        @apply(--layout-horizontal);
+    }
+    </style>
+    <div hidden>
+    {{gradename}} {{academicyear}} {{admissionyear}} {{admissionstatus}} {{parentname}} {{fathername}} {{mothername}} {{gradeid}} {{admissionno}} {{studentname}} {{academicyear}}{{admissionno}}{{sno}}{{transactionno}}{{feetype}} {{amount}}{{dateofpayment}}{{paymentmode}} {{paymenttransactionno}}{{transactionname}}{{transactiondate}}
+    {{receiptno}}{{status}}{{paymenttype}}{{receipttype}{{receiptlabel}}{{fineamount}}{{hidecashblock}}{{hidechequeblock}}{{hidereferenceblock}}{{installmentfeetype}}</div>
+    <div class="btn" hidden$="{{hideicon}}">
+      <span class="panel-icon"><a href=""><i class="fa fa-envelope fa-lg" aria-hidden="true" on-click="FnEmail"></i></a></span>
+      <span class="panel-icon"><a href=""><i class="fa fa-print fa-lg" aria-hidden="true" on-click="FnPrint"></i></a></span>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var arr=[];
+    Polymer({
+      is: 'transport-collection-receiptinfo-item-card',
+      FnEmail:function(){
+
+      },
+      FnPrint:function(){
+        arr=[];
+        var obj={};
+        obj.sno=this.sno;
+        obj.gradename=this.gradename;
+        obj.academicyear=this.academicyear;
+        obj.admissionyear=this.admissionyear;
+        obj.admissionstatus=this.admissionstatus;
+        obj.fathername=this.parentname;
+        // obj.mothername=this.mothername;
+        obj.admissionno=this.admissionno;
+        obj.studentname=this.studentname;
+        obj.academicyear=this.academicyear;
+        obj.transactionno=this.transactionno;
+        obj.feetype=this.feetype;
+        obj.amount=this.amount;
+        obj.dateofpayment=this.dateofpayment;
+        obj.paymentmode=this.paymentmode;
+        obj.paymenttransactionno=this.paymenttransactionno;
+        obj.transactionname=this.transactionname;
+        obj.transactiondate=this.transactiondate;
+        obj.receiptno=this.receiptno;
+        obj.receipttype=this.receipttype;
+        obj.receiptlabel=this.receiptlabel;
+        obj.fineamount=this.fineamount;
+        obj.hidecashblock=this.hidecashblock;
+        obj.hidechequeblock=this.hidechequeblock;
+        obj.hidereferenceblock=this.hidereferenceblock;
+        obj.installmentfeetype=this.installmentfeetype;
+        arr.push(obj);
+        // alert(arr.length);
+        // alert(JSON.stringify(arr));
+        document.querySelector('transport-collection-receiptinfo-print-card').Fnsetinfo(arr);
+        document.querySelector('transport-collection-receiptinfo-card').receiptarr=arr;
+        // document.querySelector('collection-receiptinfo-card').click();
+      },
+      FnRefresh:function(){
+        arr=[];
+        document.querySelector('transport-collection-receiptinfo-print-card').FnRefresh();
+      }
+    });
+  })();
+  </script>
+</dom-module>

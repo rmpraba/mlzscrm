@@ -513,6 +513,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         }
         document.querySelector('enquiry-card').academicarr=e.detail.response.returnval;
+        document.querySelector('enquiry-card').selectedval=localStorage.getItem("curr_sess_academicyear");
         document.querySelector('enquiry-card').FnSetDefaultYear();
         document.querySelector('followup-dashboard').academicarr=e.detail.response.returnval;
         document.querySelector('followup-dashboard').FnSetDefaultYear();

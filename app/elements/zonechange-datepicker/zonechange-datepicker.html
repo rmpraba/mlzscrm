@@ -1,26 +1,24 @@
 <!--Component import-->
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../bower_components/paper-date-picker/paper-date-picker.html">
-<link rel="import" href="../../bower_components/paper-styles/demo-pages.html">
-<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/paper-input/paper-input.html">
-
 <dom-module id="zonechange-datepicker">
+<style>
+  paper-input{
+    width: 63%;
+    margin-top: -3%;
+    margin-left: -5%;
+  }
+</style>
   <template>
-    <style is="custom-style" include="paper-date-picker-dialog-style">
-    </style>
     <!--component which invokes the predefined date picker control-->
     <div class="datepicker">
-      <!-- <paper-input class="btn" on-click="FnShowDialog" label="Effective From" raised value="{{showdate}}"></paper-input> -->
-      <p>Effective From :
+      <!-- <i class="fa fa-calendar" on-click="FnShowDialog"></i> -->
+      <p>
       <a href="#">
           <span class="glyphicon glyphicon-calendar" on-click="FnShowDialog"></span>
       </a>{{showdate}}
       </p>
-      <paper-dialog id="dialog" class="paper-date-picker-dialog" modal on-iron-overlay-closed="FnDismissDialog" style="left: 0 !important;">
+      <paper-input label="From Date" class="btn" on-click="FnShowDialog" raised value="{{showdate}}" hidden></paper-input>
+      <paper-dialog id="dialog" class="paper-date-picker-dialog" modal on-iron-overlay-closed="FnDismissDialog" >
         <paper-date-picker id="picker" date="{{date}}"></paper-date-picker>
         <div class="buttons">
           <paper-button dialog-dismiss>Cancel</paper-button>
@@ -29,7 +27,7 @@
       </paper-dialog>
     </div>
     <dialog-page id="ID_Show_Dialog"></dialog-page>
-    
+    <transport-service id="service"></transport-service>
   </template>
   <script>
     Polymer({
@@ -38,8 +36,7 @@
       ready:function()
       {
         this.showdate=moment(new Date()).format('DD/MM/YYYY');
-        // localStorage.setItem("curr_sess_chequedate",this.showdate);
-        var d=new Date();
+         var d=new Date();
         var mm=(d.getMonth()+1);
         if(mm<10)
           mm="0"+mm;
@@ -48,7 +45,7 @@
           dd="0"+dd;
         var yy=d.getFullYear();
         var dat=mm+"/"+dd+"/"+yy;
-        localStorage.setItem("curr_sess_effectivedate",dat);
+        localStorage.setItem("curr_sess_date",dat);
       },
       FnShowDialog:function(){
         this.date=new Date();
@@ -74,6 +71,7 @@
           var dat=mm+"/"+dd+"/"+yy;
           localStorage.setItem("curr_sess_effectivedate",dat);   
           document.querySelector('zonechange-card').FnProcess();
+
         }
       },
       FnClear:function(){

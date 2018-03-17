@@ -43,15 +43,15 @@
       <tr>
       <td colspan="12">
         <template  is="dom-repeat" items="{{chequearr}}" as="item">
-        <transport-cheque-bouncecancel-itemcard sno="{{item.sno}}" enrno="{{item.student_id}}" studentname="{{item.student_name}}" grade="{{item.grade}}" installmenttype="{{item.installtype}}" chequeno="{{item.cheque_no}}" bankname="{{item.bank_name}}" chequedate="{{item.cheque_date}}" installmentamount="{{item.installment_amount}}"></transport-cheque-bouncecancel-itemcard>
+        <transport-cheque-bouncecancel-itemcard sno="{{item.sno}}" enrno="{{item.student_id}}" studentname="{{item.student_name}}" grade="{{item.grade}}" installmenttype="{{item.installment}}" chequeno="{{item.cheque_no}}" bankname="{{item.bank_name}}" chequedate="{{item.cheque_date}}" installmentamount="{{item.installment_amount}}"></transport-cheque-bouncecancel-itemcard>
         </template>
       </td>
       </tr>
       </thead>
       </table>
     </div>
-   
-    <transport-processing-service id="transportprocessingservice"></transport-processing-service>
+    <transport-fee-collection-service id="transportprocessingservice"></transport-fee-collection-service>
+    <!-- <transport-processing-service id="transportprocessingservice"></transport-processing-service> -->
     
   </template>
   <script>

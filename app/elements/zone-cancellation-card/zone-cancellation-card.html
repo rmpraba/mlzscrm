@@ -12,37 +12,46 @@
         <div class="well well-sm">
           <div class="row">
             <div class="col-md-12">
-              <!-- <div class="col-md-6"> -->
                 <div class="col-md-3" style="margin-top: -1%;">
+                 <paper-dropdown-menu id="tzonecancellationacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="transportzonecancellationacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                </div>
+                <div class="col-md-4" style="margin-top: -1%;">
                    <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchEnquiry"></paper-input>
                    <paper-listbox class="dropdown-content" id="zonecancellationinput2" on-iron-select="FnSelectEnquiry">
                    <template is="dom-repeat" items="{{itemArray}}" as="item">
                    <paper-item value="{{item.student_id}}">{{item.itemdes}}</paper-item>
                    </template>
                    </paper-listbox>
-                </div>
-                <div class="col-md-3" style="margin-left: 15%;margin-top: 2%;">
-                  <paper-button on-click='FnCancel' class="btn btn-primary center">Cancel</paper-button>
+                </div> 
+                <div class="col-md-2" style="margin-top: 2%;margin-left: 20%;">
+                <paper-button on-click="FnCancel" class="btn btn-primary center">Cancel</paper-button>             
                 </div>
             </div>
           </div>
         </div>
     </div>
-     <div>
-      <table style="width: 60%;">
-      <thead>
+     <div hidden$="{{hidestudentinfo}}" class="card">
+      <table style="width: 60%;" class="table table-hover">
+      <!-- <thead> -->
         <tr>
-          <td><paper-input Label='Enrollment No' value="{{enrno}}"></paper-input></td>
-          <td><paper-input Label='Grade' value="{{grade}}"></paper-input></td>
+          <th>Student Id</th><td>{{enrno}}</td>
+          <th>Grade</th><td>{{grade}}</td>
         </tr> 
         <tr>
-          <td><paper-input Label='Parent Name' value="{{parentname}}"></paper-input></td>
-          <td><paper-input Label='Allocated Zone' value="{{zone}}"></paper-input></td>
+          <th>Parent Name</th><td>{{parentname}}</td>
+          <th>Zone</th><td>{{zone}}</td>
         </tr>    
-      </thead>
+      <!-- </thead> -->
       </table>
     </div>    
-    <transportfee-service id="transportservice"></transportfee-service>
+    <transport-fee-collection-service id="transportservice"></transport-fee-collection-service>
+    <!-- <transportfee-service id="transportservice"></transportfee-service> -->
   </template>
   <script>
   (function() {
@@ -50,9 +59,11 @@
     var item=[];
     var allchequesarr=[];
     var cheques=[];
+    var academicyear="";
     Polymer({
       is: 'zone-cancellation-card',
       ready:function(){
+        this.hidestudentinfo=true;
         this.querySelector('#zonecancellationinput2').style.visibility='hidden';
       },
       callService:function(){
@@ -61,6 +72,11 @@
       autocompletearr:function(autocompletearr)
       {
          item=autocompletearr;
+      },
+      FnSelectAcademicYear:function(e){
+        academicyear=e.target.selectedItem.textContent.trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+        this.callService();
       },
       FnSearchEnquiry:function(e){
       if(e.keyCode==13|| e.keyCode==40)
@@ -143,6 +159,7 @@
     },
     FnRefresh:function()
     {
+      document.querySelector('#transportzonecancellationacademicyear').selected=-1;
       document.querySelector('#zonecancellationinput2').selected=-1;
       this.value="";
       this.querySelector('#zonecancellationinput2').style.visibility='hidden';

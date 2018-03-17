@@ -1,0 +1,92 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="collection-receipt-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div style="width: 100%;" hidden$="{{hidecashblock}}">
+    <table style="width: 100%;">
+    <tr><th colspan="2" style="text-align: center;vertical-align: text-top;">SCHOOL FEE {{receipttype}}</th></tr>
+    <tr><td style="text-align: left;">{{receiptlabel}} No: {{receiptno}}</td><td style="text-align: right;">{{receiptlabel}} Date: {{dateofpayment}}</td></tr>
+    </table>
+    <hr></hr>
+    <table style="width: 100%;">
+    <tr><td style="text-align: left;">Enrollment No: {{admissionno}}</td><td style="text-align: right;">Student Name: {{studentname}}</td></tr>
+    <tr><td style="text-align: left;">Parent Name: {{fathername}}</td><td style="text-align: right;">Grade : {{gradename}}</td></tr>
+    </table>
+    <hr></hr>
+    <table style="width: 100%;">
+    <tr><th>Sl.No</th><th>Particulars</th><th>Splitup</th><th style="text-align: right;">Amount</th></tr>
+    <tr><th colspan="4"><hr></hr></th></tr>
+    <tr><td>1</td><td>{{feetype}}</td><td>{{installmentfeetype}}</td><td style="text-align: right;">{{amount}}</td></tr>
+    </table>
+    <hr></hr>
+    <table style="width: 100%;">
+      <tr><td>Fine Amount: {{fineamount}}</td><td style="text-align: center;">Payment Mode: {{paymentmode}}</td><td></td><td style="text-align: right;">Total Fee: {{amount}}</td></tr>
+    </table>
+    <hr></hr>
+    </div>
+    <div style="width: 100%;" hidden$="{{hidechequeblock}}">
+    <table style="width: 100%;">
+    <tr><th colspan="2" style="text-align: center;">SCHOOL FEE {{receipttype}}</th></tr>
+    <tr><td style="text-align: left;">{{receiptlabel}} No: {{receiptno}}</td><td style="text-align: right;">{{receiptlabel}} Date: {{dateofpayment}}</td></tr>
+    </table>
+    <hr></hr>
+    <table style="width: 100%;">
+    <tr><td style="text-align: left;">Enrollment No: {{admissionno}}</td><td style="text-align: right;">Student Name: {{studentname}}</td></tr>
+    <tr><td style="text-align: left;">Parent Name: {{fathername}}</td><td style="text-align: right;">Grade : {{gradename}}</td></tr>
+    </table>
+    <hr></hr>
+    <table style="width: 100%;">
+    <tr><th>Sl.No</th><th>Particulars</th><th>Splitup</th><th>Cheque No</th><th>Bank</th><th style="text-align: center;">Cheque Date</th><th style="text-align: right;">Amount</th></tr>
+    <tr><th colspan="4"><hr></hr></th></tr>
+    <tr><td>1</td><td>{{feetype}}</td><td>{{installmentfeetype}}</td><td>{{transactionno}}</td><td>{{transactionname}}</td><td style="text-align: center;">{{transactiondate}}</td><td style="text-align: right;">{{amount}}</td></tr>
+    </table>
+    <hr></hr>
+    <table style="width: 100%;">
+      <tr><td>Fine Amount: {{fineamount}}</td><td style="text-align: center;">Payment Mode: {{paymentmode}}</td><td></td><td style="text-align: right;">Total Fee: {{amount}}</td></tr>
+    </table>
+    <hr></hr>
+    </div>
+      <div style="width: 100%;" hidden$="{{hidereferenceblock}}">
+    <table style="width: 100%;">
+    <tr><th colspan="2" style="text-align: center;">SCHOOL FEE {{receipttype}}</th></tr>
+    <tr><td style="text-align: left;">{{receiptlabel}} No: {{receiptno}}</td><td style="text-align: right;">{{receiptlabel}} Date: {{dateofpayment}}</td></tr>
+    </table>
+    <hr></hr>
+    <table style="width: 100%;">
+    <tr><td style="text-align: left;">Enrollment No: {{admissionno}}</td><td style="text-align: right;">Student Name: {{studentname}}</td></tr>
+    <tr><td style="text-align: left;">Parent Name: {{fathername}}</td><td style="text-align: right;">Grade : {{gradename}}</td></tr>
+    </table>
+    <hr></hr>
+    <table style="width: 100%;">
+    <tr><th>Sl.No</th><th>Particulars</th><th>Splitup</th><th>Reference No</th><th>Bank</th><th style="text-align: center;">Date</th><th style="text-align: right;">Amount</th></tr>
+    <tr><th colspan="4"><hr></hr></th></tr>
+    <tr><td>1</td><td>{{feetype}}</td><td>{{installmentfeetype}}</td><td>{{transactionno}}</td><td>{{transactionname}}</td><td style="text-align: center;">{{transactiondate}}</td><td style="text-align: right;">{{amount}}</td></tr>
+    </table>
+    <hr></hr>
+    <table style="width: 100%;">
+      <tr><td>Fine Amount: {{fineamount}}</td><td style="text-align: center;">Payment Mode: {{paymentmode}}</td><td></td><td style="text-align: right;">Total Fee: {{amount}}</td></tr>
+    </table>
+    <hr></hr>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'collection-receipt-card',
+      ready:function(){
+        this.hidecashblock=true;
+        this.hidechequeblock=true;
+        this.hidereferenceblock=true;
+      }
+    });
+  })();
+  </script>
+</dom-module>

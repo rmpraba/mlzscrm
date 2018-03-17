@@ -1,0 +1,54 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-fee-edit-card">
+  <template>
+    <style>
+    .cardpanel{
+       @apply(--layout-horizontal); 
+    }
+    </style>
+    <div hidden>{{admissionno}}{{academicyear}}{{feetype}}{{transno}}</div>
+    <div width="100%">
+    <div class="cardpanel" width="100%">
+    <h3 width="100%">Edit Payment Info</h3>
+    <div style="text-align: right;width: 75%;margin-right: 2%;margin-top: 1%;"><span class="panel-icon"><a href=""><i class="fa fa-save fa-lg" aria-hidden="true" on-click="FnSavePayment"></i></a></span></div>
+    </div>
+      <table width="90%" cellpadding="5" cellspacing="5">
+        <tr><td valign="middle">Payment Mode: </td><td valign="bottom">{{modeofpayment}}</td><td valign="middle">Receipt#: </td>
+        <td valign="bottom">{{receiptno}}</td><td></td><td></td></tr>
+        <tr><td valign="middle">Amount: </td><td style=" vertical-align:middle; "><paper-input value="{{amount}}"></paper-input></td>
+        <td valign="middle">Date Of Payment: </td><td valign="bottom"><collection-receipt-datepicker showdate="{{dateofpayment}}"></collection-receipt-datepicker></td><td></td><td></td></tr>
+        <tr><td valign="middle">Transaction/Cheque #: </td><td valign="top"><paper-input value="{{transactionno}}"></paper-input></td><td valign="middle">Bank Name: </td><td valign="top"><paper-input value="{{transactionname}}"></paper-input></td><td valign="middle">Transaction/Cheque Date: </td>
+        <td valign="bottom"><collection-receipt-transaction-datepicker showdate="{{transactiondate}}"></collection-receipt-transaction-datepicker></td></tr>
+      </table>
+    </div>
+    <transport-fee-collection-service id='feecollectionservice'></transport-fee-collection-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'transport-collection-fee-edit-card',
+      FnSetEditInfo:function(academicyear,admissionno,transactionno,feetype,amount,dop,paymentmode,ptno,transactionname,transactiondate,receiptno,status,paymenttype,installment){
+        // alert(dop+" "+transactiondate);
+        this.modeofpayment=paymentmode;
+        this.receiptno=receiptno;
+        this.dateofpayment=dop;
+        this.transactionno=ptno;
+        this.transactionname=transactionname;
+        this.transactiondate=transactiondate;
+        this.amount=amount;
+        this.transno=transactionno;
+        this.academicyear=academicyear;
+        this.admissionno=admissionno;
+        this.feetype=feetype;
+        this.installment=installment;
+      },
+      FnSavePayment:function(){
+        this.$.feecollectionservice.editcollectionpaymentService(this.admissionno,this.feetype,this.modeofpayment,this.receiptno,this.dateofpayment,this.transactionno,this.transactiondate,this.transactionname,this.amount,this.transno,this.academicyear,this.installment);
+      }
+    });
+  })();
+  </script>
+</dom-module>

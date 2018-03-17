@@ -27,7 +27,18 @@
         debounce-duration="300"
         >
   </iron-ajax>
+   <iron-ajax
+        method="post"
+        id="fetchschoolajax"
+        url="{{fetchschoolurl}}"
+        params="{{fetchschoolparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchschoolResponse"
+        debounce-duration="300"
+        >
  <crm-service id="service"></crm-service>
+  <transportfee-service id="transportservice"></transportfee-service>
   </template>
 
   <script>
@@ -45,14 +56,35 @@
         addr=e.detail.response.address;
         // alert(addr);
         sessionStorage.setItem("addrinfo",addr);
-        localStorage.setItem("curr_sess_academicyear",e.detail.response.academicyear);
+        localStorage.setItem("curr_sess_academicyear",e.detail.response.currentacademicyear);
+        localStorage.setItem("curr_sess_nextacademicyear",e.detail.response.nextacademicyear);  
         //alert(JSON.stringify(e.detail.response.address));
       },
+      fetchschoolService:function(){
+        this.fetchschoolurl=sessionStorage.getItem("addrinfo")+"/fetchschool-service";
+        // this.fetchschoolparam=obj;
+        this.$.fetchschoolajax.generateRequest();
+      },
+      fetchschoolResponse:function(e){
+        document.querySelector('navigation-bar').schoolarr=e.detail.response.returnval;
+        var schoolarr=e.detail.response.returnval;
+        // alert(JSON.stringify(schoolarr));
+        document.querySelector('navigation-bar').selectedschool=schoolarr[0].id;
+        // alert(schoolarr[0].id);
+        localStorage.setItem("schoolid",schoolarr[0].id);
+        document.querySelector('transportfee-schedule-card').schoolarr=e.detail.response.returnval;
+        this.Fn_login_userlogin1();
+      },
       Fn_login_userlogin:function(username,password){ 
+        this.username=username;
+        this.password=password;
+        this.fetchschoolService();
+      },
+      Fn_login_userlogin1:function(){ 
          this.loginpageurl=sessionStorage.getItem("addrinfo")+"/loginpage";
         var obj={"username":"","password":""}
-        obj.username=username;
-        obj.password=password;
+        obj.username=this.username;
+        obj.password=this.password;
         this.loginpageparam=obj;
        //alert(JSON.stringify(obj));
         this.$.loginpageajax.generateRequest();
@@ -102,6 +134,7 @@
         //alert(school+'   '+role+'    '+employeename+'    '+roleid);
         document.querySelector('CRM-app').setPage("applist");
         document.querySelector('app-list').setPage("enquiry","Enquiry");
+        this.$.service.fetchacademicyearService();
         // document.querySelector('followup-service').gettotalfollowupcounttoday();
         document.querySelector('navigation-bar').FnSetRoleView(rolearr);
         }

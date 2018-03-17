@@ -1,0 +1,2119 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<dom-module id="transport-fee-collection-service">
+  <template>
+    <style></style>
+    <div>
+    <!-- It will fetch student for fee-collection-home-card -->
+    <iron-ajax
+        method="post"
+        id="fetchallstudentforcollectionajax"
+        url="{{fetchallstudentforcollectionurl}}"
+        params="{{fetchallstudentforcollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallstudentforcollectionResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchstudentinfoforcollectionajax"
+        url="{{fetchstudentinfoforcollectionurl}}"
+        params="{{fetchstudentinfoforcollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentinfoforcollectionResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchfeeinfoforcollectionajax"
+        url="{{fetchfeeinfoforcollectionurl}}"
+        params="{{fetchfeeinfoforcollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeeinfoforcollectionResponse"
+        debounce-duration="300"
+        >    
+    <iron-ajax
+        method="post"
+        id="fetchdiscountinfoforcollectionajax"
+        url="{{fetchdiscountinfoforcollectionurl}}"
+        params="{{fetchdiscountinfoforcollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchdiscountinfoforcollectionResponse"
+        debounce-duration="300"
+        >      
+    <iron-ajax
+        method="post"
+        id="fetchpaymentinfoforcollectionajax"
+        url="{{fetchpaymentinfoforcollectionurl}}"
+        params="{{fetchpaymentinfoforcollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchpaymentinfoforcollectionResponse"
+        debounce-duration="300"
+        >  
+     <iron-ajax
+        method="post"
+        id="fetchreceiptinfoforcollectionajax"
+        url="{{fetchreceiptinfoforcollectionurl}}"
+        params="{{fetchreceiptinfoforcollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchreceiptinfoforcollectionResponse"
+        debounce-duration="300"
+        > 
+     <iron-ajax
+        method="post"
+        id="fetchcollectiondiscounttypesajax"
+        url="{{fetchcollectiondiscounttypesurl}}"
+        params="{{fetchcollectiondiscounttypesparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectiondiscounttypesResponse"
+        debounce-duration="300"
+        >    
+     <iron-ajax
+        method="post"
+        id="fetchcollectionfeetypesajax"
+        url="{{fetchcollectionfeetypesurl}}"
+        params="{{fetchcollectionfeetypesparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectionfeetypesResponse"
+        debounce-duration="300"
+        >   
+     <iron-ajax
+        method="post"
+        id="fetchcollectiondiscountavailinfoajax"
+        url="{{fetchcollectiondiscountavailinfourl}}"
+        params="{{fetchcollectiondiscountavailinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectiondiscountavailinfoResponse"
+        debounce-duration="300"
+        > 
+     <iron-ajax
+        method="post"
+        id="collectionattachdiscountajax"
+        url="{{collectionattachdiscounturl}}"
+        params="{{collectionattachdiscountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="collectionattachdiscountResponse"
+        debounce-duration="300"
+        > 
+     <iron-ajax
+        method="post"
+        id="fetchfeecollectionpaymentinfoajax"
+        url="{{fetchfeecollectionpaymentinfourl}}"
+        params="{{fetchfeecollectionpaymentinfoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeecollectionpaymentinfoResponse"
+        debounce-duration="300"
+        >
+     <iron-ajax
+        method="post"
+        id="fetchcollectionpaymenttypeajax"
+        url="{{fetchcollectionpaymenttypeurl}}"
+        params="{{fetchcollectionpaymenttypeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectionpaymenttypeResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchcollectionpaymentmodeajax"
+        url="{{fetchcollectionpaymentmodeurl}}"
+        params="{{fetchcollectionpaymentmodeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectionpaymentmodeResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchcollectionpaymentsubmodeajax"
+        url="{{fetchcollectionpaymentsubmodeurl}}"
+        params="{{fetchcollectionpaymentsubmodeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectionpaymentsubmodeResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchcollectionfeetypetocollectajax"
+        url="{{fetchcollectionfeetypetocollecturl}}"
+        params="{{fetchcollectionfeetypetocollectparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectionfeetypetocollectResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchfeenetrycollectionfeetypeamountajax"
+        url="{{fetchfeenetrycollectionfeetypeamounturl}}"
+        params="{{fetchfeenetrycollectionfeetypeamountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeenetrycollectionfeetypeamountResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="makepaymentajax"
+        url="{{makepaymenturl}}"
+        params="{{makepaymentparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="makepaymentResponse"
+        debounce-duration="300"
+        >
+      <iron-ajax
+        method="post"
+        id="fetchcollectionpaymenthistoryajax"
+        url="{{fetchcollectionpaymenthistoryurl}}"
+        params="{{fetchcollectionpaymenthistoryparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectionpaymenthistoryResponse"
+        debounce-duration="300"
+        >   
+        <iron-ajax
+        method="post"
+        id="fetchcollectionpaymenthistoryajax1"
+        url="{{fetchcollectionpaymenthistoryurl1}}"
+        params="{{fetchcollectionpaymenthistoryparam1}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectionpaymenthistoryResponse1"
+        debounce-duration="300"
+        >         
+        <iron-ajax
+        method="post"
+        id="deletecollectionpaymentajax"
+        url="{{deletecollectionpaymenturl}}"
+        params="{{deletecollectionpaymentparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="deletecollectionpaymentResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="editcollectionpaymentajax"
+        url="{{editcollectionpaymenturl}}"
+        params="{{editcollectionpaymentparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="editcollectionpaymentResponse"
+        debounce-duration="300"
+        >   
+        <iron-ajax
+        method="post"
+        id="fetchallstudentforapplnfeecollectionajax"
+        url="{{fetchallstudentforapplnfeecollectionurl}}"
+        params="{{fetchallstudentforapplnfeecollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallstudentforapplnfeecollectionResponse"
+        debounce-duration="300"
+        >    
+        <iron-ajax
+        method="post"
+        id="fetchstudentinfoforapplnfeecollectionajax"
+        url="{{fetchstudentinfoforapplnfeecollectionurl}}"
+        params="{{fetchstudentinfoforapplnfeecollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentinfoforapplnfeecollectionResponse"
+        debounce-duration="300"
+        >    
+        <iron-ajax
+        method="post"
+        id="makeapplnfeepaymentajax"
+        url="{{makeapplnfeepaymenturl}}"
+        params="{{makeapplnfeepaymentparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="makeapplnfeepaymentResponse"
+        debounce-duration="300"
+        >   
+        <iron-ajax
+        method="post"
+        id="updateapplnfeeadmissionnoajax"
+        url="{{updateapplnfeeadmissionnourl}}"
+        params="{{updateapplnfeeadmissionnoparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updateapplnfeeadmissionnoResponse"
+        debounce-duration="300"
+        >  
+        <iron-ajax
+        method="post"
+        id="fetchzoneajax"
+        url="{{fetchzoneurl}}"
+        params="{{fetchzoneparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchzoneResponse"
+        debounce-duration="300"
+        >    
+        <iron-ajax
+        method="post"
+        id="fetchzoneinfoforcollectionajax"
+        url="{{fetchzoneinfoforcollectionurl}}"
+        params="{{fetchzoneinfoforcollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchzoneinfoforcollectionResponse"
+        debounce-duration="300"
+        > 
+        <iron-ajax
+        method="post"
+        id="fetchtransportzonefeeajax"
+        url="{{fetchtransportzonefeeurl}}"
+        params="{{fetchtransportzonefeeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtransportzonefeeResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="allocatezoneajax"
+        url="{{allocatezoneurl}}"
+        params="{{allocatezoneparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="allocatezoneResponse"
+        debounce-duration="300"
+        >   
+        <iron-ajax
+        method="post"
+        id="fetchcollectionpaymentinstallmentajax"
+        url="{{fetchcollectionpaymentinstallmenturl}}"
+        params="{{fetchcollectionpaymentinstallmentparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchcollectionpaymentinstallmentResponse"
+        debounce-duration="300"
+        >   
+        <iron-ajax
+        method="post"
+        id="fetchfeenetrycollectionfeetypeinstallmentamountajax"
+        url="{{fetchfeenetrycollectionfeetypeinstallmentamounturl}}"
+        params="{{fetchfeenetrycollectionfeetypeinstallmentamountparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchfeenetrycollectionfeetypeinstallmentamountResponse"
+        debounce-duration="300"
+        >       
+        <iron-ajax
+        method="post"
+        id="fetchtransportdaycollectionajax"
+        url="{{fetchtransportdaycollectionurl}}"
+        params="{{fetchtransportdaycollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtransportdaycollectionResponse"
+        debounce-duration="300"
+        > 
+        <iron-ajax
+        method="post"
+        id="fetchtransportpdccollectionajax"
+        url="{{fetchtransportpdccollectionurl}}"
+        params="{{fetchtransportpdccollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtransportpdccollectionResponse"
+        debounce-duration="300"
+        > 
+        <iron-ajax
+        method="post"
+        id="fetchtransportpendingfeeajax"
+        url="{{fetchtransportpendingfeeurl}}"
+        params="{{fetchtransportpendingfeeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchtransportpendingfeeResponse"
+        debounce-duration="300"
+        > 
+        <iron-ajax
+        method="post"
+        id="transportdailycollectionajax"
+        url="{{transportdailycollectionurl}}"
+        params="{{transportdailycollectionparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="transportdailycollectionResponse"
+        debounce-duration="300"
+        > 
+        <iron-ajax
+        method="post"
+        id="processtransportbouncechequeajax"
+        url="{{processtransportbouncechequeurl}}"
+        params="{{processtransportbouncechequeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="processtransportbouncechequeResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="updatetransportchequestatusajax"
+        url="{{updatetransportchequestatusurl}}"
+        params="{{updatetransportchequestatusparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updatetransportchequestatusResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="fetchalltransportstudentajax"
+        url="{{fetchalltransportstudenturl}}"
+        params="{{fetchalltransportstudentparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchalltransportstudentResponse"
+        debounce-duration="300"
+        >
+         <iron-ajax
+        method="post"
+        id="fetchstudentforcancellationajax"
+        url="{{fetchstudentforcancellationurl}}"
+        params="{{fetchstudentforcancellationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentforcancellationResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="fetchstudinfoforcancellationajax"
+        url="{{fetchstudinfoforcancellationurl}}"
+        params="{{fetchstudinfoforcancellationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudinfoforcancellationResponse"
+        debounce-duration="300"
+        >
+    <iron-ajax
+        method="post"
+        id="transportcancellationajax"
+        url="{{transportcancellationurl}}"
+        params="{{transportcancellationparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="transportcancellationResponse"
+        debounce-duration="300"
+        >  
+    <iron-ajax
+        method="post"
+        id="cancelzoneajax"
+        url="{{cancelzoneurl}}"
+        params="{{cancelzoneparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="cancelzoneResponse"
+        debounce-duration="300"
+        > 
+    <iron-ajax
+        method="post"
+        id="fetchstudentinfoforzonechangeajax"
+        url="{{fetchstudentinfoforzonechangeurl}}"
+        params="{{fetchstudentinfoforzonechangeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchstudentinfoforzonechangeResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="fetchallstudentforzoneajax"
+        url="{{fetchallstudentforzoneurl}}"
+        params="{{fetchallstudentforzoneparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchallstudentforzoneResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="fetchzonefeeajax"
+        url="{{fetchzonefeeurl}}"
+        params="{{fetchzonefeeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="fetchzonefeeResponse"
+        debounce-duration="300"
+        >
+        <iron-ajax
+        method="post"
+        id="savezonechangeajax"
+        url="{{savezonechangeurl}}"
+        params="{{savezonechangeparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="savezonechangeResponse"
+        debounce-duration="300"
+        >
+     <iron-ajax
+      method="post"
+      id="newdistanceajax"
+      url="{{newdistanceurl}}"
+      params="{{newdistanceparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="newdistanceResponse"
+      debounce-duration="300"
+      >
+     <iron-ajax
+      method="post"
+      id="fetchdistanceseqajax"
+      url="{{fetchdistancesequrl}}"
+      params="{{fetchdistanceseqparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="fetchdistanceseqResponse"
+      debounce-duration="300"
+      >
+      <iron-ajax
+          method="post"
+          id="fetchzoneseqajax"
+          url="{{fetchzonesequrl}}"
+          params="{{fetchzoneseqparam}}"
+          handle-as="json"
+          content-type="application/json"
+          on-response="fetchzoneseqResponse"
+          debounce-duration="300"
+      >
+      <iron-ajax
+          method="post"
+          id="fnnewzoneajax"
+          url="{{fnnewzoneurl}}"
+          params="{{fnnewzoneparam}}"
+          handle-as="json"
+          content-type="application/json"
+          on-response="fnnewzoneResponse"
+          debounce-duration="300"
+      >
+    </iron-ajax>
+    <iron-ajax
+          method="post"
+          id="fetchzoneajax1"
+          url="{{fetchzoneurl1}}"
+          params="{{fetchzoneparam1}}"
+          handle-as="json"
+          content-type="application/json"
+          on-response="fetchzoneResponse1"
+          debounce-duration="300"
+      >
+    </iron-ajax>
+    <iron-ajax        
+        id="zone1ajax"
+        url="../../configfile/zone.json"
+        params="{{zone1param}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="zone1Response"
+        debounce-duration="300"
+    >
+     <iron-ajax        
+        id="zone11ajax"
+        url="../../configfile/zonemax.json"
+        params="{{zone11param}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="zone11Response"
+        debounce-duration="300"
+    >
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var count1=0,count2=0;
+    Polymer({
+      is: 'transport-fee-collection-service',
+       fetchzonedistance:function(){
+       this.$.zone1ajax.generateRequest();
+       },
+       zone1Response:function(e){
+        //alert(JSON.stringify(e.detail.response));
+       document.querySelector('zonedistance-card').mindesarrr=e.detail.response; 
+       },
+       zoneminmax:function()
+       {
+       this.$.zone11ajax.generateRequest();
+       },
+       zone11Response:function(e)
+       {
+       //alert(JSON.stringify(e.detail.response));
+       document.querySelector('zonedistance-card').maxdesarrr=e.detail.response;
+       },
+       fnnewdistance:function(distanceid,mindistance,maxdistance,fee,zoneid,zonename)   
+       {        
+         this.zoneid1=zoneid;
+         this.zonename1=zonename; 
+         this.distanceid1=distanceid;
+        this.newdistanceurl=sessionStorage.getItem("addrinfo")+"/newdistance";
+        var obj={"schlidz":"","distanceid1":"","mindistance":"","maxdistance":"","fee":"",
+        "academic_year":""}
+        obj.schlidz=localStorage.getItem("schoolid");
+        obj.distanceid1=distanceid;
+        obj.mindistance=mindistance;
+        obj.maxdistance=maxdistance;
+        obj.fee=fee;
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        this.newdistanceparam=obj;
+        //alert(distanceid1);
+        //alert(JSON.stringify(obj));
+        this.$.newdistanceajax.generateRequest();
+      },
+      newdistanceResponse:function(e)
+      {
+        var res=e.detail.response.returnval;
+       // alert(JSON.stringify(res));
+        if(res=='Already Exit')
+        {
+            alert("This Maximum and Minimum distace are already exits");
+
+        }
+        else
+        {
+            // alert("zone insert");
+        this.fnnewzoneurl=sessionStorage.getItem("addrinfo")+"/fnnewzone";
+        var obj={"scholid":"","zoneid1":"","zonename1":"","distanceid1":"","academic_year":""}
+        obj.scholid=localStorage.getItem("schoolid");
+        obj.zoneid1=this.zoneid1;
+        obj.zonename1=this.zonename1;
+        obj.distanceid1=this.distanceid1;
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        this.fnnewzoneparam=obj;
+        //alert(distanceid1+""+zoneid1);
+       //alert(JSON.stringify(obj));
+        this.$.fnnewzoneajax.generateRequest();
+        }    
+      },
+      fnnewzoneResponse:function(e)
+      {
+        var res=e.detail.response.returnval;
+        // alert(e.detail.response.returnval);
+        if(res=='Inserted!')
+        {
+            alert("Created!");
+        }
+        //alert(JSON.stringify(res));
+      },
+      fetchdistanceseq:function()
+      {
+        //alert("distance seq");
+        this.fetchdistancesequrl=sessionStorage.getItem("addrinfo")+"/fetchdistanceseq";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.fetchdistanceseqparam=obj;
+        this.$.fetchdistanceseqajax.generateRequest();
+      },
+      
+      fetchdistanceseqResponse:function(e)
+      {
+        var res=e.detail.response.returnval;
+        //alert("disttt");
+        var disid=res[0].distance_prefix+res[0].distance_seq;
+        // alert(disid);
+        document.querySelector('zonedistance-card').fndistanceidseqq(disid);
+        //alert(JSON.stringify(distanceid));  
+      },
+      fetchzoneseq:function()
+      {
+        //alert("zone seq");
+        this.fetchzonesequrl=sessionStorage.getItem("addrinfo")+"/fetchzoneseq";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        this.fetchzoneseqparam=obj;
+        this.$.fetchzoneseqajax.generateRequest();
+      },
+      fetchzoneseqResponse:function(e)
+      {
+        var res=e.detail.response.returnval;
+        //alert("zoneee");
+        //alert(JSON.stringify(res));   
+        var zid=res[0].zone_prefix+res[0].zone_seq; 
+        //alert(zid);
+        document.querySelector('zonedistance-card').fnzoneidseqq(zid);
+      },
+       fetchzone1:function(zonename)
+       {
+        this.zonename1=zonename;
+        //alert(333);
+        this.fetchzoneurl1=sessionStorage.getItem("addrinfo")+"/fetchzone";
+        var obj={"schoolid":"","academic_year":"","zonename1":""}
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        obj.zonename1=zonename;
+        this.fetchzoneparam1=obj;
+        //alert(JSON.stringify(obj));
+        this.$.fetchzoneajax1.generateRequest();
+      },
+      fetchzoneResponse1:function(e)
+      {
+        var res=e.detail.response.returnval;
+        // alert(JSON.stringify(res));
+        if(res=='no rows')
+        {
+            document.querySelector('zonedistance-card').fnrefresh(); 
+        }
+        else
+        {
+            document.querySelector('zonedistance-card').fnmaxdist(res);
+            document.querySelector('zonedistance-card').fnmindist(res);
+            document.querySelector('zonedistance-card').fee=res[0].fee;
+        }
+      },     
+      FnSaveZoneChangeInfo:function(studentid,studentname,zoneid,zonename,amount,mode,previouszone,previouszonefee,previouszonepaidamount,usedfee,newzoneactualpayablefee,newzonepayablefee,academicyear,pendingamount,discountamount){
+        // alert(zoneid+" "+zonename+" "+amount);
+        this.savezonechangeurl=sessionStorage.getItem("addrinfo")+"/collection-savezonechange-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.studentid=studentid;
+        obj.studentname=studentname;
+        obj.zoneid=zoneid;
+        obj.zonename=zonename;
+        obj.mode=mode;
+        obj.amount=amount;
+        obj.previouszone=previouszone;
+        obj.previouszonefee=previouszonefee;
+        obj.previouszonepaidamount=previouszonepaidamount;
+        obj.usedfee=usedfee;
+        obj.pendingamount=pendingamount;
+        obj.discountamount=discountamount;
+        obj.newzoneactualpayablefee=newzoneactualpayablefee;
+        obj.newzonepayablefee=newzonepayablefee;
+        // alert(JSON.stringify(obj));
+        this.savezonechangeparam=obj;
+        this.$.savezonechangeajax.generateRequest();
+      },
+      savezonechangeResponse:function(e){
+        // alert('Zone Changed Successfully!!!');
+        document.querySelector('zonechange-card').FnAllocateZone();
+        // document.querySelector('zonechange-card').FnRefresh1();
+      },
+        fetchzonefeeService:function(distanceid){
+        this.fetchzonefeeurl=sessionStorage.getItem("addrinfo")+"/collection-fetchzonefee-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.distanceid=distanceid;
+        this.fetchzonefeeparam=obj;
+        this.$.fetchzonefeeajax.generateRequest();
+      },
+      fetchzonefeeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSOn.stringify(arr));
+        if(arr!='no rows'){
+        // document.querySelector('transportfee-schedule-card').fees=arr[0].fees;
+        // document.querySelector('zonetostudent-card').fees=arr[0].fees;
+        document.querySelector('zonechange-card').newzonefee=arr[0].fees;
+        document.querySelector('zonechange-card').FnSetZoneFee(arr[0].fees);
+        }
+      },
+      fetchallstudentforzoneService:function(){
+        this.fetchallstudentforzoneurl=sessionStorage.getItem("addrinfo")+"/collection-fetchallstudentforzone-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.fetchallstudentforzoneparam=obj;
+        this.$.fetchallstudentforzoneajax.generateRequest();
+      },
+      fetchallstudentforzoneResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        if(arr!='no rows'){
+          // document.querySelector('zonetostudent-card').autocompletearr(arr);
+          document.querySelector('zonechange-card').autocompletearr(arr);
+          // document.querySelector('transportfee-schedule-card').autocompletearr(arr);
+        }
+      },
+      fetchStudentInfoForZoneChange:function(studentid,studentname){
+        this.fetchstudentinfoforzonechangeurl=sessionStorage.getItem("addrinfo")+"/collection-fetchstudentinfoforzonechange-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studentid;
+        obj.studentname=studentname.trim();
+        this.fetchstudentinfoforzonechangeparam=obj;
+        this.$.fetchstudentinfoforzonechangeajax.generateRequest();
+      },
+      fetchstudentinfoforzonechangeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        var feearr=e.detail.response.feearr;
+        // alert(JSON.stringify(feearr));
+        // alert(JSON.stringify(arr));
+        // alert(e.detail.response.flag);
+        document.querySelector('zonechange-card').hideinfo=false;
+        if(e.detail.response.flag=='mapped'){
+          document.querySelector('zonechange-card').studentid=arr[0].admission_no;
+          document.querySelector('zonechange-card').studentname=arr[0].student_name;
+          document.querySelector('zonechange-card').grade=arr[0].class_for_admission;
+          document.querySelector('zonechange-card').parentname=arr[0].father_name;
+          document.querySelector('zonechange-card').previouszone=feearr[0].zone_name;
+          document.querySelector('zonechange-card').previouszonefee=feearr[0].fees;
+          document.querySelector('zonechange-card').fromdate=feearr[0].from_date;
+          document.querySelector('zonechange-card').enddate=feearr[0].to_date;
+          document.querySelector('zonechange-card').previouszonepaidamount=e.detail.response.paidamount;
+          document.querySelector('zonechange-card').previouszonediscountfee=e.detail.response.discountamount;
+          document.querySelector('zonechange-card').previouszonependingamount=e.detail.response.pendingamount;
+        }
+        else{
+        if(arr!='no rows'){
+        document.querySelector('zonechange-card').studentid=arr[0].admission_no;
+        document.querySelector('zonechange-card').studentname=arr[0].student_name;
+        document.querySelector('zonechange-card').grade=arr[0].class_for_admission;
+        document.querySelector('zonechange-card').parentname=arr[0].father_name;
+        }
+        }
+      },
+      fetchstudentforcancellationService:function(){
+        this.fetchstudentforcancellationurl=sessionStorage.getItem("addrinfo")+"/collection-fetchstudentforcancellation-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.fetchstudentforcancellationparam=obj;
+        this.$.fetchstudentforcancellationajax.generateRequest();
+      },
+      fetchstudentforcancellationResponse:function(e){
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+            document.querySelector('zone-cancellation-card').autocompletearr(arr);
+            document.querySelector('transport-cancellation-card').autocompletearr(arr);            
+        }
+      },
+      fetchstudinfoforcancellation:function(studid,studentname){
+        this.fetchstudinfoforcancellationurl=sessionStorage.getItem("addrinfo")+"/collection-fetchstudinfoforcancellation-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studid;
+        obj.studentname=studentname;
+        this.fetchstudinfoforcancellationparam=obj;
+        this.$.fetchstudinfoforcancellationajax.generateRequest();
+      },
+      fetchstudinfoforcancellationResponse:function(e){
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+            document.querySelector('zone-cancellation-card').enrno=arr[0].admission_no;
+            document.querySelector('zone-cancellation-card').grade=arr[0].class_for_admission;
+            document.querySelector('zone-cancellation-card').parentname=arr[0].father_name;
+            document.querySelector('zone-cancellation-card').zone=arr[0].zone_name;
+            document.querySelector('zone-cancellation-card').hidestudentinfo=false;
+            document.querySelector('transport-cancellation-card').studentid=arr[0].admission_no;
+            document.querySelector('transport-cancellation-card').studentname=arr[0].student_name;
+            document.querySelector('transport-cancellation-card').grade=arr[0].class_for_admission;
+            document.querySelector('transport-cancellation-card').parentname=arr[0].father_name;
+            document.querySelector('transport-cancellation-card').zone=arr[0].zone_name;
+            document.querySelector('transport-cancellation-card').hidestudentinfo=false;
+        }
+        else{
+            alert('Student info not found!!');
+        }
+        
+      },
+      FnCancelTransport:function(studentid){
+        this.transportcancellationurl=sessionStorage.getItem("addrinfo")+"/collection-transportcancellation-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=localStorage.getItem("curr_sess_studentid");
+        this.transportcancellationparam=obj;
+        this.$.transportcancellationajax.generateRequest();
+      },
+      transportcancellationResponse:function(e){
+        alert('Transport cancelled successfully!!');
+        document.querySelector('transport-cancellation-card').FnRefresh();
+      },
+      cancelzoneService:function(studid,studentname){
+        this.cancelzoneurl=sessionStorage.getItem("addrinfo")+"/collection-cancelzone-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studid;
+        obj.studentname=studentname;
+        this.studentid=studid;
+        this.studentname=studentname;
+        this.cancelzoneparam=obj;
+        this.$.cancelzoneajax.generateRequest();
+      },
+      cancelzoneResponse:function(e){
+        if(e.detail.response.returnval=='Updated!'){
+            alert('Cancellation Done!!');
+            document.querySelector('transport-fee-collection-home-card').FnToggleSpinner()
+            this.fetchzoneinfoforcollectionService(this.studentid,this.studentname);
+            // document.querySelector('zone-cancellation-card').FnRefresh();
+        }
+        else
+            alert('Problem in updation!!');
+      },
+      fetchalltransportstudentService:function(){
+        this.fetchalltransportstudenturl=sessionStorage.getItem("addrinfo")+"/collection-fetchalltransportstudent-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        this.fetchalltransportstudentparam=obj;
+        this.$.fetchalltransportstudentajax.generateRequest();
+      },
+      fetchalltransportstudentResponse:function(e){
+        var arr=e.detail.response.returnval;        
+        document.querySelector('transport-cheque-bouncecancel').autocompletearr(arr);
+      },
+       processtransportbouncechequeService:function(studentid,studentname){
+        this.processtransportbouncechequeurl=sessionStorage.getItem("addrinfo")+"/collection-processtransportbouncecheque-servicee";
+        var obj={"schoolid":"","academicyear":"","id":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.id=studentid;
+        obj.studentname=studentname;
+        this.processtransportbouncechequeparam=obj;
+        this.$.processtransportbouncechequeajax.generateRequest();
+      },
+      processtransportbouncechequeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        var temparr=[];
+        var t=1;
+        for(var i=0;i<arr.length;i++){          
+          // var d=new Date(arr[i].cheque_date);
+          // var d1=d.getDate();
+          // var m1=(d.getMonth())+1;
+          // var y1=d.getFullYear();
+          // if(d1<10)
+          //   d1='0'+d1;
+          // if(m1<10)
+          //   m1='0'+m1;
+          // var dd1=d1+'/'+m1+'/'+y1;
+          // arr[i].cheque_date=dd1;          
+          arr[i].sno=i+1;   
+        }
+        // alert(JSON.stringify(temparr));
+        document.querySelector('transport-cheque-bouncecancel').chequearr=arr;
+        document.querySelector('transport-cheque-bouncecancel').FnSetChequeArray(arr);
+      },
+      FnUpdateChequeStatus:function(cheque,studentname){
+        count1=cheque.length;
+        // alert(JSON.stringify(cheque));
+        this.updatetransportchequestatusurl=sessionStorage.getItem("addrinfo")+"/collection-updatetransportchequestatus-service";
+        for(var i=0;i<cheque.length;i++){ 
+          var obj={"schoolid":""};
+          var d=new Date();        
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear"); 
+        obj.studentid=cheque[i].student_id; 
+        obj.studentname=cheque[i].student_name; 
+        obj.installment=cheque[i].installment; 
+        obj.chequeno=(cheque[i].cheque_no);        
+        obj.bankname=cheque[i].bank_name; 
+        obj.chequestatus=cheque[i].status; 
+        obj.waiveoff=cheque[i].waiveoff;
+        // obj.studentname=studentname;
+        var d1=d.getDate();
+        if(d1<10)
+            d1='0'+d1;
+        var m1=(d.getMonth()+1);
+        if(m1<10)
+            m1='0'+m1;
+        obj.date=d1+"/"+m1+"/"+d.getFullYear();
+        this.updatetransportchequestatusparam=obj;     
+        this.$.updatetransportchequestatusajax.generateRequest();
+        }
+      },
+      updatetransportchequestatusResponse:function(e){
+        if(e.detail.response.returnval=="Updated!")
+          count2++;
+        if(count1==count2){
+          alert('Cheques are updated!');
+          count1=0;
+          count2=0;
+          document.querySelector('transport-cheque-bouncecancel').FnRefresh();
+        }
+      },
+      FnFetchDailycollectionDashboardService:function(academicyear){
+        this.transportdailycollectionurl=sessionStorage.getItem("addrinfo")+"/collection-transportdailycollection-service";
+        var obj={};
+        obj.academicyear=academicyear;
+        var d=new Date();
+        var da=d.getDate();
+        if(da<10)
+            da="0"+da;
+        var mn=d.getMonth()+1;
+        if(mn<10)
+            mn="0"+mn;
+        var yr=d.getFullYear();
+        obj.currdate=da+"/"+mn+"/"+yr;
+        this.transportdailycollectionparam=obj;
+        this.$.transportdailycollectionajax.generateRequest();
+      },
+      transportdailycollectionResponse:function(e){
+        var total=e.detail.response.total;
+        var today=e.detail.response.today;
+        // alert(JSON.stringify(total));
+        // alert(JSON.stringify(today));
+        for(var i=0;i<total.length;i++){
+            var f=0;
+          for(var j=0;j<today.length;j++){
+            // alert(total[i].school_id+" "+today[j].school_id+" "+total[i].admission_status+" "+today[j].admission_status);
+            if(total[i].school_id==today[j].school_id&&total[i].admission_status==today[j].admission_status){
+              f=1;
+              total[i].todaycnt=today[j].todaycnt;
+              total[i].todaytotal=today[j].todaytotal;
+              today.splice(j,1);
+              break;
+            }
+          }
+          if(f==0){
+            total[i].todaycnt=0;
+            total[i].todaytotal=0;
+          }
+        }
+        // alert(JSON.stringify(total));
+        document.querySelector('transport-dashboard').FnShowTable();
+        document.querySelector('transport-dashboard').transportdailydashboardarr=total;
+      },
+      FnFetchTransportPendingService:function(academicyear,grade,type){
+        this.fetchtransportpendingfeeurl=sessionStorage.getItem("addrinfo")+"/transportfetchtransportpendingfee-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.grade=grade;
+        obj.type=type;
+        this.fetchtransportpendingfeeparam=obj;
+        this.$.fetchtransportpendingfeeajax.generateRequest();
+      },
+      fetchtransportpendingfeeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        var change=e.detail.response.change;
+        var installment=e.detail.response.installment;
+        var discount=e.detail.response.discount;
+        var fine=e.detail.response.fine;
+        var temp=[];
+        var total=0;
+        var pending=0;
+
+        var n=10+parseFloat(installment.length);
+        var width=30;
+        var percent=width/parseFloat(installment.length);
+        var temparr=[];
+        var obj={"sno":"","studentid":"","studentname":"","grade":"","status":"","fees":"","discount":"","paidamount":"","totalpaid":"","pendingamount":"","pattern":""};
+        var insarr=[];
+        var ins=[];
+
+        for(var i=0;i<installment.length;i++){
+            var objj={};
+            objj.installment=installment[i].installment;
+            objj.colspan="1";
+            objj.width=percent;
+            insarr.push(objj);
+        }
+        obj.paidamount=insarr;
+        temparr.push(obj);
+        insarr=[];
+        for(var i=0;i<arr.length;i++){
+            insarr=[];
+            var obj={};
+             for(var j=0;j<change.length;j++){
+                if(arr[i].student_id==change[j].student_id)
+                {
+                    arr[i].zone_name=change[j].zone_name;
+                    arr[i].fees=change[j].fees;
+                }
+            }
+            for(var j=0;j<fine.length;j++){
+                if(arr[i].student_id==fine[j].student_id)
+                {
+                    arr[i].fine_amount=fine[j].fine_amount;
+                }
+            }
+            obj.studentid=arr[i].student_id;
+            obj.studentname=arr[i].student_name;
+            obj.grade=arr[i].grade;
+            obj.status=arr[i].admission_status;
+            obj.fees=arr[i].fees;
+            obj.pattern=arr[i].payment_type;
+            obj.zone=arr[i].zone_name;
+            obj.fineamount=arr[i].fine_amount;
+            var flag=0;
+            var fineamount=0;
+            var obj1={};
+            obj1.installment=arr[i].installment;
+            obj1.amount=arr[i].installment_amount;
+            // alert(arr[i].student_name+"  "+arr[i].installment+"  "+arr[i].installment_amount);
+            // fineamount=parseFloat(fineamount)+parseFloat(arr[i].fine_amount);
+            insarr.push(obj1);           
+            for(var j=i+1;j<arr.length;j++){
+                flag=0;
+                obj1={};
+                if(arr[i].student_id==arr[j].student_id){
+                    // alert(arr[j].student_name+"  "+arr[j].installment+"  "+arr[j].installment_amount);
+                    obj1.installment=arr[j].installment;
+                    obj1.amount=arr[j].installment_amount;
+                    // fineamount=parseFloat(fineamount)+parseFloat(arr[j].fine_amount);
+                    insarr.push(obj1);
+                    arr.splice(j,1);
+                    j--;
+                }
+            }
+
+            // alert(JSON.stringify(installment));
+
+            for(var x=0;x<installment.length;x++){
+                var f=0;
+                for(var y=0;y<insarr.length;y++){
+                    // alert(installment[x].installment+"  "+insarr[y].installment)
+                    if(installment[x].installment==insarr[y].installment)
+                    {
+                        // alert(insarr[y].amount);
+                        f=1;
+                        var o={};
+                        o.installment=insarr[y].amount;
+                        o.colspan="1";
+                        o.width=percent;
+                        ins.push(o);
+                    }
+                }
+                if(f==0)
+                {
+                  var o={};
+                        o.installment=0;
+                        o.colspan="1";
+                        o.width=percent;
+                        ins.push(o);  
+                }
+            }
+            for(var y=0;y<ins.length;y++){
+                total=parseFloat(total)+parseFloat(ins[y].installment);
+            }
+            obj.paidamount=ins;
+            obj.totalpaid=total;
+            // obj.fineamount=fineamount;
+            fineamount=0;
+            var t=0
+            for(var x=0;x<discount.length;x++){
+                // alert(discount[x].student_id+"  "+arr[i].student_id)
+                if(discount[x].student_id==arr[i].student_id){
+                    // alert('in');
+                    t=1;
+                    obj.discount=discount[x].discount_amount;
+                }
+            }
+            if(t==0){
+                obj.discount=0;
+            }
+            obj.pendingamount=parseFloat(obj.fees)+parseFloat(obj.fineamount)-parseFloat(total)-parseFloat(obj.discount);
+            obj.sno=i+1;
+            temparr.push(obj);
+            // alert(JSON.stringify(obj));
+            obj={};
+            insarr=[];
+            ins=[];
+            total=0;
+        }
+        // alert(JSON.stringify(temparr));
+        var totalstud=0;
+        var totalfees=0;
+        var pendingstud=0;
+        var pendingfees=0;
+        for(var i=1;i<temparr.length;i++){
+            // alert(temparr[i].totalpaid+"  "+temparr[i].pendingamount);
+            totalstud=totalstud+1;
+            totalfees=parseFloat(totalfees)+parseFloat(temparr[i].totalpaid);
+            if(temparr[i].totalpaid==0)
+                pendingstud=parseFloat(pendingstud)+1;
+            pendingfees=parseFloat(pendingfees)+parseFloat(temparr[i].pendingamount);
+        }
+        document.querySelector('transport-feepaiddue-report').colspan=installment.length;
+        document.querySelector('transport-feepaiddue-report').width=width;
+        document.querySelector('transport-feepaiddue-report').pendingarr=temparr;
+        document.querySelector('transport-feepaiddue-report').hidecount=false;
+        document.querySelector('transport-feepaiddue-report').paidstud=totalstud;
+        document.querySelector('transport-feepaiddue-report').paidfees=totalfees;
+        document.querySelector('transport-feepaiddue-report').pendingstud=pendingstud;
+        document.querySelector('transport-feepaiddue-report').pendingfees=pendingfees;
+        // document.querySelector('transport-feepaiddue-report').pendingarr=final;
+      },
+      fetchfeenetrycollectionfeetypeinstallmentamount:function(admissionno,academicyear,admissionyear,gradeid,gradename,studentname,feetype,installment){
+        this.fetchfeenetrycollectionfeetypeinstallmentamounturl=sessionStorage.getItem("addrinfo")+"/collection-fetchfeenetrycollectionfeetypeinstallmentamount-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.admissionno=admissionno;
+        obj.academicyear=academicyear;
+        obj.admissionyear=admissionyear;
+        obj.gradeid=gradeid;
+        obj.gradename=gradename;
+        obj.studentid=admissionno;
+        obj.studentname=studentname;
+        obj.feetype=feetype;
+        obj.installment=installment;
+        // alert(JSON.stringify(obj));
+        this.fetchfeenetrycollectionfeetypeinstallmentamountparam=obj;
+        this.$.fetchfeenetrycollectionfeetypeinstallmentamountajax.generateRequest();
+      },
+      fetchfeenetrycollectionfeetypeinstallmentamountResponse:function(e){
+        // alert(e.detail.response.dueamount+"  "+e.detail.response.installmentdate+"  "+e.detail.response.installment);
+        document.querySelector('transport-collection-fee-entry-card').dueamount=e.detail.response.dueamount;
+        document.querySelector('transport-collection-fee-entry-card').amount=e.detail.response.dueamount;
+        // document.querySelector('transport-collection-fee-entry-card').FnSetTransactiondate(e.detail.response.installmentdate);
+        document.querySelector('transport-collection-fee-entry-card').transactiondate=e.detail.response.installmentdate;
+        document.querySelector('transport-collection-fee-entry-card').installmentdate=e.detail.response.installmentdate;
+        document.querySelector('transport-collection-paymentinfo-card').transactiondate=e.detail.response.installmentdate;
+        document.querySelector('transport-collection-paymentinfo-card').installmentdate=e.detail.response.installmentdate;
+        // document.querySelector('transport-collection-paymentinfo-card').installmenttypename=e.detail.response.installment;
+      },
+      fetchcollectionpaymentinstallment:function(typeid,feetype){
+        this.fetchcollectionpaymentinstallmenturl=sessionStorage.getItem("addrinfo")+"/collection-transportfetchcollectionpaymentinstallment-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.typeid=typeid; 
+        obj.feetype=feetype;
+        this.fetchcollectionpaymentinstallmentparam=obj;
+        this.$.fetchcollectionpaymentinstallmentajax.generateRequest();
+      },
+      fetchcollectionpaymentinstallmentResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        if(e.detail.response.returnval!='no rows')
+        document.querySelector('transport-collection-paymentinfo-card').installmentarr=e.detail.response.returnval;
+        // document.querySelector('transport-fee-collection-home-card').installmentarr=e.detail.response.returnval;
+        // document.querySelector('transport-fee-collection-home-card').FnToggleInstallment();
+      },
+      FnUpdateFeeAdmissionno:function(admissionno,enquiryno){
+        this.updateapplnfeeadmissionnourl=sessionStorage.getItem("addrinfo")+"/collection-updateapplnfeeadmissionno-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.enquiryno=enquiryno;
+        obj.admissionno=admissionno;
+        this.updateapplnfeeadmissionnoparam=obj;
+        this.$.updateapplnfeeadmissionnoajax.generateRequest();
+      },
+      updateapplnfeeadmissionnoResponse:function(e){
+        alert('Registration completed successfully!');
+      },
+      // fetchallstudentforapplnfeecollectionService:function(){
+      //   this.fetchallstudentforapplnfeecollectionurl=sessionStorage.getItem("addrinfo")+"/collection-fetchallstudentforapplnfeecollection-service";
+      //   var obj={};
+      //   obj.schoolid=localStorage.getItem("schoolid");
+      //   this.fetchallstudentforapplnfeecollectionparam=obj;
+      //   this.$.fetchallstudentforapplnfeecollectionajax.generateRequest();
+      // },
+      // fetchallstudentforapplnfeecollectionResponse:function(e){
+      //   // alert(JSON.stringify(e.detail.response.returnval));
+      //   if(e.detail.response.returnval!='no rows'){
+      //     var arr=e.detail.response.returnval;
+      //     document.querySelector('application-fee-card').autocompletearr(arr);
+      //   }
+      // },
+      // fetchstudentinfoforapplnfeecollectionService:function(enquiryno){
+      //   this.fetchstudentinfoforapplnfeecollectionurl=sessionStorage.getItem("addrinfo")+"/collection-fetchstudentinfoforapplnfeecollection-service";
+      //   var obj={};
+      //   obj.schoolid=localStorage.getItem("schoolid");
+      //   obj.enquiryno=enquiryno;
+      //   this.fetchstudentinfoforapplnfeecollectionparam=obj;
+      //   this.$.fetchstudentinfoforapplnfeecollectionajax.generateRequest();
+      // },
+      // fetchstudentinfoforapplnfeecollectionResponse:function(e){
+      //   var studentarr=e.detail.response.returnval;
+      //   // alert(JSON.stringify(studentarr));        
+      //   document.querySelector('application-fee-card').studentname=studentarr[0].enquiry_name;
+      //   document.querySelector('application-fee-card').admissionno=studentarr[0].admission_no;
+      //   document.querySelector('application-fee-card').grade=studentarr[0].class;
+      //   document.querySelector('application-fee-card').academicyear=studentarr[0].academic_year;
+      //   document.querySelector('application-fee-card').admissionyear=studentarr[0].admission_year;
+      //   document.querySelector('application-fee-card').parentname=studentarr[0].father_name;
+      //   document.querySelector('application-fee-card').mothernamee=studentarr[0].mother_name;
+      // },
+      // FnMakeApplnFeePaymentService:function(studentname,admissionno,academicyear,admissionyear,gradeid,gradename,feecode,typeid,typename,paymenttype,paymentfeetype,paymentmodename,amount,receiptno,dateofpayment,dueamount,transactionno,transactionname,transactiondate,admissionstatus,subtypeid){
+      //   this.makeapplnfeepaymenturl=sessionStorage.getItem("addrinfo")+"/collection-makepayment-service";
+      //   var obj={"schoolid":""};
+      //   obj.schoolid=localStorage.getItem("schoolid"); 
+      //   obj.studentname=studentname;
+      //   obj.admissionno=admissionno;
+      //   obj.academicyear=academicyear;
+      //   obj.admissionyear=admissionyear;
+      //   obj.gradeid=gradeid;
+      //   obj.gradename=gradename;
+      //   obj.feecode=feecode;
+      //   obj.typeid=typeid;
+      //   obj.typename=typename;
+      //   obj.paymenttype=paymenttype;
+      //   obj.paymentfeetype=paymentfeetype;
+      //   obj.paymentmodename=paymentmodename;
+      //   obj.amount=amount;
+      //   obj.receiptno=receiptno;
+      //   obj.dateofpayment=dateofpayment;
+      //   obj.dueamount=parseFloat(dueamount)-parseFloat(amount);
+      //   obj.transactionno=transactionno;
+      //   obj.transactionname=transactionname;
+      //   obj.transactiondate=transactiondate;
+      //   obj.admissionstatus=admissionstatus;
+      //   obj.pdcflag=subtypeid;
+      //   var d=new Date();
+      //   var d1=d.getDate();
+      //   if(d1<10)
+      //       d1="0"+d1;
+      //   var m1=(d.getMonth()+1);
+      //   if(m1<10)
+      //       m1="0"+m1;
+      //   obj.paiddate=d1+"/"+m1+"/"+d.getFullYear();
+      //   obj.createdby=localStorage.getItem("employeeid"); 
+      //   this.makeapplnfeepaymentparam=obj;
+      //   this.$.makeapplnfeepaymentajax.generateRequest();
+      // },
+      // makeapplnfeepaymentResponse:function(e){
+      //   // alert(e.detail.response.returnval);
+      //   if(e.detail.response.returnval=="Saved!"){          
+      //     document.querySelector("application-fee-card").message="Saved successfully!";
+      //   }
+      //   else
+      //     document.querySelector("application-fee-card").message="Unable to save!";
+      //   document.querySelector("application-fee-card").FnCompletionDialog();
+      // },
+      FnFetchZone:function(academicyear){
+        this.fetchzoneurl=sessionStorage.getItem("addrinfo")+"/transport-fetchzone-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        this.fetchzoneparam=obj;
+        this.$.fetchzoneajax.generateRequest();
+      },
+      fetchzoneResponse:function(e){
+        document.querySelector('transport-fee-collection-home-card').zonearr=e.detail.response.returnval;
+        document.querySelector('transport-fee-collection-home-card').startdate=e.detail.response.startdate;
+        document.querySelector('transport-fee-collection-home-card').enddate=e.detail.response.enddate;
+      },
+      fetchallstudentforcollectionService:function(academicyear){
+        this.fetchallstudentforcollectionurl=sessionStorage.getItem("addrinfo")+"/transport-collection-fetchallstudent-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        // alert(localStorage.getItem("schoolid"));
+        this.fetchallstudentforcollectionparam=obj;
+        this.$.fetchallstudentforcollectionajax.generateRequest();
+      },
+      fetchallstudentforcollectionResponse:function(e){
+        if(e.detail.response.returnval!='no rows'){
+          var arr=e.detail.response.returnval;
+          document.querySelector('transport-fee-collection-home-card').autocompletearr(arr);
+        }
+      },
+      fetchstudentinfoforcollectionService:function(studentid,studentname){
+        this.fetchstudentinfoforcollectionurl=sessionStorage.getItem("addrinfo")+"/transport-collection-studentinfo-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studentid;
+        obj.studentname=studentname.trim();
+        this.fetchstudentinfoforcollectionparam=obj;
+        this.$.fetchstudentinfoforcollectionajax.generateRequest();
+      },
+      fetchstudentinfoforcollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        var feearr=e.detail.response.feearr;
+        var studentarr=e.detail.response.returnval;
+        // alert(JSON.stringify(studentarr));
+        document.querySelector('transport-fee-collection-home-card').selectedtab=0;       
+        document.querySelector('transport-fee-collection-home-card').page="transport-collection-studentinfo-card";   
+        document.querySelector('transport-fee-collection-home-card').studentname=studentarr[0].student_name;
+        document.querySelector('transport-fee-collection-home-card').admissionno=studentarr[0].admission_no;
+        document.querySelector('transport-fee-collection-home-card').gradename=studentarr[0].class_for_admission;
+        document.querySelector('transport-fee-collection-home-card').gradeid=studentarr[0].class_for_admission;
+        document.querySelector('transport-fee-collection-home-card').academicyear=studentarr[0].academic_year;
+        document.querySelector('transport-fee-collection-home-card').admissionyear=studentarr[0].admission_year;
+        document.querySelector('transport-fee-collection-home-card').studentinfoarr=studentarr;
+        document.querySelector('transport-fee-collection-home-card').admissionstatus=studentarr[0].admission_status;
+        document.querySelector('transport-fee-collection-home-card').Fnhidestudentdetailcard();
+
+        document.querySelector('transport-fee-collection-home-card').studentid=studentarr[0].admission_no;
+        document.querySelector('transport-fee-collection-home-card').grade=studentarr[0].class_for_admission;
+        if(arr[0].father_name==null||arr[0].father_name==''){
+            if(arr[0].mother_name==null||arr[0].mother_name==''){
+            }
+            else
+            document.querySelector('transport-fee-collection-home-card').parentname=arr[0].mother_name;
+        }
+        else
+        document.querySelector('transport-fee-collection-home-card').parentname=arr[0].father_name;
+        // document.querySelector('transport-fee-collection-home-card').parentname=arr[0].father_name;
+        // if(localStorage.getItem("curr_sess_spinflag")=='0')
+        // this.fetchfeeinfoforcollectionService(localStorage.getItem("curr_sess_enquiryno"));
+        // else
+        // document.querySelector('transport-fee-collection-home-card').FnToggleSpinner();     
+      },
+      fetchzoneinfoforcollectionService:function(studentid,studentname){
+        this.fetchzoneinfoforcollectionurl=sessionStorage.getItem("addrinfo")+"/transport-collection-zoneinfo-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studentid;
+        obj.studentname=studentname;
+        this.fetchzoneinfoforcollectionparam=obj;
+        this.$.fetchzoneinfoforcollectionajax.generateRequest();
+      },
+      fetchzoneinfoforcollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        var feearr=e.detail.response.feearr;
+        // alert(JSON.stringify(feearr));
+        // alert(JSON.stringify(arr));
+        // alert(e.detail.response.flag);
+        if(e.detail.response.changeflag=='0')
+        document.querySelector('transport-zonemappinginfo-card').hidetick=true;
+        else
+        document.querySelector('transport-zonemappinginfo-card').hidetick=false;
+        
+        if(e.detail.response.flag=='mapped'){
+          // alert('Zone Already Mapped!!');
+          document.querySelector('transport-zonemappinginfo-card').studentid=arr[0].admission_no;
+          document.querySelector('transport-zonemappinginfo-card').studentname=arr[0].student_name;
+          document.querySelector('transport-zonemappinginfo-card').grade=arr[0].class_for_admission;
+          document.querySelector('transport-zonemappinginfo-card').parentname=arr[0].father_name;
+          document.querySelector('transport-zonemappinginfo-card').selectedzone=feearr[0].distance_id;
+          document.querySelector('transport-zonemappinginfo-card').FnSetSelectedZone(feearr[0].distance_id);
+          document.querySelector('transport-zonemappinginfo-card').disablezone=true;
+          // document.querySelector('transport-zonemappinginfo-card').label="Modify";
+          // alert('modify');
+          document.querySelector('transport-zonemappinginfo-card').hidemap=true;
+          document.querySelector('transport-zonemappinginfo-card').hidechange=false;
+          document.querySelector('transport-zonemappinginfo-card').fees=feearr[0].fees;
+          document.querySelector('transport-fee-collection-home-card').FnToggleSpinner(); 
+        }
+        else{
+        if(arr!='no rows'){
+        document.querySelector('transport-zonemappinginfo-card').studentid=arr[0].admission_no;
+        document.querySelector('transport-zonemappinginfo-card').studentname=arr[0].student_name;
+        document.querySelector('transport-zonemappinginfo-card').grade=arr[0].class_for_admission;
+        document.querySelector('transport-zonemappinginfo-card').parentname=arr[0].father_name;
+        document.querySelector('transport-zonemappinginfo-card').selectedzone=-1;
+        document.querySelector('transport-zonemappinginfo-card').FnSetSelectedZone("");
+        document.querySelector('transport-zonemappinginfo-card').disablezone=false;
+        // document.querySelector('transport-zonemappinginfo-card').label="Save";
+        // alert('save');
+        document.querySelector('transport-zonemappinginfo-card').hidemap=false;
+          document.querySelector('transport-zonemappinginfo-card').hidechange=true;
+        document.querySelector('transport-zonemappinginfo-card').fees="";
+        document.querySelector('transport-fee-collection-home-card').FnToggleSpinner();  
+        }
+        }
+      },
+      fetchtransportzonefeeService:function(distanceid,studentid){
+        this.fetchtransportzonefeeurl=sessionStorage.getItem("addrinfo")+"/collection-fetchtransportzonefee-service";
+        var obj={"schoolid":"","prefixid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.distanceid=distanceid;
+        obj.studentid=studentid;
+        this.fetchtransportzonefeeparam=obj;
+        this.$.fetchtransportzonefeeajax.generateRequest();
+      },
+      fetchtransportzonefeeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(e.detail.response.flag);
+        if(arr!='no rows'){
+        document.querySelector('transport-fee-collection-home-card').fees=arr[0].fees;
+        if(e.detail.response.flag=='0')
+        document.querySelector('transport-zonemappinginfo-card').hidetick=true;
+        else
+        document.querySelector('transport-zonemappinginfo-card').hidetick=false;
+        }
+      },
+      FnAllocateZone:function(studentid,studentname,grade,fees,zonename,zoneid,parentname,startdate,enddate){
+        this.allocatezoneurl=sessionStorage.getItem("addrinfo")+"/collection-allocatezone-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.distanceid=zoneid;
+        obj.studentid=studentid;
+        obj.studentname=studentname;
+        obj.grade=grade;
+        obj.fees=fees;
+        obj.zonename=zonename;
+        obj.zoneid=zoneid;
+        obj.parentname=parentname;
+        obj.startdate=startdate;
+        obj.enddate=enddate;
+        obj.mode="Two-Way";
+        obj.updatedby=localStorage.getItem("employeeid"); 
+        var d=new Date();
+        var dat=d.getDate();
+        if(dat<10)
+            dat="0"+dat;
+        var mon=d.getMonth()+1;
+        if(mon<10)
+            mon="0"+mon;
+        var yr=d.getFullYear();
+        obj.currdate=yr+"/"+mon+"/"+dat;
+        this.studentid=studentid;
+        this.studentname=studentname;
+        this.allocatezoneparam=obj;
+        this.$.allocatezoneajax.generateRequest();
+      },
+      allocatezoneResponse:function(e){
+        // alert(e.detail.response.returnval);
+        // document.querySelector('transport-fee-collection-home-card').FnToggleSpinner();  
+        // this.fetchzoneinfoforcollectionService(this.studentid,this.studentname);
+        // alert('Zone mapped successfully!!');  
+        // alert(localStorage.getItem('curr_sess_page'));
+        if(localStorage.getItem('curr_sess_page')=='transport-fee-collection-home-card'){
+        alert('Zone Allocation Done!!');
+        document.querySelector('transport-fee-collection-home-card').FnToggleSpinner();  
+        this.fetchzoneinfoforcollectionService(this.studentid,this.studentname);
+        }
+        if(localStorage.getItem('curr_sess_page')=='zonechange'){
+        alert('Zone Changed Successfully!!');
+        document.querySelector('zonechange-card').FnRefresh();
+        document.querySelector('transport-fee-collection-home-card').FnToggleSpinner();  
+        document.querySelector('transport-fee-collection-home-card').page="transport-zonemappinginfo-card";
+        this.fetchzoneinfoforcollectionService(this.studentid,this.studentname);
+        }      
+      },
+      fetchfeeinfoforcollectionService:function(studentid,studentname){
+        this.fetchfeeinfoforcollectionurl=sessionStorage.getItem("addrinfo")+"/collection-transportfeeinfo-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studentid;
+        obj.studentname=studentname;
+        this.fetchfeeinfoforcollectionparam=obj;
+        this.$.fetchfeeinfoforcollectionajax.generateRequest();
+      },
+      fetchfeeinfoforcollectionResponse:function(e){
+        var arr=e.detail.response.returnval;
+        if(arr!='no rows'){
+        var total=0;
+        for(var i=0;i<arr.length;i++){
+            total=parseFloat(total)+parseFloat(arr[i].amount);
+        }
+        document.querySelector('transport-collection-feeinfo-card').zone=arr[0].zone_name;
+        document.querySelector('transport-collection-feeinfo-card').totalfee=total;
+        document.querySelector('transport-collection-feeinfo-card').feeinfoarr=arr;
+        }
+        else{
+            alert('Zone not allocated...Please allocate the zone!!');
+        }
+        document.querySelector('transport-fee-collection-home-card').FnToggleSpinner(); 
+      },
+      fetchdiscountinfoforcollectionService:function(studentid,studentname){
+        this.fetchdiscountinfoforcollectionurl=sessionStorage.getItem("addrinfo")+"/collection-transportdiscountinfo-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.studentid=studentid;
+        obj.studentname=studentname;
+        this.fetchdiscountinfoforcollectionparam=obj;
+        this.$.fetchdiscountinfoforcollectionajax.generateRequest();
+      },
+      fetchdiscountinfoforcollectionResponse:function(e){
+        var discountarr=e.detail.response.returnval;
+        var discountinsarr=e.detail.response.discount;
+        // alert(JSON.stringify(discountarr));
+        if(discountarr=='no rows'){
+          alert('No discount info found!');
+        }
+        else{
+          document.querySelector('transport-fee-collection-home-card').page='transport-collection-discountinfo-card';
+          document.querySelector('transport-collection-discountinfo-card').discountinfoarr=discountarr;
+        }
+        document.querySelector('transport-collection-discountinfo-card').discountarr=discountinsarr;
+        document.querySelector('transport-fee-collection-home-card').FnToggleSpinner();
+      },
+      fetchpaymentinfoforcollectionService:function(admission_no){
+        this.fetchpaymentinfoforcollectionurl=sessionStorage.getItem("addrinfo")+"/collection-paymentinfo-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.admissionno=admission_no;
+        this.fetchpaymentinfoforcollectionparam=obj;
+        this.$.fetchpaymentinfoforcollectionajax.generateRequest();
+      },
+      fetchpaymentinfoforcollectionResponse:function(e){        
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        if(localStorage.getItem("curr_sess_spinflag")=='0')
+        this.fetchreceiptinfoforcollectionService(localStorage.getItem("curr_sess_enquiryno"));
+        // else
+        document.querySelector('transport-fee-collection-home-card').FnToggleSpinner();
+      },
+      fetchreceiptinfoforcollectionService:function(admission_no){
+        this.fetchreceiptinfoforcollectionurl=sessionStorage.getItem("addrinfo")+"/collection-transportreceiptinfo-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.admissionno=admission_no;
+        this.fetchreceiptinfoforcollectionparam=obj;
+        this.$.fetchreceiptinfoforcollectionajax.generateRequest();
+      },
+      fetchreceiptinfoforcollectionResponse:function(e){        
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        if(localStorage.getItem("curr_sess_spinflag")=='0')
+        document.querySelector('transport-fee-collection-home-card').Fnhidestudentdetailcard();
+        // else
+        document.querySelector('transport-fee-collection-home-card').FnToggleSpinner();
+        if(arr=='no rows')
+          alert('No info found!!');
+        else{
+        }
+      },
+      fetchcollectiondiscounttypesService:function(academicyear){
+        this.fetchcollectiondiscounttypesurl=sessionStorage.getItem("addrinfo")+"/collection-fetchdiscounttypes-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");        
+        this.fetchcollectiondiscounttypesparam=obj;
+        this.$.fetchcollectiondiscounttypesajax.generateRequest();
+      },
+      fetchcollectiondiscounttypesResponse:function(e){
+        var arr=e.detail.response.returnval;
+        arr.push({"discount_type_id":"Other","discount_type":"Other"});
+        document.querySelector('fee-collection-home-card').FnToggleSpinner();
+        document.querySelector('collection-discountinfo-card').discountarr=arr;        
+      },
+      fetchcollectionfeetypesService:function(){
+        this.fetchcollectionfeetypesurl=sessionStorage.getItem("addrinfo")+"/collection-fetchfeetypes-service";
+        var obj={};
+        obj.schoolid=localStorage.getItem("schoolid");        
+        this.fetchcollectionfeetypesparam=obj;
+        this.$.fetchcollectionfeetypesajax.generateRequest();
+      },
+      fetchcollectionfeetypesResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // arr.push({"discount_type_id":"Other","discount_type":"Other"});
+        // document.querySelector('fee-collection-home-card').FnToggleSpinner();
+        document.querySelector('collection-discountinfo-card').feetypearr=arr; 
+      },
+      fetchcollectiondiscountavailinfoService:function(admissionyear,academicyear,gradeid,discounttypeid){
+        this.fetchcollectiondiscountavailinfourl=sessionStorage.getItem("addrinfo")+"/collection-fetchdiscountavailability-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionyear=admissionyear;
+        obj.academicyear=academicyear;
+        obj.gradeid=gradeid;
+        obj.discounttypeid=discounttypeid;   
+        obj.currdate=localStorage.getItem("curr_sess_discount_date");
+        this.fetchcollectiondiscountavailinfoparam=obj;
+        this.$.fetchcollectiondiscountavailinfoajax.generateRequest();
+      },
+      fetchcollectiondiscountavailinfoResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        if(arr!='no rows'){
+          document.querySelector('collection-discountinfo-card').FnEnableDiscountInfo();
+          document.querySelector('collection-discountinfo-card').discountamount=arr[0].amount;
+        }
+      },
+      collectionattachdiscountService(academicyear,admissionno,studentname,gradename,discounttype,discountamount,reason,feetype){
+        // alert(gradename);
+        this.collectionattachdiscounturl=sessionStorage.getItem("addrinfo")+"/collection-transportattachdiscount-service";
+        var obj={"schoolid":""};
+        this.admissionno=admissionno;
+        this.academicyear=academicyear;
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=academicyear;
+        obj.admissionno=admissionno;
+        obj.studentname=studentname;
+        obj.gradename=gradename;
+        obj.discounttype=discounttype; 
+        obj.discountamount=discountamount;
+        obj.reason=reason;
+        obj.feetype=feetype;
+        obj.createdby=localStorage.getItem("employeename");
+        var d=new Date();  
+        var d1=d.getDate();
+        if(d1<10)
+            d1="0"+d1;
+        var m1=(d.getMonth()+1);
+        if(m1<10)
+            m1="0"+m1;
+        obj.currdate=d1+"/"+m1+"/"+d.getFullYear();
+        this.studentid=admissionno;
+        this.studentname=studentname;
+        this.collectionattachdiscountparam=obj;
+        this.$.collectionattachdiscountajax.generateRequest();
+      },
+      collectionattachdiscountResponse:function(e){
+        if(e.detail.response.returnval=="Updated"){
+          alert('Added!');
+          // document.querySelector('collection-discountinfo-card').FnRefresh();
+          document.querySelector('transport-fee-collection-home-card').FnToggleSpinner();
+          this.fetchdiscountinfoforcollectionService(this.studentid,this.studentname);
+        }
+        else if(e.detail.response.returnval=="exist"){
+          alert('Discount type already added!');
+        }
+        else{
+          alert('Unable to add!');
+        }
+      },
+      fetchfeecollectionpaymentinfoService:function(academicyear,admissionyear,gradeid,gradename,admissionno,studentname){
+        this.fetchfeecollectionpaymentinfourl=sessionStorage.getItem("addrinfo")+"/collection-transportfetchfeecollectionpaymentinfo-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.admissionyear=admissionyear;
+        obj.academicyear=academicyear;
+        obj.studentid=admissionno;
+        obj.studentname=studentname;
+        obj.admissionno=admissionno;   
+        this.fetchfeecollectionpaymentinfoparam=obj;
+        // alert(JSON.stringify(obj));
+        this.$.fetchfeecollectionpaymentinfoajax.generateRequest();
+      },
+      fetchfeecollectionpaymentinfoResponse:function(e){
+        document.querySelector('transport-collection-paymentinfo-card').hidefeepaiddueblock=false;
+        document.querySelector('transport-collection-paymentinfo-card').totalamount=e.detail.response.total;
+        document.querySelector('transport-collection-paymentinfo-card').discountamount=e.detail.response.discount;
+        document.querySelector('transport-collection-paymentinfo-card').fineamount=e.detail.response.fineamount;
+        document.querySelector('transport-collection-paymentinfo-card').paidamount=e.detail.response.paidamount;
+        document.querySelector('transport-collection-paymentinfo-card').dueamount=e.detail.response.dueamount;        
+        // document.querySelector('transport-fee-collection-home-card').FnToggleSpinner();
+      },
+      fetchcollectionfeetypetocollect:function(academicyear){
+        this.fetchcollectionfeetypetocollecturl=sessionStorage.getItem("addrinfo")+"/collection-transportfetchcollectionfeetypetocollect-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.academicyear=academicyear;
+        this.fetchcollectionfeetypetocollectparam=obj;
+        this.$.fetchcollectionfeetypetocollectajax.generateRequest();
+      },
+      fetchcollectionfeetypetocollectResponse:function(e){
+        var arr=e.detail.response.returnval;
+        for(var i=0;i<arr.length;i++){
+          arr[i].commontype=(arr[i].fee_type).replace(' ','');
+        }
+        document.querySelector('transport-collection-paymentinfo-card').feetypearr=arr;
+        document.querySelector('transport-collection-paymentinfo-card').FnToggle();
+      } ,     
+      fetchcollectionpaymenttype:function(academicyear,studentid){
+        this.fetchcollectionpaymenttypeurl=sessionStorage.getItem("addrinfo")+"/collection-fetchcollectionpaymenttype-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.academicyear=academicyear;
+        obj.studentid=studentid;
+        this.fetchcollectionpaymenttypeparam=obj;
+        this.$.fetchcollectionpaymenttypeajax.generateRequest();
+      },
+      fetchcollectionpaymenttypeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        var paidins=e.detail.response.paidins;
+        for(var i=0;i<arr.length;i++){
+            arr[i].checked=false;
+            arr[i].readonly=false;
+            if(paidins.length>0){
+                arr[i].readonly=true;
+                if(arr[i].payment_typeid==paidins[0].payment_type){
+                arr[i].checked=true;
+                document.querySelector('transport-collection-paymentinfo-card').FnSetPaymenttype(arr[i].payment_typeid,arr[i].payment_typename);
+                }
+            }
+        }
+        // alert(JSON.stringify(arr));        
+        document.querySelector('transport-collection-paymentinfo-card').paymenttypearr=arr;
+        // document.querySelector('transport-collection-paymentinfo-card').paidins=e.detail.response.paidins;
+        // document.querySelector('transport-collection-paymentinfo-card').hidepaymenttype=false;
+      },
+      fetchcollectionpaymentmode:function(){
+        this.fetchcollectionpaymentmodeurl=sessionStorage.getItem("addrinfo")+"/collection-fetchcollectionpaymentmode-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        this.fetchcollectionpaymentmodeparam=obj;
+        this.$.fetchcollectionpaymentmodeajax.generateRequest();
+      },
+      fetchcollectionpaymentmodeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        document.querySelector('transport-collection-paymentinfo-card').paymentmodearr=arr;
+      },
+      fetchcollectionpaymentsubmode:function(modeid,modename)
+      {
+        this.fetchcollectionpaymentsubmodeurl=sessionStorage.getItem("addrinfo")+"/collection-fetchcollectionpaymentsubmode-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.modeid=modeid;
+        obj.modename=modename;
+        this.fetchcollectionpaymentsubmodeparam=obj;
+        this.$.fetchcollectionpaymentsubmodeajax.generateRequest();
+      },
+      fetchcollectionpaymentsubmodeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        var mode="";
+        if(arr.length>1){
+        document.querySelector('transport-collection-fee-entry-card').paymentsubmodearr=arr;
+        document.querySelector('transport-collection-fee-entry-card').FnToggleModes();
+        }
+        document.querySelector('transport-collection-fee-entry-card').FnSetInfo(arr[0].info_flag,arr[0].sub_typeid);
+      },
+      fetchfeenetrycollectionfeetypeamount:function(admissionno,academicyear,admissionyear,gradeid,gradename,studentname,feetype){
+        this.fetchfeenetrycollectionfeetypeamounturl=sessionStorage.getItem("addrinfo")+"/collection-transportfetchfeenetrycollectionfeetypeamount-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.admissionno=admissionno;
+        obj.academicyear=academicyear;
+        obj.admissionyear=admissionyear;
+        obj.gradeid=gradeid;
+        obj.gradename=gradename;
+        obj.studentid=admissionno;
+        obj.studentname=studentname;
+        obj.feetype=feetype;
+        this.fetchfeenetrycollectionfeetypeamountparam=obj;
+        this.$.fetchfeenetrycollectionfeetypeamountajax.generateRequest();
+      },
+      fetchfeenetrycollectionfeetypeamountResponse:function(e){
+        // alert(e.detail.response.dueamount);
+        document.querySelector('transport-collection-fee-entry-card').dueamount=e.detail.response.dueamount;
+      },
+      FnMakePaymentService:function(studentname,admissionno,academicyear,admissionyear,gradeid,gradename,feecode,typeid,typename,paymenttype,paymentfeetype,paymentmodename,amount,receiptno,dateofpayment,dueamount,transactionno,transactionname,transactiondate,admissionstatus,subtypeid,installment,installmentdate){
+        this.makepaymenturl=sessionStorage.getItem("addrinfo")+"/collection-transportmakepayment-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.studentname=studentname;
+        obj.admissionno=admissionno;
+        obj.academicyear=academicyear;
+        obj.admissionyear=admissionyear;
+        obj.gradeid=gradeid;
+        obj.gradename=gradename;
+        obj.feecode=feecode;
+        obj.typeid=typeid;
+        obj.typename=typename;
+        obj.paymenttype=paymenttype;
+        obj.paymentfeetype=paymentfeetype;
+        obj.paymentmodename=paymentmodename;
+        obj.amount=amount;
+        obj.receiptno=receiptno;
+        obj.dateofpayment=dateofpayment;
+        obj.dueamount=parseFloat(dueamount)-parseFloat(amount);
+        obj.transactionno=transactionno;
+        obj.transactionname=transactionname;
+        obj.transactiondate=transactiondate;
+        obj.admissionstatus=admissionstatus;
+        obj.pdcflag=subtypeid;
+        obj.installment=installment;
+        obj.installmentdate=installmentdate;
+        // alert(installmentdate);
+        var d=new Date();
+        var d1=d.getDate();
+        if(d1<10)
+            d1="0"+d1;
+        if(m1<10)
+            m1="0"+m1;
+        var m1=(d.getMonth()+1);
+        obj.paiddate=d1+"/"+m1+"/"+d.getFullYear();
+        obj.createdby=localStorage.getItem("employeeid"); 
+        this.makepaymentparam=obj;
+        // alert(installment);
+        this.$.makepaymentajax.generateRequest();
+      },
+      makepaymentResponse:function(e){
+        // alert(e.detail.response.returnval);
+        if(e.detail.response.returnval=="Saved!"){          
+          document.querySelector("transport-collection-paymentinfo-card").message="Saved successfully!";
+        }
+        else
+        document.querySelector("transport-collection-paymentinfo-card").message="Unable to save!";
+        document.querySelector("transport-collection-paymentinfo-card").FnCompletionDialog();
+        document.querySelector("transport-fee-collection-home-card").FnRefreshInstallment();
+      },
+      fetchcollectionpaymenthistoryService:function(academicyear,admissionyear,gradeid,gradename,admissionno,studentname){
+        // alert(admissionno);
+         this.fetchcollectionpaymenthistoryurl=sessionStorage.getItem("addrinfo")+"/collection-transportfetchcollectionpaymenthistory-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.admissionno=admissionno;
+        obj.academicyear=academicyear;
+        obj.admissionyear=admissionyear;
+        obj.studentid=admissionno;
+        obj.studentname=studentname;
+        this.fetchcollectionpaymenthistoryparam=obj;
+        this.$.fetchcollectionpaymenthistoryajax.generateRequest();
+      },
+     fetchcollectionpaymenthistoryResponse:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        if(arr=='no rows'){
+        }
+        else{
+          var res=[];
+          var obj={"sno":"Sno","transactionno":"Transaction#","feetype":"Fee Type","installment":"Installment","amount":"Amount","dop":"Payment Date","paymentmode":"Payment Mode","ptno":"Transaction/Cheque #","transactionname":"Bank Name","transactiondate":"Transaction/Cheque Date","receiptno":"Receipt#","status":"Status","paymenttype":"Payment Type","hideicon":true,"fontsize":"font-weight:bold;"};
+          res.push(obj);          
+          for(var i=0;i<arr.length;i++){
+            obj={};
+            obj.sno=i+1;
+            obj.transactionno=arr[i].transaction_no;
+            obj.feetype=arr[i].installment_feetype;
+            obj.installment=arr[i].installment;
+            obj.amount=arr[i].installment_amount;
+            obj.dop=arr[i].paid_date;
+            obj.paymentmode=arr[i].mode_of_payment;
+            obj.ptno=arr[i].cheque_no;
+            obj.transactionname=arr[i].bank_name;
+            obj.transactiondate=arr[i].cheque_date;
+            obj.receiptno=arr[i].receipt_no;
+            obj.status=arr[i].cheque_status;
+            obj.admissionno=arr[i].student_id;
+            obj.academicyear=arr[i].academic_year;
+            if(arr[i].pdc_flag=="1")
+              arr[i].pdc_flag="On Date";
+            else
+              arr[i].pdc_flag="Post Date";
+            obj.paymenttype=arr[i].pdc_flag;
+            obj.receipttype=arr[i].receipt_type;
+            obj.fineamount=arr[i].fine_amount;
+            obj.receiptlabel=((arr[i].receipt_type).toLowerCase()).charAt(0).toUpperCase() + ((arr[i].receipt_type).toLowerCase()).slice(1);
+            obj.hideicon=false;
+            obj.fontsize="font-weight:normal;";
+            // alert(arr[i].mode_of_payment);
+            if(arr[i].mode_of_payment=="Cash"){
+              obj.hidecashblock=false;
+              obj.hidechequeblock=true;
+              obj.hidereferenceblock=true;
+            }
+            else if(arr[i].mode_of_payment=="Cheque"){
+              obj.hidecashblock=false;
+              obj.hidechequeblock=true;
+              obj.hidereferenceblock=true;
+            }
+            else{
+              // alert("in");
+              obj.hidecashblock=true;
+              obj.hidechequeblock=true;
+              obj.hidereferenceblock=false;
+            }
+            res.push(obj);
+          }
+          // alert(JSON.stringify(res.length));
+          document.querySelector('transport-fee-collection-home-card').paymenthistoryarr=res;
+          document.querySelector('transport-collection-paymentinfo-card').hidepaidpayment=false;          
+        }
+        document.querySelector('transport-fee-collection-home-card').FnToggleSpinner();
+      },
+      fetchcollectionpaymenthistoryService1:function(academicyear,admissionyear,gradeid,gradename,admissionno){
+         this.fetchcollectionpaymenthistoryurl1=sessionStorage.getItem("addrinfo")+"/collection-transportfetchcollectionpaymenthistory-service1";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.admissionno=admissionno;
+        obj.academicyear=academicyear;
+        obj.admissionyear=admissionyear;
+        obj.gradeid=gradeid;
+        obj.gradename=gradename;
+        this.fetchcollectionpaymenthistoryparam1=obj;
+        this.$.fetchcollectionpaymenthistoryajax1.generateRequest();
+      },
+     fetchcollectionpaymenthistoryResponse1:function(e){
+        var arr=e.detail.response.returnval;
+        // alert(JSON.stringify(arr));
+        if(arr=='no rows'){
+        }
+        else{
+          var res=[];
+          var obj={"sno":"Sno","transactionno":"Transaction#","feetype":"Fee Type","amount":"Amount","dop":"Date Of Payment","paymentmode":"Payment Mode","ptno":"Payment Transaction#","transactionname":"Transaction Name","transactiondate":"Transaction Date","receiptno":"Receipt#","status":"Status","paymenttype":"Payment Type","hideicon":true,"fontsize":"font-weight:bold;"};
+          res.push(obj);          
+          for(var i=0;i<arr.length;i++){
+            obj={};
+            obj.sno=i+1;
+            obj.transactionno=arr[i].transaction_no;
+            obj.feetype=arr[i].installment;
+            obj.installmentfeetype=arr[i].installment_feetype;
+            obj.amount=arr[i].installment_amount;
+            obj.dop=arr[i].paid_date;
+            obj.paymentmode=arr[i].mode_of_payment;
+            obj.ptno=arr[i].cheque_no;
+            obj.transactionname=arr[i].bank_name;
+            obj.transactiondate=arr[i].cheque_date;
+            obj.receiptno=arr[i].receipt_no;
+            obj.status=arr[i].cheque_status;
+            obj.admissionno=arr[i].admission_no;
+            obj.academicyear=arr[i].academic_year;
+            if(arr[i].pdc_flag=="1")
+              arr[i].pdc_flag="On Date";
+            else
+              arr[i].pdc_flag="Post Date";
+            obj.paymenttype=arr[i].pdc_flag;
+            obj.receipttype=arr[i].receipt_type;
+            obj.fineamount=arr[i].fine_amount;
+            obj.receiptlabel=((arr[i].receipt_type).toLowerCase()).charAt(0).toUpperCase() + ((arr[i].receipt_type).toLowerCase()).slice(1);
+            obj.hideicon=false;
+            obj.fontsize="font-weight:normal;";
+            // alert(arr[i].mode_of_payment);
+            if(arr[i].mode_of_payment=="Cash"){
+              obj.hidecashblock=false;
+              obj.hidechequeblock=true;
+              obj.hidereferenceblock=true;
+            }
+            else if(arr[i].mode_of_payment=="Cheque"){
+              obj.hidecashblock=false;
+              obj.hidechequeblock=true;
+              obj.hidereferenceblock=true;
+            }
+            else{
+              // alert("in");
+              obj.hidecashblock=true;
+              obj.hidechequeblock=true;
+              obj.hidereferenceblock=false;
+            }
+            res.push(obj);
+          }
+          // alert(JSON.stringify(res.length));
+          document.querySelector('transport-fee-collection-home-card').paymenthistoryarr=res;
+          document.querySelector('transport-collection-paymentinfo-card').hidepaidpayment=false;
+        }
+      },
+      deletecollectionpaymentService(admissionno,transactionno,feetype,academicyear,installment){
+        this.deletecollectionpaymenturl=sessionStorage.getItem("addrinfo")+"/collection-transportdeletecollectionpayment-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.admissionno=admissionno;
+        obj.academicyear=academicyear;
+        obj.transactionno=transactionno;
+        obj.feetype=feetype;
+        obj.installment=installment;
+        this.deletecollectionpaymentparam=obj;
+        this.$.deletecollectionpaymentajax.generateRequest();
+      },
+      deletecollectionpaymentResponse:function(e){
+        alert(e.detail.response.returnval);
+        document.querySelector('transport-fee-collection-home-card').FnPaymentInfo();
+        // document.querySelector('collection-paymentinfo-card').message=e.detail.response.returnval;
+        // document.querySelector('collection-paymentinfo-card').FnToggleDialog();
+      },
+      editcollectionpaymentService:function(admissionno,feetype,modeofpayment,receiptno,dateofpayment,transactionno,transactiondate,transactionname,amount,transno,academicyear,installment){
+        this.editcollectionpaymenturl=sessionStorage.getItem("addrinfo")+"/collection-transporteditcollectionpayment-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.admissionno=admissionno;
+        obj.academicyear=academicyear;
+        obj.transactionno=transactionno;
+        obj.feetype=feetype;
+        obj.modeofpayment=modeofpayment;
+        obj.receiptno=receiptno;
+        obj.dateofpayment=dateofpayment;
+        obj.transactiondate=transactiondate;
+        obj.transactionname=transactionname;
+        obj.amount=amount;
+        obj.transno=transno;
+        obj.installment=installment;
+        this.editcollectionpaymentparam=obj;
+        this.$.editcollectionpaymentajax.generateRequest();
+      },
+      editcollectionpaymentResponse:function(e){
+        alert(e.detail.response.returnval);
+        document.querySelector('transport-fee-collection-home-card').FnPaymentInfo();
+      },
+      FnFetchDayCollectionService:function(type){
+        this.fetchtransportdaycollectionurl=sessionStorage.getItem("addrinfo")+"/collection-fetchtransportdaycollection-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        obj.type=type;
+        this.type=type;
+        this.fetchtransportdaycollectionparam=obj;
+        this.$.fetchtransportdaycollectionajax.generateRequest();
+      },
+      fetchtransportdaycollectionResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        var totalamount=0;
+        var arr=e.detail.response.todaycoll;
+        var insarr=e.detail.response.returnval;
+
+        for(var i=0;i<arr.length;i++){
+          arr[i].sno=i+1;
+          arr[i].total=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          totalamount=parseFloat(totalamount)+parseFloat(arr[i].total);
+          // var d=new Date(arr[i].cheque_date);
+          // var d1=d.getDate();
+          // var m1=(d.getMonth())+1;
+          // var y1=d.getFullYear();
+          // if(d1<10)
+          //   d1='0'+d1;
+          // if(m1<10)
+          //   m1='0'+m1;
+          // var dd1=d1+'/'+m1+'/'+y1;
+          // arr[i].cheque_date=dd1;
+          // // }
+          // var dd=new Date(arr[i].paid_date);
+          // var d2=dd.getDate();
+          // var m2=(dd.getMonth())+1;
+          // var y2=dd.getFullYear();
+          // if(d2<10)
+          //   d2='0'+d2;
+          // if(m2<10)
+          //   m2='0'+m2;
+          // var dd2=d2+'/'+m2+'/'+y2;
+          // arr[i].paid_date=dd2;          
+        }
+        insarr.push({"mode_of_payment":"Total","total":totalamount});
+        document.querySelector('transport-daily-collection-report').daycollectionarr=arr;
+        document.querySelector('transport-daily-collection-report').daysplitarr=insarr;
+        document.querySelector('transport-daily-collection-report').FnHideView();
+      },
+      FnFetchPDCCollectionService:function(){
+        this.fetchtransportpdccollectionurl=sessionStorage.getItem("addrinfo")+"/collection-fetchtransportpdccollection-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid");
+        obj.academicyear=localStorage.getItem("curr_sess_academicyear");
+        obj.fromdate=localStorage.getItem("localsess_from_date");
+        obj.todate=localStorage.getItem("localsess_to_date");
+        var d=new Date();
+        var mm=(d.getMonth()+1);
+        if(mm<10)
+          mm="0"+mm;
+        var dd=d.getDate();
+        if(dd<10)
+          dd="0"+dd;
+        var yy=d.getFullYear();
+        var currdate=mm+"/"+dd+"/"+yy;
+        obj.currdate=currdate;
+        this.fetchtransportpdccollectionparam=obj;
+        this.$.fetchtransportpdccollectionajax.generateRequest();
+      },
+      fetchtransportpdccollectionResponse:function(e){
+        var totalamount=0;
+        var arr=e.detail.response.todaycoll;
+        var insarr=e.detail.response.returnval;
+
+        for(var i=0;i<arr.length;i++){
+          arr[i].sno=i+1;
+          arr[i].total=parseFloat(arr[i].installment_amount)+parseFloat(arr[i].fine_amount);
+          totalamount=parseFloat(totalamount)+parseFloat(arr[i].total);
+          // var d=new Date(arr[i].cheque_date);
+          // var d1=d.getDate();
+          // var m1=(d.getMonth())+1;
+          // var y1=d.getFullYear();
+          // if(d1<10)
+          //   d1='0'+d1;
+          // if(m1<10)
+          //   m1='0'+m1;
+          // var dd1=d1+'/'+m1+'/'+y1;
+          // arr[i].cheque_date=dd1;
+          // // }
+          // var dd=new Date(arr[i].paid_date);
+          // var d2=dd.getDate();
+          // var m2=(dd.getMonth())+1;
+          // var y2=dd.getFullYear();
+          // if(d2<10)
+          //   d2='0'+d2;
+          // if(m2<10)
+          //   m2='0'+m2;
+          // var dd2=d2+'/'+m2+'/'+y2;
+          // arr[i].paid_date=dd2;          
+        }
+        insarr.push({"mode_of_payment":"Total","total":totalamount});
+        document.querySelector('transport-pdc-collection-report').daycollectionarr=arr;
+        document.querySelector('transport-pdc-collection-report').daysplitarr=insarr;
+        document.querySelector('transport-pdc-collection-report').FnHideView();
+      }
+    });
+  })();
+  </script>
+</dom-module>

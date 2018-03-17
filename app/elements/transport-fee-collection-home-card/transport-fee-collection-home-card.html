@@ -1,0 +1,314 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\..\bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="..\..\bower_components/iron-icons/iron-icons.html">
+<dom-module id="transport-fee-collection-home-card">
+  <template>
+    <style>
+      #spinner{
+            margin: 0;
+            padding: 0;
+            border: none;
+            background-color: transparent;
+          }
+          paper-tab{
+            width: 19%;
+          }
+          hr{
+            margin-top: -1%;
+          }
+          paper-dialog{
+            border-radius: 5px;
+          }
+          .topcard{
+            @apply(--layout-horizontal);
+          }
+    </style>
+    <div>
+       <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                 <div class="col-md-3" style="margin-top: -1%;">
+                 <paper-dropdown-menu id="ttransportfeecollectionacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="transportfeecollectionacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                </div>
+                <div class="col-md-5" style="margin-top: -1%;">
+                   <paper-input  label="Student Name" is="" value="{{value}}" on-keydown="FnSearchEnquiry"></paper-input>
+                   <paper-listbox class="dropdown-content" id="transportfeecollectioninputname" on-iron-select="FnSelectEnquiry">
+                   <template is="dom-repeat" items="{{itemArray}}" as="item">
+                   <paper-item value="{{item.admission_no}}">{{item.itemdes}}</paper-item>
+                   </template>
+                   </paper-listbox>
+                </div>              
+            </div>
+          </div>
+        </div>
+    </div>  
+    <div hidden$="{{hidestudentdetailcard}}">
+    <div style="width:100%;">
+      <paper-tabs selected="{{selectedtab}}" scrollable style="width:100%;margin-left: -3%;">
+      <paper-tab><paper-button on-click="FnStudentInfo">STUDENT INFO</paper-button></paper-tab>
+      <paper-tab><paper-button on-click="FnZoneInfo">ZONE INFO</paper-button></paper-tab>
+      <paper-tab><paper-button on-click="FnFeeInfo">FEE INFO</paper-button></paper-tab>
+      <paper-tab><paper-button on-click="FnDiscountInfo">DISCOUNT INFO</paper-button></paper-tab>
+      <paper-tab><paper-button on-click="FnPaymentInfo">PAYMENT INFO</paper-button></paper-tab>
+      <paper-tab><paper-button on-click="FnReceiptInfo">RECEIPT INFO</paper-button></paper-tab>
+      </paper-tabs>
+    </div>
+    <hr>
+    <div hidden>
+    {{studentname}}{{admissionno}}{{academicyear}}{{admissionyear}}{{gradeid}}{{gradename}}{{admissionstatus}}
+    </div>
+    
+    <iron-pages selected="{{page}}" attr-for-selected="data-category">
+      <section data-category="transport-collection-studentinfo-card">
+        <transport-collection-studentinfo-card studentinfoarr="{{studentinfoarr}}">
+        </transport-collection-studentinfo-card>
+      </section>
+      <section data-category="transport-zonemappinginfo-card">
+        <transport-zonemappinginfo-card studentid="{{studentid}}" studentname="{{studentname}}" grade="{{grade}}" parentname="{{parentname}}" zonearr="{{zonearr}}" selectedzone="{{selectedzone}}" fees="{{fees}}" zoneinfoarr="{{zoneinfoarr}}" disablezone="{{disablezone}}" label="{{label}}" startdate="{{startdate}}" enddate="{{enddate}}">
+        </transport-zonemappinginfo-card>
+      </section>
+      <section data-category="transport-collection-feeinfo-card">        
+        <transport-collection-feeinfo-card feeinfoarr="{{feeinfoarr}}" feecode="{{feecode}}" totalfee="{{totalfee}}">          
+        </transport-collection-feeinfo-card>       
+      </section>
+      <section data-category="transport-collection-discountinfo-card">
+        <transport-collection-discountinfo-card discountinfoarr="{{discountinfoarr}}" studentname={{studentname}} admissionno="{{admissionno}}" gradeid="{{gradeid}}" gradename="{{gradename}}" academicyear="{{academicyear}}" admissionyear="{{admissionyear}}">         
+        </transport-collection-discountinfo-card>
+      </section>
+      <section data-category="transport-collection-paymentinfo-card">        
+        <transport-collection-paymentinfo-card feecode="{{feecode}}" paymenthistoryarr="{{paymenthistoryarr}}" paymentinfoarr="{{paymentinfoarr}}" feecode="{{feecode}}" totalfee="{{totalfee}}" studentname="{{studentname}}" admissionno="{{admissionno}}" gradeid="{{gradeid}}" gradename="{{gradename}}" academicyear="{{academicyear}}" admissionyear="{{admissionyear}}"
+        admissionstatus="{{admissionstatus}}" installmentarr="{{installmentarr}}">     
+        </transport-collection-paymentinfo-card>        
+      </section>
+      <section data-category="transport-collection-receiptinfo-card">        
+        <transport-collection-receiptinfo-card paymenthistoryarr="{{paymenthistoryarr}}" studentname="{{studentname}}" admissionno="{{admissionno}}" gradeid="{{gradeid}}" gradename="{{gradename}}" academicyear="{{academicyear}}" admissionyear="{{admissionyear}}"
+        admissionstatus="{{admissionstatus}}" fathername="{{fathername}}" mothername="{{mothername}}" parentname="{{parentname}}">          
+        </transport-collection-receiptinfo-card>              
+      </section>
+      <section data-category="zonechange-card">    
+        <zonechange-card studentid="{{studentid}}" studentname="{{studentname}}" grade="{{grade}}" parentname="{{parentname}}"></zonechange-card>
+      </section>  
+    </iron-pages>
+    </div>
+    </div>
+    <div class="spinner"><paper-dialog modal id="spinner" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop><paper-spinner active></paper-spinner></paper-dialog></div>
+    <!-- <paper-dialog id="transportcollectioninstallmenttypedialog" style="width: 35%;" modal>
+    <div class="topcard" style="width: 100%;">
+    <div style="width: 90%;"><h2>Select Installment!</h2></div>
+    <div style="width: 10%;text-align: right;margin-top: -2%;"><paper-icon-button style="color: grey;"  icon="icons:close" on-click="FnInstallmentCancel"></paper-icon-button>   </div> 
+    </div>
+    <div class="inscard" hidden$="{{hideinstallmentblock}}">
+    <template is="dom-repeat" items="{{installmentarr}}" as="item">
+      <transport-collection-payment-installment-card installment="{{item.installment}}" installmentid="{{item.installmentid}}"></transport-collection-payment-installment-card>
+    </template>
+    </div>
+    <div class="buttons">
+    <paper-button on-click="FnInstallmentOk" class="btn btn-primary center">Ok</paper-button>
+    <!-- <paper-button on-click="FnInstallmentCancel" class="btn btn-primary center">Cancel</paper-button> -->
+    <!-- </div> -->
+    <!-- </paper-dialog>  -->
+    <transport-fee-collection-service id="feecollectionservice"></transport-fee-collection-service>  
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var academicyear="";
+    var item=[];
+    Polymer({
+      is: 'transport-fee-collection-home-card',
+      ready:function(){
+        this.selectedtab=0;
+        this.hidestudentdetailcard=true;
+        this.querySelector('#transportfeecollectioninputname').style.visibility='hidden';
+        this.page="transport-collection-studentinfo-card";
+      },
+      FnRefreshInstallment:function(){
+        this.installmentarr=[];
+      },
+      FnSetPaymentFeetype:function(type,feetype){
+        this.feetype=feetype;   
+      },
+      // FnSetInstallmenttype(typeid,typename){
+      //   // alert(typeid+" "+typename);
+      //   this.installmenttypeid=typeid;
+      //   this.installmenttypename=typename;
+      // },
+      // FnToggleInstallment:function(){
+      //   this.$.transportcollectioninstallmenttypedialog.toggle();
+      // },
+      // FnInstallmentOk:function(){
+      //   this.$.transportcollectioninstallmenttypedialog.toggle();
+      //   this.$.feecollectionservice.fetchfeenetrycollectionfeetypeinstallmentamount(this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.studentname,this.feetype,this.installmenttypename);
+      // },
+      // FnInstallmentCancel:function(){
+      //   this.$.transportcollectioninstallmenttypedialog.toggle();
+      // },
+      FnSelectAcademicYear:function(e){
+        academicyear=e.target.selectedItem.textContent.trim();
+        localStorage.setItem("curr_sess_academicyear",academicyear);
+        this.callService();
+        this.$.feecollectionservice.FnFetchZone(academicyear);
+      },
+      FnStudentInfo:function(){
+        this.$.spinner.toggle();
+        this.page="transport-collection-studentinfo-card";
+        localStorage.setItem("curr_sess_spinflag",1);
+        this.$.feecollectionservice.fetchstudentinfoforcollectionService(localStorage.getItem("curr_sess_enquiryno"),localStorage.getItem("curr_sess_enquiryname"));
+      },
+      FnZoneInfo:function(){
+        this.$.spinner.toggle();
+        this.page="transport-zonemappinginfo-card";
+        document.querySelector('transport-zonemappinginfo-card').FnRefresh();
+        localStorage.setItem("curr_sess_spinflag",1);
+        this.$.feecollectionservice.fetchzoneinfoforcollectionService(localStorage.getItem("curr_sess_enquiryno"),localStorage.getItem("curr_sess_enquiryname"));
+      },
+      FnFeeInfo:function(){
+        this.$.spinner.toggle();
+        this.page="transport-collection-feeinfo-card";
+        localStorage.setItem("curr_sess_spinflag",1);
+        document.querySelector('transport-collection-feeinfo-card').FnRefresh();
+        this.$.feecollectionservice.fetchfeeinfoforcollectionService(localStorage.getItem("curr_sess_enquiryno"),localStorage.getItem("curr_sess_enquiryname"));
+      },
+      FnDiscountInfo:function(){
+        this.$.spinner.toggle();
+        this.page="transport-collection-discountinfo-card";
+        document.querySelector('transport-collection-discountinfo-card').FnRefresh();
+        localStorage.setItem("curr_sess_spinflag",1);
+        this.$.feecollectionservice.fetchdiscountinfoforcollectionService(localStorage.getItem("curr_sess_enquiryno"),localStorage.getItem("curr_sess_enquiryname"));
+      },
+      FnPaymentInfo:function(){
+        this.$.spinner.toggle();
+        this.page="transport-collection-paymentinfo-card";
+        localStorage.setItem("curr_sess_spinflag",1);
+        document.querySelector('transport-collection-paymentinfo-card').ready();
+        this.$.feecollectionservice.fetchcollectionpaymenthistoryService(this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.admissionno,this.studentname);
+        this.$.feecollectionservice.fetchfeecollectionpaymentinfoService(this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.admissionno,this.studentname);
+      },
+      FnReceiptInfo:function(){
+        this.$.spinner.toggle();
+        this.page="transport-collection-receiptinfo-card";
+        localStorage.setItem("curr_sess_spinflag",1);
+        document.querySelector('transport-collection-receiptinfo-card').FnRefresh();
+        this.$.feecollectionservice.fetchcollectionpaymenthistoryService1(this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.admissionno);
+        this.$.feecollectionservice.fetchreceiptinfoforcollectionService(localStorage.getItem("curr_sess_enquiryno"));
+      },
+      callService:function(){
+        this.$.feecollectionservice.fetchallstudentforcollectionService(academicyear);      
+      },
+      autocompletearr:function(autocompletearr)
+      {     
+        item=autocompletearr;
+      },
+      FnSearchEnquiry:function(e){
+      if(e.keyCode==13|| e.keyCode==40)
+      this.querySelector('#transportfeecollectioninputname').focus();
+      var arr=[];
+      arr.push({"itemdes":"-----Select-----"});
+      this.querySelector('#transportfeecollectioninputname').style.visibility='visible';
+      if(e.keyCode==8){
+        this.itemflag="true";
+        this.itemval="";
+        var len=(this.value).length;
+        if(len<=1){
+          this.querySelector('#transportfeecollectioninputname').style.visibility='hidden';
+          this.itemArray="";
+          this.itemval="";
+        }
+        if(len>1){
+          this.querySelector('#transportfeecollectioninputname').style.visibility='visible';
+          var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
+          for(var i=0;i<item.length;i++)
+          {            
+            var subval=((item[i].student_name).trim()).substring(0,backsubval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.value).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          this.itemArray=arr;
+        }
+      }
+      if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+        if(this.itemflag=="true") {
+          this.itemval = (this.value).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+          this.itemflag="false";
+        }
+        else
+        this.itemval = this.value +String.fromCharCode((e.keyCode));
+        if(this.itemval.length>0)
+        {
+          for(var i=0;i<item.length;i++)
+          {
+            var subval=((item[i].student_name).trim()).substring(0,this.itemval.length);
+            if((item[i].student_name).toUpperCase().indexOf((this.itemval).toUpperCase())!=-1)
+            {
+              var obj={"itemdes":"","enquiry_no":""};
+              obj.itemdes=item[i].student_name;
+              obj.admission_no=item[i].admission_no;
+              arr.push(obj);
+            }
+          }
+          if(arr.length>0)
+            this.itemArray=arr;
+          else
+          {
+            var obj={"itemdes":"","enquiry_no":""};
+            obj.itemdes="No items found";
+            arr.push(obj);
+            this.itemArray=arr;
+          }
+        }
+      }
+    },
+    FnSelectEnquiry:function(e){
+    this.querySelector('#transportfeecollectioninputname').style.visibility='hidden';
+    var enquiry_name = e.target.selectedItem.textContent.trim();
+    var admission_no = e.target.selectedItem.value.trim();
+    // alert(admission_no);
+    localStorage.setItem("curr_sess_enquiryno",admission_no);
+    localStorage.setItem("curr_sess_enquiryname",enquiry_name);
+    this.itemArray=[];
+    document.querySelector('#transportfeecollectioninputname').selected=-1;
+    this.value=enquiry_name;
+    this.page="transport-collection-studentinfo-card";
+    localStorage.setItem("curr_sess_spinflag",0);
+    this.$.spinner.toggle();
+    this.$.feecollectionservice.fetchstudentinfoforcollectionService(admission_no,enquiry_name);
+    },
+    FnProcess:function(){
+    },
+    FnRefresh:function(){
+        this.querySelector('#transportfeecollectioninputname').style.visibility='hidden';
+        document.querySelector('#transportfeecollectionacademicyear').selected=-1;
+        this.itemArray=[];
+        this.value="";
+        this.admissionno="";
+        this.studentname="";        
+        this.grade="";
+        this.hidestudentdetailcard=true;
+        this.selectedtab=0;
+        this.installmentarr=[];
+    },
+    Fnhidestudentdetailcard:function(){
+      // alert('coming!');
+      this.hidestudentdetailcard=false;
+      this.$.spinner.toggle();
+    },
+    FnToggleSpinner:function(){
+      // alert('come');
+      this.$.spinner.toggle();
+    }
+    });
+  })();
+  </script>
+</dom-module>
