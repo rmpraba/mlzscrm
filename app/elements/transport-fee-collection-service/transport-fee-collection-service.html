@@ -1915,13 +1915,14 @@
         }
         else{
           var res=[];
-          var obj={"sno":"Sno","transactionno":"Transaction#","feetype":"Fee Type","amount":"Amount","dop":"Date Of Payment","paymentmode":"Payment Mode","ptno":"Payment Transaction#","transactionname":"Transaction Name","transactiondate":"Transaction Date","receiptno":"Receipt#","status":"Status","paymenttype":"Payment Type","hideicon":true,"fontsize":"font-weight:bold;"};
+          var obj={"sno":"Sno","transactionno":"Transaction#","feetype":"Fee Type","installment":"Installment","amount":"Amount","dop":"Date Of Payment","paymentmode":"Payment Mode","ptno":"Payment Transaction#","transactionname":"Transaction Name","transactiondate":"Transaction Date","receiptno":"Receipt#","status":"Status","paymenttype":"Payment Type","hideicon":false,"fontsize":"font-weight:bold;","type":"all","printlabel":"Print All"};
           res.push(obj);          
           for(var i=0;i<arr.length;i++){
             obj={};
             obj.sno=i+1;
             obj.transactionno=arr[i].transaction_no;
-            obj.feetype=arr[i].installment;
+            obj.feetype=arr[i].installment_feetype;
+            obj.installment=arr[i].installment;
             obj.installmentfeetype=arr[i].installment_feetype;
             obj.amount=arr[i].installment_amount;
             obj.dop=arr[i].paid_date;
@@ -1933,6 +1934,8 @@
             obj.status=arr[i].cheque_status;
             obj.admissionno=arr[i].admission_no;
             obj.academicyear=arr[i].academic_year;
+            obj.type="individual";
+            obj.printlabel="Print";
             if(arr[i].pdc_flag=="1")
               arr[i].pdc_flag="On Date";
             else

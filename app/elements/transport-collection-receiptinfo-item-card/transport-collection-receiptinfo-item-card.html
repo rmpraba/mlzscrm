@@ -8,14 +8,14 @@
         @apply(--layout-horizontal);
     }
     </style>
-    <div hidden>
+    <div hidden>{{paymenthistoryarr}}
     {{gradename}} {{academicyear}} {{admissionyear}} {{admissionstatus}} {{parentname}} {{fathername}} {{mothername}} {{gradeid}} {{admissionno}} {{studentname}} {{academicyear}}{{admissionno}}{{sno}}{{transactionno}}{{feetype}} {{amount}}{{dateofpayment}}{{paymentmode}} {{paymenttransactionno}}{{transactionname}}{{transactiondate}}
-    {{receiptno}}{{status}}{{paymenttype}}{{receipttype}{{receiptlabel}}{{fineamount}}{{hidecashblock}}{{hidechequeblock}}{{hidereferenceblock}}{{installmentfeetype}}</div>
+    {{receiptno}}{{status}}{{paymenttype}}{{receipttype}{{receiptlabel}}{{fineamount}}{{hidecashblock}}{{hidechequeblock}}{{hidereferenceblock}}{{installmentfeetype}}{{installment}}{{type}}</div>
     <div class="btn" hidden$="{{hideicon}}">
-      <span class="panel-icon"><a href=""><i class="fa fa-envelope fa-lg" aria-hidden="true" on-click="FnEmail"></i></a></span>
-      <span class="panel-icon"><a href=""><i class="fa fa-print fa-lg" aria-hidden="true" on-click="FnPrint"></i></a></span>
+      <span class="panel-icon"><a href="" id="idemail"><i class="fa fa-envelope fa-lg" aria-hidden="true" on-click="FnEmail"></i></a><!-- <paper-tooltip for="idemail">{{printlabel}}</paper-tooltip> --></span>
+      <span class="panel-icon"><a href="" id="idprint"><i class="fa fa-print fa-lg" aria-hidden="true" on-click="FnPrint"></i></a><!-- <paper-tooltip for="idprint">{{printlabel}}</paper-tooltip> --></span>
     </div>
-  </template>
+  </template>  
   <script>
   (function() {
     'use strict';
@@ -23,9 +23,42 @@
     Polymer({
       is: 'transport-collection-receiptinfo-item-card',
       FnEmail:function(){
-
       },
       FnPrint:function(){
+        if(this.type=="all"){
+        arr=[];
+        for(var i=1;i<this.paymenthistoryarr.length;i++){
+        var obj={};        
+        obj.gradename=this.gradename;
+        obj.academicyear=this.academicyear;
+        obj.admissionyear=this.admissionyear;
+        obj.admissionstatus=this.admissionstatus;
+        obj.fathername=this.parentname;
+        obj.admissionno=this.admissionno;
+        obj.studentname=this.studentname;
+        obj.academicyear=this.academicyear;
+        obj.sno=this.paymenthistoryarr[i].sno;
+        obj.transactionno=this.paymenthistoryarr[i].transactionno;
+        obj.feetype=this.paymenthistoryarr[i].feetype;
+        obj.amount=this.paymenthistoryarr[i].amount;
+        obj.dateofpayment=this.paymenthistoryarr[i].dop;
+        obj.paymentmode=this.paymenthistoryarr[i].paymentmode;
+        obj.paymenttransactionno=this.paymenthistoryarr[i].ptno;
+        obj.transactionname=this.paymenthistoryarr[i].transactionname;
+        obj.transactiondate=this.paymenthistoryarr[i].transactiondate;
+        obj.receiptno=this.paymenthistoryarr[i].receiptno;
+        obj.receipttype=this.paymenthistoryarr[i].receipttype;
+        obj.receiptlabel=this.paymenthistoryarr[i].receiptlabel;
+        obj.fineamount=this.paymenthistoryarr[i].fineamount;
+        obj.hidecashblock=this.paymenthistoryarr[i].hidecashblock;
+        obj.hidechequeblock=this.paymenthistoryarr[i].hidechequeblock;
+        obj.hidereferenceblock=this.paymenthistoryarr[i].hidereferenceblock;
+        obj.installmentfeetype=this.paymenthistoryarr[i].installmentfeetype;
+        obj.installment=this.paymenthistoryarr[i].installment;
+        arr.push(obj);
+        }
+        }
+        if(this.type=="individual"){
         arr=[];
         var obj={};
         obj.sno=this.sno;
@@ -54,7 +87,9 @@
         obj.hidechequeblock=this.hidechequeblock;
         obj.hidereferenceblock=this.hidereferenceblock;
         obj.installmentfeetype=this.installmentfeetype;
+        obj.installment=this.installment;
         arr.push(obj);
+        }
         // alert(arr.length);
         // alert(JSON.stringify(arr));
         document.querySelector('transport-collection-receiptinfo-print-card').Fnsetinfo(arr);

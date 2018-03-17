@@ -18,19 +18,18 @@
         <tr>
           <td style="vertical-align: text-bottom;"><img style="width: 100px; height: 100px;" 
           src="../../images/schoollogo.png"></td>
-          <th colspan="4" style="text-align: center;"><h3 style="margin-left: 10px;">{{schoolname}}</h3></th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>          
+          <th colspan="4" style="text-align: center;"><h3 style="margin-left: 10px;">{{schoolname}}</h3></th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>          
         </tr>
         <tr>
           <th></th>
-          <th colspan="4" style="text-align: center;vertical-align: text-top;">{{schooladdress}}</th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+          <th colspan="4" style="text-align: center;vertical-align: text-top;">{{schooladdress}}</th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
         </tr>
       <tr><td colspan="6"><hr></td></tr>
       <!-- <div style="width:100%;"> -->
       <tr><td colspan="5">
       <template  is="dom-repeat" items="{{receiptarr}}">
-      <collection-receipt-card gradename="{{item.gradename}}" fathername="{{item.fathername}}" 
-      mothername="{{item.mothername}}" admissionno="{{item.admissionno}}"
-      studentname="{{item.studentname}}" feetype="{{item.feetype}}" amount="{{item.amount}}" dateofpayment="{{item.dateofpayment}}"  paymentmode="{{item.paymentmode}}" transactionno="{{item.paymenttransactionno}}" transactionname="{{item.transactionname}}" transactiondate="{{item.transactiondate}}" receiptno="{{item.receiptno}}" receipttype="{{item.receipttype}}" receiptlabel="{{item.receiptlabel}}" fineamount="{{item.fineamount}}" hidecashblock="{{item.hidecashblock}}" hidechequeblock="{{item.hidechequeblock}}" hidereferenceblock="{{item.hidereferenceblock}}" installmentfeetype="{{item.installmentfeetype}}">       
+      <collection-receipt-card gradename="{{item.gradename}}" fathername="{{item.fathername}}" mothername="{{item.mothername}}" admissionno="{{item.admissionno}}" studentname="{{item.studentname}}" 
+      feetype="{{item.feetype}}" amount="{{item.amount}}" dateofpayment="{{item.dateofpayment}}"  paymentmode="{{item.paymentmode}}" transactionno="{{item.paymenttransactionno}}" transactionname="{{item.transactionname}}" transactiondate="{{item.transactiondate}}" receiptno="{{item.receiptno}}" receipttype="{{item.receipttype}}" receiptlabel="{{item.receiptlabel}}" fineamount="{{item.fineamount}}" hidecashblock="{{item.hidecashblock}}" hidechequeblock="{{item.hidechequeblock}}" hidereferenceblock="{{item.hidereferenceblock}}" installmentfeetype="{{item.installmentfeetype}}" installment="{{item.installment}}">       
       </collection-receipt-card>
       </template>
       </td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
