@@ -1,0 +1,211 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="stylesheet" type="text/css" href="../../styles/styles.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<dom-module id="transport-routing-fetch-card">
+<template> 
+ <style>
+    .rows
+    {
+       box-shadow: 0 0 1px 1px rgb(192,192,192); -moz-box-shadow: 0 0 1px 1px rgb(192,192,192); -webkit-box-shadow: 0 0 1px 1px rgb(192,192,192); -o-box-shadow: 0 0 1px 1px rgb(192,192,192);
+    }
+    .row
+    {
+      @apply(--layout-horizontal);
+    }
+    transport-routing-timepicker-card,transport-routing-timepicker1-card{
+      margin-left: -3%;
+    }
+ </style>
+  <legend align="center"></legend>
+   <div hidden>{{pointid}}</div>
+   <div hidden>{{routid}}</div>
+    <ul>
+      <div class="rows">
+        <fieldset>
+          <div style="margin-top:9px;margin-left:85%">
+          <paper-icon-button icon='create' on-click="fnedit" id="fnretiveeditidz">
+                </paper-icon-button>
+              </div>
+           <div style="margin-top:-13px;margin-left:85%" id="fnretivesaveidz">
+          <paper-icon-button icon='save' on-click="fnsave">
+                </paper-icon-button>
+              </div>
+                <div style="margin-top:-40px;margin-left:92%">
+                  <paper-icon-button icon="close" on-click="fndelete"></paper-icon-button>
+
+              </div>
+          <ul class="rowss">
+            <div class="row">
+              <div class="detail">
+                <div class="layout">
+                  <paper-input id="point" readonly$="{{asdsaddad}}" label="Point" class="field" value={{points}}></paper-input>
+                </div>
+              </div>
+
+              <div class="detail"  style="margin-left: 2%;">
+                <div class="layout">
+                  <paper-input id="distance1" readonly$="{{asdsaddad}}" label="Distance" class="field" value={{distance}}></paper-input>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="date" hidden$="{{fntimepeackidz1}}">
+              <paper-input id="point" readonly$="{{asdsaddad}}"  label="Pickup Time" class="field" value={{picktime}}></paper-input>
+              </div>
+              <div class="date" hidden$="{{fntimepeackidz}}" style="margin-left: -3%;">
+              <transport-routing-timepicker-card></transport-routing-timepicker-card>
+              </div>
+              <div class="date" style="margin-left: 2%;" hidden$="{{fntimepeackidz1}}">
+              <paper-input id="point"  readonly$="{{asdsaddad}}" label="Drop Time" class="field" value={{droptime}}></paper-input>
+              </div>
+              <div class="date" style="margin-left: -3%;" hidden$="{{fntimepeackidz}}">
+              <transport-routing-timepicker1-card></transport-routing-timepicker1-card>
+              </div>
+            </div>
+            <div class="row">
+              <div class="detail">
+                <paper-input id="pickseq1" readonly$="{{asdsaddad}}" label="Pickup Sequence" class="field" value={{pickseq}} allowed-pattern="[0-9]"></paper-input>
+              </div>
+
+              <div class="detail"  style="margin-left: 2%;">
+                <paper-input id="dropseq1" readonly$="{{asdsaddad}}" label="Drop Sequence" class="field" value={{dropseq}} allowed-pattern="[0-9]"></paper-input>
+              </div>
+            </div>
+          </ul>
+        </fieldset>
+      </div>
+      
+    </ul>
+    <div>
+      <paper-input id="trip" class="field" label="Trip" value={{trip}}></paper-input>
+    </div>
+    <iron-ajax
+      method="post"
+      id="fneditthepicuprootajax"
+      url="{{fneditthepicuprooturl}}"
+      params="{{fneditthepicuprootparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="fneditthepicuprootResponse"
+      debounce-duration="300"
+      >
+    <iron-ajax
+      method="post"
+      id="fndeletethepicuprootajax"
+      url="{{fndeletethepicuprooturl}}"
+      params="{{fndeletethepicuprootparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="fndeletethepicuprootResponse"
+      debounce-duration="300"
+      > <iron-ajax
+      method="post"
+      id="fndeletethepicuproot1ajax"
+      url="{{fndeletethepicuproot1url}}"
+      params="{{fndeletethepicuproot1param}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="fndeletethepicuproot1Response"
+      debounce-duration="300"
+      >
+      <transport-routing-transport-service id="transportservice"></transport-routing-transport-service>
+</template>
+  <script>
+  (function() {
+    var n=0;
+    var itemarr=[];
+    Polymer({
+      is: "transport-routing-fetch-card",
+      ready:function(){
+         this.$.fnretiveeditidz.hidden=false;
+         this.$.fnretivesaveidz.hidden=true;
+         n=n+1;
+         this.asdsaddad=true;
+         this.$.trip.hidden=true;
+         this.fntimepeackidz=true;
+      },
+      fnsave:function(e){
+        if(this.points==""||this.distance==""||this.pickseq==""||this.dropseq==""){
+           alert('Please Enter the values');
+        }
+        else{
+        this.asdsaddad=true;
+        // alert(this.points+this.picktime+this.droptime+this.pointid+this.routid);
+        this.fneditthepicuprooturl=sessionStorage.getItem("addrinfo")+"/transport-routing-fneditthepicuproot-service";
+        var obj={"schol":"","academic_year":"","points":"","distance":"","picktime":"","droptime":"","pointid":"","pickseq":"","dropseq":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        obj.points=this.points;
+        obj.distance=this.distance;
+        obj.picktime=localStorage.getItem("curr_sess_pickuptime");
+        obj.droptime=localStorage.getItem("curr_sess_droptime");
+        obj.pointid=this.pointid;
+        obj.routid=this.routid;
+        obj.pickseq=this.pickseq;
+        obj.dropseq=this.dropseq;
+        // alert(JSON.stringify(obj));
+        this.fneditthepicuprootparam=obj; 
+        this.$.fneditthepicuprootajax.generateRequest();
+        this.$.fnretiveeditidz.hidden=false;
+        this.$.fnretivesaveidz.hidden=true;
+        }
+      },
+      fnedit:function(e){
+          this.asdsaddad=false;
+          this.$.fnretiveeditidz.hidden=true;
+          this.$.fnretivesaveidz.hidden=false;
+          this.fntimepeackidz=false;
+          this.fntimepeackidz1=true;  
+      },
+      fndeletethepicuprootResponse:function(e){
+       if(e.detail.response.returnval=="delete")
+       {
+       document.querySelector('transport-routing-mappointtoroute-card').fndeletethepicuprootref()
+       }
+       else if(e.detail.response.returnval=="notempty"){
+       alert("ALREADY STUDENTS MAPPED TO THIS POINT ");
+       }
+      },  
+      fndelete:function(e){
+      // alert(this.points+this.picktime+this.droptime+this.pointid);
+       this.fndeletethepicuprooturl=sessionStorage.getItem("addrinfo")+"/transport-routing-fndeletethepicuproot-service";
+       var obj={"schol":"","academic_year":"","points":"","distance":"","picktime":"","droptime":"","pointid":"","pickseq":"","dropseq":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        obj.points=this.points;
+        obj.distance=this.distance;
+        obj.picktime=this.picktime;
+        obj.droptime=this.droptime;
+        obj.pointid=this.pointid;
+        obj.routid=this.routid;
+        obj.pickseq=this.pickseq;
+        obj.dropseq=this.dropseq;
+        this.fndeletethepicuprootparam=obj; 
+        //alert(JSON.stringify(obj)); 
+        this.$.fndeletethepicuprootajax.generateRequest();
+        // this.$.transportservice.fndeletethepicuproot(this.points,this.picktime,this.droptime,this.pointid);
+      },
+      fneditthepicuprootResponse:function(e)
+      {
+        if(e.detail.response.returnval=="success")
+        {         
+          document.querySelector('transport-routing-mappointtoroute-card').fndeletethepicuprootref();
+          this.fntimepeackidz=true;
+          this.fntimepeackidz1=false;
+        }
+         //alert(JSON.stringify(e.detail.response.returnval));
+      },
+      changeHandler:function(e)
+      {
+        if(e.target.checked==true){
+           document.querySelector('transport-routing-mappointtoroute-card').FnGetpoints(this.points,"true");
+        } else {
+           document.querySelector('transport-routing-mappointtoroute-card').FnGetpoints(this.points,"false");
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>
+

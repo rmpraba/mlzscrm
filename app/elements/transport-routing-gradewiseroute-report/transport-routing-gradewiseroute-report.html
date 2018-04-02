@@ -1,0 +1,365 @@
+
+<dom-module id="transport-routing-gradewiseroute-report">
+  <div class="routereport-card">
+    <template>
+    <style>
+      .graderoutereport{
+        @apply(--layout-horizontal);
+      }
+      .total-collection{
+        @apply(--layout-horizontal);
+        margin:1% 0 0 80%;
+      }
+      .total-collection paper-item{
+        font-weight: bold;
+      }
+      .itemcards:nth-child(odd){
+        background-color: #f1f1f1;
+        height: 7%;
+        width: 70%;
+        margin-left: 15%;
+      }
+      .itemcards:nth-child(even){
+        background-color: #ffffff;
+        height: 7%;
+        width: 70%;
+        margin-left: 15%;
+      }
+      .headtabs{
+        margin-left: 12%;
+      }
+      .headtabs paper-tab{
+        font-size: 1.15em;
+        font-weight: bold !important;
+      }
+      table{
+        border-collapse: collapse;
+        margin-top: 2%;
+      }
+      #button{
+        @apply(--layout-horizontal);
+      }
+      .graderoutereport
+      {
+        width:76%;
+        height:150px;
+        margin-left: 13%;
+        background-color: white; 
+       box-shadow: 0 0 3px 3px rgb(184, 209, 249); -moz-box-shadow: 0 0 3px 3px rgb(184, 209, 249); -webkit-box-shadow: 0 0 3px 3px gb(184, 209, 249); -o-box-shadow: 0 0 3px 3px rgb(184, 209, 249);  
+      }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-3" style="margin-top: -1%;">
+                <paper-dropdown-menu id="gradewisettransportroutingpointtorouteacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-menu class="dropdown-content" selected="{{selectedacademicyear}}" id="gradewisetransportroutingpointtorouteacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-menu>
+                 </paper-dropdown-menu>
+                 </div>
+                <div class="col-md-2" style="margin-top: -1%;">
+                <paper-input label="Enter Route" value="{{value}}" id="inputroute" on-keydown="FnInputChanged"></paper-input>
+                <paper-listbox id="selectitemlist" class="dropdown-content" on-iron-select="FnItemSelected">
+                  <template is="dom-repeat" items="{{itemArray}}" as="item">
+                    <paper-item value="{{item.itemid}}">{{item.itemdes}}</paper-item>
+                  </template>
+                </paper-listbox>
+                </div>
+                <div class="col-md-2" style="margin-top: -1%;">
+                <paper-dropdown-menu label="Select the Trip">
+                <paper-menu id="routereportselecttrip" class="dropdown-content" on-iron-select="Fntrip" valueattr="value" >
+                <template  is="dom-repeat" items="{{triparr}}" as="view">
+                <paper-item value="{{view.trip_id}}">{{view.trip_name}}</paper-item>
+                </template>
+                </paper-menu>
+                </paper-dropdown-menu>
+                </div>
+                <div class="col-md-2" style="margin-top: -1%;" hidden>
+                <paper-dropdown-menu label="Select PickUp or Drop">
+                <paper-menu id="selectpickdrop" class="dropdown-content" on-iron-select="Fnpickordrop" valueattr="value" >
+                    <paper-item value="pickup">Pickup</paper-item>
+                    <paper-item value="drop">Drop</paper-item>          
+                </paper-menu>
+                </paper-dropdown-menu>
+                </div>
+                <div class="col-md-2" style="margin-top: -1%;">
+                <paper-dropdown-menu  label="Grade">
+                <paper-menu id="selectgradewisegrade" class="dropdown-content" on-iron-select="grade" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{gradearr}}" as="view">
+                    <paper-item value="{{view.class}}">{{view.class}}</paper-item>
+                  </template>
+                </paper-menu>
+                </paper-dropdown-menu>
+                </div>
+                <div class="col-md-1" style="margin-top: 1%;">
+                  <paper-button class="btn btn-primary center" id="rep" on-click="show">Show</paper-button>
+                </div>
+                <div class="col-md-1" style="margin-top: 1%;margin-left: 2%;">
+                  <p>Download
+                  <a href="#">
+                  <span class="glyphicon glyphicon-download-alt" onclick="transportgradewiseroutereportexportToExcel()"></span>
+                  </a>
+                  </p>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+      <div class="total-collection" id="grndtot" style="font-weight: bold !important;">
+          <paper-item>Total students</paper-item>
+          <paper-item>{{no_of_student}}</paper-item>
+      </div>
+      <table id="transportgradewiseroutereport" class="table table-hover">
+      <tr id="tableheading"><th>Sno</th><th>Student ID</th><th>Name</th><th>Parent Name</th><th>Mobile No</th><th>Pickup Route</th><th>Pickup Point</th><th>Drop Route</th><th>Drop point</th><th>Grade</th><th>Zone</th>
+      </tr>
+      <template  is="dom-repeat" items="{{reportarr}}" as="view">
+        <tr><td>{{view.sno}}</td><td>{{view.student_id}}</td><td>{{view.student_name}}</td><td>{{view.parent}}</td><td>{{view.mobile}}</td><td>{{view.pickroute}}</td><td>{{view.pickpoint}}</td><td>{{view.droproute}}</td><td>{{view.droppoint}}</td><td>{{view.grade}}</td><td>{{view.zone_name}}</td></tr>
+      </template>
+      </table>
+      </div>
+      
+      <!-- <div id="button">
+        <paper-button class="button" style="margin: 4% 0 0 45%; height: 35px;" id="print" on-click="print">Print</paper-button>
+        <paper-button id="btn2" style="margin: 4% 0 0 4%; height: 35px;" onclick="tableToExcel('gradewisetestTable', 'W3C Example Table')" value="Export to Excel">Excel</paper-button>
+      </div> -->
+      <transport-routing-transport-service id="service"></transport-routing-transport-service>
+    </template>
+  </div>
+  <script type="text/javascript">
+  var exportname="Gradewise Route report";
+  function transportgradewiseroutereportexportToExcel(){
+  var htmls = "";
+  //alert("2");
+  var tab_text = '<table border="1px" style="font-size:17px" ">';
+    var textRange; 
+    var j = 0;
+    var tab = document.getElementById('transportgradewiseroutereport'); // id of table
+    var lines = tab.rows.length;
+
+    // the first headline of the table
+    if (lines > 0) {
+        tab_text = tab_text + '<tr bgcolor="#DFDFDF">' + tab.rows[0].innerHTML + '</tr>';
+    }
+
+    // table data lines, loop starting from 1
+    for (j = 1 ; j < lines; j++) {     
+        tab_text = tab_text + "<tr>" + tab.rows[j].innerHTML + "</tr>";
+    }
+
+    tab_text = tab_text + "</table>";
+   
+    var uri = 'data:application/vnd.ms-excel;base64,';
+            var template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'; 
+            var base64 = function(s) {
+                return window.btoa(unescape(encodeURIComponent(s)))
+            };
+
+            var format = function(s, c) {
+                return s.replace(/{(\w+)}/g, function(m, p) {
+                    return c[p];
+                })
+            };
+
+         htmls = tab_text
+
+            var ctx = {
+                worksheet : exportname || 'Worksheet',
+                table : htmls
+            }
+        var link = document.createElement("a");
+            link.download = exportname;
+            link.href = uri + base64(format(template, ctx));
+            link.click();
+    }
+  </script>
+  <script type="text/javascript">
+    var tableToExcel = (function(){
+    var uri = 'data:application/vnd.ms-excel;base64,'
+      , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+      , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+      , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+    return function(table, name) {
+      if (!table.nodeType) table = document.getElementById(table)
+      var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+      window.location.href = uri + base64(format(template, ctx))
+    }
+  })()
+  </script>
+  <script type="text/javascript">
+  (function() {
+    var namearr=[];
+    var routename;
+    var triptype;
+    var pickordrop;
+    var grade;
+    Polymer({
+      is: 'transport-routing-gradewiseroute-report',
+      ready: function() {
+        //this.$.service.name();
+        this.querySelector("#tableheading").style.visibility='hidden';
+        this.querySelector("#transportgradewiseroutereport").style.visibility='hidden';
+        // this.querySelector("#btn2").style.visibility='hidden';
+        // this.$.print.hidden=true;
+        this.$.grndtot.hidden=true;
+        this.querySelector('paper-listbox').style.visibility='visible';
+      },
+      FnClear:function(){
+        this.value="";
+        document.querySelector('#routereportselecttrip').selected=-1;
+        document.querySelector('#selectpickdrop').selected=-1;
+        document.querySelector('#selectgradewisegrade').selected=-1;
+        document.querySelector('#selectitemlist').selected = -1;
+        document.querySelector('#gradewisetransportroutingpointtorouteacademicyear').selected = -1;        
+        this.itemArray="";
+        this.reportarr="";
+        this.no_of_student="";
+        namearr="";
+        this.querySelector('paper-listbox').style.visibility='hidden';
+      },
+      FnCallService:function(){
+        // this.$.service.generateroutereport();
+        this.$.service.getgrade();
+      },
+      FnSelectAcademicYear:function(e){
+         document.querySelector('#selectitemlist').selected = -1;
+        this.value="";
+        document.querySelector('#routereportselecttrip').selected=-1;
+        document.querySelector('#selectpickdrop').selected=-1;
+        document.querySelector('#selectgradewisegrade').selected=-1;
+          this.academicyear=e.target.selectedItem.textContent.trim();
+          localStorage.setItem("curr_sess_academicyear",this.academicyear);
+          this.$.service.generateroutereport();
+          this.$.service.fetchTrip();
+      },
+      autocompletename(nameitem){
+        namearr=nameitem;
+      },
+      FnInputChanged:function(e){
+      if(e.keyCode==13|| e.keyCode==40)
+        this.querySelector('paper-listbox').focus();
+      var arr=[];
+      arr.push({"itemdes":"-----Select-----"});
+      this.querySelector('paper-listbox').style.visibility='visible';
+      if(e.keyCode==8){
+        this.itemflag="true";
+        this.itemval="";
+        //alert('yes');
+        var len=(this.value).length;
+        if(len<=1){
+          this.querySelector('paper-listbox').style.visibility='hidden';
+          this.itemArray="";
+          this.itemval="";
+        }
+        if(len>1){
+          this.querySelector('paper-listbox').style.visibility='visible';
+          var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
+          for(var i=0;i<namearr.length;i++)
+          {
+            var subval=((namearr[i].student_name).trim()).substring(0,backsubval.length);
+            if((subval).toUpperCase()==(backsubval).toUpperCase())
+            {
+              var obj={"itemdes":"","itemid":""};
+              obj.itemdes=namearr[i].route_name;
+              obj.itemid=namearr[i].id;
+              arr.push(obj);
+            }
+          }
+          this.itemArray=arr;
+        }
+      }
+      if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+        if(this.itemflag=="true") {
+          this.itemval = (this.value).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+          this.itemflag="false";
+        }
+        else
+        this.itemval = this.value +String.fromCharCode((e.keyCode));
+        if(this.itemval.length>0)
+        {
+          for(var i=0;i<namearr.length;i++){
+            var subval=((namearr[i].route_name).trim()).substring(0,this.itemval.length);
+            if((subval).toUpperCase()==(this.itemval).toUpperCase()){
+              var obj={"itemdes":"","itemid":""};
+              obj.itemdes=namearr[i].route_name;
+              obj.itemid=namearr[i].id;
+              arr.push(obj);
+            }
+          }
+          if(arr.length>0)
+            this.itemArray=arr;
+          else {
+            var obj={"itemdes":"","itemid":""};
+              obj.itemdes=namearr[i].route_name;
+              obj.itemid=namearr[i].id;
+              arr.push(obj);
+            this.itemArray=arr;
+          }
+        }
+      }
+      },
+      f11:function(e){
+        this.querySelector("#tableheading").style.visibility='hidden';
+        this.querySelector("#transportgradewiseroutereport").style.visibility='hidden';
+        // this.querySelector("#btn2").style.visibility='hidden';
+        // this.$.print.hidden=true;
+        this.$.grndtot.hidden=true;
+      },
+      FnItemSelected:function(e){
+        routeid= e.target.selectedItem.value;
+        routename=e.target.selectedItem.textContent.trim();
+        //alert(e.target.selectedItem.value);
+        //this.$.service.routereport(routeid);
+        this.itemArray=[];
+        this.querySelector('paper-listbox').style.visibility='hidden';
+        this.querySelector('paper-listbox').selected=-1;
+        this.value=routename;
+        this.reportarr="";
+        this.no_of_student="";
+        document.querySelector('#routereportselecttrip').selected=-1;
+        document.querySelector('#selectgradewisegrade').selected=-1;
+        document.querySelector('#selectpickdrop').selected=-1;
+        this.querySelector("#tableheading").style.visibility='hidden';
+        this.querySelector("#transportgradewiseroutereport").style.visibility='hidden';
+        // this.querySelector("#btn2").style.visibility='hidden';
+        // this.$.print.hidden=true;
+        this.$.grndtot.hidden=true;
+        this.$.service.getgrade();
+      },
+      grade:function(e){
+        grade=(e.target.selectedItem.value).trim();
+      },
+      show:function()
+      {
+         this.selectroute=routename;
+         // this.$.print.hidden=false;
+         this.querySelector("#tableheading").style.visibility='visible';
+         this.querySelector("#transportgradewiseroutereport").style.visibility='visible';
+         // this.querySelector("#btn2").style.visibility='visible';
+         this.$.grndtot.hidden=false;
+         this.$.service.gradewiseroutereport(routeid,triptype,grade);
+      },
+      Fntrip:function(e)
+      { 
+      triptype=(e.target.selectedItem.textContent).trim();;
+      },
+      Fnpickordrop:function(e){
+        document.querySelector('#routereportselecttrip').selected=-1;
+        pickordrop=(e.target.selectedItem.textContent).trim();
+      },
+      print:function(){
+        // this.$.print.hidden=true;
+        if (!window.print){
+          alert("You need NS4.x to use this print button!")
+          return
+        }
+        window.print();
+        // this.$.print.hidden=false;
+      }
+    });
+  })();
+  </script>
+</dom-module>

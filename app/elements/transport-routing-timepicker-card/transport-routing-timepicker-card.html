@@ -1,0 +1,66 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="transport-routing-timepicker-card">
+  <template>
+    <style is="custom-style" include="paper-date-picker-dialog-style">
+      .cardd {
+        width: 100%;
+        /*text-align: center;*/
+        /*margin-left:20%;*/
+      }
+      paper-input{
+        width: 100%;
+      }
+    </style>
+    <div class="cardd">
+      <paper-input class="btn" label="Pickup Time" on-click="showDialog" raised value="{{picktime}}"></paper-input>
+      <paper-dialog id="dialog" class="paper-date-picker-dialog" modal on-iron-overlay-closed="dismissDialog">
+        <paper-time-picker id="picker" time="[[time]]"></paper-time-picker>
+        <div class="buttons">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button dialog-confirm>OK</paper-button>
+        </div>
+      </paper-dialog>
+    </div>
+  </template>
+  <script src="../../scripts/timepicker-card.js"></script>
+</dom-module>
+<script>
+  Polymer({
+  is: "transport-routing-timepicker-card",
+  ready:function()
+  {
+    /*var type="";
+    var currentTime = new Date()
+    var hours = currentTime.getHours()
+    var minutes = currentTime.getMinutes()
+    if (minutes < 10){
+      minutes = "0" + minutes
+    }
+    //document.write(hours + ":" + minutes + " ")
+    if(hours > 11){
+      type="PM";
+    } else {
+      type="AM";
+    }
+    this.picktime=hours + ":" + minutes + " "+type;
+    localStorage.setItem("curr_sess_outwardtime",this.picktime);*/
+  },
+  showDialog:function(){
+    //alert('pickup');
+    this.time=this.picktime;
+    this.$.dialog.toggle();
+  },
+  dismissDialog:function(e){
+    if (e.detail.confirmed) {
+      this.picktime = this.$.picker.time;
+      localStorage.setItem("curr_sess_pickuptime",this.picktime);
+      //document.querySelector('customerinfo-page').setTime();
+    }
+  },
+  fnrefresh:function()
+  {
+    this.picktime="";
+  }
+});
+</script>

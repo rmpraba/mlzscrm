@@ -1,0 +1,36 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-routing-route-display-card">
+  <template>
+    <style>
+      :host 
+      {
+        display: block;
+      }
+      paper-item
+      {
+        margin-left: 15%;
+        width: 100%;
+      }
+    </style>
+    <div>
+      <paper-item hidden$="{{routeid}}"></paper-item>
+      <paper-item hidden$="{{hiderouteitem}}">{{routename}}</paper-item>
+      <paper-input value="{{routename}}" hidden$="{{hiderouteinput}}"></paper-input>
+    </div>
+  </template>
+  <script>
+  (function() 
+  {
+    'use strict';
+    Polymer({
+      is: 'transport-routing-route-display-card',
+      ready:function()
+      {
+        this.hiderouteinput=true;
+        this.hiderouteitem=false;
+      }
+    });
+  })();
+  </script>
+</dom-module>

@@ -424,7 +424,7 @@
         </li>
 
         <li id="reportcollectionreport">
-         <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Collection Report<span class="fa arrow"></span></a>
+         <a href="" aria-hidden="true"><i class="fa fa-money"></i>Collection Report<span class="fa arrow"></span></a>
           <ul class="nav nav-second-level">          
             <li id="reportbouncecollection">
             <a href="" aria-hidden="true" on-click="FnBounceCollectionReport">Bounce Collection</a>
@@ -496,7 +496,10 @@
         </li>
 
         <li id="transportprocess">
-          <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Transport Process<span class="fa arrow"></span></a>
+          <a href="" aria-hidden="true"><i class="fa fa-bus"></i>Transport Process<span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">
+          <li id="transportzonefeecollection">
+            <a href="" aria-hidden="true" class="fa fa-money">Zone Mapping & Collection</a> 
           <ul class="nav nav-second-level">
            <li id="transportzonefeecollection">
             <a href="" aria-hidden="true" on-click="FnTransportCollection">Zone Allocation</a>
@@ -505,7 +508,7 @@
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezoneallocation" on-click="FnZoneAllocation">Zone Allocation</a>
            </li> 
            <li id="zonechange" hidden>
-            <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonechange" on-click="FnZoneChange">Zone Change</a>
+            <a href="" aria-hidden="true" data-toggle="modal" on-click="FnZoneChange">Zone Change</a>
            </li>
            <li id="zonechangecollection" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonechangecollection" on-click="FnZoneChangeCollection">Zone Change Collection</a>
@@ -543,6 +546,46 @@
            <li id="transportcancellation">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportcancellation" on-click="FnTransportCancellation">Transport Cancellation</a>
            </li>
+          </ul>
+          </li>
+          <li id="transportzonefeecollection">
+            <a href="" aria-hidden="true" class="fa fa-map-marker">Transport Routing</a> 
+            <ul class="nav nav-second-level">
+              <li id="transportroutecreation">
+              <a href="" aria-hidden="true" on-click="FnTransportRouteCreation">Add Route</a>
+              </li> 
+              <li id="transportroutecreation">
+              <a href="" aria-hidden="true" on-click="FnTransportPointCreation">Add/
+              Map Point</a>
+              </li>
+              <li id="transporttriptograde">
+              <a href="" aria-hidden="true" on-click="FnTransportTripToGrade">Trip to Grade Mapping</a>
+              </li>
+              <li id="transporttriptograde" hidden>
+              <a href="" aria-hidden="true" on-click="FnTransportTripToGrade">Add Bus Info</a>
+              </li>
+              <li id="transportroutecreation">
+              <a href="" aria-hidden="true" on-click="FnTransportStudentPointMapping">Student to Point Mapping</a>
+              </li>
+              <li id="transportroutecreation">
+              <a href="" aria-hidden="true" on-click="FnTransportChangePoint">Change Student Point</a>
+              </li>
+              <!-- <li id="transportstudentPass">
+              <a href="" aria-hidden="true" on-click="FnTransportStudentPass">Student Pass</a>
+              </li> -->
+              <!-- <li id="transportroutereports">
+              <a href="" aria-hidden="true" class="fa fa-server">Reports</a>
+              <ul class="nav nav-second-level"> -->
+              <li id="transportroutereport">
+              <a href="" aria-hidden="true" on-click="FnTransportRouteReport">Route Report</a>
+              </li>
+              <li id="transportgradwiseroutereport">
+              <a href="" aria-hidden="true" on-click="FnTransportGradewiseRouteReport">Gradewise Route Report</a>
+              </li>
+              <!-- </ul>
+              </li> -->
+            </ul>
+          </li>
           </ul>
         </li>
 
@@ -1088,6 +1131,8 @@
     <reporting-service id="reportingservice"></reporting-service>
     <user-service id="userservice"></user-service>
     <transportfee-service id="transportfeeservice"></transportfee-service>
+     <transport-routing-mapstudenttopoint-service id="route"></transport-routing-mapstudenttopoint-service>
+    <transport-routing-transport-service id="routepoint"></transport-routing-transport-service>
   </template>
   <script>
   (function() {
@@ -1846,6 +1891,48 @@
         document.querySelector('app-list').setPage("collection-recon-report","Collection Reconciliation");
         document.querySelector('collection-recon-report').FnRefresh();
         document.querySelector('collection-recon-report').callService();
+      },
+      FnTransportRouteCreation:function(){
+        document.querySelector('app-list').setPage("transport-routing-routecreate-card","Add Route");
+        this.$.route.fetchacademicyearService();
+        this.$.route.FetchRoute();
+        document.querySelector('transport-routing-routecreate-card').FnClear();
+      },
+      FnTransportPointCreation:function(){
+        document.querySelector('app-list').setPage("transport-routing-mappointtoroute-card","Create/Map Point To Route");
+        this.$.route.fetchacademicyearService();
+        document.querySelector('transport-routing-mappointtoroute-card').FnClear();
+      },
+      FnTransportStudentPointMapping:function(){
+        document.querySelector('app-list').setPage("transport-routing-mapstudenttopoint-card","Student To Point Mapping");
+        this.$.route.fetchacademicyearService();
+        this.$.route.selectclass();
+        document.querySelector('transport-routing-mapstudenttopoint-card').FnClear();
+      },
+      FnTransportChangePoint:function(){
+        document.querySelector('app-list').setPage("transport-routing-changepoint-card","Student Point Change");
+        this.$.route.fetchacademicyearService();
+        document.querySelector('transport-routing-changepoint-card').FnCallService();
+        document.querySelector('transport-routing-changepoint-card').FnClear();
+      },
+      FnTransportRouteReport:function(){
+        document.querySelector('app-list').setPage("transport-routing-routereport-card","Route Report");
+        this.$.route.fetchacademicyearService();
+        document.querySelector('transport-routing-routereport-card').FnCallService();
+        document.querySelector('transport-routing-routereport-card').FnClear();
+      },
+      FnTransportGradewiseRouteReport:function(){
+        document.querySelector('app-list').setPage("transport-routing-gradewiseroute-report","Gradewise Route Report");
+        this.$.route.fetchacademicyearService();
+        document.querySelector('transport-routing-gradewiseroute-report').FnCallService();
+        document.querySelector('transport-routing-gradewiseroute-report').FnClear();
+      },
+      FnTransportTripToGrade:function(){
+        document.querySelector('app-list').setPage("transport-routing-trip-to-grade","Transport Trip-Grade Mapping");
+        this.$.route.fetchacademicyearService();
+        this.$.scheduleservice.fetchgradeService();
+        document.querySelector('transport-routing-trip-to-grade').FnCallService();
+        document.querySelector('transport-routing-trip-to-grade').FnClear();
       },
       FnSetRoleView:function(arr){
         // alert(JSON.stringify(arr));

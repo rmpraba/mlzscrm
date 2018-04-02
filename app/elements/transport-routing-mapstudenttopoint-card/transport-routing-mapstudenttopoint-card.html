@@ -1,0 +1,299 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<!-- <link rel="stylesheet" type="text/css" href="../../styles/styles.css"> -->
+<dom-module id="transport-routing-mapstudenttopoint-card">
+  <template>   
+  <style>
+  .card{  
+   @apply(--layout-center);
+  }
+  .template{
+    margin-left: -5%;
+  }
+  .hrspace
+  {
+    padding-left: 11%;
+    padding-top: 11%;
+  }
+  .hrlayout
+  {
+        @apply(--layout-horizontal);
+        width:45%;
+        margin-left: 24%;
+        height:170px;
+        background-color: white; 
+        box-shadow: 0 0 1px 1px rgb(192,192,192); -moz-box-shadow: 0 0 1px 1px rgb(192,192,192); -webkit-box-shadow: 0 0 1px 1px rgb(192,192,192); -o-box-shadow: 0 0 1px 1px rgb(192,192,192); 
+  }
+  .pointcard{
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+        width: 100%;
+  }
+  .innercard{        
+        width: 50%;
+  }
+  </style>
+    <body>
+      <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                 <div class="col-md-3" style="margin-top: -1%;">
+                 <paper-dropdown-menu id="ttransportroutingcreateacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="transportroutingcreateacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                </div>
+                <div class="col-md-3" style="margin-top: -1%;">
+                <paper-dropdown-menu   label="Select Grade">
+                <paper-menu class="dropdown-content" id="mapstudpointgradeselect" on-iron-select="FnSelectgrade" attr-for-selected="value" selected="{{selectedgrade}}">
+                <template  is="dom-repeat" items="{{classarr}}" as="view">
+                  <paper-item value="{{view.class}}">{{view.class}}</paper-item>
+                </template>
+                </paper-menu>
+                </paper-dropdown-menu>
+                </div>
+                <div class="col-md-1" style="margin-top: 2%;">(OR)</div>
+                <div class="col-md-2" style="margin-top: 2%;">
+                <paper-checkbox id="selectbox" on-change="changeHandler">Select by Name</paper-checkbox>
+                </div>
+                <div class="col-md-3" style="margin-top: -1%;">
+                <div id="search">   
+                <paper-input label="Enter Student Name" value="{{value}}" on-keydown="FnInputChanged"></paper-input>
+                <paper-listbox id="itemlist" class="dropdown-content" on-iron-select="FnItemSelected">
+                <template is="dom-repeat" items="{{itemArray}}" as="item">
+                <paper-item value="{{item.itemid}}">{{item.itemdes}}</paper-item>
+                </template>
+                </paper-listbox>  
+                </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+      <div class="pointcard">
+          <div style="margin-left: 93%;margin-top: -1%; height: 40% !important;">
+          <paper-button id="submitbutton" class="btn btn-primary center" on-click="click">Submit</paper-button>
+          </div> 
+          <template  is="dom-repeat" items="{{studentarr}}">
+          <div class="innercard">
+          <transport-routing-studenttopoint-item-card schooltype="{{seltripsz}}" studentid="{{item.id}}" studentname="{{item.student_name}}"></transport-routing-studenttopoint-item-card>
+          </div>
+          </template>  
+        </div>    
+      </div> 
+      <paper-dialog id="spin">
+        <paper-spinner id="spinner"></paper-spinner>
+      </paper-dialog>
+    </body>
+    <transport-routing-mapstudenttopoint-service id="maps"></transport-routing-mapstudenttopoint-service>
+  </template>
+  <script>
+    (function() {
+      var itemarray=[];
+      var selclass="";
+      var seltrip="";
+      Polymer({
+        is:"transport-routing-mapstudenttopoint-card",
+        ready:function(){
+          this.$.submitbutton.hidden=true;
+          this.$.search.hidden=true;  
+          //this.$.maps.selectclass();
+          this.$.submitbutton.disabled=true;
+          // this.$.maps.selectname();
+        },
+        FnSelectAcademicYear:function(e){
+          this.studentarr=[];
+          document.querySelector('#mapstudpointgradeselect').selected=-1;
+          this.academicyear=e.target.selectedItem.textContent.trim();
+          localStorage.setItem("curr_sess_academicyear",this.academicyear);
+          this.$.maps.selectname();
+          },
+        FnClear:function(){
+          this.$.submitbutton.hidden=true;
+          this.classarr="";
+          this.value="";
+          this.itemArray="";
+          this.studentarr="";
+          selclass="";
+          seltrip="";
+          document.querySelector('#mapstudpointgradeselect').selected=-1;
+          document.querySelector('#selectbox').checked=false;
+        },
+        refreshmappoint:function(){
+          this.studentarr=[];
+          this.$.maps.selectclass();
+          itemarray=[];
+        },
+        changeHandler:function(e){
+          this.$.submitbutton.hidden=true;
+          this.$.submitbutton.disabled=true;
+          if(e.target.checked==true)
+          {
+            this.$.search.hidden=false;
+            this.$.itemlist.hidden=true;
+            this.$.maps.selectname();
+            this.studentarr=[];
+            document.querySelector('#mapstudpointgradeselect').selected=-1;
+            // document.getElementById("submitbutton").style.background="grey";
+            // document.querySelector('#spin').open();
+            // this.$.spinner.active=true;
+          }
+          else
+          {
+            this.$.search.hidden=true;
+          }
+        },
+        spinner:function(){
+          this.$.spinner.active=false;
+          document.querySelector('#spin').close();
+        },
+        FnSelectgrade:function(e){
+          this.studentarr=[];
+          selclass=(e.target.selectedItem.textContent).trim();
+          for(var i=0;i<this.classarr.length;i++){
+            if(this.classarr[i].class==selclass)
+              this.seltripsz=this.classarr[i].tripidz;
+          } 
+          this.$.maps.classpick(selclass);
+          this.$.submitbutton.hidden=false;
+          this.$.search.hidden=true;
+          document.querySelector("#selectbox").checked=false;
+          // document.getElementById("submitbutton").style.background="grey";
+        },
+        autocompletename(nameitem){
+          namearr=nameitem;
+        // alert(JSON.stringify(namearr));
+        },
+        FnInputChanged:function(e){
+          if(e.keyCode==13|| e.keyCode==40)
+            this.querySelector('#itemlist').focus();
+          var arr=[];
+          arr.push({"itemdes":"-----Select-----"});
+          this.querySelector('#itemlist').style.visibility='visible';
+          if(e.keyCode==8){
+            this.itemflag="true";
+            this.itemval="";
+            //alert('yes');
+            var len=(this.value).length;
+            if(len<=1){
+              this.querySelector('#itemlist').style.visibility='hidden';
+              this.itemArray="";
+              this.itemval="";
+            }
+            if(len>1){
+              this.querySelector('#itemlist').style.visibility='visible';
+              var backsubval=(((this.value).substring(0,(len-1))).trim()).toUpperCase();
+              for(var i=0;i<namearr.length;i++)
+              {
+                var subval=((namearr[i].student_name).trim()).substring(0,backsubval.length);
+                if((subval).toUpperCase()==(backsubval).toUpperCase())
+                {
+                  var obj={"itemdes":"","itemid":"","trip":""};
+                  obj.itemdes=namearr[i].student_name;
+                  obj.itemid=namearr[i].id;
+                  obj.trip=namearr[i].tripidz; 
+                  arr.push(obj);
+                }
+              }
+              this.itemArray=arr;
+            }
+          }
+          if(e.keyCode!=8&& e.keyCode!=16&& e.keyCode!=13 && e.keyCode!=38&&e.keyCode!=40&&e.keyCode!=37&&e.keyCode!=39){
+            if(this.itemflag=="true") {
+              this.itemval = (this.value).toUpperCase()+String.fromCharCode((e.keyCode)).toUpperCase();
+              this.itemflag="false";
+            }
+            else
+            this.itemval = this.value +String.fromCharCode((e.keyCode));
+            if(this.itemval.length>0)
+            {
+              for(var i=0;i<namearr.length;i++){
+                var subval=((namearr[i].student_name).trim()).substring(0,this.itemval.length);
+                if((subval).toUpperCase()==(this.itemval).toUpperCase()){
+                  var obj={"itemdes":"","itemid":"","trip":""};
+                  obj.itemdes=namearr[i].student_name;
+                  obj.itemid=namearr[i].id;
+                  obj.trip=namearr[i].tripidz; 
+              
+                  arr.push(obj);
+                }
+              }
+              if(arr.length>0)
+                this.itemArray=arr;
+              else {
+                var obj={"itemdes":"","itemid":"","trip":""};
+                  obj.itemdes=namearr[i].student_name;
+                  obj.itemid=namearr[i].id;
+                  obj.trip=namearr[i].tripidz; 
+                  arr.push(obj);
+                this.itemArray=arr;
+              }
+            }
+          }
+          // alert(JSON.stringify(this.itemArray));
+          this.$.itemlist.hidden=false;
+          this.studentarr=[];
+        },
+        FnItemSelected:function(e){
+          this.studid= e.target.selectedItem.value;
+          var studname = (e.target.selectedItem.textContent).trim();
+        //    alert(JSON.stringify(this.itemArray));
+
+        for(var i=0;i<this.itemArray.length;i++){
+
+            if(this.itemArray[i].itemid==this.studid)
+            
+             this.seltripsz=this.itemArray[i].trip;
+            } 
+          // alert(this.seltripsz);
+          this.value=studname;  
+          this.$.submitbutton.hidden=false;
+          this.$.maps.namepick(this.studid);
+          this.itemArray=[];
+          this.querySelector('#itemlist').selected=-1;
+          this.querySelector('#itemlist').style.visibility='hidden';
+        },
+        click:function(){
+          this.$.maps.submit(itemarray);
+          itemarray=[];
+          document.querySelector('#mapstudpointgradeselect').selected=-1;
+          this.value="";
+          this.$.submitbutton.hidden=true;
+          this.$.submitbutton.disabled=true;
+          this.$.maps.selectname();
+         },
+        FnGetItemsz:function(studentid,pickroute,droproute,pickpoint,droppoint,schtype)
+           {
+            var obj={"studentid":"","class_id":"","pickroute":"","droproute":"","pickpoint":"","droppoint":""};
+            obj.studentid=studentid;
+            obj.class_id=schtype;
+            obj.pickroute=pickroute;
+            obj.droproute=droproute;
+            obj.pickpoint=pickpoint;
+            obj.droppoint=droppoint;
+            itemarray.push(obj);
+            //alert(JSON.stringify(obj));
+            this.$.submitbutton.disabled=false;
+             // document.getElementById("submitbutton").style.background="black";
+           },
+           removestud:function(std)
+           {
+              for(var i=0;i<itemarray.length;i++)
+       {
+       if(std==itemarray[i].studentid)
+       {
+        itemarray.splice(i,1);
+       }
+       }
+             this.$.submitbutton.disabled=true;
+             // document.getElementById("submitbutton").style.background="grey";
+           }
+      });
+    })();
+  </script>
+</dom-module>

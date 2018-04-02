@@ -539,6 +539,7 @@
         this.$.fetchgradeajax.generateRequest();
       },
       fetchgradeResponse:function(e){
+        document.querySelector('transport-routing-trip-to-grade').gradearr=e.detail.response.returnval;
         document.querySelector('feetype-schedule-card').gradearr=e.detail.response.returnval;
         document.querySelector('rtefeetype-schedule-card').gradearr=e.detail.response.returnval;
         document.querySelector('discount-master-card').gradearr=e.detail.response.returnval;

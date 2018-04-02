@@ -1,0 +1,126 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<dom-module id="transport-routing-routecreate-card">
+  <template>
+    <style> 
+     :host {
+        display: block;
+     }
+     table
+     {
+        @apply(--layout-horizontal);
+         /*border-collapse: collapse;*/
+         /*border: 1px solid #C0C0C0;*/
+         padding: 5px;
+         /*margin-left: 56%;*/
+         width: 50%;
+         /*margin-top: -13% !important;*/
+     }
+     .routecreate
+     {
+        display: flex;
+        border-collapse: collapse;
+        border: 1px solid #C0C0C0;
+        padding: 5px;
+        width: 35%;
+        min-height: 170px;
+        margin-left: 5%;
+        margin-top: 3% !important;     
+        background-color: white; 
+        box-shadow: 0 0 1px 1px rgb(192,192,192); -moz-box-shadow: 0 0 1px 1px rgb(192,192,192); -webkit-box-shadow: 0 0 1px 1px rgb(192,192,192); -o-box-shadow: 0 0 1px 1px rgb(192,192,192); 
+     }  
+     .newcard1{
+        margin-top: -16% !important;
+        height: 300px;
+        overflow: auto;
+        border: 1px solid #C0C0C0;
+        margin-left: 50%;
+        background-color: white; 
+        box-shadow: 0 0 1px 1px rgb(192,192,192); -moz-box-shadow: 0 0 1px 1px rgb(192,192,192); -webkit-box-shadow: 0 0 1px 1px rgb(192,192,192); -o-box-shadow: 0 0 1px 1px rgb(192,192,192); 
+        /*padding: 5px;*/
+     }  
+     transport-routing-route-display-card{
+      width: 100%;
+     }
+    </style>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                 <div class="col-md-3" style="margin-top: -1%;">
+                 <paper-dropdown-menu id="ttransportroutingcreateacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="transportroutingcreateacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="routecreate">
+      <div>
+        <label><b>CREATE NEW ROUTE</b></label>
+      </div>
+    
+      <div class="center" style="margin-top:8%;margin-left: -8em;">
+        <paper-item>Route Name : </paper-item>
+      </div>
+      <div class="center" style="margin-left: 0%;margin-top: 10%;width: 23%;">
+        <paper-input  id="rname" value="{{routename}}" allowed-pattern="[0-9]" ></paper-input>
+        <div prefix   style="margin-top: -1.6em;margin-left: -4em;">ROUTE -</div>     
+      </div>
+      <div class="right" style="margin-top: 35%;margin-left: -5em;height: 60%;">
+        <paper-button class="btn btn-primary center" on-click="create">ADD</paper-button>
+      </div>
+    </div>
+    <div class="newcard1">
+      <table>
+        <tr>
+        <th><label><CENTER>CURRENT ROUTES</CENTER></label></th>
+        </tr>
+        <template is="dom-repeat" items="{{newroutearr}}" as="rr">  
+          <tr>
+            <td colspan="4">
+            <transport-routing-route-display-card  routename="{{rr.route_name}}" routeid="{{rr.id}}" 
+               hiderouteinput="true" hiderouteitem="false">
+            </transport-routing-route-display-card>
+            </td>
+          </tr>
+        </template>
+      </table>        
+    </div>
+    <transport-routing-mapstudenttopoint-service id="route"></transport-routing-mapstudenttopoint-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'transport-routing-routecreate-card',
+      FnSelectAcademicYear:function(e){
+        this.academicyear=e.target.selectedItem.textContent.trim();
+        localStorage.setItem("curr_sess_academicyear",this.academicyear);
+        this.$.route.FetchRoute();
+      },
+      create:function()
+      {
+         if(this.routename=="")
+         {
+          alert("Please Enter Route name");
+         }
+         else
+         {
+          var rnamez="ROUTE -"+(this.routename);
+          this.$.route.createroute(rnamez);
+          this.FnClear();
+         }
+      },
+      FnClear:function()
+      {
+        this.routename="";
+      }
+    });
+  })();
+  </script>
+</dom-module>

@@ -1,0 +1,205 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="stylesheet" type="text/css" href="../../styles/styles.css">
+<dom-module id="transport-routing-mappointtoroute-card">
+  <template>  
+    <style> 
+      .card
+      {
+        width:50%;
+        height:150px;
+        margin-left: 14%;
+        background-color: white; 
+        box-shadow: 0 0 1px 1px rgb(192,192,192); -moz-box-shadow: 0 0 1px 1px rgb(192,192,192); -webkit-box-shadow: 0 0 1px 1px rgb(192,192,192); -o-box-shadow: 0 0 1px 1px rgb(192,192,192); 
+      }
+      paper-dropdown-menu
+      {
+       margin-left: 9%;
+       margin-top: 3%; 
+      }
+      .innercard{        
+        width: 50%;
+      }
+      .pointcard{
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+        width: 100%;
+      }
+      paper-dialog{
+        border-radius: 5px;
+      }
+      .topcard{
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <body>
+    <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-3" style="margin-top: -1%;">
+                 <paper-dropdown-menu id="ttransportroutingpointtorouteacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="transportroutingpointtorouteacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                </div>
+                <div class="col-md-3" style="margin-top: -1%;">
+                  <paper-dropdown-menu label="Route" id="route" required  errorMessage ="please select the route" >
+                  <paper-menu id="routemenu" class="dropdown-content" on-iron-select="rootname" valueattr="value" >
+                  <template  is="dom-repeat" items="{{routearr}}" as="view">
+                  <paper-item value="{{view.id}}">{{view.route_name}}</paper-item>
+                  </template>
+                  </paper-menu>
+                  </paper-dropdown-menu> 
+                </div>
+                <div class="col-md-3" style="margin-top: -1%;">
+                <paper-dropdown-menu label="Trip" id="tripnoo" required error-message="select the trip">
+                <paper-menu id="tripmenu" class="dropdown-content" on-iron-select="tripnum" valueattr="value"  >
+                <template  is="dom-repeat" items="{{triparr}}" as="view">
+                <paper-item value="{{view.trip_id}}">{{view.trip_name}}</paper-item>
+                </template>
+                </paper-menu>
+                </paper-dropdown-menu>
+                </div>
+                <div class="col-md-3" style="margin-top: 1%;">
+                  <div class="buttons">  
+                  <paper-button id="button" class="btn btn-primary center" class="button" on-click="Fndeletepoint">Delete</paper-button>
+                  <paper-button id="create" class="btn btn-primary center" class="button" on-click="clickfn">Create New Point</paper-button>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="dupframe">
+        <div hidden$="{{hide11}}" class="pointcard">
+          <template  is="dom-repeat" items="{{itemarr}}">  
+          <div class="innercard">
+            <transport-routing-fetch-card points="{{item.point_name}}" distance="{{item.distance_from_school}}" trip="{{item.trip}}" picktime="{{item.pickup_time}}" droptime="{{item.drop_time}}" pointid="{{item.id}}"  routid="{{item.route_id}}" pickseq="{{item.pickup_seq}}" dropseq="{{item.drop_seq}}"></transport-routing-fetch-card>
+          </div>
+          </template>  
+        </div>       
+    </div>
+    <paper-dialog id="transportroutingnewpointdialog" style="width: 35%;" modal>
+    <div class="topcard" style="width: 100%;">
+    <div style="width: 90%;"><h2>Create new point</h2></div>
+    <div style="width: 10%;text-align: right;margin-top: -2%;"><paper-icon-button style="color: grey;" icon="icons:close" on-click="FnCancel"></paper-icon-button></div> 
+    </div>
+    <transport-routing-item-card></transport-routing-item-card>
+    </paper-dialog> 
+    </body>
+  <transport-routing-transport-service id="select"></transport-routing-transport-service>
+  </template>
+  <script>
+    (function() { 
+      var routename="";
+      var pointarray=[];
+      var detailarr=[];
+      var tripno="";
+        var routevalue1;
+        Polymer({
+          is: "transport-routing-mappointtoroute-card",
+          ready:function(){ 
+            this.hide=true;
+            this.$.button.hidden=true;
+            this.$.create.hidden=true;   
+          },
+          FnClear:function()
+          {
+            this.$.routemenu.selected=-1;
+            this.$.tripmenu.selected=-1;
+            this.itemarr=[];   
+            this.$.transportroutingpointtorouteacademicyear.selected=-1;
+          },
+          FnSelectAcademicYear:function(e){
+          this.itemarr=[];
+          this.$.routemenu.selected=-1;
+          this.$.tripmenu.selected=-1;
+          this.$.create.hidden=true;
+          this.academicyear=e.target.selectedItem.textContent.trim();
+          localStorage.setItem("curr_sess_academicyear",this.academicyear);
+          this.$.select.fetchTrip();
+          this.$.select.getroute();
+          },
+          rootname:function(e){
+            this.itemarr=[];
+            this.$.tripmenu.selected=-1;
+            this.$.create.hidden=true;
+            routename = (e.target.selectedItem.textContent).trim();
+            routevalue1 = e.target.selectedItem.value;
+            this.$.select.gettrip(routename,routevalue1);
+            sessionStorage.setItem("route",routename);
+            sessionStorage.setItem("routevalue",routevalue1);
+            this.$.tripmenu.selected=-1;
+          },
+          tripnum:function(e){
+            this.itemarr=[];
+            tripno=(e.target.selectedItem.textContent).trim();
+            this.$.select.getroutedetail(tripno,routevalue1);
+            sessionStorage.setItem("trip",tripno);
+            this.$.create.hidden=false;
+            this.hide11=false;
+          },
+          refz:function(e){
+          this.$.select.getroutedetail(tripno,routevalue1);
+          },
+          fndeletethepicuprootref:function(e){
+          this.$.select.getroutedetail(tripno,routevalue1);
+          },
+          refreshdeletedata:function()
+          {
+             this.$.select.getroutedetail(tripno,routevalue1);
+             this.hide11=false;
+             this.hide=true;
+          },
+          Fndeletepoint:function()
+          {
+          if(tripno=="")
+          {
+          this.$.route.validate();
+          this.$.tripnoo.validate();
+          }
+          else if(pointarray.length>0)
+          {
+            this.$.select.deletemappoint(pointarray,routename,tripno);
+          }
+          else
+          {
+            alert("No CheckBox is Checked");
+          } 
+          },
+          clickfn:function(){
+             if(tripno==""){
+              this.$.route.validate();
+              this.$.tripnoo.validate();
+            } else {
+              this.hide=false;
+              this.hide11=false;
+              this.$.select.getroutedetail(tripno,routevalue1);
+              this.$.transportroutingnewpointdialog.toggle();
+            }
+          },
+          FnCancel:function(){
+            this.$.transportroutingnewpointdialog.toggle();
+          },
+          FnGetpoints:function(points,checktype){
+            if(checktype=="true"){
+              pointarray.push(points);
+            } else {
+              var i = pointarray.indexOf(points);
+              if(i != -1) {
+                pointarray.splice(i, 1);
+              }
+            }            
+          },
+          fn1:function(e){
+           this.hide11=true;
+          }
+        });
+    })();
+    </script>
+</dom-module>
+
+

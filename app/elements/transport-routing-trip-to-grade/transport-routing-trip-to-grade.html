@@ -1,0 +1,155 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-routing-trip-to-grade">
+  <template>
+    <style>
+    .cardd{
+        @apply(--layout-horizontal);        
+    }
+    .check{
+       @apply(--layout-vertical);
+       width:100%;
+        /*margin-left: 20%;*/
+        /*height:170px;*/
+        background-color: white; 
+        box-shadow: 0 0 1px 1px rgb(192,192,192); -moz-box-shadow: 0 0 1px 1px rgb(192,192,192); -webkit-box-shadow: 0 0 1px 1px rgb(192,192,192); -o-box-shadow: 0 0 1px 1px rgb(192,192,192);
+    }
+    .outcard{
+      @apply(--layout-horizontal);  
+    }
+    .display{
+      /*margin-left: 5%;*/
+        width:100%;
+        background-color: white; 
+        box-shadow: 0 0 1px 1px rgb(192,192,192); -moz-box-shadow: 0 0 1px 1px rgb(192,192,192); -webkit-box-shadow: 0 0 1px 1px rgb(192,192,192); -o-box-shadow: 0 0 1px 1px rgb(192,192,192);
+    }
+    table{
+      width: 100%;
+    }
+    </style>
+     <div class="row">
+        <div class="well well-sm">
+          <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-3" style="margin-top: -1%;">
+                 <paper-dropdown-menu id="ttransportroutingtripacademicyear" label="Academic Year" on-iron-select="FnSelectAcademicYear">
+                  <paper-listbox class="dropdown-content" selected="{{selectedacademicyear}}" id="transportroutingtripacademicyear" attr-for-selected="value">
+                  <template  is="dom-repeat" items="{{academicarr}}" as="item">
+                  <paper-item value="{{item.academic_year}}">{{item.academic_year}}</paper-item>
+                  </template>
+                  </paper-listbox>
+                 </paper-dropdown-menu>
+                </div>
+                <div id="triptogradesave" class="col-md-2" style="margin-top: 1%;margin-left: 55%;">
+                <paper-button class="btn btn-primary center" on-click="FnSave">Save</paper-button>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>  
+      <!-- <div class="outcard">  -->
+      <table>
+      <tr><td style="vertical-align: text-top;">
+      <div class="check" hidden$="{{hidecard}}">  
+      <div class="cardd">
+      <div style="margin-left: 5%;margin-top: 1%;">
+        <paper-dropdown-menu label="Select the Trip" >
+          <paper-menu id="triptogradeselecttrip" class="dropdown-content" on-iron-select="Fntrip" valueattr="value" >
+            <template  is="dom-repeat" items="{{triparr}}" as="view">
+            <paper-item value="{{view.trip_id}}">{{view.trip_name}}</paper-item>
+            </template>
+          </paper-menu>
+        </paper-dropdown-menu>
+      </div>  
+      <div style="padding:  5%;" >    
+          <paper-checkbox id="triptogradeall" class="checkbox" on-change="allHandler" checked>All Grades</paper-checkbox>
+          <paper-checkbox id="triptogradespec" class="checkbox" on-change="specHandler">Specific Grades</paper-checkbox>        
+      </div>     
+      </div>
+      <div hidden$="{{hidegradecard}}" style="padding-left:  5%;">
+      <hr>
+      <schooltype-to-grade-displaycard hidegradecard="{{hidegradecard}}"></schooltype-to-grade-displaycard>
+      </div> 
+      </div></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+      <div hidden$="{{hidedisplaycard}}" class="display">
+        <transport-routing-triptograde-display tripgradearr="{{tripgradearr}}"></transport-routing-triptograde-display>
+      </div>
+      </td></tr></table>
+      <!-- </div>   -->
+      <transport-routing-transport-service id="service"></transport-routing-transport-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    var gradearr=[];
+    var gradetype="";
+    Polymer({
+      is: 'transport-routing-trip-to-grade',
+       FnSelectAcademicYear:function(e){
+          this.academicyear=e.target.selectedItem.textContent.trim();
+          localStorage.setItem("curr_sess_academicyear",this.academicyear);
+          this.$.service.fetchTrip();
+          this.hidecard=false;
+          this.$.service.fetchtripgradeService();
+      },
+      FnCallService:function(){
+        this.hidegradecard=true;
+        this.$.triptogradesave.disabled=true;
+        this.hidecard=true;
+        this.hidedisplaycard=true;
+      },
+      Fntrip:function(e){
+        this.trip=e.target.selectedItem.textContent.trim();
+      },
+       allHandler:function(){
+        if(document.querySelector("#triptogradeall").checked==true)
+        {
+          this.$.triptogradesave.disabled=false;
+          this.hidegradecard=true;
+          document.querySelector("#triptogradespec").checked=false;
+          gradetype="All";
+          document.querySelector('schooltype-to-grade-displaycard').ready();
+          document.querySelector('schooltype-to-grade-displaycard').FnRefresh();
+        }
+      },
+      specHandler:function(){
+        if(document.querySelector("#triptogradespec").checked==true)
+        {
+          this.$.triptogradesave.disabled=false;
+          this.hidegradecard=false;
+          document.querySelector("#triptogradeall").checked=false;
+          gradetype="Specific";
+          // document.querySelector('schooltype-to-grade-displaycard').ready();
+          // document.querySelector('schooltype-to-grade-displaycard').FnRefresh();
+        }
+      },
+      FnSetGrades:function(arr){
+        gradearr=arr;
+      },
+      FnSave:function(){
+        // alert(JSON.stringify(gradearr));
+        this.$.service.FnSaveTriptoGrade(this.trip,gradearr);
+        gradearr=[];
+        this.hidecard=true;
+        document.querySelector('schooltype-to-grade-displaycard').ready();
+        document.querySelector('schooltype-to-grade-displaycard').FnRefresh();
+        document.querySelector("#triptogradeall").checked=false;
+        document.querySelector("#triptogradespec").checked=false;
+        document.querySelector("#triptogradeselecttrip").selected=-1;
+        // document.querySelector("#transportroutingtripacademicyear").selected=-1;
+      },
+      FnClear:function(){
+        gradearr=[];
+        gradetype="";
+        this.hidegradecard=true;
+        this.hidecard=true;
+        document.querySelector("#triptogradeall").checked=false;
+        document.querySelector("#triptogradespec").checked=false;
+        document.querySelector("#triptogradeselecttrip").selected=-1;
+        document.querySelector("#transportroutingtripacademicyear").selected=-1;
+        // this.hidedisplaycard=true;
+      }
+    });
+  })();
+  </script>
+</dom-module>

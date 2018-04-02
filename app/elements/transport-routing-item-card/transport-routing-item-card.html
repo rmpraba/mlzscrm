@@ -1,0 +1,119 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="stylesheet" type="text/css" href="../../styles/styles.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<dom-module id="transport-routing-item-card">
+ <style>
+ .layout1{
+ width: 100%;
+ margin-left: 2%;
+ }
+ .row
+ {
+  @apply(--layout-horizontal);
+ }
+ </style>
+<template>
+  <legend align="center"></legend>
+    <ul>
+      <!-- <li class="rows" style="margin-top: 3%;"> -->
+        <fieldset>
+          <ul class="rowss">
+            <div class="row">
+              <div class="detail">
+                <div class="layout">
+                  <paper-input label="Point" id="pt" class="field" required error-message="needs Point Name!" value={{points}}></paper-input>
+                </div>
+              </div>
+              <div class="detail" style="margin-left: 3%;"> 
+                <div class="layout">
+                 <paper-input label="distance" id="dist" required allowed-pattern="[0-9]" class="field"  error-message="needs Distance!" value={{distance}}></paper-input>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="margin-top: -3%;">
+              <div class="date" style="margin-left: -3%;width: 49%;">
+                  <transport-routing-timepicker-card></transport-routing-timepicker-card>
+              </div>
+              <div class="date" style="margin-left: -3%;width: 49%;"> 
+                  <transport-routing-timepicker1-card></transport-routing-timepicker1-card>
+              </div>
+            </div>            
+            <div class="row">
+              <div class="detail">
+                <div class="field">
+                  <paper-input label="Pickup Sequence"  allowed-pattern="[0-9]" required error-message="needs Pickup Sequence!" value="{{pickupseq}}" id="mstppickseq"></paper-input>
+                </div>
+              </div>
+              <div class="detail" style="margin-left: 3%;">
+                <div class="field">
+                  <paper-input label="Drop Sequence"  allowed-pattern="[0-9]" required error-message="needs Drop Sequence!" value="{{dropseq}}" id="mstpdropseq"></paper-input>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="margin-left: 65%;margin-top: 2%;">
+              <div class="detail">
+                <div class="field">
+                  <paper-button  id="new-button" class="btn btn-primary center" on-click="insert">Add Point</paper-button>
+                </div>
+              </div>
+            </div>
+            
+          </ul>
+        </fieldset>
+      <!-- </li> -->
+    </ul>
+  <paper-input hidden="true" value="{{routen}}"></paper-input>
+  <transport-routing-transport-service id="insert"></transport-routing-transport-service>
+</template>
+<script>
+  (function() {
+    var n=0;
+    var itemarr=[];
+    var rout=this.routen;
+    Polymer({
+      is: "transport-routing-item-card",
+      ready:function(){
+        n=n+1;
+      },
+      insert:function(e)
+      {
+        //alert(111111);
+        if(this.points=="" || this.distance=="" || this.pickupseq=="" || this.dropseq=="" )
+        {
+           /*this.$.pt.validate();
+           this.$.dist.validate();
+           this.$.mstppickseq.validate();
+           this.$.mstpdropseq.validate();*/
+           alert('Pease Enter all the fields');
+        }
+        else
+        {
+       // alert('Add button is clicked');
+          var route=sessionStorage.getItem("route");
+          var tripn=sessionStorage.getItem("trip");
+          //alert(route+""+this.points+""+pickuptime+""+droptime+""+tripn+""+this.distance+""+this.pickupseq+""+this.dropseq);
+          this.$.insert.insertpoint(route,this.points,localStorage.getItem("curr_sess_pickuptime"),localStorage.getItem("curr_sess_droptime"),tripn,this.distance,this.pickupseq,this.dropseq);
+          this.points="";
+          this.distance="";
+          this.pickupseq="";
+          this.dropseq="";
+          document.querySelector('transport-routing-timepicker-card').fnrefresh();
+          document.querySelector('transport-routing-timepicker1-card').FnClear();
+          document.querySelector('transport-routing-mappointtoroute-card').refz();  
+          //this.points="";
+          //this.distance="";   
+       // document.querySelector('mappointtoroute-card').FnClear();
+
+        }
+      },
+      Fnclear:function()
+      {
+        this.points="";
+        this.distance="";
+        this.pickupseq="";
+        this.dropseq="";
+      }
+    });
+  })();
+</script>
+</dom-module>

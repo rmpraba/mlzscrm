@@ -1,0 +1,218 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<dom-module id="transport-routing-changepoint-list">
+<style type="text/css">
+  .flexchild-vertical 
+  { 
+    @apply(--layout-horizontal);
+  }
+   .cardd
+      {
+        width:50%;
+        height:220px;
+        margin-left: 25%;
+        background-color: white; 
+        box-shadow: 0 0 1px 1px rgb(192,192,192); -moz-box-shadow: 0 0 1px 1px rgb(192,192,192); -webkit-box-shadow: 0 0 1px 1px rgb(192,192,192); -o-box-shadow: 0 0 1px 1px rgb(192,192,192);
+      }
+      .detail
+      {
+        @apply(--layout-horizontal);
+      }
+</style>
+<template>
+  <legend align="center"></legend>
+  <paper-input hidden class="field" value="{{schooltype}}"></paper-input>
+  <div class="cardd">
+      <div class="ro11">
+        <fieldset>
+        <ul>
+          <div class="check-box" style="margin-left: 93%;margin-top: 1%;">
+            <paper-checkbox id="selectbox" on-change="changeHandler"></paper-checkbox>
+          </div>
+            <div class="row">
+              <div class="detail">
+                <div class="field" style="padding: 0 1% 0 1%;">
+                    <paper-input readonly class="field" value="{{studentid}}"></paper-input>
+                   <paper-input readonly hidden class="field" value="{{tripid}}"></paper-input>
+                </div>
+                <div class="field"  style="margin-left: 4em;">
+                    <paper-input readonly class="field" value="{{studentname}}"></paper-input>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="detail">
+                <div class="field">
+                  <paper-dropdown-menu id="set" label="Pick-up Route">
+                    <paper-menu id="pickrt1" class="dropdown-content" required    on-iron-select="pickroute" 
+                      attr-for-selected="value" selected="{{pkroutezz}}">
+                      <template  is="dom-repeat" items="{{routearr}}" as="view">
+                        <paper-item value="{{view.id}}">{{view.route_name}}</paper-item>
+                      </template>
+                    </paper-menu>
+                  </paper-dropdown-menu>
+                </div>
+                <div class="field" style="margin-left: 3em;">
+                  <paper-dropdown-menu id="set1" label="Pick-up Point">
+                    <paper-menu id="pickpnt1" class="dropdown-content" required on-iron-select="pickpoints" 
+                    attr-for-selected="value" selected="{{pkpointzz}}">  
+                      <template  is="dom-repeat" items="{{pointarr}}" as="view">
+                        <paper-item value="{{view.id}}">{{view.point_name}}</paper-item>
+                      </template>
+                    </paper-menu>
+                  </paper-dropdown-menu>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="detail">
+                <div class="field">
+                  <paper-dropdown-menu id="set2" label="Drop Route">
+                    <paper-menu id="droprt2" class="dropdown-content" required on-iron-select="droproute" 
+                    attr-for-selected="value" selected="{{dproutezz}}">
+                      <template  is="dom-repeat" items="{{routearr}}" as="view">
+                        <paper-item value="{{view.id}}">{{view.route_name}}</paper-item>
+                      </template>
+                    </paper-menu>
+                  </paper-dropdown-menu>
+                </div>
+                <div class="field" style="margin-left: 3em;">
+                  <paper-dropdown-menu id="set3" label="Drop Point">
+                    <paper-menu id="droppnt2" class="dropdown-content" required on-iron-select="droppoints" 
+                    attr-for-selected="value" selected="{{dppointzz}}">
+                      <template  is="dom-repeat" items="{{droparr}}" as="view">
+                        <paper-item value="{{view.id}}">{{view.point_name}}</paper-item>
+                      </template>
+                    </paper-menu>
+                  </paper-dropdown-menu>
+                </div>
+              </div>
+              </div>
+              <!-- <paper-input label="Pickip Route" value="{{pkroutezz}}"></paper-input>  -->
+        </ul>
+        </fieldset>
+      </div>
+    <!-- </ul> -->
+    </div>
+    <transport-routing-changepoint-services id="mapstud"></transport-routing-changepoint-services>
+  <iron-ajax
+    method="post"
+    id="selectpointajax"
+    url="{{selectpointurl}}"
+    handle-as="json"
+    content-type="application/json"
+    params="{{routepickpointparam}}"
+    on-response="pickpointsResponse"
+    debounce-duration="300"
+  >
+  </iron-ajax>
+    <iron-ajax
+    method="post"
+    id="routedroppointajax"
+    url="{{routedroppointurl}}"
+    handle-as="json"
+    content-type="application/json"
+    params="{{routedroppointparam}}"
+    on-response="droppointsResponse"
+    debounce-duration="300"
+  >
+  </iron-ajax>
+  </template>
+  <script>
+  (function() {
+      var pickroute;
+      var pickpoint;
+      var droproute;
+      var droppoint;
+      var scholtype;
+      var school=localStorage.getItem("schoolid");
+    Polymer({
+      is: "transport-routing-changepoint-list",
+      ready:function()
+      {
+      this.$.selectbox.disabled=true;  
+      },   
+      pickroute:function(e){
+        pickroute= e.target.selectedItem.value;
+        //droproute=pickroute;
+        //this.selectid=pickroute;
+        this.selectpointurl = sessionStorage.getItem("addrinfo")+"/transport-routing-pickpoints";
+        var obj={"routept":"","studid":"","schol":"","schooltype":"","academic_year":""};
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        obj.routept=pickroute;
+        obj.studid=this.studentid;
+        this.routepickpointparam=obj;
+        //  alert(JSON.stringify(obj));
+        // alert(JSON.stringify(obj));
+        this.$.selectpointajax.generateRequest();
+      },
+      droproute:function(e){
+        droproute = (e.target.selectedItem.value);
+        this.routedroppointurl = sessionStorage.getItem("addrinfo")+"/transport-routing-routedroppoint";
+        var obj={"routedroppt":"","studid":"","schol":"","schooltype":"","academic_year":""};
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        obj.schol=localStorage.getItem("schoolid");
+        obj.routedroppt=droproute;
+        obj.studid=this.studentid;
+        this.routedroppointparam=obj;
+        this.$.routedroppointajax.generateRequest();
+        this.$.selectbox.disabled=true;
+      },
+      pickpointsResponse:function(e)
+      {
+        var points=e.detail.response.returnval;
+         //alert(JSON.stringify(points));
+        this.droparr=points;
+        this.pointarr=points;
+      },
+      droppointsResponse:function(e){
+        var points=e.detail.response.returnval;
+        this.droparr=[];
+        this.droparr=points;
+      },
+      pickpoints:function(e){
+        pickpoint= e.target.selectedItem.value;
+        // this.selectpoint=pickpoint;
+        //droppoint=pickpoint;
+        this.$.selectbox.disabled=false;
+      },
+      droppoints:function(e){
+        droppoint = (e.target.selectedItem.value);
+         this.$.selectbox.disabled=false;
+      },
+      changeHandler:function(e){
+        var box = document.querySelector("#selectbox");
+        if(e.target.checked==true)
+        {
+        document.querySelector('transport-routing-changepoint-card').FnGetItemsz(this.studentid,pickroute,droproute,pickpoint,droppoint);
+       //alert(this.studentid+" "+pickroute+" "+droproute+" "+pickpoint+" "+droppoint);
+       // alert(this.studentid+" "+pickroute+" "+droproute+" "+pickpoint+" "+droppoint);
+       this.$.set.disabled=true;
+       this.$.set1.disabled=true;
+       this.$.set2.disabled=true;
+       this.$.set3.disabled=true;
+        }
+        else
+        {
+          document.querySelector('transport-routing-changepoint-card').removestud(this.studentid);
+           this.$.set.disabled=false;
+           this.$.set1.disabled=false;
+           this.$.set2.disabled=false;
+           this.$.set3.disabled=false;
+        }
+    },
+    qxqxqq:function(e)
+    {
+          //  alert("pre results");
+          //   alert(JSON.stringify(e));
+           this.pkroutezz=e[0].pickup_route_id;
+           this.pkpointzz=e[0].pickup_point;
+           this.dproutezz=e[0].drop_route_id;
+           this.dppointzz=e[0].drop_point;
+          //  alert(this.dppointzz);    
+    }
+  });
+  })();
+  </script>
+
+</dom-module>

@@ -1,0 +1,615 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="transport-routing-mapstudenttopoint-service">
+  <template>
+  <!--pass the user name and password for signin-->
+  <!--fetch the route to map the point to the student-->
+  <iron-ajax
+    auto
+    method="post"   
+    id="selectclassajax"
+    url="{{selectclassurl}}"
+    params="{{selectclassparam}}"
+    handle-as="json"
+    content-type="application/json"
+    on-response="selectclassResponse"
+    debounce-duration="300"
+  >   
+  </iron-ajax>   
+  <iron-ajax
+    method="post"
+    id="selectnameajax"
+    url="{{selectnameurl}}"
+    params="{{selectnameparam}}"
+    handle-as="json"
+    content-type="application/json"
+    on-response="selectnameResponse"
+    debounce-duration="300"
+  >
+  </iron-ajax>
+  <iron-ajax
+    method="post"
+    id="classpickajax"
+    url="{{classpickurl}}"
+    params="{{classpickparam}}"
+    handle-as="json"
+    content-type="application/json"
+    on-response="classpickResponse"
+    debounce-duration="300"
+  >
+  </iron-ajax>
+  <iron-ajax
+    method="post"
+    id="namepickajax"
+    url="{{namepickurl}}"
+    params="{{namepickparam}}"
+    handle-as="json"
+    content-type="application/json"
+    on-response="namepickResponse"
+    debounce-duration="300"
+  >
+  </iron-ajax>
+  <iron-ajax
+    auto
+    method="post"
+    id="selectpointajax"
+    url="{{selectpointurl}}"
+    handle-as="json"
+    content-type="application/json"
+    on-response="pointsResponse"
+    debounce-duration="300"
+  >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="routepoint"
+        url="{{routepointurl}}"
+        params="{{routepointparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="routepointResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <iron-ajax
+        method="post"
+        id="routedroppoint"
+        url="{{routedroppointurl}}"
+        params="{{routedroppointparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="routedroppointResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+   <iron-ajax
+        method="post"
+        id="studentpointajax"
+        url="{{studentpointurl}}"
+        params="{{studentpointparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="studentpointResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <!-- this below ajax to get the total route_id sequence number -->
+   <iron-ajax
+        method="post"
+        id="getrouteseqajax"
+        url="{{getroutesequrl}}"
+        params="{{getrouteseqparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="getrouteseqResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <!-- this ajax to update above taken sequence number by increamenting by 1 -->
+   <iron-ajax
+        method="post"
+        id="updaterouteseqajax"
+        url="{{updateroutesequrl}}"
+        params="{{updaterouteseqparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="updaterouteseqResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <!-- this to create route -->
+   <iron-ajax
+        method="post"
+        id="createrouteajax"
+        url="{{createrouteurl}}"
+        params="{{createrouteparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="createrouteResponse"
+        debounce-duration="300"
+        >
+  </iron-ajax>
+  <!-- below ajax to get the list of student id belong to that grade and their details -->
+   <iron-ajax
+      method="post"
+      id="getclasspassajax"
+      url="{{getclasspassurl}}"
+      params="{{getclasspassparams}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="getclasspassResponse"
+      debounce-duration="300"
+    >
+    <!-- take no of student to specific pickup route and trip -->
+     <iron-ajax
+      method="post"
+      id="pickdetailajax"
+      url="{{pickdetailurl}}"
+      params="{{pickdetailparams}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="pickdetailResponse"
+      debounce-duration="300"
+    >
+    </iron-ajax>
+    <!-- take no of student to specific drop route and trip -->
+     <iron-ajax
+      method="post"
+      id="dropdetailajax"
+      url="{{dropdetailurl}}"
+      params="{{dropdetailparams}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="dropdetailResponse"
+      debounce-duration="300"
+    >
+    </iron-ajax>
+    <!-- to take current routes from table -->
+     <iron-ajax
+      method="post"
+      id="FetchRouteajax"
+      url="{{FetchRouteurl}}"
+      params="{{FetchRouteparams}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="FetchRouteResponse"
+      debounce-duration="300"
+    >
+    </iron-ajax>
+    <iron-ajax
+      method="post"
+      id="getpasssecajax"
+      url="{{getpasssecurl}}"
+      params="{{getpasssecparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="getpasssecResponse"
+      debounce-duration="300"
+    >
+    </iron-ajax>
+    <iron-ajax
+      method="post"
+      id="fetchacademicyearajax"
+      url="{{fetchacademicyearurl}}"
+      params="{{fetchacademicyearparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="fetchacademicyearResponse"
+      debounce-duration="300"
+    >
+    </iron-ajax>
+    <!-- <iron-ajax
+    auto
+      method="post"
+      id="getparentinfoajax"
+      url="{{getparentinfourl}}"
+      params="{{getparentinfoparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="getparentinfoResponse"
+      debounce-duration="300"
+    >
+    </iron-ajax>
+    <iron-ajax
+    auto
+      method="post"
+      id="getstudpointoajax"
+      url="{{getstudpointurl}}"
+      params="{{getstudpointparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="getstudpointResponse"
+      debounce-duration="300"
+    >
+    </iron-ajax>
+    <iron-ajax
+          auto      
+        id="numberreadajax"
+        url="../../configfile/coordinator.json"
+        params="{{numberreadparam}}"
+        handle-as="json"
+        content-type="application/json"
+        on-response="numberreadResponse"
+        debounce-duration="300"
+        >
+    </iron-ajax> -->
+  </template>
+  <script>
+  (function() {
+    var len;
+    var routenamez;
+    var school=sessionStorage.getItem("sch");
+    var pointcount;
+    var count1=0,count2=0;
+
+    var sid;
+    var passarr=[];
+    var stname;
+    var pickupoint;
+    var droppoint;
+    var pickuproute;
+    var droproute;
+    var dad1;
+    var add1;
+    var add2;
+    var add3;
+    var add4;
+    var pin;
+    var mob;
+    var standard;
+    var section;
+    var len;
+    var c=0;
+    var coor;
+    var zonename;
+    Polymer({
+      is: "transport-routing-mapstudenttopoint-service",
+      fetchacademicyearService:function(){        
+        this.fetchacademicyearurl=sessionStorage.getItem("addrinfo")+"/fetchacademicyear-service"
+        this.$.fetchacademicyearajax.generateRequest();
+      },
+      fetchacademicyearResponse:function(e){
+        // alert(JSON.stringify(e.detail.response.returnval));
+        document.querySelector('transport-routing-routecreate-card').academicarr=e.detail.response.returnval;
+        document.querySelector('transport-routing-mappointtoroute-card').academicarr=e.detail.response.returnval;
+        document.querySelector('transport-routing-mapstudenttopoint-card').academicarr=e.detail.response.returnval;
+        document.querySelector('transport-routing-changepoint-card').academicarr=e.detail.response.returnval;
+        document.querySelector('transport-routing-routereport-card').academicarr=e.detail.response.returnval;
+        document.querySelector('transport-routing-gradewiseroute-report').academicarr=e.detail.response.returnval;
+        document.querySelector('transport-routing-trip-to-grade').academicarr=e.detail.response.returnval;
+      },
+      selectclass:function(){
+        this.selectclassurl = sessionStorage.getItem("addrinfo")+"/transport-routing-selectclass";
+        var obj={"schol":"","academic_year":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        this.selectclassparam=obj;
+        this.$.selectclassajax.generateRequest();
+      },
+      FnClear:function(){
+        len=0;
+      },
+      selectclassResponse:function(e){
+        var classdetail=e.detail.response.returnval;
+        // alert(JSON.stringify(classdetail));
+        document.querySelector('transport-routing-mapstudenttopoint-card').classarr=classdetail;
+        // document.querySelector('studentpass-card').classarr=classdetail;
+        },
+      selectname:function(){
+       // alert("1");
+        this.selectnameurl = sessionStorage.getItem("addrinfo")+"/transport-routing-selectnameforpoint";
+        var obj={"schol":"","academic_year":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        this.selectnameparam=obj;
+      
+        this.$.selectnameajax.generateRequest();
+        },
+        selectnameResponse:function(e){;
+         var nameitem=e.detail.response.returnval;
+
+         var studarr=e.detail.response.studarr;
+         // alert(studarr.length);
+         if(nameitem.length>0){
+         for(var i=0;i<studarr.length;i++){
+          for(var j=0;j<nameitem.length;j++){
+            if(studarr[i].id==nameitem[j].student_id){
+              studarr.splice(i,1);
+              i--;
+              break;
+            }
+          }
+         }
+         } 
+         document.querySelector('transport-routing-mapstudenttopoint-card').autocompletename(studarr);         
+         document.querySelector('transport-routing-mapstudenttopoint-card').spinner();
+      },
+      namepick:function(cla)
+      {
+        this.namepickurl = sessionStorage.getItem("addrinfo")+"/transport-routing-namepick";
+        var obj={"id":"","schol":"","academic_year":""}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        obj.id=cla;
+        this.namepickparam=obj;
+        this.$.namepickajax.generateRequest();
+      },
+      namepickResponse:function(e)
+      {        
+        var student=e.detail.response.returnval;
+        //alert(JSON.stringify(student));
+        document.querySelector('transport-routing-mapstudenttopoint-card').studentarr=student;
+      },
+      classpick:function(cla){
+        this.classpickurl = sessionStorage.getItem("addrinfo")+"/transport-routing-classpick";
+        var obj={"classes":"","schol":"","academic_year":""}
+        obj.classes=cla;
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        this.classpickparam=obj;
+        //alert(JSON.stringify(obj));
+        this.$.classpickajax.generateRequest();
+      },
+      classpickResponse:function(e){
+        var studarr=e.detail.response.studarr;
+        var nameitem=e.detail.response.returnval;        
+        // alert(JSON.stringify(studarr));
+        // alert(JSON.stringify(nameitem));
+        if(nameitem.length>0){
+         for(var i=0;i<studarr.length;i++){
+          for(var j=0;j<nameitem.length;j++){
+            // alert(studarr[i].id+" "+nameitem[j].student_id);
+            if(studarr[i].id==nameitem[j].student_id){
+              studarr.splice(i,1);
+              i--;
+              break;
+            }
+          }
+         }
+        }
+    document.querySelector('transport-routing-mapstudenttopoint-card').studentarr=studarr;
+      },
+      submit:function(itemarr){
+          len=itemarr.length;
+          count1=itemarr.length;
+          for(var i=0;i<itemarr.length;i++){
+            var obj={"studentid":"","class_id":"","pickroute":"","droproute":"","pickpoint":"","droppoint":"","flag":"","schol":"","academic_year":""};
+            obj.studentid=itemarr[i].studentid;
+            obj.class_id=itemarr[i].class_id;
+            obj.pickroute=itemarr[i].pickroute;
+            obj.droproute=itemarr[i].droproute;
+            obj.pickpoint=itemarr[i].pickpoint;
+            obj.droppoint=itemarr[i].droppoint;
+            obj.flag=1;
+            obj.academic_year=localStorage.getItem("curr_sess_academicyear")
+            obj.schol=localStorage.getItem("schoolid");
+            this.studentpointurl=sessionStorage.getItem("addrinfo")+"/transport-routing-submiturl";
+            this.studentpointparam=obj;
+            this.$.studentpointajax.generateRequest();
+          }
+    },
+    studentpointResponse:function(e)
+    {
+      var result=e.detail.response.returnval;
+      // alert(JSON.stringify(result));
+      var j=0;
+      count2++;
+      // alert(count1+" "+count2);
+      if(count1==count2){
+        alert('Mapping Done... Successfully!!');
+        document.querySelector('transport-routing-mapstudenttopoint-card').refreshmappoint();
+        count1=0;
+        count2=0;
+      }      
+    },
+    createroute:function(route){
+        routenamez=route;
+       this.getroutesequrl = sessionStorage.getItem("addrinfo")+"/transport-routing-routeid";
+       var obj={"id":""};
+        obj.id='route';
+        this.getrouteseqparam=obj;
+       // alert(JSON.stringify(obj));
+        this.$.getrouteseqajax.generateRequest();
+    },
+    getrouteseqResponse:function(e){
+        pointcount=(e.detail.response.returnval[0].count)+1;
+        this.updateroutesequrl=sessionStorage.getItem("addrinfo")+"/transport-routing-sequence";
+        var obj={"pointcoun":"","id":""}
+        obj.id='route';
+        obj.pointcoun=pointcount;
+        this.updaterouteseqparam=obj;
+        this.$.updaterouteseqajax.generateRequest();
+    },
+    updaterouteseqResponse:function(e){
+        //alert('update response');
+        var seq=pointcount;
+        var obj={"id":"","routes":"","schol":"","academic_year":"",}
+        obj.schol=localStorage.getItem("schoolid");
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        obj.id="r"+seq;
+        obj.routes=routenamez;
+        this.createrouteparam=obj;
+        //alert(JSON.stringify(obj));
+        this.createrouteurl=sessionStorage.getItem("addrinfo")+"/transport-routing-createroute";
+        this.$.createrouteajax.generateRequest();
+    },
+    createrouteResponse:function(e){
+      var resd=e.detail.response.returnval;
+      // alert(resd);
+      if(resd=='Already Exit')
+      {
+      alert('This Route is already Exit');
+      }
+      else
+      {
+      alert('The new route is created');
+      this.FetchRoute();
+      }
+      //document.querySelector('routecreate-card').FnClear();
+    },
+    getgradedata:function(temp,grade){
+      // alert('call');
+    this.getclasspassurl = sessionStorage.getItem("addrinfo")+"/getclasspass";
+      var obj={"id":"","schol":"","academic_year":""}
+      obj.schol=sessionStorage.getItem("sch");
+      obj.id=temp;
+      obj.grade=grade;
+       obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+     
+      this.getclasspassparams=obj;
+      this.$.getclasspassajax.generateRequest();
+      },
+      getclasspassResponse:function(e) {
+        var starr = e.detail.response.returnval;
+        if(starr!="invalid")
+        this.fngetid(starr);
+      },
+      routedetail:function(){
+            this.pickdetailurl=sessionStorage.getItem("addrinfo")+"/pickdetail";
+            var obj={"schol":""}
+            obj.schol=sessionStorage.getItem("sch");
+            this.pickdetailparams=obj;
+            this.$.pickdetailajax.generateRequest();
+
+            this.dropdetailurl=sessionStorage.getItem("addrinfo")+"/dropdetail";
+            this.dropdetailparams=obj;
+            this.$.dropdetailajax.generateRequest();
+
+      },
+      pickdetailResponse:function(e){
+        var pickarr=e.detail.response.returnval;
+        document.querySelector('routestudent-card').pickdetailarr=pickarr;
+      },
+      dropdetailResponse:function(e){
+        var droparr=e.detail.response.returnval;
+        document.querySelector('routestudent-card').dropdetailarr=droparr;
+      },
+      FetchRoute:function()   
+      {        
+        //alert(11);
+        this.FetchRouteurl=sessionStorage.getItem("addrinfo")+"/transport-routing-fetchroute-service";
+        var obj={"schlidz":"","academic_year":""}
+        obj.schlidz=localStorage.getItem("schoolid");
+        obj.academic_year=localStorage.getItem("curr_sess_academicyear");
+        this.FetchRouteparams=obj;
+        //alert(JSON.stringify(obj));
+        this.$.FetchRouteajax.generateRequest();
+      },
+      FetchRouteResponse:function(e)
+      {
+        var res=e.detail.response.returnval;
+        //alert(res.length);
+        //alert(JSON.stringify(res));
+        document.querySelector('transport-routing-routecreate-card').newroutearr=res;
+      },
+      fngetid:function(starrx){
+        var starr = starrx;
+        // alert(JSON.stringify(starr));
+        len=starrx.length;
+        for (var i = 0; i < len; i++) {
+
+        sid = starr[i].student_id;
+        
+
+        this.getpasssecurl = sessionStorage.getItem("addrinfo") + "/getpasssec";
+        var obj0 = {"stid": "","schol": "","academic_year":""}
+        obj0.stid = sid;
+        obj0.schol = sessionStorage.getItem("sch");
+        obj0.academic_year=localStorage.getItem("curr_sess_academicyear");
+        this.getpasssecparam =obj0;
+       // alert(JSON.stringify(obj0));
+        this.$.getpasssecajax.generateRequest();
+       // this.$.numberreadajax.generateRequest();     
+      }
+
+      },
+       numberreadResponse:function(e){
+        //alert(JSON.stringify(e.detail.response));
+        //alert(sessionStorage.getItem("sch"));
+        var no=e.detail.response;
+        for(var i=0;i<no.length;i++)
+        {
+          if(no[i].school_id==sessionStorage.getItem("sch"))
+           coor=no[i].conumber;
+        }
+      },
+     getpasssecResponse:function(e){
+      //alert('2');
+     // alert(len);
+     // alert(JSON.stringify(e.detail.response.returnval));
+     if(e.detail.response.returnval!='invalid'){
+      stname=e.detail.response.returnval[0].student_name;
+      standard=e.detail.response.returnval[0].standard;
+      section=e.detail.response.returnval[0].section;
+      zonename=e.detail.response.returnval[0].zone_name;
+      pickuproute=e.detail.response.returnval[0].pickup_route_id;
+      droproute=e.detail.response.returnval[0].drop_route_id;
+      pickupoint=e.detail.response.returnval[0].pickup_point;
+      droppoint=e.detail.response.returnval[0].drop_point;
+      dad1=e.detail.response.returnval[0].parent_name;
+      mob=e.detail.response.returnval[0].mobile;
+      add1=e.detail.response.returnval[0].address1;
+     var er1=e.detail.response.returnval[0].address2;
+     var er2=e.detail.response.returnval[0].address3;
+      var er3=e.detail.response.returnval[0].city;
+      var er4=e.detail.response.returnval[0].pincode;
+    if(er1==null||er1==""){
+      add2=e.detail.response.returnval[0].address2;
+          }
+     if(er2==null||er1==""){
+       add3=e.detail.response.returnval[0].address3;
+     }
+      if(er3==null||er1==""){
+        add4=e.detail.response.returnval[0].city;
+      }
+      if(er4==null||er1==""){
+         pin=e.detail.response.returnval[0].pincode;
+       }
+  
+      conumber=e.detail.response.returnval[0].conumber;
+    
+var obj={"stname":"","stnd":"","sec":"","pickp":"","pickr":"","dropp":"","dropr":"","dad1":"","add1":"","add2":"","add3":"","add4":"","pin":"","mob":"","conumber":"","schoolname":"","schooladdr":"","zonename":""}
+      obj.stname=stname;
+        obj.stnd=standard;
+        obj.sec=section;
+        obj.pickp=pickupoint;
+        obj.pickr=pickuproute;
+        obj.dropp=droppoint;
+        obj.dropr=droproute;
+        obj.dad1=dad1;
+        obj.add1=add1;
+        obj.add2=add2;
+        obj.add3=add3;
+        obj.add4=add4;
+        obj.pin=pin;
+        obj.mob=mob;
+        obj.conumber=conumber;
+        obj.zonename=zonename;
+        obj.schoolname=sessionStorage.getItem("schoolname");
+        obj.schooladdr=sessionStorage.getItem("schooladdr");
+        passarr.push(obj);
+     //   alert(JSON.stringify(passarr));
+        //alert('final arr is .. '+JSON.stringify(passarr));
+        c++;
+         // alert('c is '+c+'  '+len);
+        if(c==len){
+
+        //  alert('c is '+c+'  '+len);
+        // alert(passarr.length);
+        document.querySelector('studentpass-card').passarr1=passarr;
+        c=0;
+        passarr=[];
+        // break;
+      }
+      }
+      else{
+        passarr=[];
+        document.querySelector('studentpass-card').passarr1=passarr;
+      }
+      // passarr=[];
+      }
+    });
+  })();
+  </script>
+</dom-module>

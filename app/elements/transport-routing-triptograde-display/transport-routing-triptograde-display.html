@@ -1,0 +1,24 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-routing-triptograde-display">
+  <template>
+    <style>
+    </style>
+    <div>
+      <table class="table table-hover">
+      <tr><th>Trip</th><th>Grade</th></tr>
+        <template is="dom-repeat" items="{{tripgradearr}}">
+          <tr><td>{{item.trip}}</td><td>{{item.grade_name}}</td></tr>
+        </template>
+      </table>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'transport-routing-triptograde-display',
+    });
+  })();
+  </script>
+</dom-module>
