@@ -56,6 +56,7 @@
     <table style="width:60%;" class="table table-hover" hidden$="{{hidestudentinfo}}">
     <tr><th>Student Id</th><td>{{studentid}}</td><th>Student Name</th><td>{{studentname}}</td></tr>
     <tr><th>Grade</th><td>{{grade}}</td><th>Zone</th><td>{{zone}}</td></tr>
+    <tr><th>Reason</th><td colspan="3"><paper-input required error-message="Reason please!" id="transportcancelreason" label="Leave comments here" value="{{reason}}"></paper-input></td></tr>
     </table>
     </div>
     </div>
@@ -79,7 +80,12 @@
         this.hidestudentinfo=true;
       },
       FnSubmit:function(){
-        this.$.service.FnCancelTransport(this.studentid);
+        if(this.reason==""||this.reason==null){
+          this.$.transportcancelreason.validate();
+        }
+        else
+        this.$.service.FnCancelTransport(this.studentid,this.reason);
+      this.reason="";
       },
       FnCancel:function(){
         this.FnRefresh();
@@ -191,6 +197,7 @@
       this.feearr="";
       this.zone="";
       this.hidestudentinfo=true;
+      this.reason="";
       // localStorage.setItem("curr_sess_paymentpattern",1);
       // localStorage.setItem("curr_sess_ins1discount",0);
       // localStorage.setItem("curr_sess_ins2discount",0);

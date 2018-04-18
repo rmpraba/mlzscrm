@@ -84,7 +84,9 @@
     <div class="row">
     <div class="col-md-12">
     <div>
-    <transport-collection-fee-entry-card installmentdate="{{installmentdate}}" transactiondate="{{transactiondate}}" paymentmodearr="{{paymentmodearr}}" installmentarr="{{installmentarr}}"></transport-collection-fee-entry-card>
+    <transport-collection-feecollection-card installmentdate="{{installmentdate}}" transactiondate="{{transactiondate}}" paymentmodearr="{{paymentmodearr}}" installmentarr="{{installmentarr}}"
+    admissionno="{{admissionno}}" academicyear="{{academicyear}}" gradeid="{{gradeid}}" gradename="{{gradename}}" paymentfeetype="{{paymentfeetype}}"></transport-collection-feecollection-card>
+    <!-- <transport-collection-fee-entry-card installmentdate="{{installmentdate}}" transactiondate="{{transactiondate}}" paymentmodearr="{{paymentmodearr}}" installmentarr="{{installmentarr}}"></transport-collection-fee-entry-card> -->
     </div>
     </div>
     </div>
@@ -121,12 +123,21 @@
     <!-- <paper-button on-click="FnCancel">Cancel</paper-button> -->
     </div>
     </paper-dialog>  
-    <paper-dialog id="collectionfeeentryconfirmationdialog" style="width: 30%;">
+    <paper-dialog id="collectionfeeentryconfirmationdialog" style="width: 60%;">
     <!-- <center> -->
     <div class="topcard" style="width: 100%;">
     <div style="width: 90%;"><h2>Do you want to save!</h2></div>
+    <!-- <div class="submode" style="width: 100%;"> -->      
+    <!-- </div> -->
     <div style="width: 10%;text-align: right;margin-top: -2%;"><paper-icon-button style="color: grey;"  icon="icons:close" on-click="FnSaveNo"></paper-icon-button></div> 
     </div>
+    <table style="width: 100%;" class="table table-hover">
+        <tr><th>Installment</th><th>Amount</th><th>Payment Date</th><th>Payment Mode</th><th>Bank Name</th><th>Trans/Cheque #</th><th>Trans/Cheque Date</th></tr>
+        <template is="dom-repeat" items="{{makepaymentarr}}">
+          <tr style="color: {{item.colorcode}};"><td>{{item.installment}}</td><td>{{item.amount}}</td><td>{{item.dateofpayment}}</td>
+          <td>{{item.modeofpayment}}</td><td>{{item.transactionname}}</td><td>{{item.transactionno}}</td><td>{{item.transactiondate}}</td></tr>
+        </template>
+    </table>
     <br>
     <!-- <h2>Do you want to save!</h2> -->
     <!-- <br><br> -->
@@ -188,13 +199,13 @@
         this.installmentarr=[];
         this.paymenttype="";
         this.paymentfeetype="";
-        document.querySelector('transport-collection-fee-entry-card').FnRefresh();
+        document.querySelector('transport-collection-feecollection-card').FnRefresh();
+        // document.querySelector('transport-collection-fee-entry-card').FnRefresh();
         // document.querySelector('transport-collection-paymentfeetype-card').FnRefresh();
         // document.querySelector('transport-collection-paymenttype-card').FnRefresh();
         // document.querySelector('transport-collection-payment-installment-card').FnRefresh();
         // document.querySelector('transport-collection-paymentsubmode-card').FnRefresh();
-        this.$.feecollectionservice.fetchcollectionfeetypetocollect(this.academicyear);
-        
+        this.$.feecollectionservice.fetchcollectionfeetypetocollect(this.academicyear);        
         // this.$.feecollectionservice.fetchcollectionpaymentinstallment();
       },
       FnRefresh:function(){
@@ -208,9 +219,11 @@
         this.ready();
         this.paymenttype="";
         this.paymentfeetype=""; 
-        document.querySelector('transport-collection-fee-entry-card').installmenttypename=""; 
+        document.querySelector('transport-collection-feecollection-card').FnRefresh();
+        document.querySelector('transport-collection-feecollection-card').installmenttypename="";
+        // document.querySelector('transport-collection-fee-entry-card').installmenttypename=""; 
         document.querySelector('transport-collection-paymenttype-card').FnRefresh();
-        document.querySelector('transport-collection-fee-entry-card').FnRefresh();
+        // document.querySelector('transport-collection-fee-entry-card').FnRefresh();
         document.querySelector('transport-collection-paymentfeetype-card').FnRefresh();
       },
       FnSetInstallmenttype(typeid,typename){
@@ -220,7 +233,8 @@
         this.hidepaymentfeeentry=false;
         this.hidesavepaymenttype=false; 
         this.hidepaymentfeeedit=true;  
-        document.querySelector('transport-collection-fee-entry-card').FnRefresh();
+        document.querySelector('transport-collection-feecollection-card').FnRefresh();
+        // document.querySelector('transport-collection-fee-entry-card').FnRefresh();
         this.$.feecollectionservice.fetchfeenetrycollectionfeetypeinstallmentamount(this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.studentname,this.feetype,this.installmenttypename);
       },
       FnSetPaymenttype:function(typeid,typename){
@@ -229,9 +243,11 @@
         if(typeid==2&&this.paymentfeetype!='Zonechange Fee'){
           // alert('in');
           document.querySelector("transport-fee-collection-home-card").FnRefreshInstallment();
-          document.querySelector("transport-collection-fee-entry-card").hideinstallmentblock=false;
-          document.querySelector('transport-collection-fee-entry-card').installmenttypename="";   
-          this.$.feecollectionservice.fetchcollectionpaymentinstallment(typeid,this.feetype);
+          // document.querySelector("transport-collection-fee-entry-card").hideinstallmentblock=false;
+          // document.querySelector('transport-collection-fee-entry-card').installmenttypename="";   
+          // document.querySelector('transport-collection-feecollection-card').hideinstallmentblock=false;
+          document.querySelector('transport-collection-feecollection-card').installmenttypename="";
+          this.$.feecollectionservice.fetchcollectionpaymentinstallment(typeid,this.feetype,this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.studentname,typename);          
         }
         else{
           // alert(typename);
@@ -241,12 +257,17 @@
           }
           this.installmenttypeid=typename;
           this.installmenttypename=typename;          
-          document.querySelector("transport-collection-fee-entry-card").hideinstallmentblock=true; 
-          this.$.feecollectionservice.fetchfeenetrycollectionfeetypeinstallmentamount(this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.studentname,this.feetype,typename);
+          // document.querySelector("transport-collection-fee-entry-card").hideinstallmentblock=true; 
+          document.querySelector("transport-collection-feecollection-card").hideinstallmentblock=true; 
+          var obj={"installment":typename};
+          var insarr=[];
+          insarr.push(obj);
+          this.$.feecollectionservice.fetchfeenetrycollectionfeetypeinstallmentamount(insarr,this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.studentname,this.feetype,typename);
         }
         this.typeid=typeid;
         this.typename=typename;
-        document.querySelector('transport-collection-fee-entry-card').FnRefresh();
+        // document.querySelector('transport-collection-fee-entry-card').FnRefresh();
+        document.querySelector('transport-collection-feecollection-card').FnRefresh();
         this.hidepaymentfeeentry=false;
         this.hidesavepaymenttype=false; 
         this.hidepaymentfeeedit=true;    
@@ -311,25 +332,33 @@
       FnToggle:function(){
         this.$.collectionfeeentryfeetypedialog.toggle();
       },
-      FnSetPaymentInfo(paymentmodename,amount,receiptno,dateofpayment,dueamount,transactionno,transactionname,transactiondate,subtypeid,installmentdate){
-        // alert(paymentmodename+"  "+amount+"  "+receiptno+"  "+dateofpayment+"  "+dueamount+"  "+transactionno+"  "+transactionname+"  "+transactiondate);
-        this.paymentmodename=paymentmodename;
-        this.amount=amount;
-        this.receiptno=receiptno;
-        this.dateofpayment=dateofpayment;
-        this.dueamount=dueamount;
-        this.transactionno=transactionno;
-        this.transactionname=transactionname;
-        this.transactiondate=transactiondate;
-        this.subtypeid=subtypeid;
-        this.installmentdate=installmentdate;
-        // alert(this.installmentdate);
+      // FnSetPaymentInfo(paymentmodename,amount,receiptno,dateofpayment,dueamount,transactionno,transactionname,transactiondate,subtypeid,installmentdate){
+      //   // alert(paymentmodename+"  "+amount+"  "+receiptno+"  "+dateofpayment+"  "+dueamount+"  "+transactionno+"  "+transactionname+"  "+transactiondate);
+      //   this.paymentmodename=paymentmodename;
+      //   this.amount=amount;
+      //   this.receiptno=receiptno;
+      //   this.dateofpayment=dateofpayment;
+      //   this.dueamount=dueamount;
+      //   this.transactionno=transactionno;
+      //   this.transactionname=transactionname;
+      //   this.transactiondate=transactiondate;
+      //   this.subtypeid=subtypeid;
+      //   this.installmentdate=installmentdate;
+      //   // alert(this.installmentdate);
+      //   this.$.collectionfeeentryconfirmationdialog.toggle();
+      // },
+      FnSetPaymentInfo(arr){
         this.$.collectionfeeentryconfirmationdialog.toggle();
+        this.makepaymentarr=arr;
       },
       FnSaveYes:function(){
         this.$.collectionfeeentryconfirmationdialog.toggle();
-        this.$.feecollectionservice.FnMakePaymentService(this.studentname,this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.feecode,this.typeid,this.typename,this.paymenttype,this.paymentfeetype,this.paymentmodename,this.amount,this.receiptno,this.dateofpayment,this.dueamount,this.transactionno,this.transactionname,this.transactiondate,this.admissionstatus,this.subtypeid,this.installmenttypename,this.installmentdate);
+        this.$.feecollectionservice.FnMakePaymentService(this.studentname,this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.feecode,this.typeid,this.typename,this.paymenttype,this.paymentfeetype,this.admissionstatus,this.makepaymentarr);
       },
+      // FnSaveYes:function(){
+      //   this.$.collectionfeeentryconfirmationdialog.toggle();
+      //   this.$.feecollectionservice.FnMakePaymentService(this.studentname,this.admissionno,this.academicyear,this.admissionyear,this.gradeid,this.gradename,this.feecode,this.typeid,this.typename,this.paymenttype,this.paymentfeetype,this.paymentmodename,this.amount,this.receiptno,this.dateofpayment,this.dueamount,this.transactionno,this.transactionname,this.transactiondate,this.admissionstatus,this.subtypeid,this.installmenttypename,this.installmentdate);
+      // },
       FnSaveNo:function(){
         this.$.collectionfeeentryconfirmationdialog.toggle();
       },
@@ -350,7 +379,8 @@
         this.ready();
         this.FnRefresh();
         document.querySelector('transport-collection-paymenttype-card').FnRefresh();
-        document.querySelector('transport-collection-fee-entry-card').FnRefresh();
+        // document.querySelector('transport-collection-fee-entry-card').FnRefresh();
+        document.querySelector('transport-collection-feecollection-card').FnRefresh();
         document.querySelector('transport-collection-paymentfeetype-card').FnRefresh();
         document.querySelector('transport-collection-payment-installment-card').FnRefresh();
       },

@@ -6,10 +6,9 @@
 <link rel="import" href="../schedulefee-card/schedulefee-card.html">
 <link rel="import" href="../fee-card/fee-card.html">
 <link rel="import" href="../followup-details/followup-details.html">
-<link rel="import" href="../fee-reports/fee-reports.html">
-<link rel="import" href="../feetype-schedule-capdcrd/feetype-schedule-card.html">
-<link rel="import" href="../discount-schedule-card/discount-schedule-card.html">
-
+<!-- <link rel="import" href="../fee-reports/fee-reports.html"> -->
+<!-- <link rel="import" href="../feetype-schedule-card/feetype-schedule-card.html"> -->
+<!-- <link rel="import" href="../discount-schedule-card/discount-schedule-card.html"> -->
 <dom-module id="navigation-bar">
   <template>
     <style>
@@ -216,14 +215,35 @@
               <li id="enquiryform">
               <a href="" data-backdrop="static" data-keyboard="false" aria-hidden="true" data-toggle="modal" data-target="#pre-apps" on-click="Fnpreapp">Enquiry Form</a>
               </li>
-              <!-- <li id="updateenquiry">
-              <a href="" on-click="Fnpreappupdate">Update Enquiry</a>
-              </li> -->
               <li id="followup">
               <a id="followup" href="" aria-hidden="true" on-click="followupdashboard" data-toggle="modal"> Follow Up</a>
               </li>
             </ul>
         </li>
+
+        <li id="foreports" hidden>
+          <a id="foreports" href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>FO Reports<span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">
+              <li id="enquiryconversionanalysis">
+                <a href="" on-click="FnEnquiryconversion" aria-hidden="true">Enquiry Conversion Analysis</a>
+              </li>
+              <li id="walkinanalysis">
+                <a href="" on-click="walkin_analysis" aria-hidden="true">Walkin Analysis</a>
+              </li>
+              <li id="walkinanalysiswithfilter">
+                <a href="" on-click="walkin_analysis_filter" aria-hidden="true">Walkin Analysis With Filter</a>
+              </li>
+              <li id="followupcallanalysis">
+                <a href="" on-click="call_analysis" aria-hidden="true">Follow Up Call Analysis</a>
+              </li>
+              <li id="masterenquiryanalysis">
+                <a href="" on-click="Fnmasteranalysis" aria-hidden="true">Master Enquiry Analysis</a>
+              </li>
+              <li id="counsellorreport">
+                <a href="" on-click="Fncounsellorreport" aria-hidden="true">Counsellor Report</a>
+              </li>
+          </ul>
+        </li> 
         
         <!-- <li id="balancefollowup" hidden$="{{hidebalancefollowupmenu}}">
             <a href="" on-click="exchange_followup" ><i class="fa fa-exchange fa-fw"></i>Balance Followup</a>
@@ -261,7 +281,7 @@
         </li>
 
         <li id="rtestructure">
-            <a id="rtestructure" href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>RTE Structure</a>
+            <a  href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>RTE Structure</a>
             <ul class="nav nav-second-level">
               <li id="rtefeetypeschedule">
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglertefeetypeschedule" on-click="FnRTEFeetypeschedule">Fee Type Schedule</a>
@@ -270,7 +290,6 @@
         </li>
 
         <li id="transportfeestructure">
-            <!-- <a id="transportfeestructure" href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>Transport Fee Structure</a> -->
             <a id="transportfeestructure" href="" aria-hidden="true" ><i class="fa fa-check fa-fw"></i>Transport Structure</a>
             <ul class="nav nav-second-level">
               <li id="transportzonecreation">
@@ -329,10 +348,10 @@
             <a href="" aria-hidden="true" on-click="FnRTEreport">RTE Students Report</a>
             </li>
             <li id="enrollmentdashboard">
-            <a href="" aria-hidden="true" on-click="FnEnrollmentDashboard">Enrollment Dashboard</a>
+            <a href="" aria-hidden="true" on-click="FnEnrollmentDashboard">Daily Enrollment Dashboard</a>
             </li>
             <li id="admissiondashboard">
-            <a href="" aria-hidden="true" on-click="FnAdmissionDashboard">Dashboard</a>
+            <a href="" aria-hidden="true" on-click="FnAdmissionDashboard">Enrollment Dashboard</a>
             </li>
             </ul>
         </li>
@@ -340,132 +359,44 @@
         <li id="feepayment">
             <a id="feepayment" href="#" aria-hidden="true" data-toggle="modal" on-click="FnFeePayment"><i class="fa fa-money fa-fw"></i> Fee Payment<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
-              <li id="feecollection">
-              <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglefeecollection" on-click="FnFeeCollection" hidden>Fee Collection</a>
+              
+              <!-- <li id="feecollection">
+              <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglefeecollection" on-click="FnFeeCollection">Fee Collection</a>
+              </li> -->
+              <!-- <li id="applicationfee">
+              <a href="" aria-hidden="true" data-toggle="modal"  on-click="FnProspect">Application Fee</a>
               </li>
+              <li id="collection">
+              <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglecollection" on-click="FnCollection">Fee Collection</a>
+              </li> -->
               <li id="applicationfee">
               <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggleprospectousfee" on-click="FnProspect">Application Fee</a>
               </li>
-              <li id="registrationfee">
+              <li id="registrationfee" >
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggleregisterationfee" on-click="FnRegister">Registration Fee</a>
               </li>
-              <li id="cautiondeposit">
+              <li id="cautiondeposit" >
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglecautiondeposit" on-click="FnCautionDeposit">Caution Deposit</a>
               </li>
-              <li id="schoolfee">
+              <li id="schoolfee" >
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglefeepayment"  on-click="FnKit">School Fee</a>
               </li>
               <li id="transportfee" hidden>
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportfeepayment"  on-click="FnTransportFee">Transport Fee</a>
               </li>
-              <li id="customfeepayment">
+              <li id="customfeepayment" >
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglecustomfeepayment"  on-click="FnCustomfee">Custom Fee Payment</a>
               </li> 
-              <li id="rtefee">
+              <li id="rtefee" >
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglertefee"  on-click="FnRTEfee">RTE Fee</a>
               </li>              
-              <li id="provisionfee">
+              <li id="provisionfee" hidden>
                 <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggleprovisionfee"  on-click="FnProvisionfee">Provision Fee</a>
               </li> 
             </ul>
         </li>
 
-        <li id="foreports">
-          <a id="foreports" href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>FO Reports<span class="fa arrow"></span></a>
-          <ul class="nav nav-second-level">
-              <li id="enquiryconversionanalysis">
-                <a href="" on-click="FnEnquiryconversion" aria-hidden="true">Enquiry Conversion Analysis</a>
-              </li>
-              <li id="walkinanalysis">
-                <a href="" on-click="walkin_analysis" aria-hidden="true">Walkin Analysis</a>
-              </li>
-              <li id="walkinanalysiswithfilter">
-                <a href="" on-click="walkin_analysis_filter" aria-hidden="true">Walkin Analysis With Filter</a>
-              </li>
-              <li id="followupcallanalysis">
-                <a href="" on-click="call_analysis" aria-hidden="true">Follow Up Call Analysis</a>
-              </li>
-              <li id="masterenquiryanalysis">
-                <a href="" on-click="Fnmasteranalysis" aria-hidden="true">Master Enquiry Analysis</a>
-              </li>
-              <li id="counsellorreport">
-                <a href="" on-click="Fncounsellorreport" aria-hidden="true">Counsellor Report</a>
-              </li>
-          </ul>
-        </li>    
-      
-        <li id="reports">
-            <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Reports<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level">
-            <li id="reports">
-            <a href="" aria-hidden="true">Pending Collection Report<span class="fa arrow"></span></a>
-            <ul class="nav nav-third-level">
-            <li id="feeduereport">
-            <a href="" aria-hidden="true" on-click="FnPendingFeeReport">Fee Paid & Due Report</a>
-            </li>
-            <li id="rollovernotpaidlist">
-            <a href="" aria-hidden="true" on-click="FnNotpaidReport">Rollover Not paid List</a>
-            </li>
-            </ul>
-            </li>            
-            <li id="dailycollectiondashboard">
-            <a href="" aria-hidden="true" on-click="FnDailycollectionDashboard">Daily Collection Dashboard<span class="fa arrow"></span></a>
-            </li>
-            <li id="consolidatedcollectiondashboard" hidden>
-            <a href="" aria-hidden="true" on-click="FnCollectionDashboard">Consolidated Collection Dashboard<span class="fa arrow"></span></a>
-            </li>
-            <li id="feepaidduereport" hidden>
-            <a href="" aria-hidden="true" on-click="FnDetailduereport">Fee Paid & Due report<span class="fa arrow"></span></a>
-            </li>
-            <li id="processreport" hidden>
-            <a href="" aria-hidden="true" on-click="FnProcessreport">Process Report<span class="fa arrow"></span></a>
-            </li>
-            </ul>
-        </li>
-
-        <li id="reportcollectionreport">
-         <a href="" aria-hidden="true"><i class="fa fa-money"></i>Collection Report<span class="fa arrow"></span></a>
-          <ul class="nav nav-second-level">          
-            <li id="reportbouncecollection">
-            <a href="" aria-hidden="true" on-click="FnBounceCollectionReport">Bounce Collection</a>
-            </li>
-            <li id="reportcollection">
-            <a href="" aria-hidden="true" on-click="FnTCCollectionReport">TC Collection</a>
-            </li>
-            <li id="reportwithdrawcollection">
-            <a href="" aria-hidden="true" on-click="FnWithdrawCollectionReport">Withdrawn Collection</a>
-            </li>
-            <li id="reportapplnfeecollection">
-            <a href="" aria-hidden="true" on-click="FnApplnFeeCollectionReport">Application Fee Collection</a>
-            </li>
-            <li id="reportregfeecollection">
-            <a href="" aria-hidden="true" on-click="FnRegFeeCollectionReport">Registration Fee Collection</a>
-            </li>
-            <li id="reportschoolfeecollection">
-            <a href="" aria-hidden="true" on-click="FnSchoolFeeCollectionReport">School Fee Collection</a>
-            </li>
-            <li id="reportlatefeecollection">
-            <a href="" aria-hidden="true" on-click="FnLateFeeCollectionReport">Late Fee Collection</a>
-            </li>
-            <li id="reportadhocfeecollection">
-            <a href="" aria-hidden="true" on-click="FnAdhocFeeCollectionReport">Adhoc Fee Collection</a>
-            </li>
-            <li id="thirdpartycollection">
-            <a href="" aria-hidden="true" on-click="FnTPCollectionReport">Thirdparty Collection</a>
-            </li>
-            <li id="thirdpartypendingcollection">
-            <a href="" aria-hidden="true" on-click="FnTPPendingCollectionReport">Thirdparty Pending Collection</a>
-            </li>
-            <li id="refundcollectionamount">
-            <a href="" aria-hidden="true" on-click="FnRefundCollectionReport">Refund Amount</a>
-            </li>
-            <li id="collectionreconamount">
-            <a href="" aria-hidden="true" on-click="FnCollectionReconReport">Reconciliation Report</a>
-            </li>
-          </ul>
-        </li>
-
-        <li id="dailycollectionreport">
+          <li id="dailycollectionreport">
           <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Daily Collection Report<span class="fa arrow"></span></a>
           <ul class="nav nav-second-level">          
             <li id="currentdatecollection">
@@ -493,81 +424,204 @@
             <a href="" aria-hidden="true" on-click="FnDailyCollectionReport">Daily Fee Collection Report</a>
             </li> -->            
           </ul>
+        </li>  
+      
+        <li id="reports" hidden>
+            <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Reports<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+            <li id="collectionduereport">
+            <a href="" aria-hidden="true" on-click="FnCollectionDueReport">Due Report<span class="fa arrow"></span></a>
+            </li>
+            <li id="reports" hidden>
+            <a href="" aria-hidden="true">Pending Collection Report<span class="fa arrow"></span></a>
+            <ul class="nav nav-third-level">
+            <li id="feeduereport">
+            <a href="" aria-hidden="true" on-click="FnPendingFeeReport">Fee Paid & Due Report</a>
+            </li>
+            <li id="rollovernotpaidlist">
+            <a href="" aria-hidden="true" on-click="FnNotpaidReport">Rollover Not paid List</a>
+            </li>
+            </ul>
+            </li>            
+            <li id="dailycollectiondashboard">
+            <a href="" aria-hidden="true" on-click="FnDailycollectionDashboard">Daily Collection Dashboard<span class="fa arrow"></span></a>
+            </li>
+            <li id="consolidatedcollectiondashboard" hidden>
+            <a href="" aria-hidden="true" on-click="FnCollectionDashboard">Consolidated Collection Dashboard<span class="fa arrow"></span></a>
+            </li>
+            <li id="feepaidduereport" hidden>
+            <a href="" aria-hidden="true" on-click="FnDetailduereport">Fee Paid & Due report<span class="fa arrow"></span></a>
+            </li>
+            <li id="processreport" hidden>
+            <a href="" aria-hidden="true" on-click="FnProcessreport">Process Report<span class="fa arrow"></span></a>
+            </li>
+            </ul>
         </li>
 
-        <li id="transportprocess">
+        <li id="dashboardreport">
+         <a href="" aria-hidden="true"><i class="fa fa-table fa-fw"></i>Dashboard<span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">  
+          <li id="dashboardfodashboardreport">
+            <a href="" aria-hidden="true"><i class="glyphicon glyphicon-user"></i>Enquiry Dashboard<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level"> 
+            <li id="dashboardenquiryconversionanalysis">
+                <a href="" on-click="FnEnquiryconversion" aria-hidden="true">Enquiry Conversion Analysis</a>
+              </li>
+              <li id="dashboardwalkinanalysis">
+                <a href="" on-click="walkin_analysis" aria-hidden="true">Walkin Analysis</a>
+              </li>
+              <li id="dashboardwalkinanalysiswithfilter">
+                <a href="" on-click="walkin_analysis_filter" aria-hidden="true">Walkin Analysis With Filter</a>
+              </li>
+              <li id="dashboardfollowupcallanalysis" hidden>
+                <a href="" on-click="call_analysis" aria-hidden="true">Follow Up Call Analysis</a>
+              </li>
+              <li id="dashboardmasterenquiryanalysis" hidden>
+                <a href="" on-click="Fnmasteranalysis" aria-hidden="true">Master Enquiry Analysis</a>
+              </li>
+              <li id="dashboardcounsellorreport" hidden>
+                <a href="" on-click="Fncounsellorreport" aria-hidden="true">Counsellor Report</a>
+              </li>
+            <li id="dashboardenrollmentdashboard">
+            <a href="" aria-hidden="true" on-click="FnEnrollmentDashboard">Daily Enrollment Dashboard</a>
+            </li>
+            <li id="dashboardadmissiondashboard">
+            <a href="" aria-hidden="true" on-click="FnAdmissionDashboard">Enrollment Dashboard</a>
+            </li>
+            </ul>
+          </li>    
+          <li id="dashboardcollectiondashboardreport">
+            <a href="" aria-hidden="true"><i class="glyphicon glyphicon-gbp"></i>Collection Dashboard<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level"> 
+              <li id="dashboardcollectionduereport">
+              <a href="" aria-hidden="true" on-click="FnCollectionDueReport">Due Report<span class="fa arrow"></span></a>
+              </li>
+              <li id="dashboarddailycollectiondashboard">
+              <a href="" aria-hidden="true" on-click="FnDailycollectionDashboard">Daily Collection Dashboard<span class="fa arrow"></span></a>
+              </li>
+            </ul>
+          </li>  
+          </ul>
+        </li>
+
+        <li id="collectionreportcollectionreport" >
+         <a href="" aria-hidden="true"><i class="fa fa-money"></i>Collection Report<span class="fa arrow"></span></a>
+          <ul class="nav nav-second-level">          
+            <li id="collectionreportbouncecollection">
+            <a href="" aria-hidden="true" on-click="FnBounceCollectionReport">Bounce Collection</a>
+            </li>
+            <li id="collectionreporttccollection">
+            <a href="" aria-hidden="true" on-click="FnTCCollectionReport">TC Collection</a>
+            </li>
+            <li id="collectionreportwithdrawcollection">
+            <a href="" aria-hidden="true" on-click="FnWithdrawCollectionReport">Withdrawn Collection</a>
+            </li>
+            <li id="collectionreportapplnfeecollection">
+            <a href="" aria-hidden="true" on-click="FnApplnFeeCollectionReport">Application Fee Collection</a>
+            </li>
+            <li id="collectionreportregfeecollection">
+            <a href="" aria-hidden="true" on-click="FnRegFeeCollectionReport">Registration Fee Collection</a>
+            </li>
+            <li id="collectionreportschoolfeecollection">
+            <a href="" aria-hidden="true" on-click="FnSchoolFeeCollectionReport">School Fee Collection</a>
+            </li>
+            <li id="collectionreportlatefeecollection">
+            <a href="" aria-hidden="true" on-click="FnLateFeeCollectionReport">Late Fee Collection</a>
+            </li>
+            <li id="collectionreportadhocfeecollection">
+            <a href="" aria-hidden="true" on-click="FnAdhocFeeCollectionReport">Adhoc Fee Collection</a>
+            </li>
+            <li id="collectionthirdpartycollection">
+            <a href="" aria-hidden="true" on-click="FnTPCollectionReport">Thirdparty Collection</a>
+            </li>
+            <li id="collectionthirdpartypendingcollection">
+            <a href="" aria-hidden="true" on-click="FnTPPendingCollectionReport">Thirdparty Pending Collection</a>
+            </li>
+            <li id="collectionrefundcollectionamount">
+            <a href="" aria-hidden="true" on-click="FnRefundCollectionReport">Refund Amount</a>
+            </li>
+            <li id="collectioncollectionreconamount">
+            <a href="" aria-hidden="true" on-click="FnCollectionReconReport">Reconciliation Report</a>
+            </li>
+          </ul>
+        </li>
+
+        <li id="transportroutingtransportprocess">
           <a href="" aria-hidden="true"><i class="fa fa-bus"></i>Transport Process<span class="fa arrow"></span></a>
           <ul class="nav nav-second-level">
-          <li id="transportzonefeecollection">
+          <li id="transportroutingtransportzonefeecollection">
             <a href="" aria-hidden="true" class="fa fa-money">Zone Mapping & Collection</a> 
           <ul class="nav nav-second-level">
-           <li id="transportzonefeecollection">
+           <li id="transportroutingtransportzonefeecollection">
             <a href="" aria-hidden="true" on-click="FnTransportCollection">Zone Allocation</a>
            </li> 
-           <li id="zoneallocation" hidden>
+           <li id="transportroutingzoneallocation" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezoneallocation" on-click="FnZoneAllocation">Zone Allocation</a>
            </li> 
-           <li id="zonechange" hidden>
+           <li id="transportroutingzonechange" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" on-click="FnZoneChange">Zone Change</a>
            </li>
-           <li id="zonechangecollection" hidden>
+           <li id="transportroutingzonechangecollection" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonechangecollection" on-click="FnZoneChangeCollection">Zone Change Collection</a>
            </li>
-           <li id="zonecancellation" hidden>
+           <li id="transportroutingzonecancellation" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#togglezonecancellation" on-click="FnZoneCancellation">Zone Cancellation</a>
            </li>
-           <li id="transportdiscount" hidden>
+           <li id="transportroutingtransportdiscount" hidden>
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportdiscount" on-click="FnTransportDiscount">Transport Discount</a>
            </li>
-           <li id="transportchequecancelorbounce">
+           <li id="transportroutingtransportchequecancelorbounce">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportchequecancelorbounce" on-click="FnTransportchequecancelorbounce">Transport cheque Bounce/Cancel</a>
            </li>
-           <li id="addstudent">
+           <li id="transportroutingaddstudent">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggleaddstudent" on-click="FnAddStudent">Add Student</a>
            </li> 
-           <li id="transportsearchreceipt" hidden>
+           <li id="transportroutingtransportsearchreceipt" hidden>
             <a href="" aria-hidden="true" on-click="FnTransportSearchReceipt">Search Receipt</a>
            </li> 
-           <li id="transportchequeeditdelete" hidden>
+           <li id="transportroutingtransportchequeeditdelete" hidden>
             <a href="" aria-hidden="true" on-click="FnTransportChequeEditDelete">Cheque Edit/Delete</a>
            </li> 
-           <li id="transportdailycollection">
+           <li id="transportroutingtransportdailycollection">
+            <a href="" aria-hidden="true" on-click="FnTransportDailyIncome">Transport Daily Income</a>
+           </li> 
+           <li id="transportroutingtransportdailycollection">
             <a href="" aria-hidden="true" on-click="FnTransportDailyCollection">Transport Daily Collection</a>
            </li>
-           <li id="transportfeeduereport">
+           <li id="transportroutingtransportfeeduereport">
             <a href="" aria-hidden="true" on-click="FnTransportFeeDueReport">Transport Fee Paid & Due Report</a>
            </li>
-           <li id="transportpdccollection">
+           <li id="transportroutingtransportpdccollection">
             <a href="" aria-hidden="true" on-click="FnTransportPdcCollection">PDC Collection</a>
            </li>
-           <li id="transportcollectiondashboard">
+           <li id="transportroutingtransportcollectiondashboard">
             <a href="" aria-hidden="true" on-click="FnTransportCollectionDashboard">Transport Collection Dashboard</a>
            </li>
-           <li id="transportcancellation">
+           <li id="transportroutingtransportcancellation">
             <a href="" aria-hidden="true" data-toggle="modal" data-target="#toggletransportcancellation" on-click="FnTransportCancellation">Transport Cancellation</a>
            </li>
           </ul>
           </li>
-          <li id="transportzonefeecollection">
+          <li id="transportroutingtransportrouting">
             <a href="" aria-hidden="true" class="fa fa-map-marker">Transport Routing</a> 
             <ul class="nav nav-second-level">
-              <li id="transportroutecreation">
+              <li id="transportroutingtransportroutecreation">
               <a href="" aria-hidden="true" on-click="FnTransportRouteCreation">Add Route</a>
               </li> 
-              <li id="transportroutecreation">
+              <li id="transportroutingtransportpointcreation">
               <a href="" aria-hidden="true" on-click="FnTransportPointCreation">Add/
               Map Point</a>
               </li>
-              <li id="transporttriptograde">
+              <li id="transportroutingtransporttriptograde">
               <a href="" aria-hidden="true" on-click="FnTransportTripToGrade">Trip to Grade Mapping</a>
               </li>
-              <li id="transporttriptograde" hidden>
-              <a href="" aria-hidden="true" on-click="FnTransportTripToGrade">Add Bus Info</a>
+              <li id="transportroutingtransportaddbusinfo">
+              <a href="" aria-hidden="true" on-click="FnTransportAddBusInfo">Add Bus Info</a>
               </li>
-              <li id="transportroutecreation">
+              <li id="transportroutingtransportroutecreation">
               <a href="" aria-hidden="true" on-click="FnTransportStudentPointMapping">Student to Point Mapping</a>
               </li>
-              <li id="transportroutecreation">
+              <li id="transportroutingtransportroutecreation">
               <a href="" aria-hidden="true" on-click="FnTransportChangePoint">Change Student Point</a>
               </li>
               <!-- <li id="transportstudentPass">
@@ -576,10 +630,10 @@
               <!-- <li id="transportroutereports">
               <a href="" aria-hidden="true" class="fa fa-server">Reports</a>
               <ul class="nav nav-second-level"> -->
-              <li id="transportroutereport">
+              <li id="transportroutingtransportroutereport">
               <a href="" aria-hidden="true" on-click="FnTransportRouteReport">Route Report</a>
               </li>
-              <li id="transportgradwiseroutereport">
+              <li id="transportroutingtransportgradwiseroutereport">
               <a href="" aria-hidden="true" on-click="FnTransportGradewiseRouteReport">Gradewise Route Report</a>
               </li>
               <!-- </ul>
@@ -703,25 +757,6 @@
         </div>
       </div>
  </div> -->
-
- <div class="modal fade bd-example-modal-lg" id="toggletransportzonecreation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 class="center-block event-title" id="">
-              Transport Zone Creation
-            </h4>
-          </div>
-          <div class="modal-body">
-            <zonedistance-card></zonedistance-card>
-          </div>
-        </div>
-      </div>
-  </div>
-
 
  <div class="modal fade bd-example-modal-lg" id="toggleaddstudent" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
@@ -1012,6 +1047,24 @@
       </div>
     </div>
 
+     <div class="modal fade bd-example-modal-lg" id="toggletransportzonecreation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="center-block event-title" id="">
+              Transport Zone Creation
+            </h4>
+          </div>
+          <div class="modal-body">
+            <zonedistance-card></zonedistance-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade bd-example-modal-lg" id="toggletransportfeepayment" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" id ="fee-dialog">
         <div class="modal-content" id="fee-content">
@@ -1131,7 +1184,7 @@
     <reporting-service id="reportingservice"></reporting-service>
     <user-service id="userservice"></user-service>
     <transportfee-service id="transportfeeservice"></transportfee-service>
-     <transport-routing-mapstudenttopoint-service id="route"></transport-routing-mapstudenttopoint-service>
+    <transport-routing-mapstudenttopoint-service id="route"></transport-routing-mapstudenttopoint-service>
     <transport-routing-transport-service id="routepoint"></transport-routing-transport-service>
   </template>
   <script>
@@ -1155,7 +1208,6 @@
         this.hidemasterreportmenu=true;
         this.hidereportmenu=true;
         localStorage.setItem('curr_sess_page','');
-
       },
       // FnFeeCollection:function(){
       //   document.querySelector('app-list').setPage("fee-card","Fee Collection");
@@ -1167,6 +1219,7 @@
         var schoolid=e.target.selectedItem.value.trim();
         localStorage.setItem("schoolname",schoolname);
         localStorage.setItem("schoolid",schoolid);
+        // alert(localStorage.getItem("schoolid"));
         this.$.service.getenquirycount();
         this.$.service.getadmittedcount();
         document.querySelector('app-list').setPage("enquiry","Enquiry");
@@ -1213,15 +1266,7 @@
         document.querySelector('transportfee-schedule-card').callService();
         this.$.scheduleservice.fetchacademicyearService();
       },
-       FnTransportCollection:function(e){
-        localStorage.setItem('curr_sess_page','zoneallocation');
-        document.querySelector('app-list').setPage("transport-fee-collection-home-card","Transport Collection");
-        this.$.scheduleservice.fetchacademicyearService();
-        // document.querySelector('transport-fee-collection-home-card').callService();
-        document.querySelector('transport-fee-collection-home-card').FnRefresh();
-        document.querySelector('transport-fee-collection-home-card').ready();
-      },
-       FnTransportZoneCreation:function(e){
+      FnTransportZoneCreation:function(e){
         localStorage.setItem('curr_sess_page','');
         document.querySelector('zonedistance-card').fnrefresh();
         document.querySelector('zonedistance-card').fnclear();
@@ -1233,14 +1278,36 @@
         document.querySelector('transportfee-card').FnRefresh();
         document.querySelector('transportfee-card').callService();
       },
+      FnCollection:function(e){
+        document.querySelector('app-list').setPage("fee-collection-home-card","Collection");
+        this.$.scheduleservice.fetchacademicyearService();
+        // document.querySelector('fee-collection-home-card').callService();
+        document.querySelector('fee-collection-home-card').FnRefresh();
+        document.querySelector('fee-collection-home-card').ready();
+      },
+      FnTransportCollection:function(e){
+        localStorage.setItem('curr_sess_page','zoneallocation');
+        document.querySelector('app-list').setPage("transport-fee-collection-home-card","Transport Collection");
+        this.$.scheduleservice.fetchacademicyearService();
+        // document.querySelector('transport-fee-collection-home-card').callService();
+        document.querySelector('transport-fee-collection-home-card').FnRefresh();
+        document.querySelector('transport-fee-collection-home-card').ready();
+      },
       FnProspect:function(e){
       // alert(e.target.text);
       localStorage.setItem('curr_sess_page','');
         localStorage.setItem("curr_sess_feetypepayment","Application fee");
-        localStorage.setItem("curr_sess_feetypepaymentflag","1");
-        document.querySelector('prospectousfee-card').callService();
-        document.querySelector('prospectousfee-card').FnRefresh();
-        document.querySelector('prospectousfee-card').ready();
+        document.querySelector('app-list').setPage("application-fee-card","Application Fee Collection");
+        this.$.scheduleservice.fetchacademicyearService();
+        document.querySelector('application-fee-card').FnRefresh();
+        document.querySelector('application-fee-card').ready();
+        // document.querySelector('application-fee-card').callService();
+        // document.querySelector('application-fee-card').FnRefresh();
+        // document.querySelector('application-fee-card').ready();
+        // localStorage.setItem("curr_sess_feetypepaymentflag","1");
+        // document.querySelector('prospectousfee-card').callService();
+        // document.querySelector('prospectousfee-card').FnRefresh();
+        // document.querySelector('prospectousfee-card').ready();
         // this.FnRefresh();
       },
       FnRegister:function(e){
@@ -1434,13 +1501,21 @@
           document.querySelector('daycollection-report').FnRefresh();
           document.querySelector('daycollection-report').FnCallService();
       },
-      FnTransportDailyCollection:function(){
-          // document.querySelector('app-list').setPage("transportdaily-collection-report","Transport Daily Collection");
+      FnTransportDailyIncome:function(){
+          document.querySelector('app-list').setPage("transport-daily-income-report","Transport Daily Income");
+          document.querySelector('transport-daily-income-report').FnRefresh();
+          document.querySelector('transport-daily-income-report').FnCallService();
+
           // document.querySelector('transportdaily-collection-report').FnRefresh();
           // document.querySelector('transportdaily-collection-report').FnCallService();
+      },
+      FnTransportDailyCollection:function(){
           document.querySelector('app-list').setPage("transport-daily-collection-report","Transport Daily Collection");
           document.querySelector('transport-daily-collection-report').FnRefresh();
           document.querySelector('transport-daily-collection-report').FnCallService();
+
+          // document.querySelector('transportdaily-collection-report').FnRefresh();
+          // document.querySelector('transportdaily-collection-report').FnCallService();
       },
       FnTransportFeeDueReport:function(){
           this.$.scheduleservice.fetchacademicyearService();
@@ -1450,20 +1525,17 @@
           document.querySelector('transport-feepaiddue-report').FnCallService();
       },
       FnTransportPdcCollection:function(){
-        // document.querySelector('app-list').setPage("transport-pdc-report","Transport PDC Collection");
-        // document.querySelector('transport-pdc-report').FnRefresh();
-        // document.querySelector('transport-pdc-report').FnCallService();
         document.querySelector('app-list').setPage("transport-pdc-collection-report","Transport PDC Collection");
         document.querySelector('transport-pdc-collection-report').FnRefresh();
         document.querySelector('transport-pdc-collection-report').FnCallService();
+        // document.querySelector('transport-pdc-report').FnRefresh();
+        // document.querySelector('transport-pdc-report').FnCallService();
       },
       FnTransportCollectionDashboard:function(){
-        // document.querySelector('app-list').setPage("transport-dashboard","transport-dashboard");
-        // // document.querySelector('transport-dashboard').FnRefresh();
-        // document.querySelector('transport-dashboard').FnCallService();
         document.querySelector('app-list').setPage("transport-dashboard","Transport Collection Dashboard");
         document.querySelector('transport-dashboard').FnRefresh();
         this.$.scheduleservice.fetchacademicyearService();
+        // document.querySelector('transport-dashboard').FnCallService();
       },
       FnDetaildaycollection:function(){
           this.$.scheduleservice.fetchgradeforreportService();
@@ -1574,13 +1646,12 @@
       },
       FnZoneChange:function(){
         localStorage.setItem('curr_sess_page','zonechange');
-        // document.querySelector('zonechange-card').callService();
         document.querySelector('app-list').setPage("zonechange-card","Zone Change");
         // document.querySelector('zonechange-card').callService();
-        this.$.scheduleservice.fetchacademicyearService();     
+        this.$.scheduleservice.fetchacademicyearService();        
         this.$.transportfeeservice.fetchzoneService();
         document.querySelector('zonechange-card').ready();
-        document.querySelector('zonechange-card').FnRefresh();
+        document.querySelector('zonechange-catransportfeeservicerd').FnRefresh();
       },
       FnZoneChangeCollection:function(){
         localStorage.setItem('curr_sess_page','');
@@ -1591,16 +1662,16 @@
       FnZoneCancellation:function(){
         localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("zone-cancellation-card","Zone Cancellation");
-        // document.querySelector('zone-cancellation-card').callService();
         this.$.scheduleservice.fetchacademicyearService();
+        // document.querySelector('zone-cancellation-card').callService();
         document.querySelector('zone-cancellation-card').ready();
         document.querySelector('zone-cancellation-card').FnRefresh();
       },
       FnTransportCancellation:function(){
         localStorage.setItem('curr_sess_page','');
         document.querySelector('app-list').setPage("transport-cancellation-card","Transport Cancellation");
-        // document.querySelector('transport-cancellation-card').callService();
         this.$.scheduleservice.fetchacademicyearService();
+        // document.querySelector('transport-cancellation-card').callService();
         document.querySelector('transport-cancellation-card').ready();
         document.querySelector('transport-cancellation-card').FnRefresh();
       },
@@ -1620,8 +1691,8 @@
       FnAddStudent:function(){
         localStorage.setItem('curr_sess_page','');
         this.$.transportfeeservice.fetchgradeService();
-        // this.$.transportfeeservice.fetchsectionService();
         this.$.scheduleservice.fetchacademicyearService();
+        // this.$.transportfeeservice.fetchsectionService();
         document.querySelector('add-newstudent-card').FnRefresh();
       },
       FnTransportSearchReceipt:function(){
@@ -1653,6 +1724,14 @@
         document.querySelector('pendingfee-report').FnRefresh();
         // document.querySelector('pendingfee-report').FnCallService();
       },
+      FnCollectionDueReport:function(){
+        localStorage.setItem('curr_sess_page','');
+        this.$.scheduleservice.fetchacademicyearService();
+        this.$.scheduleservice.fetchgradeforreportService();
+        document.querySelector('app-list').setPage("collection-due-report","Due Report");
+        document.querySelector('collection-due-report').ready();
+        document.querySelector('collection-due-report').FnRefresh();
+      },
       FnDetailduereport:function(){
         localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchacademicyearService();
@@ -1671,14 +1750,23 @@
         document.querySelector('process-report').FnRefresh();
         document.querySelector('process-report').FnCallService();
       },
+      // FnDailycollectionDashboard:function(){
+      //   localStorage.setItem('curr_sess_page','');
+      //   this.$.scheduleservice.fetchacademicyearService();
+      //   this.$.scheduleservice.fetchgradeforreportService();
+      //   document.querySelector('app-list').setPage("dailycollection-dashboard","Daily Collection Dashboard");
+      //   document.querySelector('dailycollection-dashboard').ready();
+      //   document.querySelector('dailycollection-dashboard').FnRefresh();
+      //   document.querySelector('dailycollection-dashboard').FnCallService();
+      // },
       FnDailycollectionDashboard:function(){
         localStorage.setItem('curr_sess_page','');
         this.$.scheduleservice.fetchacademicyearService();
         this.$.scheduleservice.fetchgradeforreportService();
-        document.querySelector('app-list').setPage("dailycollection-dashboard","Daily Collection Dashboard");
-        document.querySelector('dailycollection-dashboard').ready();
-        document.querySelector('dailycollection-dashboard').FnRefresh();
-        document.querySelector('dailycollection-dashboard').FnCallService();
+        document.querySelector('app-list').setPage("collection-daily-collection-dashboard","Daily Collection Dashboard");
+        document.querySelector('collection-daily-collection-dashboard').ready();
+        document.querySelector('collection-daily-collection-dashboard').FnRefresh();
+        document.querySelector('collection-daily-collection-dashboard').callService();
       },
       FnCollectionDashboard:function(){
         localStorage.setItem('curr_sess_page','');
@@ -1829,11 +1917,13 @@
       },
       FnEnrollmentDashboard:function(){
         document.querySelector('app-list').setPage("enrollment-daily-dashboard","Enrollment Daily Dashboard");
+        this.$.scheduleservice.fetchacademicyearService();
         document.querySelector('enrollment-daily-dashboard').FnRefresh();
         document.querySelector('enrollment-daily-dashboard').callService();
       },
       FnAdmissionDashboard:function(){
         document.querySelector('app-list').setPage("enrollment-dashboard-card","Enrollment Dashboard");
+        this.$.scheduleservice.fetchacademicyearService();
         document.querySelector('enrollment-dashboard-card').FnRefresh();
         document.querySelector('enrollment-dashboard-card').callService();
       },
@@ -1939,6 +2029,7 @@
         this.schoolname=localStorage.getItem("schoolname");
         this.username=localStorage.getItem("employeename");
         for(var i=0;i<arr.length;i++){
+          // alert(i+"  "+JSON.stringify(arr[i].menu_id));
           var id=((arr[i].menu_id).replace(/[^a-zA-Z0-9]/g, '')).toLowerCase();
           // alert(id);
           if((arr[i].status).toLowerCase()=="true"){

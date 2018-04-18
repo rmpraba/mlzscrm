@@ -1,0 +1,116 @@
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-feecollection-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .inscard{
+        @apply(--layout-horizontal);
+        margin-left: 2%;
+      }
+      .submode{
+       @apply(--layout-horizontal); 
+      }
+      .ccard{
+       @apply(--layout-vertical);  
+      }
+      collection-paymentsubmode-card{
+        margin-left: 3%;
+      }
+      .inscard{
+        width: 100%;
+      }
+      transport-collection-payment-installment-card{
+        margin-left: 3%;
+      }
+      transport-collection-paymentsubmode-card{
+        margin-left: 3%;
+      }
+      paper-dialog{
+        border-radius: 5px;
+      }
+      .topcard{
+        @apply(--layout-horizontal);
+      }
+    </style>
+    <div class="ccard" width="100%">
+    <div style="text-align: right;width: 100%;">
+      <paper-button class="btn btn-primary center" on-click="FnSavePayment">Save</paper-button>
+    </div>
+    <div style="width:100%;">
+      <table class="table table-hover">
+        <tr>
+          <th>Installment</th><th>Amount</th><th>Discount</th><th>Paid Amount</th><th>Due Amount</th><th>Due Date</th><th>Add / View Payment Info</th>
+        </tr>
+        <template is="dom-repeat" items="{{installmentarr}}">
+          <tr>
+            <td>{{item.installment}}</td><td>{{item.installmentamount}}</td><td>{{item.discountamount}}</td><td>{{item.paidamount}}</td><td>{{item.dueamount}}</td>
+            <td>{{item.installmentdate}}</td>
+            <td>
+            <transport-collection-feecollection-itemcard installment="{{item.installment}}" installmentid="{{item.installmentid}}" installmentamount="{{item.installmentamount}}" discountamount="{{item.discountamount}}" paidamount="{{item.paidamount}}" actualamount="{{item.dueamount}}" amount="{{item.dueamount}}" dueamount="{{item.dueamount}}" dateofpayment="{{dateofpayment}}" installmentdate="{{item.installmentdate}}" transactiondate="{{transactiondate}}" paymentmodearr="{{paymentmodearr}}" hideadditionalinfo="{{hideadditionalinfo}}" hideadditionaltypeinfo="{{hideadditionaltypeinfo}}" paymentsubmodearr="{{paymentsubmodearr}}" admissionno="{{admissionno}}" academicyear="{{academicyear}}" gradeid="{{gradeid}}" gradename="{{gradename}}" paymentfeetype="{{paymentfeetype}}" modetypeid="{{modetypeid}}" modetypename="{{modetypename}}"></transport-collection-feecollection-itemcard>
+            </td>
+          </tr>
+        </template>
+      </table>
+    </div>
+    <paper-dialog id="collectionfeeentrymodedialog" style="width: 30%;">
+    <!-- <h2>Select Mode</h2> -->
+    <div class="topcard" style="width: 100%;">
+    <div style="width: 90%;"><h2>Select Cheque Type!</h2></div>
+    <div style="width: 10%;text-align: right;margin-top: -2%;"><paper-icon-button style="color: grey;"  icon="icons:close" on-click="FnCancel"></paper-icon-button></div> 
+    </div>
+    <div class="submode">
+    <template  is="dom-repeat" items="{{paymentsubmodearr}}" as="item">
+    <transport-collection-paymentsubmode-card subtype="{{item.sub_type}}" subtypeid="{{item.sub_typeid}}"></transport-collection-paymentsubmode-card>
+    </template>
+    </div>
+    <br>
+    <div class="buttons">
+    <paper-button on-click="FnOk" class="btn btn-primary center">Ok</paper-button>
+    <!-- <paper-button on-click="FnCancel" class="btn btn-primary center">Cancel</paper-button> -->
+    </div>
+    </paper-dialog>
+    <div hidden>{{installmenttypename}}{{installmentdate}}</div>
+    <transport-fee-collection-service id="feecollectionservice"></transport-fee-collection-service>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'transport-collection-feecollection-card',
+      ready:function(){
+        this.hideadditionalinfo=true;        
+      },
+      attached:function(){
+        var d=new Date();
+        var dd=d.getDate();
+        var mm=(d.getMonth()+1);
+        if(dd<10)
+          dd="0"+dd;
+        var mm=(d.getMonth()+1);
+        if(mm<10)
+          mm="0"+mm;
+        this.transactiondate=dd+"/"+mm+"/"+d.getFullYear();
+        this.dateofpayment=dd+"/"+mm+"/"+d.getFullYear();
+      },
+      FnSetPaymentInfo:function(arr){
+      this.makepaymentarr=[];
+      for(var i=0;i<arr.length;i++){
+        if(arr[i].insertflag=='1')
+        this.makepaymentarr.push(arr[i]);
+      }
+      },
+      FnSavePayment:function(){
+        // alert(JSON.stringify(this.makepaymentarr));
+        document.querySelector('transport-collection-paymentinfo-card').FnSetPaymentInfo(this.makepaymentarr);
+      },
+      FnRefresh:function(){
+        this.ready();
+      }
+    });
+  })();
+  </script>
+</dom-module>

@@ -1,18 +1,8 @@
 <link rel="import" href="..\..\bower_components/polymer/polymer.html">
 
 <dom-module id="transport-collection-paymentsubmode-card">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-/*      paper-radio-button{
-        margin-left: 3%;
-      }*/
-    </style>
-    <div>
-      <paper-radio-button id="cpsc{{subtypeid}}" on-change="FnSelecttype">{{subtype}}</paper-radio-button>
-    </div>
+  <template><h1 hidden>{{installmentdate}}{{installment}}</h1>
+  <paper-radio-button id="cpsc{{installmentid}}{{subtypeid}}" on-change="FnSelecttype">{{subtype}}</paper-radio-button>
   </template>
   <script>
   (function() {
@@ -26,15 +16,15 @@
       },
       FnSelecttype:function(e){
         if(typename==""){
-        if(document.querySelector('#cpsc'+this.subtypeid).checked==true){
+        if(document.querySelector('#cpsc'+this.installmentid+this.subtypeid).checked==true){
           typename=this.subtypename;
           typeid=this.subtypeid;
         }
         }
         else{
           if(typeid!=this.subtypeid){
-            document.querySelector('#cpsc'+typeid).checked=false;
-            if(document.querySelector('#cpsc'+this.subtypeid).checked==true){
+            document.querySelector('#cpsc'+this.installmentid+typeid).checked=false;
+            if(document.querySelector('#cpsc'+this.installmentid+this.subtypeid).checked==true){
              typename=this.subtypename;
              typeid=this.subtypeid;
             }
@@ -44,7 +34,25 @@
             typename="";
           }
         }
-        document.querySelector('transport-collection-fee-entry-card').FnSetPaymentmodetype(typeid,typename);
+        // document.querySelector('transport-collection-feecollection-itemcard').FnSetPaymentmodetype(typeid,typename);
+        var d=new Date();
+        if(typeid=="1"){
+        var dd=d.getDate();
+        if(dd<10)
+          dd="0"+dd;
+        var mm=(d.getMonth()+1);
+        if(mm<10)
+          mm="0"+mm;
+          document.querySelector('transport-collection-feecollection-card').transactiondate=
+          dd+"/"+mm+"/"+d.getFullYear();
+        }
+        else{
+          document.querySelector('transport-collection-feecollection-card').transactiondate=
+          this.installmentdate;
+        }
+        document.querySelector('transport-collection-feecollection-card').modetypeid=typeid;
+        document.querySelector('transport-collection-feecollection-card').modetypename=typename;
+        // alert(typeid);
       }
     });
   })();

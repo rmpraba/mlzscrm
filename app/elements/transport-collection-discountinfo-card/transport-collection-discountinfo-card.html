@@ -71,9 +71,14 @@
         this.hideafterinfo=true;
       },
       FnAddDiscount:function(){
+        if(localStorage.getItem("roleid")=='ROLE106'){
         this.hideavaileddiscount=true;
         this.hideadddiscount=false;
         this.hideafterinfo=true;
+        }
+        else{
+          alert('You are not authorized to add discount!');
+        }
       },
       FnSelectInstallment:function(e){
         discounttype=(e.target.selectedItem.textContent).trim(); 

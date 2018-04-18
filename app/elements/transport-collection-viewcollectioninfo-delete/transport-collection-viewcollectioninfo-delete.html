@@ -1,0 +1,21 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<dom-module id="transport-collection-viewcollectioninfo-delete">
+  <template>
+    <style>
+    </style>
+    <div hidden$="{{hidedelete}}"><h1 hidden>{{installment}}{{sno}}</h1>
+     <span class="panel-icon"><a href=""><i class="fa fa-remove fa-lg" aria-hidden="true" on-click="FnDeletePaymentInfo"></i></a></span> 
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+    Polymer({
+      is: 'transport-collection-viewcollectioninfo-delete',
+      FnDeletePaymentInfo:function(){
+        document.querySelector('transport-collection-feecollection-itemcard').FnRemovePayment(this.installment,this.sno);
+      }
+    });
+  })();
+  </script>
+</dom-module>

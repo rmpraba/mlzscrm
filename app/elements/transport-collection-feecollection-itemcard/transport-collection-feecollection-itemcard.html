@@ -1,0 +1,429 @@
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+
+<dom-module id="transport-collection-feecollection-itemcard">
+  <template>
+    <style>
+      paper-dialog{
+        border-radius: 5px;
+      }
+      .topcard{
+        @apply(--layout-horizontal);
+      }
+      .modeinfo{
+        @apply(--layout-horizontal); 
+      }
+      .submodecard{
+        @apply(--layout-horizontal); 
+      }
+      transport-collection-paymentsubmode-card{
+        width: 20%;
+      }
+    </style>
+    <div><h1 hidden>{{installment}}{{installmentamount}}{{installmentdate}}{{paidamount}}{{discountamount}}{{actualamount}}{{amount}}{{dateofpayment}}{{transactiondate}}{{admissionno}}{{academicyear}}{{gradeid}}{{gradename}}{{paymentfeetype}}{{modetypeid}}{{modetypename}}</h1>
+      <span class="panel-icon"><a href=""><i class="fa fa-plus fa-lg" aria-hidden="true" on-click="FnAddPaymentInfo"></i>&nbsp;&nbsp;Add</a></span>
+      <span class="panel-icon"><a href=""><i class="fa fa-edit fa-lg" aria-hidden="true" on-click="FnEditViewPaymentInfo"></i>&nbsp;&nbsp;View</a></span>
+    </div>
+    <paper-dialog id="collectionfeecollectionpaymentinfodialog{{installmentid}}" style="width: 60%;" modal>
+    <div class="topcard" style="width: 100%;">
+    <div style="width: 90%;"><h2>Add Payment Info!</h2></div>
+    <div style="width: 10%;text-align: right;margin-top: -2%;"><paper-icon-button style="color: grey;"  icon="icons:close" on-click="FnCancel"></paper-icon-button></div> 
+    </div>
+    <div class="modeinfo">
+      <table class="table table-hover">
+        <tr><th>Mode</th><td width="8%"></td>
+        <td>
+          <paper-dropdown-menu required auto-validate  error-message="Please Select Mode!" label="Select your payment mode here" on-iron-select="FnSelectMode" id="ccollectionfeecollectionentrymodee" >
+            <paper-listbox class="dropdown-content" id="collectionfeecollectionentrymodee" >
+            <template  is="dom-repeat" items="{{paymentmodearr}}" as="item">
+              <paper-item value="{{item.payment_modeid}}">{{item.payment_modename}}</paper-item>
+            </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </td>
+        </tr>
+        <tr><th>Amount</th><td width="8%"></td><td valign="top"><paper-input pattern="[0-9]*" value="{{amount}}" auto-validate  id="fcamt" required error-message="Please Enter Amount!"></paper-input></td></tr>
+        <tr><th>Payment Date</th><td width="8%"></td><td><p hidden>{{dateofpayment}}</p><collection-receipt-datepicker showdate="{{dateofpayment}}"></collection-receipt-datepicker></td></tr>
+        <tr><th>Due Amount</th><td width="8%"></td><td>{{dueamount}}</td></tr>
+      </table>
+      <table class="table table-hover" hidden$="{{hideadditionalinfo}}">
+        <tr hidden$="{{hideadditionaltypeinfo}}"><th>Type</th>
+        <template  is="dom-repeat" items="{{paymentsubmodearr}}" as="item">        
+        <td><transport-collection-paymentsubmode-card subtype="{{item.sub_type}}" subtypeid="{{item.sub_typeid}}" installment="{{installment}}" installmentid="{{installmentid}}" installmentdate="{{installmentdate}}"></transport-collection-paymentsubmode-card></td>       
+        </template>
+        </tr>
+        <tr><th>Cheque/Trans #</th><td width="8%"></td>
+        <td><paper-input required id="fctransno" auto-validate  value="{{transactionno}}" error-message="Please Enter Cheque/Transaction # !"></paper-input>
+        </td>
+        </tr>
+        <tr><th>Bank Name</th><td width="8%"></td><td><paper-input error-message="Please Enter Bank Name!" auto-validate  id="fcbankname" required value="{{transactionname}}"></paper-input></td></tr>
+        <tr><th>Cheque/Trans Date</th><td width="8%"></td><td><p hidden>{{transactiondate}}</p><collection-receipt-transaction-datepicker showdate="{{transactiondate}}"></collection-receipt-transaction-datepicker></td></tr>
+      </table>
+    </div>
+    <div class="buttons">
+    <paper-button on-click="FnOk" class="btn btn-primary center">Save</paper-button>
+    </div>
+    </paper-dialog>  
+    <paper-dialog id="collectionfeecollectioneditviewpaymentinfodialog" style="width: 60%;" modal>
+    <div class="topcard" style="width: 100%;">
+    <div style="width: 90%;"><h2>Payment Info!</h2></div>
+    <div style="width: 10%;text-align: right;margin-top: -2%;"><paper-icon-button style="color: grey;"  icon="icons:close" on-click="FnCancelView"></paper-icon-button></div> 
+    </div>
+    <div class="submode" style="width: 100%;">
+      <table style="width: 100%;" class="table table-hover">
+        <tr><th>Sno</th><th>Installment</th><th>Amount</th><th>Payment Date</th><th>Payment Mode</th><th>Bank Name</th><th>Trans/Cheque #</th><th>Trans/Cheque Date</th></tr>
+        <template is="dom-repeat" items="{{paymentarr}}">
+          <tr style="color: {{item.colorcode}};"><td>{{item.sno}}</td><td>{{item.installment}}</td><td>{{item.amount}}</td><td>{{item.dateofpayment}}</td>
+          <td>{{item.modeofpayment}}</td><td>{{item.transactionname}}</td><td>{{item.transactionno}}</td><td>{{item.transactiondate}}</td><td><transport-collection-viewcollectioninfo-delete installment="{{item.installment}}" sno="{{item.sno}}" hidedelete="{{item.hidedelete}}" colorcode="{{item.colorcode}}"></transport-collection-viewcollectioninfo-delete></td></tr>
+        </template>
+      </table>
+    </div>
+    <div class="buttons">
+    <paper-button on-click="FnEditViewOk" class="btn btn-primary center">Ok</paper-button>
+    </div>
+    </paper-dialog> 
+    <transport-fee-collection-service id="feecollectionservice"></transport-fee-collection-service>
+    <iron-ajax
+      method="post"
+      id="fetchcollectionpaymentsubmodeajax"
+      url="{{fetchcollectionpaymentsubmodeurl}}"
+      params="{{fetchcollectionpaymentsubmodeparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="fetchcollectionpaymentsubmodeResponse"
+      debounce-duration="300"></iron-ajax>
+    <iron-ajax
+      method="post"
+      id="fetchcollectionpaidinfoajax"
+      url="{{fetchcollectionpaidinfourl}}"
+      params="{{fetchcollectionpaidinfoparam}}"
+      handle-as="json"
+      content-type="application/json"
+      on-response="fetchcollectionpaidinfoResponse"
+      debounce-duration="300"></iron-ajax>
+  </template>
+  <script>
+  (function() {
+    var paymentinfoarr=[];
+    'use strict';
+    Polymer({
+      is: 'transport-collection-feecollection-itemcard',
+      ready:function(){
+        this.hideadditionalinfo=true;
+        this.hideadditionaltypeinfo=true;
+        var d=new Date();
+        var dd=d.getDate();
+        var mm=(d.getMonth()+1);
+        if(dd<10)
+          dd="0"+dd;
+        var mm=(d.getMonth()+1);
+        if(mm<10)
+          mm="0"+mm;
+        this.dateofpayment=dd+"/"+mm+"/"+d.getFullYear();
+      },
+      FnEditViewPaymentInfo:function(){
+        this.fetchcollectionpaidinfourl=sessionStorage.getItem("addrinfo")+"/collection-fetchcollectionpaidinfo-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.admissionno=this.admissionno;
+        obj.academicyear=this.academicyear;
+        obj.gradeid=this.gradeid;
+        obj.gradename=this.gradename;
+        obj.studentid=this.admissionno;
+        obj.feetype=this.paymentfeetype;
+        obj.installment=this.installment;
+        this.fetchcollectionpaidinfoparam=obj;
+        this.$.fetchcollectionpaidinfoajax.generateRequest();
+        // var temp=[];
+        // for(var i=0;i<paymentinfoarr.length;i++){
+        //   if(this.installment==paymentinfoarr[i].installment)
+        //   {
+        //   paymentinfoarr[i].sno=i+1;
+        //   temp.push(paymentinfoarr[i]);
+        //   }
+        // }
+        // this.paymentarr=temp;
+        // this.$.collectionfeecollectioneditviewpaymentinfodialog.toggle();
+      },
+      fetchcollectionpaidinfoResponse:function(e){
+        this.paidarr=e.detail.response.returnval;
+        var temp=[];
+        if(this.paidarr!='no rows'){
+          if(this.paidarr.length>0){
+            for(var i=0;i<this.paidarr.length;i++){
+              var obj={};
+              obj.installment=this.paidarr[i].installment;
+              obj.amount=this.paidarr[i].installment_amount;
+              obj.installmentdate=this.paidarr[i].installment_date;
+              obj.dateofpayment=this.paidarr[i].paid_date;
+              obj.modeofpayment=this.paidarr[i].mode_of_payment;
+              obj.transactionno=this.paidarr[i].cheque_no;
+              obj.transactionname=this.paidarr[i].bank_name;
+              obj.transactiondate=this.paidarr[i].cheque_date;
+              obj.hidedelete=true;
+              if(this.paidarr[i].cheque_status=='bounced'||this.paidarr[i].cheque_status=='cancelled')
+              obj.colorcode='#FF0000';
+              else
+              obj.colorcode='#0000FF';
+              obj.insertflag='0';
+              temp.push(obj);
+            }
+          }
+        }
+        for(var i=0;i<paymentinfoarr.length;i++){
+          if(this.installment==paymentinfoarr[i].installment)
+          {
+          // paymentinfoarr[i].sno=i+1;
+          paymentinfoarr[i].hidedelete=false;
+          temp.push(paymentinfoarr[i]);
+          }
+        }
+        for(var i=0;i<temp.length;i++){
+          temp[i].sno=i+1;
+        }
+        this.paymentarr=temp;
+        this.$.collectionfeecollectioneditviewpaymentinfodialog.toggle();
+      },
+      FnRemovePayment:function(installment,sno){
+        var temp=[];
+        if(this.paidarr!='no rows'){
+          if(this.paidarr.length>0){
+            for(var i=0;i<this.paidarr.length;i++){
+              var obj={};
+              obj.installment=this.paidarr[i].installment;
+              obj.amount=this.paidarr[i].installment_amount;
+              obj.installmentdate=this.paidarr[i].installment_date;
+              obj.dateofpayment=this.paidarr[i].paid_date;
+              obj.modeofpayment=this.paidarr[i].mode_of_payment;
+              obj.transactionno=this.paidarr[i].cheque_no;
+              obj.transactionname=this.paidarr[i].bank_name;
+              obj.transactiondate=this.paidarr[i].cheque_date;
+              obj.hidedelete=true;
+              if(this.paidarr[i].cheque_status=='bounced'||this.paidarr[i].cheque_status=='cancelled')
+              obj.colorcode='#FF0000';
+              else
+              obj.colorcode='#0000FF';
+              obj.insertflag='0';
+              temp.push(obj);
+            }
+          }
+        }
+        for(var i=0;i<paymentinfoarr.length;i++){
+          if(paymentinfoarr[i].installment==installment&&paymentinfoarr[i].sno==sno){
+          paymentinfoarr.splice(i,1);
+          i--;
+          }
+        }
+        for(var i=0;i<paymentinfoarr.length;i++){
+          paymentinfoarr[i].hidedelete=false;
+          temp.push(paymentinfoarr[i]);
+        }
+        for(var i=0;i<temp.length;i++){
+          temp[i].sno=i+1;
+        }
+        this.paymentarr=[];
+        this.paymentarr=temp;
+      },
+      FnEditViewOk:function(){
+        this.$.collectionfeecollectioneditviewpaymentinfodialog.toggle();
+      },
+      FnCancelView:function(){
+        this.$.collectionfeecollectioneditviewpaymentinfodialog.toggle();
+      },
+      FnSetDate:function(){
+        var d=new Date();
+        var dd=d.getDate();
+        var mm=(d.getMonth()+1);
+        if(dd<10)
+          dd="0"+dd;
+        var mm=(d.getMonth()+1);
+        if(mm<10)
+          mm="0"+mm;
+        this.transactiondate=dd+"/"+mm+"/"+d.getFullYear();
+        this.dateofpayment=dd+"/"+mm+"/"+d.getFullYear();
+        document.querySelector('transport-collection-feecollection-card').transactiondate=this.transactiondate;
+        document.querySelector('transport-collection-feecollection-card').dateofpayment=this.dateofpayment;
+        // document.querySelector('collection-receipt-datepicker').ready();
+      },
+      attached:function(){
+        paymentinfoarr=[];
+        this.paymentarr=[];
+        document.querySelector('transport-collection-feecollection-card').FnSetPaymentInfo(paymentinfoarr);
+        this.FnSetDate();
+      },
+      fetchcollectionpaymentsubmode:function(modeid,modename)
+      {
+        this.fetchcollectionpaymentsubmodeurl=sessionStorage.getItem("addrinfo")+"/collection-fetchcollectionpaymentsubmode-service";
+        var obj={"schoolid":""};
+        obj.schoolid=localStorage.getItem("schoolid"); 
+        obj.modeid=modeid;
+        obj.modename=modename;
+        this.fetchcollectionpaymentsubmodeparam=obj;
+        this.$.fetchcollectionpaymentsubmodeajax.generateRequest();
+      },
+      fetchcollectionpaymentsubmodeResponse:function(e){
+        var arr=e.detail.response.returnval;
+        var mode="";
+        if(arr.length>1){
+        document.querySelector('transport-collection-feecollection-card').paymentsubmodearr=arr;
+        document.querySelector('transport-collection-feecollection-card').hideadditionaltypeinfo=false;
+        }
+        else
+        document.querySelector('transport-collection-feecollection-card').hideadditionaltypeinfo=true;   
+        document.querySelector('transport-collection-feecollection-itemcard').FnSetInfo(arr[0].info_flag,arr[0].sub_typeid);
+      },
+      
+      FnOk:function(){
+        // alert(this.modename);
+        if(this.modename==""||this.modename==null||this.modename=='undefined'){
+          this.$.ccollectionfeecollectionentrymodee.validate();
+        }
+        else if(this.amount==""||this.amount==null){
+          this.$.fcamt.validate();
+        }
+        else{
+        if(this.hideadditionalinfo==false)
+        {
+        if(this.transactionno==null||this.transactionno=="")
+          this.$.fctransno.validate();
+        else if(this.transactionname==null||this.transactionname=="")
+          this.$.fcbankname.validate();  
+        else{
+          // alert('hi');
+        if(parseFloat(this.amount)<=parseFloat(this.dueamount))
+        {
+        var obj={};
+        obj.installment=this.installment;
+        obj.amount=this.amount;
+        obj.installmentdate=this.installmentdate;
+        obj.dateofpayment=this.dateofpayment;
+        obj.modeofpayment=this.modename;
+        obj.transactionno=this.transactionno;
+        obj.transactionname=this.transactionname;
+        obj.transactiondate=this.transactiondate;
+        obj.pdcflag=this.modetypeid;
+        // alert(this.modetypeid);
+        obj.insertflag='1';
+        paymentinfoarr.push(obj);
+        document.querySelector('#collectionfeecollectionpaymentinfodialog'+this.installmentid).toggle();
+        document.querySelector('transport-collection-feecollection-card').FnSetPaymentInfo(paymentinfoarr);
+        }
+        else
+        {
+          this.amount="";
+          alert("Please check the amount!");
+        }    
+        }  
+        }
+        else{
+        if(parseFloat(this.amount)<=parseFloat(this.dueamount))
+        {
+          var obj={};
+        obj.installment=this.installment;
+        obj.amount=this.amount;
+        obj.installmentdate=this.installmentdate;
+        obj.dateofpayment=this.dateofpayment;
+        obj.modeofpayment=this.modename;
+        obj.transactionno=this.transactionno;
+        obj.transactionname=this.transactionname;
+        obj.transactiondate=this.transactiondate;
+        obj.pdcflag=this.modetypeid;
+        obj.insertflag='1';
+        paymentinfoarr.push(obj);
+        document.querySelector('#collectionfeecollectionpaymentinfodialog'+this.installmentid).toggle();
+        document.querySelector('transport-collection-feecollection-card').FnSetPaymentInfo(paymentinfoarr);
+        }
+        else
+        {
+          this.amount="";
+          alert("Please check the amount!");
+        }
+        }
+        }
+        // else{
+        // var obj={};
+        // obj.installment=this.installment;
+        // obj.amount=this.amount;
+        // obj.installmentdate=this.installmentdate;
+        // obj.dateofpayment=this.dateofpayment;
+        // obj.modeofpayment=this.modename;
+        // obj.transactionno=this.transactionno;
+        // obj.transactionname=this.transactionname;
+        // obj.transactiondate=this.transactiondate;
+        // obj.pdcflag=this.typeid;
+        // obj.insertflag='1';
+        // paymentinfoarr.push(obj);
+        // document.querySelector('#collectionfeecollectionpaymentinfodialog'+this.installmentid).toggle();
+        // document.querySelector('transport-collection-feecollection-card').FnSetPaymentInfo(paymentinfoarr);
+        // }
+      },
+      FnModeChange:function(){
+        paymentinfoarr=[];
+        this.paymentarr=[];
+        document.querySelector('transport-collection-feecollection-card').FnSetPaymentInfo(paymentinfoarr);
+      },
+      FnClear:function(){
+        document.querySelector('#collectionfeecollectionentrymodee').selected=-1;
+        this.transactionno="";
+        this.transactionname="";
+        this.transactiondate="";
+        this.dateofpayment="";
+        this.FnSetDate();
+        document.querySelector('transport-collection-feecollection-card').paymentsubmodearr=[];
+        document.querySelector('transport-collection-feecollection-card').hideadditionalinfo=true;
+        document.querySelector('transport-collection-feecollection-card').hideadditionaltypeinfo=true;        
+      },
+      FnAddPaymentInfo:function(){
+        if(paymentinfoarr.length==0){
+        if(this.amount>0)
+        document.querySelector('#collectionfeecollectionpaymentinfodialog'+this.installmentid).toggle();
+        else
+          alert('No more due!!');
+        // document.querySelector('transport-collection-feecollection-card').transactiondate=this.installmentdate;
+        }
+        else{
+          var temp=0;
+          for(var i=0;i<paymentinfoarr.length;i++){
+            if(this.installment==paymentinfoarr[i].installment)
+            temp+=parseFloat(paymentinfoarr[i].amount);
+          }
+          temp=parseFloat(this.actualamount)-parseFloat(temp);
+          if(temp>0){
+          this.amount=temp;
+          this.dueamount=temp;
+          document.querySelector('#collectionfeecollectionpaymentinfodialog'+this.installmentid).toggle();
+          // document.querySelector('transport-collection-feecollection-card').transactiondate=this.installmentdate;
+          }
+          else{
+          alert('No more due!!');
+          }
+        }
+        this.FnSetDate();
+        this.FnClear();
+      },
+      FnCancel:function(){
+      document.querySelector('#collectionfeecollectionpaymentinfodialog'+this.installmentid).toggle();
+      },
+      FnSelectMode:function(e){   
+        document.querySelector('transport-collection-feecollection-card').paymentsubmodearr=[];   
+        this.FnSetDate();  
+        this.$.collectionfeecollectionentrymodee.invalid=false; 
+        this.modeid=(e.target.selectedItem.value).trim();
+        this.modename=(e.target.selectedItem.textContent).trim();     
+        this.fetchcollectionpaymentsubmode(this.modeid,this.modename);
+      },
+      FnSetInfo:function(info_flag,sub_typeid){
+        if(info_flag=="1")
+          document.querySelector('transport-collection-feecollection-card').hideadditionalinfo=false;
+        else
+          document.querySelector('transport-collection-feecollection-card').hideadditionalinfo=true;
+        this.typeid=sub_typeid;        
+        document.querySelector('transport-collection-feecollection-card').modetypeid=sub_typeid;
+      },
+      FnSetPaymentmodetype:function(typeid,typename){
+        this.modetypeid=typeid;
+        this.modetypename=typename;
+      }
+    });
+  })();
+  </script>
+</dom-module>

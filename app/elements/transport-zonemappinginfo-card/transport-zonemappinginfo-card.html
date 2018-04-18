@@ -68,6 +68,10 @@
           if(this.zoneid==null||this.zoneid==""){
             alert('Please select the zone!!');
           }
+          else if(this.fees==null||this.fees==""||this.fees=='undefined'){
+            alert('Please check the fees!!');
+            document.querySelector('#zoneallocationzone').selected=-1;
+          }
           else{
             this.$.service.FnAllocateZone(this.studentid,this.studentname,this.grade,this.fees,this.zonename,this.zoneid,this.parentname,this.startdate,this.enddate);
           }
